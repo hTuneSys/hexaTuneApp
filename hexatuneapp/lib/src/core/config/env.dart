@@ -1,0 +1,26 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+/// Compile-time environment configuration.
+///
+/// Values are injected via `--dart-define-from-file` at build time.
+/// When no definitions are provided (e.g. plain `flutter run`),
+/// the defaults point to the local dev server.
+class Env {
+  Env._();
+
+  static const String environment = String.fromEnvironment(
+    'ENVIRONMENT',
+    defaultValue: 'dev',
+  );
+
+  static const String apiBaseUrl = String.fromEnvironment(
+    'API_BASE_URL',
+    defaultValue: 'http://127.0.0.1:8080',
+  );
+
+  static bool get isDev => environment == 'dev';
+  static bool get isTest => environment == 'test';
+  static bool get isStage => environment == 'stage';
+  static bool get isProd => environment == 'prod';
+}
