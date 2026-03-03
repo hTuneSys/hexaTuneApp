@@ -3,8 +3,11 @@
 
 import 'dart:io';
 
+import 'package:dio/dio.dart';
+
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/device/device_service.dart';
@@ -55,9 +58,17 @@ class AppBootstrap {
         log.devLog(
           'Token state — hasToken: ${tokenManager.hasToken}, '
           'session: ${tokenManager.sessionId}, '
-          'expiresAt: ${tokenManager.expiresAt}',
+          'accessExp: ${tokenManager.accessExpiresAt}, '
+          'refreshExp: ${tokenManager.refreshExpiresAt}',
           category: LogCategory.bootstrap,
         );
+      }
+
+      // Proactive token refresh during bootstrap.
+      // If the access token has expired, refresh it now so the user
+      // doesn't need to re-login.
+      if (tokenManager.hasToken && tokenManager.isAccessTokenExpired) {
+        await _refreshTokensAtBoot(tokenManager, log);
       }
 
       // API client (PostConstruct already ran).
@@ -170,6 +181,90 @@ class AppBootstrap {
         stackTrace: stackTrace,
       );
       rethrow;
+    }
+  }
+
+  /// Attempt to refresh tokens using a plain [Dio] instance
+  /// (no interceptors) to avoid recursion with the auth interceptor.
+  static Future<void> _refreshTokensAtBoot(
+    TokenManager tokenManager,
+    LogService log,
+  ) async {
+    if (tokenManager.isRefreshTokenExpired) {
+      log.warning(
+        'Refresh token also expired — clearing tokens',
+        category: LogCategory.bootstrap,
+      );
+      await tokenManager.clearTokens();
+      return;
+    }
+
+    log.info(
+      'Access token expired — refreshing during bootstrap',
+      category: LogCategory.bootstrap,
+    );
+
+    try {
+      // Use a fresh Dio to bypass the auth interceptor chain.
+      final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
+      final refreshData = {'refreshToken': tokenManager.refreshToken};
+
+      if (Env.isDev) {
+        log.devLog(
+          '→ Bootstrap refresh: POST ${ApiEndpoints.refresh} '
+          '| refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}',
+          category: LogCategory.bootstrap,
+        );
+      }
+
+      final response = await dio.post(
+        ApiEndpoints.refresh,
+        data: refreshData,
+      );
+
+      if (response.statusCode == 200 && response.data is Map) {
+        final data = response.data as Map<String, dynamic>;
+        final newAccessToken = data['accessToken'] as String?;
+        final newRefreshToken = data['refreshToken'] as String?;
+        final sessionId = data['sessionId'] as String?;
+        final expiresAt = data['expiresAt'] as String?;
+
+        if (newAccessToken != null && newRefreshToken != null) {
+          await tokenManager.saveTokens(
+            accessToken: newAccessToken,
+            refreshToken: newRefreshToken,
+            sessionId: sessionId,
+            expiresAt: expiresAt,
+          );
+          log.info(
+            'Access token refreshed during bootstrap',
+            category: LogCategory.bootstrap,
+          );
+          if (Env.isDev) {
+            log.devLog(
+              '✓ Bootstrap refresh succeeded — '
+              'newAccessExp: ${tokenManager.accessExpiresAt}, '
+              'newRefreshExp: ${tokenManager.refreshExpiresAt}',
+              category: LogCategory.bootstrap,
+            );
+          }
+          return;
+        }
+      }
+
+      // Unexpected response — clear tokens.
+      log.warning(
+        'Bootstrap refresh returned unexpected response — clearing tokens',
+        category: LogCategory.bootstrap,
+      );
+      await tokenManager.clearTokens();
+    } catch (e) {
+      log.warning(
+        'Bootstrap refresh failed — clearing tokens',
+        category: LogCategory.bootstrap,
+        exception: e,
+      );
+      await tokenManager.clearTokens();
     }
   }
 }
