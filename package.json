@@ -16,6 +16,12 @@
     "semantic-release": "^22.0.0"
   },
   "scripts": {
-    "prepare": "husky"
+    "prepare": "husky",
+    "flutter:run": "cd hexatuneapp && flutter run",
+    "flutter:format": "cd hexatuneapp && dart format lib test",
+    "flutter:analyze": "cd hexatuneapp && flutter analyze",
+    "flutter:test": "cd hexatuneapp && flutter test",
+    "flutter:build": "cd hexatuneapp && dart run build_runner build --delete-conflicting-outputs",
+    "flutter:clean": "cd hexatuneapp && flutter clean && flutter pub get"
   }
 }
