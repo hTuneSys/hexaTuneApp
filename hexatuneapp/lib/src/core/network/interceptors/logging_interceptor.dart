@@ -4,6 +4,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:talker_dio_logger/talker_dio_logger.dart';
 
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 
 /// Wraps [TalkerDioLogger] so it can be injected into [ApiClient].
@@ -21,10 +22,12 @@ class LoggingInterceptor {
   void init() {
     _interceptor = TalkerDioLogger(
       talker: _logService.talker,
-      settings: const TalkerDioLoggerSettings(
+      settings: TalkerDioLoggerSettings(
         printRequestHeaders: true,
-        printResponseHeaders: false,
+        printResponseHeaders: Env.isDev,
         printResponseMessage: true,
+        printRequestData: Env.isDev,
+        printResponseData: Env.isDev,
       ),
     );
   }

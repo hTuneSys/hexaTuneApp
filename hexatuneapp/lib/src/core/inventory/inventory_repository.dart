@@ -106,10 +106,7 @@ class InventoryRepository {
 
   /// GET /api/v1/inventories/{id}/image
   Future<ImageUrlResponse> getImageUrl(String id) async {
-    _logService.debug(
-      'GET inventory image $id',
-      category: LogCategory.network,
-    );
+    _logService.debug('GET inventory image $id', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.inventoryImage(id),
     );

@@ -100,8 +100,7 @@ class DeviceService {
       final info = await _deviceInfoPlugin.macOsInfo;
       deviceName = info.computerName;
       platformName = 'macos';
-      osVersion =
-          '${info.majorVersion}.${info.minorVersion}';
+      osVersion = '${info.majorVersion}.${info.minorVersion}';
     } else if (Platform.isWindows) {
       final info = await _deviceInfoPlugin.windowsInfo;
       deviceName = info.computerName;

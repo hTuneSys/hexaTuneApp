@@ -85,10 +85,7 @@ void main() {
     });
 
     test('toJson produces correct keys', () {
-      const request = CreateCategoryRequest(
-        name: 'Cat',
-        labels: ['a'],
-      );
+      const request = CreateCategoryRequest(name: 'Cat', labels: ['a']);
       final json = request.toJson();
       expect(json['name'], 'Cat');
       expect(json['labels'], ['a']);
@@ -126,10 +123,7 @@ void main() {
     });
 
     test('round-trip preserves values', () {
-      const original = UpdateCategoryRequest(
-        name: 'n',
-        labels: ['l'],
-      );
+      const original = UpdateCategoryRequest(name: 'n', labels: ['l']);
       final restored = UpdateCategoryRequest.fromJson(original.toJson());
       expect(restored, original);
     });

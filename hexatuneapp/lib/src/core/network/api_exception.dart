@@ -14,22 +14,16 @@ sealed class ApiException implements Exception {
   final String? traceId;
 
   /// No network connection.
-  const factory ApiException.network({
-    String message,
-    String? traceId,
-  }) = NetworkException;
+  const factory ApiException.network({String message, String? traceId}) =
+      NetworkException;
 
   /// Request timed out.
-  const factory ApiException.timeout({
-    String message,
-    String? traceId,
-  }) = TimeoutException;
+  const factory ApiException.timeout({String message, String? traceId}) =
+      TimeoutException;
 
   /// Authentication required (HTTP 401).
-  const factory ApiException.unauthorized({
-    String message,
-    String? traceId,
-  }) = UnauthorizedException;
+  const factory ApiException.unauthorized({String message, String? traceId}) =
+      UnauthorizedException;
 
   /// Access denied or special action required (HTTP 403).
   const factory ApiException.forbidden({
@@ -46,10 +40,8 @@ sealed class ApiException implements Exception {
   }) = ServerException;
 
   /// Request cancelled by the caller.
-  const factory ApiException.cancelled({
-    String message,
-    String? traceId,
-  }) = CancelledException;
+  const factory ApiException.cancelled({String message, String? traceId}) =
+      CancelledException;
 
   /// Bad request with validation errors (HTTP 400/422).
   const factory ApiException.badRequest({
@@ -59,22 +51,16 @@ sealed class ApiException implements Exception {
   }) = BadRequestException;
 
   /// Resource not found (HTTP 404).
-  const factory ApiException.notFound({
-    String message,
-    String? traceId,
-  }) = NotFoundException;
+  const factory ApiException.notFound({String message, String? traceId}) =
+      NotFoundException;
 
   /// Resource conflict (HTTP 409).
-  const factory ApiException.conflict({
-    String message,
-    String? traceId,
-  }) = ConflictException;
+  const factory ApiException.conflict({String message, String? traceId}) =
+      ConflictException;
 
   /// Rate limited (HTTP 429).
-  const factory ApiException.rateLimited({
-    String message,
-    String? traceId,
-  }) = RateLimitedException;
+  const factory ApiException.rateLimited({String message, String? traceId}) =
+      RateLimitedException;
 
   /// Catch-all for unmapped errors.
   const factory ApiException.unknown({
@@ -95,10 +81,7 @@ class NetworkException extends ApiException {
 }
 
 class TimeoutException extends ApiException {
-  const TimeoutException({
-    super.message = 'Request timed out',
-    super.traceId,
-  });
+  const TimeoutException({super.message = 'Request timed out', super.traceId});
 }
 
 class UnauthorizedException extends ApiException {
@@ -155,10 +138,7 @@ class NotFoundException extends ApiException {
 }
 
 class ConflictException extends ApiException {
-  const ConflictException({
-    super.message = 'Resource conflict',
-    super.traceId,
-  });
+  const ConflictException({super.message = 'Resource conflict', super.traceId});
 }
 
 class RateLimitedException extends ApiException {

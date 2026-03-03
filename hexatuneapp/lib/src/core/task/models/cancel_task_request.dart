@@ -9,9 +9,7 @@ part 'cancel_task_request.g.dart';
 /// Request model for cancelling a task.
 @freezed
 abstract class CancelTaskRequest with _$CancelTaskRequest {
-  const factory CancelTaskRequest({
-    String? reason,
-  }) = _CancelTaskRequest;
+  const factory CancelTaskRequest({String? reason}) = _CancelTaskRequest;
 
   factory CancelTaskRequest.fromJson(Map<String, dynamic> json) =>
       _$CancelTaskRequestFromJson(json);

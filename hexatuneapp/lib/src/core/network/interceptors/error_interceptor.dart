@@ -67,10 +67,9 @@ class ErrorInterceptor extends Interceptor {
 
     switch (statusCode) {
       case 400:
-        final errors =
-            data is Map<String, dynamic>
-                ? data['errors'] as Map<String, dynamic>?
-                : null;
+        final errors = data is Map<String, dynamic>
+            ? data['errors'] as Map<String, dynamic>?
+            : null;
         return ApiException.badRequest(
           message: message ?? 'Bad request',
           errors: errors,
@@ -82,10 +81,9 @@ class ErrorInterceptor extends Interceptor {
           traceId: problem?.traceId,
         );
       case 403:
-        final errorCode =
-            data is Map<String, dynamic>
-                ? data['error_code'] as String?
-                : null;
+        final errorCode = data is Map<String, dynamic>
+            ? data['error_code'] as String?
+            : null;
         return ApiException.forbidden(
           message: message ?? 'Access denied',
           errorCode: errorCode ?? problem?.type,

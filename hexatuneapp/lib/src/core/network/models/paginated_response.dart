@@ -13,10 +13,7 @@ import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
 /// );
 /// ```
 class PaginatedResponse<T> {
-  const PaginatedResponse({
-    required this.data,
-    required this.pagination,
-  });
+  const PaginatedResponse({required this.data, required this.pagination});
 
   /// The list of items for the current page.
   final List<T> data;

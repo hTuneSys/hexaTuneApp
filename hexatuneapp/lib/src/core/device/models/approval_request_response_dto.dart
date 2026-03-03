@@ -8,8 +8,7 @@ part 'approval_request_response_dto.g.dart';
 
 /// Response DTO for device approval endpoints.
 @freezed
-abstract class ApprovalRequestResponseDto
-    with _$ApprovalRequestResponseDto {
+abstract class ApprovalRequestResponseDto with _$ApprovalRequestResponseDto {
   const factory ApprovalRequestResponseDto({
     required String requestId,
     required String accountId,

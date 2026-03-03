@@ -4,7 +4,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/log/log_category.dart';
+import 'package:hexatuneapp/src/core/log/log_service.dart';
 
 /// Dummy home page for testing — will be replaced with production UI.
 class DummyHomePage extends StatelessWidget {
@@ -20,16 +23,26 @@ class DummyHomePage extends StatelessWidget {
             icon: const Icon(Icons.logout),
             tooltip: 'Logout',
             onPressed: () async {
+              final log = getIt<LogService>();
+              if (Env.isDev) {
+                log.devLog(
+                  '→ Logout button tapped',
+                  category: LogCategory.ui,
+                );
+              }
               await getIt<AuthService>().logout();
+              if (Env.isDev) {
+                log.devLog(
+                  '✓ Logout complete',
+                  category: LogCategory.ui,
+                );
+              }
             },
           ),
         ],
       ),
       body: const Center(
-        child: Text(
-          'hexaTune App',
-          style: TextStyle(fontSize: 24),
-        ),
+        child: Text('hexaTune App', style: TextStyle(fontSize: 24)),
       ),
     );
   }

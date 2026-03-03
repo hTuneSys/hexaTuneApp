@@ -46,10 +46,7 @@ class SessionRepository {
 
   /// DELETE /api/v1/accounts/me/sessions/others
   Future<RevokeSessionsResponse> revokeOthers() async {
-    _logService.debug(
-      'DELETE sessions/others',
-      category: LogCategory.network,
-    );
+    _logService.debug('DELETE sessions/others', category: LogCategory.network);
     final response = await _dio.delete<Map<String, dynamic>>(
       ApiEndpoints.sessionsOthers,
     );

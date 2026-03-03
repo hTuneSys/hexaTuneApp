@@ -187,8 +187,8 @@ void main() {
         createdAt: 'c',
         updatedAt: 'u',
       );
-      final json = jsonDecode(jsonEncode(original.toJson()))
-          as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonEncode(original.toJson())) as Map<String, dynamic>;
       final restored = FormulaDetailResponse.fromJson(json);
       expect(restored, original);
     });
@@ -213,10 +213,7 @@ void main() {
     });
 
     test('toJson produces correct keys', () {
-      const request = CreateFormulaRequest(
-        name: 'F',
-        labels: ['a'],
-      );
+      const request = CreateFormulaRequest(name: 'F', labels: ['a']);
       final json = request.toJson();
       expect(json['name'], 'F');
       expect(json['labels'], ['a']);
@@ -256,11 +253,7 @@ void main() {
 
   group('AddFormulaItemEntry', () {
     test('fromJson with all fields', () {
-      final json = {
-        'inventoryId': 'inv-001',
-        'quantity': 5,
-        'sortOrder': 1,
-      };
+      final json = {'inventoryId': 'inv-001', 'quantity': 5, 'sortOrder': 1};
       final entry = AddFormulaItemEntry.fromJson(json);
       expect(entry.inventoryId, 'inv-001');
       expect(entry.quantity, 5);
@@ -322,8 +315,8 @@ void main() {
       const original = AddFormulaItemsRequest(
         items: [AddFormulaItemEntry(inventoryId: 'v', quantity: 1)],
       );
-      final json = jsonDecode(jsonEncode(original.toJson()))
-          as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonEncode(original.toJson())) as Map<String, dynamic>;
       final restored = AddFormulaItemsRequest.fromJson(json);
       expect(restored, original);
     });
@@ -344,8 +337,9 @@ void main() {
 
     test('round-trip preserves values', () {
       const original = UpdateFormulaItemQuantityRequest(quantity: 7);
-      final restored =
-          UpdateFormulaItemQuantityRequest.fromJson(original.toJson());
+      final restored = UpdateFormulaItemQuantityRequest.fromJson(
+        original.toJson(),
+      );
       expect(restored, original);
     });
   });
@@ -398,8 +392,8 @@ void main() {
       const original = ReorderFormulaItemsRequest(
         items: [ReorderEntry(itemId: 'i', sortOrder: 0)],
       );
-      final json = jsonDecode(jsonEncode(original.toJson()))
-          as Map<String, dynamic>;
+      final json =
+          jsonDecode(jsonEncode(original.toJson())) as Map<String, dynamic>;
       final restored = ReorderFormulaItemsRequest.fromJson(json);
       expect(restored, original);
     });

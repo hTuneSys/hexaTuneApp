@@ -26,9 +26,7 @@ void main() {
     test('toQueryParameters with only cursor set', () {
       const params = PaginationParams(cursor: 'cursor-only');
 
-      expect(params.toQueryParameters(), {
-        'cursor': 'cursor-only',
-      });
+      expect(params.toQueryParameters(), {'cursor': 'cursor-only'});
     });
 
     test('toQueryParameters with no fields returns empty map', () {

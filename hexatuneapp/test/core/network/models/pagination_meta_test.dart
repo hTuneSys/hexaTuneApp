@@ -8,11 +8,7 @@ import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
 void main() {
   group('PaginationMeta', () {
     test('fromJson with all fields', () {
-      final json = {
-        'has_more': true,
-        'limit': 25,
-        'next_cursor': 'cursor-abc',
-      };
+      final json = {'has_more': true, 'limit': 25, 'next_cursor': 'cursor-abc'};
       final meta = PaginationMeta.fromJson(json);
       expect(meta.hasMore, true);
       expect(meta.limit, 25);
@@ -20,11 +16,7 @@ void main() {
     });
 
     test('fromJson with next_cursor as null', () {
-      final json = {
-        'has_more': false,
-        'limit': 10,
-        'next_cursor': null,
-      };
+      final json = {'has_more': false, 'limit': 10, 'next_cursor': null};
       final meta = PaginationMeta.fromJson(json);
       expect(meta.hasMore, false);
       expect(meta.limit, 10);
@@ -44,10 +36,7 @@ void main() {
     });
 
     test('toJson round-trip preserves values', () {
-      const original = PaginationMeta(
-        hasMore: false,
-        limit: 10,
-      );
+      const original = PaginationMeta(hasMore: false, limit: 10);
       final json = original.toJson();
       final restored = PaginationMeta.fromJson(json);
       expect(restored, original);

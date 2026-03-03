@@ -5,12 +5,7 @@
 ///
 /// Used by all paginated list endpoints.
 class PaginationParams {
-  const PaginationParams({
-    this.cursor,
-    this.limit,
-    this.sort,
-    this.query,
-  });
+  const PaginationParams({this.cursor, this.limit, this.sort, this.query});
 
   /// Cursor for the next page (from [PaginationMeta.nextCursor]).
   final String? cursor;

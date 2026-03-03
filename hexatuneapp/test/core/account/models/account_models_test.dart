@@ -100,10 +100,7 @@ void main() {
     });
 
     test('round-trip preserves values', () {
-      const original = ProfileResponse(
-        accountId: 'a',
-        updatedAt: 'u',
-      );
+      const original = ProfileResponse(accountId: 'a', updatedAt: 'u');
       final restored = ProfileResponse.fromJson(original.toJson());
       expect(restored, original);
     });
@@ -131,10 +128,7 @@ void main() {
     });
 
     test('toJson produces correct keys', () {
-      const request = UpdateProfileRequest(
-        displayName: 'Name',
-        bio: 'Bio',
-      );
+      const request = UpdateProfileRequest(displayName: 'Name', bio: 'Bio');
       final json = request.toJson();
       expect(json['displayName'], 'Name');
       expect(json['bio'], 'Bio');

@@ -36,13 +36,16 @@ void main() {
     test('400 with ProblemDetails → BadRequestException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(400, problemDetails(
-          type: 'https://api.example.com/errors/validation',
-          title: 'Validation Error',
-          status: 400,
-          detail: 'Email format is invalid',
-          traceId: 'abc-123',
-        )),
+        (server) => server.reply(
+          400,
+          problemDetails(
+            type: 'https://api.example.com/errors/validation',
+            title: 'Validation Error',
+            status: 400,
+            detail: 'Email format is invalid',
+            traceId: 'abc-123',
+          ),
+        ),
       );
 
       try {
@@ -59,13 +62,16 @@ void main() {
     test('401 with ProblemDetails → UnauthorizedException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(401, problemDetails(
-          type: 'https://api.example.com/errors/unauthorized',
-          title: 'Unauthorized',
-          status: 401,
-          detail: 'Token has expired',
-          traceId: 'trace-401',
-        )),
+        (server) => server.reply(
+          401,
+          problemDetails(
+            type: 'https://api.example.com/errors/unauthorized',
+            title: 'Unauthorized',
+            status: 401,
+            detail: 'Token has expired',
+            traceId: 'trace-401',
+          ),
+        ),
       );
 
       try {
@@ -79,41 +85,51 @@ void main() {
       }
     });
 
-    test('403 with ProblemDetails → ForbiddenException with type as errorCode',
-        () async {
-      dioAdapter.onGet(
-        '/test',
-        (server) => server.reply(403, problemDetails(
-          type: 'https://api.example.com/errors/reauth_required',
-          title: 'Forbidden',
-          status: 403,
-          detail: 'Re-authentication required',
-          traceId: 'trace-403',
-        )),
-      );
+    test(
+      '403 with ProblemDetails → ForbiddenException with type as errorCode',
+      () async {
+        dioAdapter.onGet(
+          '/test',
+          (server) => server.reply(
+            403,
+            problemDetails(
+              type: 'https://api.example.com/errors/reauth_required',
+              title: 'Forbidden',
+              status: 403,
+              detail: 'Re-authentication required',
+              traceId: 'trace-403',
+            ),
+          ),
+        );
 
-      try {
-        await dio.get('/test');
-        fail('Should throw');
-      } on DioException catch (e) {
-        final error = e.error as ForbiddenException;
-        expect(error, isA<ForbiddenException>());
-        expect(error.errorCode,
-            'https://api.example.com/errors/reauth_required');
-        expect(error.traceId, 'trace-403');
-      }
-    });
+        try {
+          await dio.get('/test');
+          fail('Should throw');
+        } on DioException catch (e) {
+          final error = e.error as ForbiddenException;
+          expect(error, isA<ForbiddenException>());
+          expect(
+            error.errorCode,
+            'https://api.example.com/errors/reauth_required',
+          );
+          expect(error.traceId, 'trace-403');
+        }
+      },
+    );
 
     test('404 with ProblemDetails → NotFoundException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(404, problemDetails(
-          type: 'https://api.example.com/errors/not-found',
-          title: 'Not Found',
-          status: 404,
-          detail: 'Account not found',
-          traceId: 'trace-404',
-        )),
+        (server) => server.reply(
+          404,
+          problemDetails(
+            type: 'https://api.example.com/errors/not-found',
+            title: 'Not Found',
+            status: 404,
+            detail: 'Account not found',
+            traceId: 'trace-404',
+          ),
+        ),
       );
 
       try {
@@ -130,13 +146,16 @@ void main() {
     test('409 with ProblemDetails → ConflictException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(409, problemDetails(
-          type: 'https://api.example.com/errors/conflict',
-          title: 'Conflict',
-          status: 409,
-          detail: 'Email already registered',
-          traceId: 'trace-409',
-        )),
+        (server) => server.reply(
+          409,
+          problemDetails(
+            type: 'https://api.example.com/errors/conflict',
+            title: 'Conflict',
+            status: 409,
+            detail: 'Email already registered',
+            traceId: 'trace-409',
+          ),
+        ),
       );
 
       try {
@@ -153,13 +172,16 @@ void main() {
     test('429 with ProblemDetails → RateLimitedException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(429, problemDetails(
-          type: 'https://api.example.com/errors/rate-limited',
-          title: 'Too Many Requests',
-          status: 429,
-          detail: 'Rate limit exceeded',
-          traceId: 'trace-429',
-        )),
+        (server) => server.reply(
+          429,
+          problemDetails(
+            type: 'https://api.example.com/errors/rate-limited',
+            title: 'Too Many Requests',
+            status: 429,
+            detail: 'Rate limit exceeded',
+            traceId: 'trace-429',
+          ),
+        ),
       );
 
       try {
@@ -176,13 +198,16 @@ void main() {
     test('500 with ProblemDetails → ServerException', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(500, problemDetails(
-          type: 'https://api.example.com/errors/internal',
-          title: 'Internal Server Error',
-          status: 500,
-          detail: 'Something went wrong',
-          traceId: 'trace-500',
-        )),
+        (server) => server.reply(
+          500,
+          problemDetails(
+            type: 'https://api.example.com/errors/internal',
+            title: 'Internal Server Error',
+            status: 500,
+            detail: 'Something went wrong',
+            traceId: 'trace-500',
+          ),
+        ),
       );
 
       try {
@@ -200,9 +225,7 @@ void main() {
     test('non-ProblemDetails JSON falls back to message field', () async {
       dioAdapter.onGet(
         '/test',
-        (server) => server.reply(400, {
-          'message': 'Fallback error message',
-        }),
+        (server) => server.reply(400, {'message': 'Fallback error message'}),
       );
 
       try {
@@ -217,10 +240,7 @@ void main() {
     });
 
     test('response with no body uses default message', () async {
-      dioAdapter.onGet(
-        '/test',
-        (server) => server.reply(400, null),
-      );
+      dioAdapter.onGet('/test', (server) => server.reply(400, null));
 
       try {
         await dio.get('/test');

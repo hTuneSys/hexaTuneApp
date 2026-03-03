@@ -18,10 +18,8 @@ sealed class ApiResponse<T> {
 
   const factory ApiResponse.success(T data) = ApiSuccess<T>;
 
-  const factory ApiResponse.error(
-    String message, {
-    Object? exception,
-  }) = ApiError<T>;
+  const factory ApiResponse.error(String message, {Object? exception}) =
+      ApiError<T>;
 }
 
 class ApiSuccess<T> extends ApiResponse<T> {

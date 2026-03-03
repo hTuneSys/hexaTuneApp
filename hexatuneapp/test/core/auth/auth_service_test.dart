@@ -50,47 +50,38 @@ void main() {
     });
 
     group('checkAuthStatus', () {
-      test(
-        'emits authenticated when token exists',
-        () async {
-          when(() => mockTokenManager.loadTokens())
-              .thenAnswer((_) async {});
-          when(() => mockTokenManager.hasToken).thenReturn(true);
+      test('emits authenticated when token exists', () async {
+        when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
+        when(() => mockTokenManager.hasToken).thenReturn(true);
 
-          final states = <AuthState>[];
-          authService.authState.listen(states.add);
+        final states = <AuthState>[];
+        authService.authState.listen(states.add);
 
-          await authService.checkAuthStatus();
+        await authService.checkAuthStatus();
 
-          expect(authService.currentState, AuthState.authenticated);
-          await Future<void>.delayed(Duration.zero);
-          expect(states, contains(AuthState.authenticated));
-        },
-      );
+        expect(authService.currentState, AuthState.authenticated);
+        await Future<void>.delayed(Duration.zero);
+        expect(states, contains(AuthState.authenticated));
+      });
 
-      test(
-        'emits unauthenticated when no token',
-        () async {
-          when(() => mockTokenManager.loadTokens())
-              .thenAnswer((_) async {});
-          when(() => mockTokenManager.hasToken).thenReturn(false);
+      test('emits unauthenticated when no token', () async {
+        when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
+        when(() => mockTokenManager.hasToken).thenReturn(false);
 
-          final states = <AuthState>[];
-          authService.authState.listen(states.add);
+        final states = <AuthState>[];
+        authService.authState.listen(states.add);
 
-          await authService.checkAuthStatus();
+        await authService.checkAuthStatus();
 
-          expect(authService.currentState, AuthState.unauthenticated);
-          await Future<void>.delayed(Duration.zero);
-          expect(states, contains(AuthState.unauthenticated));
-        },
-      );
+        expect(authService.currentState, AuthState.unauthenticated);
+        await Future<void>.delayed(Duration.zero);
+        expect(states, contains(AuthState.unauthenticated));
+      });
     });
 
     group('forceLogout', () {
       test('clears tokens and emits unauthenticated', () async {
-        when(() => mockTokenManager.clearTokens())
-            .thenAnswer((_) async {});
+        when(() => mockTokenManager.clearTokens()).thenAnswer((_) async {});
 
         final states = <AuthState>[];
         authService.authState.listen(states.add);

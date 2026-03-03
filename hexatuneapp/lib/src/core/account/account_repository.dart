@@ -25,25 +25,19 @@ class AccountRepository {
   /// GET /api/v1/accounts/me
   Future<AccountResponse> getAccount() async {
     _logService.debug('GET account', category: LogCategory.network);
-    final response = await _dio.get<Map<String, dynamic>>(
-      ApiEndpoints.account,
-    );
+    final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.account);
     return AccountResponse.fromJson(response.data!);
   }
 
   /// GET /api/v1/accounts/me/profile
   Future<ProfileResponse> getProfile() async {
     _logService.debug('GET profile', category: LogCategory.network);
-    final response = await _dio.get<Map<String, dynamic>>(
-      ApiEndpoints.profile,
-    );
+    final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.profile);
     return ProfileResponse.fromJson(response.data!);
   }
 
   /// PATCH /api/v1/accounts/me/profile
-  Future<ProfileResponse> updateProfile(
-    UpdateProfileRequest request,
-  ) async {
+  Future<ProfileResponse> updateProfile(UpdateProfileRequest request) async {
     _logService.debug('PATCH profile', category: LogCategory.network);
     final response = await _dio.patch<Map<String, dynamic>>(
       ApiEndpoints.profile,

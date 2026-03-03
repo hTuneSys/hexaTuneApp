@@ -42,9 +42,7 @@ class AuthRepository {
   }
 
   /// POST /api/v1/auth/register
-  Future<AccountResponse> register(
-    CreateAccountRequest request,
-  ) async {
+  Future<AccountResponse> register(CreateAccountRequest request) async {
     _logService.debug('POST register', category: LogCategory.network);
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.register,
@@ -81,51 +79,28 @@ class AuthRepository {
 
   /// POST /api/v1/auth/forgot-password
   Future<void> forgotPassword(ForgotPasswordRequest request) async {
-    _logService.debug(
-      'POST forgot-password',
-      category: LogCategory.network,
-    );
-    await _dio.post(
-      ApiEndpoints.forgotPassword,
-      data: request.toJson(),
-    );
+    _logService.debug('POST forgot-password', category: LogCategory.network);
+    await _dio.post(ApiEndpoints.forgotPassword, data: request.toJson());
   }
 
   /// POST /api/v1/auth/reset-password
   Future<void> resetPassword(ResetPasswordRequest request) async {
-    _logService.debug(
-      'POST reset-password',
-      category: LogCategory.network,
-    );
-    await _dio.post(
-      ApiEndpoints.resetPassword,
-      data: request.toJson(),
-    );
+    _logService.debug('POST reset-password', category: LogCategory.network);
+    await _dio.post(ApiEndpoints.resetPassword, data: request.toJson());
   }
 
   /// POST /api/v1/auth/verify-email
   Future<void> verifyEmail(VerifyEmailRequest request) async {
-    _logService.debug(
-      'POST verify-email',
-      category: LogCategory.network,
-    );
-    await _dio.post(
-      ApiEndpoints.verifyEmail,
-      data: request.toJson(),
-    );
+    _logService.debug('POST verify-email', category: LogCategory.network);
+    await _dio.post(ApiEndpoints.verifyEmail, data: request.toJson());
   }
 
   /// POST /api/v1/auth/resend-verification
-  Future<void> resendVerification(
-    ResendVerificationRequest request,
-  ) async {
+  Future<void> resendVerification(ResendVerificationRequest request) async {
     _logService.debug(
       'POST resend-verification',
       category: LogCategory.network,
     );
-    await _dio.post(
-      ApiEndpoints.resendVerification,
-      data: request.toJson(),
-    );
+    await _dio.post(ApiEndpoints.resendVerification, data: request.toJson());
   }
 }

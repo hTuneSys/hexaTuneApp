@@ -60,9 +60,7 @@ void main() {
     });
 
     test('forbidden exception carries error code', () {
-      const ex = ApiException.forbidden(
-        errorCode: 'reauth_required',
-      );
+      const ex = ApiException.forbidden(errorCode: 'reauth_required');
       expect(ex, isA<ForbiddenException>());
       expect((ex as ForbiddenException).errorCode, 'reauth_required');
     });

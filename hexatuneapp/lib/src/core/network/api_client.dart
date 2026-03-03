@@ -52,8 +52,6 @@ class ApiClient {
       _errorInterceptor,
     ]);
 
-    _logService.info(
-      'ApiClient initialized — baseUrl: ${Env.apiBaseUrl}',
-    );
+    _logService.info('ApiClient initialized — baseUrl: ${Env.apiBaseUrl}');
   }
 }

@@ -9,9 +9,8 @@ part 'refresh_request.g.dart';
 /// Request body for POST /api/v1/auth/refresh.
 @freezed
 abstract class RefreshRequest with _$RefreshRequest {
-  const factory RefreshRequest({
-    required String refreshToken,
-  }) = _RefreshRequest;
+  const factory RefreshRequest({required String refreshToken}) =
+      _RefreshRequest;
 
   factory RefreshRequest.fromJson(Map<String, dynamic> json) =>
       _$RefreshRequestFromJson(json);

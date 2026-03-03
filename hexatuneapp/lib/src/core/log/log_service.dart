@@ -4,6 +4,7 @@
 import 'package:injectable/injectable.dart';
 import 'package:talker/talker.dart';
 
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 
 /// Application-wide logging service built on Talker.
@@ -24,6 +25,20 @@ class LogService {
       ),
     );
     info('LogService initialized', category: LogCategory.bootstrap);
+  }
+
+  /// Mask a token for safe console display: first 8 + last 8 characters.
+  static String maskToken(String? token) {
+    if (token == null) return 'null';
+    if (token.length <= 16) return '***';
+    return '${token.substring(0, 8)}…${token.substring(token.length - 8)}';
+  }
+
+  /// Log a message only when running in dev environment.
+  void devLog(String message, {LogCategory? category}) {
+    if (Env.isDev) {
+      debug(_formatMessage(message, category: category));
+    }
   }
 
   String _formatMessage(String message, {LogCategory? category}) {

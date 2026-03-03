@@ -29,10 +29,7 @@ void main() {
     });
 
     test('round-trip preserves values', () {
-      const original = RegisterPushTokenRequest(
-        token: 't',
-        platform: 'p',
-      );
+      const original = RegisterPushTokenRequest(token: 't', platform: 'p');
       final restored = RegisterPushTokenRequest.fromJson(original.toJson());
       expect(restored, original);
     });
@@ -79,8 +76,7 @@ void main() {
         requestingDeviceId: 'd',
         operationType: 'o',
       );
-      final restored =
-          CreateApprovalRequestDto.fromJson(original.toJson());
+      final restored = CreateApprovalRequestDto.fromJson(original.toJson());
       expect(restored, original);
     });
   });
@@ -211,8 +207,7 @@ void main() {
         approvingDeviceId: 'ad',
         operationMetadata: {'k': 'v'},
       );
-      final restored =
-          ApprovalRequestResponseDto.fromJson(original.toJson());
+      final restored = ApprovalRequestResponseDto.fromJson(original.toJson());
       expect(restored, original);
     });
   });

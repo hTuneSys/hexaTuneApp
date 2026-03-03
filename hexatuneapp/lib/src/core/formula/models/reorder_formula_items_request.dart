@@ -10,8 +10,7 @@ part 'reorder_formula_items_request.g.dart';
 
 /// Request model for reordering formula items.
 @freezed
-abstract class ReorderFormulaItemsRequest
-    with _$ReorderFormulaItemsRequest {
+abstract class ReorderFormulaItemsRequest with _$ReorderFormulaItemsRequest {
   const factory ReorderFormulaItemsRequest({
     required List<ReorderEntry> items,
   }) = _ReorderFormulaItemsRequest;

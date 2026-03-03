@@ -58,9 +58,6 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
-    gh.singleton<_i325.SecureStorageService>(
-      () => _i325.SecureStorageService()..init(),
-    );
     gh.singleton<_i207.ImageService>(
       () => _i207.ImageService(gh<_i571.LogService>()),
     );
@@ -75,6 +72,9 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i1001.PermissionService>(
       () => _i1001.PermissionService(gh<_i571.LogService>()),
+    );
+    gh.singleton<_i325.SecureStorageService>(
+      () => _i325.SecureStorageService(gh<_i571.LogService>())..init(),
     );
     gh.singleton<_i1025.TokenManager>(
       () => _i1025.TokenManager(
@@ -156,7 +156,7 @@ extension GetItInjectableX on _i174.GetIt {
       ),
     );
     gh.singleton<_i877.AppRouter>(
-      () => _i877.AppRouter(gh<_i386.AuthService>()),
+      () => _i877.AppRouter(gh<_i386.AuthService>(), gh<_i571.LogService>()),
     );
     return this;
   }

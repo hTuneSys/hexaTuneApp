@@ -9,9 +9,8 @@ part 'reject_request_dto.g.dart';
 /// Body for POST /api/v1/device-approvals/{id}/reject.
 @freezed
 abstract class RejectRequestDto with _$RejectRequestDto {
-  const factory RejectRequestDto({
-    required String rejectingDeviceId,
-  }) = _RejectRequestDto;
+  const factory RejectRequestDto({required String rejectingDeviceId}) =
+      _RejectRequestDto;
 
   factory RejectRequestDto.fromJson(Map<String, dynamic> json) =>
       _$RejectRequestDtoFromJson(json);

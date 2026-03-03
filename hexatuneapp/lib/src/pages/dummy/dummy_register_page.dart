@@ -5,7 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/auth/models/create_account_request.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/log/log_category.dart';
+import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,12 +42,27 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
     }
 
     setState(() => _isLoading = true);
+    final log = getIt<LogService>();
 
     try {
+      if (Env.isDev) {
+        log.devLog(
+          '→ Register attempt: email=$email',
+          category: LogCategory.ui,
+        );
+      }
+
       final authRepo = getIt<AuthRepository>();
-      await authRepo.register(
+      final response = await authRepo.register(
         CreateAccountRequest(email: email, password: password),
       );
+
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Register success: ${response.toJson()}',
+          category: LogCategory.ui,
+        );
+      }
 
       if (!mounted) return;
       _showMessage('Account created! Please sign in.');
@@ -52,6 +70,12 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       // Navigate to login after successful registration.
       context.go(RouteNames.login);
     } catch (e) {
+      if (Env.isDev) {
+        log.devLog(
+          '✗ Register failed: $e',
+          category: LogCategory.ui,
+        );
+      }
       _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) {

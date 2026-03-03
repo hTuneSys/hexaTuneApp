@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/device/device_service.dart';
 import 'package:hexatuneapp/src/core/device/models/register_push_token_request.dart';
@@ -31,24 +32,32 @@ class AppBootstrap {
     try {
       // Storage services (PostConstruct already ran for sync inits).
       // PreferencesService uses preResolve so it's ready.
-      log.info(
-        'SecureStorageService ready',
-        category: LogCategory.bootstrap,
-      );
-      log.info(
-        'PreferencesService ready',
-        category: LogCategory.bootstrap,
-      );
+      log.info('SecureStorageService ready', category: LogCategory.bootstrap);
+      log.info('PreferencesService ready', category: LogCategory.bootstrap);
 
       // Device identification.
       final deviceService = getIt<DeviceService>();
       await deviceService.init();
       log.info('DeviceService ready', category: LogCategory.bootstrap);
+      if (Env.isDev) {
+        log.devLog(
+          'Device ID: ${deviceService.deviceId}',
+          category: LogCategory.bootstrap,
+        );
+      }
 
       // Load stored tokens.
       final tokenManager = getIt<TokenManager>();
       await tokenManager.loadTokens();
       log.info('TokenManager ready', category: LogCategory.bootstrap);
+      if (Env.isDev) {
+        log.devLog(
+          'Token state — hasToken: ${tokenManager.hasToken}, '
+          'session: ${tokenManager.sessionId}, '
+          'expiresAt: ${tokenManager.expiresAt}',
+          category: LogCategory.bootstrap,
+        );
+      }
 
       // API client (PostConstruct already ran).
       log.info('ApiClient ready', category: LogCategory.bootstrap);
@@ -67,10 +76,13 @@ class AppBootstrap {
         final notificationService = getIt<NotificationService>();
         await notificationService.init();
         fcmToken = notificationService.fcmToken;
-        log.info(
-          'NotificationService ready',
-          category: LogCategory.bootstrap,
-        );
+        log.info('NotificationService ready', category: LogCategory.bootstrap);
+        if (Env.isDev) {
+          log.devLog(
+            'FCM token: $fcmToken',
+            category: LogCategory.bootstrap,
+          );
+        }
       } catch (e) {
         log.warning(
           'NotificationService init failed '
@@ -127,10 +139,7 @@ class AppBootstrap {
               platform: Platform.isIOS ? 'ios' : 'android',
             ),
           );
-          log.info(
-            'Push token registered',
-            category: LogCategory.bootstrap,
-          );
+          log.info('Push token registered', category: LogCategory.bootstrap);
         } catch (e) {
           log.warning(
             'Push token registration failed (non-critical)',

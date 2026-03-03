@@ -45,9 +45,7 @@ void main() {
       });
 
       test('carries error code for reauth', () {
-        const ex = ApiException.forbidden(
-          errorCode: 'reauth_required',
-        );
+        const ex = ApiException.forbidden(errorCode: 'reauth_required');
         expect((ex as ForbiddenException).errorCode, 'reauth_required');
       });
 
@@ -93,13 +91,8 @@ void main() {
       });
 
       test('carries validation errors', () {
-        const ex = ApiException.badRequest(
-          errors: {'email': 'invalid format'},
-        );
-        expect(
-          (ex as BadRequestException).errors,
-          {'email': 'invalid format'},
-        );
+        const ex = ApiException.badRequest(errors: {'email': 'invalid format'});
+        expect((ex as BadRequestException).errors, {'email': 'invalid format'});
       });
     });
 

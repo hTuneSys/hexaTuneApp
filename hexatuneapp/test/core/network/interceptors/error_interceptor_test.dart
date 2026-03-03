@@ -42,9 +42,7 @@ void main() {
       test('maps 401 to UnauthorizedException', () async {
         dioAdapter.onGet(
           '/test',
-          (server) => server.reply(401, {
-            'message': 'Token expired',
-          }),
+          (server) => server.reply(401, {'message': 'Token expired'}),
         );
 
         try {
@@ -74,10 +72,7 @@ void main() {
       });
 
       test('maps 404 to NotFoundException', () async {
-        dioAdapter.onGet(
-          '/test',
-          (server) => server.reply(404, null),
-        );
+        dioAdapter.onGet('/test', (server) => server.reply(404, null));
 
         try {
           await dio.get('/test');
@@ -88,10 +83,7 @@ void main() {
       });
 
       test('maps 500 to ServerException with status code', () async {
-        dioAdapter.onGet(
-          '/test',
-          (server) => server.reply(500, null),
-        );
+        dioAdapter.onGet('/test', (server) => server.reply(500, null));
 
         try {
           await dio.get('/test');
@@ -103,10 +95,7 @@ void main() {
       });
 
       test('maps 503 to ServerException', () async {
-        dioAdapter.onGet(
-          '/test',
-          (server) => server.reply(503, null),
-        );
+        dioAdapter.onGet('/test', (server) => server.reply(503, null));
 
         try {
           await dio.get('/test');

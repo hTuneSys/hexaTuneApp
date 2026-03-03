@@ -112,10 +112,7 @@ void main() {
 
   group('AuditLogQueryParams', () {
     test('toQueryParameters includes only non-null values', () {
-      const params = AuditLogQueryParams(
-        actorType: 'user',
-        action: 'login',
-      );
+      const params = AuditLogQueryParams(actorType: 'user', action: 'login');
       final query = params.toQueryParameters();
       expect(query['actorType'], 'user');
       expect(query['action'], 'login');

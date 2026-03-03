@@ -101,46 +101,39 @@ void main() {
       expect(find.text('Loading'), findsOneWidget);
     });
 
-    testWidgets(
-      'redirects to login when unauthenticated',
-      (tester) async {
-        when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
+    testWidgets('redirects to login when unauthenticated', (tester) async {
+      when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
 
-        final router = _buildTestRouter(mockAuth);
-        await tester.pumpWidget(MaterialApp.router(routerConfig: router));
-        await tester.pumpAndSettle();
+      final router = _buildTestRouter(mockAuth);
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
 
-        expect(find.text('Login'), findsOneWidget);
-      },
-    );
+      expect(find.text('Login'), findsOneWidget);
+    });
 
-    testWidgets(
-      'redirects to home when authenticated from login',
-      (tester) async {
-        // Start unauthenticated → show login.
-        when(() => mockAuth.currentState)
-            .thenReturn(AuthState.unauthenticated);
+    testWidgets('redirects to home when authenticated from login', (
+      tester,
+    ) async {
+      // Start unauthenticated → show login.
+      when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
 
-        final router = _buildTestRouter(mockAuth);
-        await tester.pumpWidget(MaterialApp.router(routerConfig: router));
-        await tester.pumpAndSettle();
-        expect(find.text('Login'), findsOneWidget);
+      final router = _buildTestRouter(mockAuth);
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
+      expect(find.text('Login'), findsOneWidget);
 
-        // Now become authenticated.
-        when(() => mockAuth.currentState)
-            .thenReturn(AuthState.authenticated);
-        authStream.add(AuthState.authenticated);
-        await tester.pumpAndSettle();
+      // Now become authenticated.
+      when(() => mockAuth.currentState).thenReturn(AuthState.authenticated);
+      authStream.add(AuthState.authenticated);
+      await tester.pumpAndSettle();
 
-        expect(find.text('Home'), findsOneWidget);
-      },
-    );
+      expect(find.text('Home'), findsOneWidget);
+    });
 
     testWidgets(
       'redirects to login when auth state changes to unauthenticated',
       (tester) async {
-        when(() => mockAuth.currentState)
-            .thenReturn(AuthState.authenticated);
+        when(() => mockAuth.currentState).thenReturn(AuthState.authenticated);
 
         final router = _buildTestRouter(mockAuth);
         await tester.pumpWidget(MaterialApp.router(routerConfig: router));
@@ -150,8 +143,7 @@ void main() {
         expect(find.text('Home'), findsOneWidget);
 
         // Now lose auth.
-        when(() => mockAuth.currentState)
-            .thenReturn(AuthState.unauthenticated);
+        when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
         authStream.add(AuthState.unauthenticated);
         await tester.pumpAndSettle();
 

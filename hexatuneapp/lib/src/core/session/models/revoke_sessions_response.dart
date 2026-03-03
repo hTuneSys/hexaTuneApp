@@ -9,9 +9,8 @@ part 'revoke_sessions_response.g.dart';
 /// Response from DELETE /api/v1/accounts/me/sessions/others.
 @freezed
 abstract class RevokeSessionsResponse with _$RevokeSessionsResponse {
-  const factory RevokeSessionsResponse({
-    required int revokedCount,
-  }) = _RevokeSessionsResponse;
+  const factory RevokeSessionsResponse({required int revokedCount}) =
+      _RevokeSessionsResponse;
 
   factory RevokeSessionsResponse.fromJson(Map<String, dynamic> json) =>
       _$RevokeSessionsResponseFromJson(json);

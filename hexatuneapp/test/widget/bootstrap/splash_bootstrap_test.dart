@@ -59,9 +59,14 @@ void main() {
 
     test('calls all services in order', () async {
       when(() => mockDevice.init()).thenAnswer((_) async {});
+      when(() => mockDevice.deviceId).thenReturn('test-device-id');
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
+      when(() => mockTokenManager.hasToken).thenReturn(false);
+      when(() => mockTokenManager.sessionId).thenReturn(null);
+      when(() => mockTokenManager.expiresAt).thenReturn(null);
       when(() => mockLocalNotif.init()).thenAnswer((_) async {});
       when(() => mockNotif.init()).thenAnswer((_) async {});
+      when(() => mockNotif.fcmToken).thenReturn(null);
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
       when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
 
@@ -78,7 +83,11 @@ void main() {
 
     test('continues when notification service fails', () async {
       when(() => mockDevice.init()).thenAnswer((_) async {});
+      when(() => mockDevice.deviceId).thenReturn('test-device-id');
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
+      when(() => mockTokenManager.hasToken).thenReturn(false);
+      when(() => mockTokenManager.sessionId).thenReturn(null);
+      when(() => mockTokenManager.expiresAt).thenReturn(null);
       when(() => mockLocalNotif.init()).thenAnswer((_) async {});
       when(() => mockNotif.init()).thenThrow(Exception('No Firebase'));
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
@@ -92,14 +101,9 @@ void main() {
     });
 
     test('rethrows on critical failure', () async {
-      when(() => mockDevice.init()).thenThrow(
-        StateError('Device init failed'),
-      );
+      when(() => mockDevice.init()).thenThrow(StateError('Device init failed'));
 
-      expect(
-        () => AppBootstrap.initialize(),
-        throwsStateError,
-      );
+      expect(() => AppBootstrap.initialize(), throwsStateError);
     });
   });
 }

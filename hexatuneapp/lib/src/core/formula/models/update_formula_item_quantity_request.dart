@@ -10,9 +10,8 @@ part 'update_formula_item_quantity_request.g.dart';
 @freezed
 abstract class UpdateFormulaItemQuantityRequest
     with _$UpdateFormulaItemQuantityRequest {
-  const factory UpdateFormulaItemQuantityRequest({
-    required int quantity,
-  }) = _UpdateFormulaItemQuantityRequest;
+  const factory UpdateFormulaItemQuantityRequest({required int quantity}) =
+      _UpdateFormulaItemQuantityRequest;
 
   factory UpdateFormulaItemQuantityRequest.fromJson(
     Map<String, dynamic> json,

@@ -88,9 +88,7 @@ void main() {
     });
 
     test('toJson produces correct keys', () {
-      const response = ImageUrlResponse(
-        url: 'https://cdn.example.com/img.png',
-      );
+      const response = ImageUrlResponse(url: 'https://cdn.example.com/img.png');
       final json = response.toJson();
       expect(json['url'], 'https://cdn.example.com/img.png');
     });

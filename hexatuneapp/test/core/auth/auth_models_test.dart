@@ -36,10 +36,7 @@ void main() {
     });
 
     test('deviceId and tenantId are optional', () {
-      const request = LoginRequest(
-        email: 'user@test.com',
-        password: 'pass',
-      );
+      const request = LoginRequest(email: 'user@test.com', password: 'pass');
       expect(request.deviceId, isNull);
       expect(request.tenantId, isNull);
     });

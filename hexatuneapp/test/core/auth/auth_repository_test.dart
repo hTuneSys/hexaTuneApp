@@ -45,62 +45,66 @@ void main() {
     });
 
     group('login', () {
-      test('sends POST to /api/v1/auth/login and returns LoginResponse',
-          () async {
-        const request = LoginRequest(
-          email: 'user@example.com',
-          password: 'secret123',
-        );
+      test(
+        'sends POST to /api/v1/auth/login and returns LoginResponse',
+        () async {
+          const request = LoginRequest(
+            email: 'user@example.com',
+            password: 'secret123',
+          );
 
-        dioAdapter.onPost(
-          '/api/v1/auth/login',
-          (server) => server.reply(200, {
-            'accessToken': 'at-123',
-            'refreshToken': 'rt-456',
-            'sessionId': 'sess-789',
-            'accountId': 'acc-001',
-            'expiresAt': '2025-12-31T23:59:59Z',
-          }),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/login',
+            (server) => server.reply(200, {
+              'accessToken': 'at-123',
+              'refreshToken': 'rt-456',
+              'sessionId': 'sess-789',
+              'accountId': 'acc-001',
+              'expiresAt': '2025-12-31T23:59:59Z',
+            }),
+            data: request.toJson(),
+          );
 
-        final result = await repository.login(request);
+          final result = await repository.login(request);
 
-        expect(result, isA<LoginResponse>());
-        expect(result.accessToken, 'at-123');
-        expect(result.refreshToken, 'rt-456');
-        expect(result.sessionId, 'sess-789');
-        expect(result.accountId, 'acc-001');
-      });
+          expect(result, isA<LoginResponse>());
+          expect(result.accessToken, 'at-123');
+          expect(result.refreshToken, 'rt-456');
+          expect(result.sessionId, 'sess-789');
+          expect(result.accountId, 'acc-001');
+        },
+      );
     });
 
     group('register', () {
-      test('sends POST to /api/v1/auth/register and returns AccountResponse',
-          () async {
-        const request = CreateAccountRequest(
-          email: 'new@example.com',
-          password: 'newpass123',
-        );
+      test(
+        'sends POST to /api/v1/auth/register and returns AccountResponse',
+        () async {
+          const request = CreateAccountRequest(
+            email: 'new@example.com',
+            password: 'newpass123',
+          );
 
-        dioAdapter.onPost(
-          '/api/v1/auth/register',
-          (server) => server.reply(201, {
-            'id': 'acc-new',
-            'email': 'new@example.com',
-            'status': 'pending_verification',
-            'createdAt': '2025-01-01T00:00:00Z',
-            'updatedAt': '2025-01-01T00:00:00Z',
-          }),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/register',
+            (server) => server.reply(201, {
+              'id': 'acc-new',
+              'email': 'new@example.com',
+              'status': 'pending_verification',
+              'createdAt': '2025-01-01T00:00:00Z',
+              'updatedAt': '2025-01-01T00:00:00Z',
+            }),
+            data: request.toJson(),
+          );
 
-        final result = await repository.register(request);
+          final result = await repository.register(request);
 
-        expect(result, isA<AccountResponse>());
-        expect(result.id, 'acc-new');
-        expect(result.email, 'new@example.com');
-        expect(result.status, 'pending_verification');
-      });
+          expect(result, isA<AccountResponse>());
+          expect(result.id, 'acc-new');
+          expect(result.email, 'new@example.com');
+          expect(result.status, 'pending_verification');
+        },
+      );
     });
 
     group('logout', () {
@@ -116,27 +120,28 @@ void main() {
 
     group('refresh', () {
       test(
-          'sends POST to /api/v1/auth/refresh with refreshToken body',
-          () async {
-        const request = RefreshRequest(refreshToken: 'rt-old');
+        'sends POST to /api/v1/auth/refresh with refreshToken body',
+        () async {
+          const request = RefreshRequest(refreshToken: 'rt-old');
 
-        dioAdapter.onPost(
-          '/api/v1/auth/refresh',
-          (server) => server.reply(200, {
-            'accessToken': 'at-new',
-            'refreshToken': 'rt-new',
-            'sessionId': 'sess-789',
-            'expiresAt': '2025-12-31T23:59:59Z',
-          }),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/refresh',
+            (server) => server.reply(200, {
+              'accessToken': 'at-new',
+              'refreshToken': 'rt-new',
+              'sessionId': 'sess-789',
+              'expiresAt': '2025-12-31T23:59:59Z',
+            }),
+            data: request.toJson(),
+          );
 
-        final result = await repository.refresh(request);
+          final result = await repository.refresh(request);
 
-        expect(result, isA<RefreshResponse>());
-        expect(result.accessToken, 'at-new');
-        expect(result.refreshToken, 'rt-new');
-      });
+          expect(result, isA<RefreshResponse>());
+          expect(result.accessToken, 'at-new');
+          expect(result.refreshToken, 'rt-new');
+        },
+      );
     });
 
     group('forgotPassword', () {

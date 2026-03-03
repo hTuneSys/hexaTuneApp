@@ -97,10 +97,7 @@ void main() {
 
   group('ReAuthResponse', () {
     test('fromJson creates instance', () {
-      final json = {
-        'token': 'reauth-tok',
-        'expiresAt': '2025-06-01T00:00:00Z',
-      };
+      final json = {'token': 'reauth-tok', 'expiresAt': '2025-06-01T00:00:00Z'};
       final response = ReAuthResponse.fromJson(json);
       expect(response.token, 'reauth-tok');
       expect(response.expiresAt, '2025-06-01T00:00:00Z');
@@ -142,10 +139,7 @@ void main() {
     });
 
     test('round-trip preserves values', () {
-      const original = CreateAccountRequest(
-        email: 'u@t.com',
-        password: 'p',
-      );
+      const original = CreateAccountRequest(email: 'u@t.com', password: 'p');
       final restored = CreateAccountRequest.fromJson(original.toJson());
       expect(restored, original);
     });
@@ -248,8 +242,7 @@ void main() {
 
     test('round-trip preserves values', () {
       const original = ResendVerificationRequest(email: 'e');
-      final restored =
-          ResendVerificationRequest.fromJson(original.toJson());
+      final restored = ResendVerificationRequest.fromJson(original.toJson());
       expect(restored, original);
     });
   });

@@ -9,9 +9,7 @@ part 'image_url_response.g.dart';
 /// Response model for GET /api/v1/inventories/{id}/image.
 @freezed
 abstract class ImageUrlResponse with _$ImageUrlResponse {
-  const factory ImageUrlResponse({
-    required String url,
-  }) = _ImageUrlResponse;
+  const factory ImageUrlResponse({required String url}) = _ImageUrlResponse;
 
   factory ImageUrlResponse.fromJson(Map<String, dynamic> json) =>
       _$ImageUrlResponseFromJson(json);

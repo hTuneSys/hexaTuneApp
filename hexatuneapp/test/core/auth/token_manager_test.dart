@@ -26,14 +26,14 @@ void main() {
 
     group('loadTokens', () {
       test('loads tokens from secure storage', () async {
-        when(() => mockStorage.getAccessToken())
-            .thenAnswer((_) async => 'auth_123');
-        when(() => mockStorage.getRefreshToken())
-            .thenAnswer((_) async => 'refresh_456');
-        when(() => mockStorage.getSessionId())
-            .thenAnswer((_) async => null);
-        when(() => mockStorage.getExpiresAt())
-            .thenAnswer((_) async => null);
+        when(
+          () => mockStorage.getAccessToken(),
+        ).thenAnswer((_) async => 'auth_123');
+        when(
+          () => mockStorage.getRefreshToken(),
+        ).thenAnswer((_) async => 'refresh_456');
+        when(() => mockStorage.getSessionId()).thenAnswer((_) async => null);
+        when(() => mockStorage.getExpiresAt()).thenAnswer((_) async => null);
 
         await tokenManager.loadTokens();
 
@@ -43,14 +43,10 @@ void main() {
       });
 
       test('handles missing tokens gracefully', () async {
-        when(() => mockStorage.getAccessToken())
-            .thenAnswer((_) async => null);
-        when(() => mockStorage.getRefreshToken())
-            .thenAnswer((_) async => null);
-        when(() => mockStorage.getSessionId())
-            .thenAnswer((_) async => null);
-        when(() => mockStorage.getExpiresAt())
-            .thenAnswer((_) async => null);
+        when(() => mockStorage.getAccessToken()).thenAnswer((_) async => null);
+        when(() => mockStorage.getRefreshToken()).thenAnswer((_) async => null);
+        when(() => mockStorage.getSessionId()).thenAnswer((_) async => null);
+        when(() => mockStorage.getExpiresAt()).thenAnswer((_) async => null);
 
         await tokenManager.loadTokens();
 
@@ -62,14 +58,12 @@ void main() {
 
     group('saveTokens', () {
       test('stores tokens in memory and secure storage', () async {
-        when(() => mockStorage.saveAccessToken(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveRefreshToken(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveSessionId(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveExpiresAt(any()))
-            .thenAnswer((_) async {});
+        when(() => mockStorage.saveAccessToken(any())).thenAnswer((_) async {});
+        when(
+          () => mockStorage.saveRefreshToken(any()),
+        ).thenAnswer((_) async {});
+        when(() => mockStorage.saveSessionId(any())).thenAnswer((_) async {});
+        when(() => mockStorage.saveExpiresAt(any())).thenAnswer((_) async {});
 
         await tokenManager.saveTokens(
           accessToken: 'new_auth',
@@ -87,16 +81,13 @@ void main() {
 
     group('clearTokens', () {
       test('clears tokens from memory and secure storage', () async {
-        when(() => mockStorage.saveAccessToken(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveRefreshToken(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveSessionId(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.saveExpiresAt(any()))
-            .thenAnswer((_) async {});
-        when(() => mockStorage.clearTokens())
-            .thenAnswer((_) async {});
+        when(() => mockStorage.saveAccessToken(any())).thenAnswer((_) async {});
+        when(
+          () => mockStorage.saveRefreshToken(any()),
+        ).thenAnswer((_) async {});
+        when(() => mockStorage.saveSessionId(any())).thenAnswer((_) async {});
+        when(() => mockStorage.saveExpiresAt(any())).thenAnswer((_) async {});
+        when(() => mockStorage.clearTokens()).thenAnswer((_) async {});
 
         // First save some tokens.
         await tokenManager.saveTokens(

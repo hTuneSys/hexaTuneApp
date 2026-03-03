@@ -40,10 +40,7 @@ void main() {
       test('adds Bearer token when token exists', () async {
         when(() => mockTokenManager.accessToken).thenReturn('my-token');
 
-        dioAdapter.onGet(
-          '/test',
-          (server) => server.reply(200, {'ok': true}),
-        );
+        dioAdapter.onGet('/test', (server) => server.reply(200, {'ok': true}));
 
         final response = await dio.get('/test');
         expect(response.statusCode, 200);
@@ -52,10 +49,7 @@ void main() {
       test('does not add header when no token', () async {
         when(() => mockTokenManager.accessToken).thenReturn(null);
 
-        dioAdapter.onGet(
-          '/test',
-          (server) => server.reply(200, {'ok': true}),
-        );
+        dioAdapter.onGet('/test', (server) => server.reply(200, {'ok': true}));
 
         final response = await dio.get('/test');
         expect(response.statusCode, 200);
@@ -63,31 +57,26 @@ void main() {
     });
 
     group('auth events on 403', () {
-      test(
-        'emits reAuthRequired on reauth_required error code',
-        () async {
-          when(() => mockTokenManager.accessToken).thenReturn('token');
+      test('emits reAuthRequired on reauth_required error code', () async {
+        when(() => mockTokenManager.accessToken).thenReturn('token');
 
-          dioAdapter.onGet(
-            '/protected',
-            (server) => server.reply(403, {
-              'error_code': 'reauth_required',
-            }),
-          );
+        dioAdapter.onGet(
+          '/protected',
+          (server) => server.reply(403, {'error_code': 'reauth_required'}),
+        );
 
-          final events = <AuthEvent>[];
-          interceptor.authEvents.listen(events.add);
+        final events = <AuthEvent>[];
+        interceptor.authEvents.listen(events.add);
 
-          try {
-            await dio.get('/protected');
-          } on DioException {
-            // Expected.
-          }
+        try {
+          await dio.get('/protected');
+        } on DioException {
+          // Expected.
+        }
 
-          await Future<void>.delayed(Duration.zero);
-          expect(events, contains(AuthEvent.reAuthRequired));
-        },
-      );
+        await Future<void>.delayed(Duration.zero);
+        expect(events, contains(AuthEvent.reAuthRequired));
+      });
 
       test(
         'emits deviceApprovalRequired on device_approval_required',
@@ -96,9 +85,8 @@ void main() {
 
           dioAdapter.onGet(
             '/protected',
-            (server) => server.reply(403, {
-              'error_code': 'device_approval_required',
-            }),
+            (server) =>
+                server.reply(403, {'error_code': 'device_approval_required'}),
           );
 
           final events = <AuthEvent>[];

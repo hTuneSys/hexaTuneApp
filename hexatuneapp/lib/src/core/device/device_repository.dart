@@ -27,10 +27,7 @@ class DeviceRepository {
   /// PUT /api/v1/devices/me/push-token
   Future<void> registerPushToken(RegisterPushTokenRequest request) async {
     _logService.debug('PUT push-token', category: LogCategory.network);
-    await _dio.put(
-      ApiEndpoints.pushToken,
-      data: request.toJson(),
-    );
+    await _dio.put(ApiEndpoints.pushToken, data: request.toJson());
   }
 
   /// DELETE /api/v1/devices/me/push-token

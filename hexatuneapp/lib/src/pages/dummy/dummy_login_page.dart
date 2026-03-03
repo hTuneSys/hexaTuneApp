@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_request.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/device/device_service.dart';
 import 'package:hexatuneapp/src/core/device/models/register_push_token_request.dart';
@@ -47,12 +48,20 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
     }
 
     setState(() => _isLoading = true);
+    final log = getIt<LogService>();
 
     try {
       final authService = getIt<AuthService>();
       final deviceService = getIt<DeviceService>();
 
-      await authService.login(
+      if (Env.isDev) {
+        log.devLog(
+          '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
+          category: LogCategory.ui,
+        );
+      }
+
+      final response = await authService.login(
         LoginRequest(
           email: email,
           password: password,
@@ -60,11 +69,25 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         ),
       );
 
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Login success: sessionId=${response.sessionId}, '
+          'expiresAt=${response.expiresAt}',
+          category: LogCategory.ui,
+        );
+      }
+
       // Register push token after successful login.
       await _registerPushToken();
 
       // Router will auto-redirect to home via auth state change.
     } catch (e) {
+      if (Env.isDev) {
+        log.devLog(
+          '✗ Login failed: $e',
+          category: LogCategory.ui,
+        );
+      }
       _showError(e.toString());
     } finally {
       if (mounted) {
@@ -77,7 +100,15 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
     try {
       final notificationService = getIt<NotificationService>();
       final fcmToken = notificationService.fcmToken;
-      if (fcmToken == null) return;
+      if (fcmToken == null) {
+        if (Env.isDev) {
+          getIt<LogService>().devLog(
+            'Push token registration skipped — no FCM token',
+            category: LogCategory.notification,
+          );
+        }
+        return;
+      }
 
       final deviceRepo = getIt<DeviceRepository>();
       await deviceRepo.registerPushToken(
@@ -90,6 +121,12 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         'Push token registered after login',
         category: LogCategory.notification,
       );
+      if (Env.isDev) {
+        getIt<LogService>().devLog(
+          '✓ Push token registered: $fcmToken',
+          category: LogCategory.notification,
+        );
+      }
     } catch (e) {
       getIt<LogService>().warning(
         'Push token registration failed (non-critical)',
@@ -101,9 +138,9 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
 
   void _showError(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override

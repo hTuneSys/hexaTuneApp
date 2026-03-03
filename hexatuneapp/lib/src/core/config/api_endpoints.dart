@@ -18,8 +18,7 @@ class ApiEndpoints {
   static const String forgotPassword = '$_v1/auth/forgot-password';
   static const String resetPassword = '$_v1/auth/reset-password';
   static const String verifyEmail = '$_v1/auth/verify-email';
-  static const String resendVerification =
-      '$_v1/auth/resend-verification';
+  static const String resendVerification = '$_v1/auth/resend-verification';
 
   // --- Accounts (1 endpoint) ---
   static const String account = '$_v1/accounts/me';
@@ -29,8 +28,7 @@ class ApiEndpoints {
 
   // --- Sessions (3 endpoints) ---
   static const String sessions = '$_v1/accounts/me/sessions';
-  static const String sessionsOthers =
-      '$_v1/accounts/me/sessions/others';
+  static const String sessionsOthers = '$_v1/accounts/me/sessions/others';
 
   // --- Audit (1 endpoint) ---
   static const String auditLogs = '$_v1/audit/logs';
@@ -39,8 +37,7 @@ class ApiEndpoints {
   static const String pushToken = '$_v1/devices/me/push-token';
 
   // --- Device Approval (4 endpoints) ---
-  static const String deviceApprovalRequest =
-      '$_v1/device-approvals/request';
+  static const String deviceApprovalRequest = '$_v1/device-approvals/request';
 
   static String deviceApprovalApprove(String id) =>
       '$_v1/device-approvals/$id/approve';
@@ -61,8 +58,7 @@ class ApiEndpoints {
 
   static String inventory(String id) => '$_v1/inventories/$id';
 
-  static String inventoryImage(String id) =>
-      '$_v1/inventories/$id/image';
+  static String inventoryImage(String id) => '$_v1/inventories/$id/image';
 
   // --- Formulas (5 endpoints) ---
   static const String formulas = '$_v1/formulas';
