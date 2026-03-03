@@ -205,6 +205,11 @@ class AuthInterceptor extends QueuedInterceptor {
       final response = await dio.post(
         ApiEndpoints.refresh,
         data: refreshData,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer ${_tokenManager.accessToken}',
+          },
+        ),
       );
 
       if (response.statusCode == 200 && response.data is Map) {
