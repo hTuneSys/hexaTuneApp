@@ -12,4 +12,16 @@ class RouteNames {
   static const String home = '/home';
   static const String reAuth = '/re-auth';
   static const String deviceApproval = '/device-approval';
+
+  // Dummy test pages — will be removed after production UI is built.
+  static const String authExtras = '/dev/auth-extras';
+  static const String account = '/dev/account';
+  static const String sessions = '/dev/sessions';
+  static const String devices = '/dev/devices';
+  static const String categories = '/dev/categories';
+  static const String inventories = '/dev/inventories';
+  static const String formulas = '/dev/formulas';
+  static const String formulaItems = '/dev/formulas/:formulaId/items';
+  static const String tasks = '/dev/tasks';
+  static const String audit = '/dev/audit';
 }

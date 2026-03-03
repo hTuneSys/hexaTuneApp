@@ -10,10 +10,20 @@ import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_account_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_audit_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_categories_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_devices_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_formula_items_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_formulas_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_inventories_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_login_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_register_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -59,6 +69,50 @@ class AppRouter {
         path: RouteNames.deviceApproval,
         builder: (context, state) =>
             const _PlaceholderPage(title: 'Device Approval'),
+      ),
+      // Dummy test pages for all API endpoints.
+      GoRoute(
+        path: RouteNames.authExtras,
+        builder: (context, state) => const DummyAuthExtrasPage(),
+      ),
+      GoRoute(
+        path: RouteNames.account,
+        builder: (context, state) => const DummyAccountPage(),
+      ),
+      GoRoute(
+        path: RouteNames.sessions,
+        builder: (context, state) => const DummySessionsPage(),
+      ),
+      GoRoute(
+        path: RouteNames.devices,
+        builder: (context, state) => const DummyDevicesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.categories,
+        builder: (context, state) => const DummyCategoriesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.inventories,
+        builder: (context, state) => const DummyInventoriesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.formulas,
+        builder: (context, state) => const DummyFormulasPage(),
+      ),
+      GoRoute(
+        path: RouteNames.formulaItems,
+        builder: (context, state) {
+          final formulaId = state.pathParameters['formulaId'] ?? '';
+          return DummyFormulaItemsPage(formulaId: formulaId);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.tasks,
+        builder: (context, state) => const DummyTasksPage(),
+      ),
+      GoRoute(
+        path: RouteNames.audit,
+        builder: (context, state) => const DummyAuditPage(),
       ),
     ],
   );
