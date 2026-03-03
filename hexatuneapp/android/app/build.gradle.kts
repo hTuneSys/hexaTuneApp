@@ -70,3 +70,9 @@ flutter {
 dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
+
+// Apply Google Services plugin only when google-services.json exists.
+// Run `flutterfire configure` to generate this file from your Firebase project.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+}

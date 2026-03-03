@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
 
@@ -15,11 +16,18 @@ class NotificationService {
   NotificationService(this._logService);
 
   final LogService _logService;
-  late final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+
+  /// Whether Firebase is initialized and FCM is available.
+  bool _firebaseAvailable = false;
+
+  FirebaseMessaging? _messaging;
 
   String? _fcmToken;
 
   String? get fcmToken => _fcmToken;
+
+  /// Whether FCM is available on this device.
+  bool get isAvailable => _firebaseAvailable;
 
   /// Callback invoked when the FCM token refreshes.
   void Function(String newToken)? _onTokenRefreshCallback;
@@ -30,8 +38,24 @@ class NotificationService {
   }
 
   /// Request permission and retrieve the FCM device token.
+  ///
+  /// Safe to call even when Firebase is not configured — logs a warning
+  /// and returns early.
   Future<void> init() async {
-    final settings = await _messaging.requestPermission();
+    if (Firebase.apps.isEmpty) {
+      _firebaseAvailable = false;
+      _logService.warning(
+        'Firebase not initialized — FCM unavailable. '
+        'Run `flutterfire configure` to set up Firebase.',
+        category: LogCategory.notification,
+      );
+      return;
+    }
+
+    _firebaseAvailable = true;
+    _messaging = FirebaseMessaging.instance;
+
+    final settings = await _messaging!.requestPermission();
     _logService.info(
       'Notification permission: ${settings.authorizationStatus}',
       category: LogCategory.notification,
@@ -39,7 +63,7 @@ class NotificationService {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
-      _fcmToken = await _messaging.getToken();
+      _fcmToken = await _messaging!.getToken();
       _logService.info(
         'FCM token obtained',
         category: LogCategory.notification,
@@ -53,7 +77,7 @@ class NotificationService {
     }
 
     // Listen for token refreshes.
-    _messaging.onTokenRefresh.listen((newToken) {
+    _messaging!.onTokenRefresh.listen((newToken) {
       _fcmToken = newToken;
       _logService.info(
         'FCM token refreshed',
@@ -110,7 +134,8 @@ class NotificationService {
   }
 
   Future<void> subscribeToTopic(String topic) async {
-    await _messaging.subscribeToTopic(topic);
+    if (!_firebaseAvailable || _messaging == null) return;
+    await _messaging!.subscribeToTopic(topic);
     _logService.debug(
       'Subscribed to topic: $topic',
       category: LogCategory.notification,
@@ -118,7 +143,8 @@ class NotificationService {
   }
 
   Future<void> unsubscribeFromTopic(String topic) async {
-    await _messaging.unsubscribeFromTopic(topic);
+    if (!_firebaseAvailable || _messaging == null) return;
+    await _messaging!.unsubscribeFromTopic(topic);
     _logService.debug(
       'Unsubscribed from topic: $topic',
       category: LogCategory.notification,

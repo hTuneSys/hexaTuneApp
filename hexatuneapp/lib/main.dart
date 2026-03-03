@@ -16,8 +16,11 @@ void main() async {
   // Initialize Firebase (required for FCM notifications).
   try {
     await Firebase.initializeApp();
-  } catch (_) {
-    // Firebase may not be configured yet (no google-services.json).
+  } catch (e) {
+    // Firebase may not be configured yet — run `flutterfire configure`.
+    // The app works without Firebase, but FCM notifications will be
+    // unavailable until google-services.json is added.
+    debugPrint('[BOOTSTRAP] Firebase init failed — FCM unavailable: $e');
   }
 
   // Register all services via get_it + injectable.
