@@ -195,22 +195,36 @@ class AuthInterceptor extends QueuedInterceptor {
     try {
       final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
       final refreshData = {'refreshToken': _tokenManager.refreshToken};
+      final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
+      final headers = {
+        'Authorization': 'Bearer ${_tokenManager.accessToken}',
+        'Content-Type': 'application/json',
+      };
+
       if (Env.isDev) {
         _logService.devLog(
-          '→ POST ${ApiEndpoints.refresh} | data: '
-          '{refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
+          '→ [AUTH REFRESH] POST $fullUrl\n'
+          '  Headers: {\n'
+          '    Authorization: Bearer ${LogService.maskToken(_tokenManager.accessToken)}\n'
+          '    Content-Type: application/json\n'
+          '  }\n'
+          '  Body: {refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
           category: LogCategory.auth,
         );
       }
       final response = await dio.post(
         ApiEndpoints.refresh,
         data: refreshData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer ${_tokenManager.accessToken}',
-          },
-        ),
+        options: Options(headers: headers),
       );
+
+      if (Env.isDev) {
+        _logService.devLog(
+          '← [AUTH REFRESH] Status: ${response.statusCode}\n'
+          '  Body: ${response.data}',
+          category: LogCategory.auth,
+        );
+      }
 
       if (response.statusCode == 200 && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
@@ -243,6 +257,15 @@ class AuthInterceptor extends QueuedInterceptor {
         }
       }
     } catch (e) {
+      if (Env.isDev && e is DioException) {
+        _logService.devLog(
+          '✗ [AUTH REFRESH] FAILED — Status: ${e.response?.statusCode}\n'
+          '  Error: ${e.message}\n'
+          '  Response body: ${e.response?.data}\n'
+          '  Response headers: ${e.response?.headers.map}',
+          category: LogCategory.auth,
+        );
+      }
       _logService.error(
         'Token refresh failed',
         category: LogCategory.auth,

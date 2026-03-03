@@ -209,10 +209,20 @@ class AppBootstrap {
       final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
       final refreshData = {'refreshToken': tokenManager.refreshToken};
 
+      final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
+      final headers = {
+        'Authorization': 'Bearer ${tokenManager.accessToken}',
+        'Content-Type': 'application/json',
+      };
+
       if (Env.isDev) {
         log.devLog(
-          '→ Bootstrap refresh: POST ${ApiEndpoints.refresh} '
-          '| refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}',
+          '→ [BOOTSTRAP REFRESH] POST $fullUrl\n'
+          '  Headers: {\n'
+          '    Authorization: Bearer ${LogService.maskToken(tokenManager.accessToken)}\n'
+          '    Content-Type: application/json\n'
+          '  }\n'
+          '  Body: {refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}}',
           category: LogCategory.bootstrap,
         );
       }
@@ -220,12 +230,17 @@ class AppBootstrap {
       final response = await dio.post(
         ApiEndpoints.refresh,
         data: refreshData,
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer ${tokenManager.accessToken}',
-          },
-        ),
+        options: Options(headers: headers),
       );
+
+      if (Env.isDev) {
+        log.devLog(
+          '← [BOOTSTRAP REFRESH] Status: ${response.statusCode}\n'
+          '  Headers: ${response.headers.map}\n'
+          '  Body: ${response.data}',
+          category: LogCategory.bootstrap,
+        );
+      }
 
       if (response.statusCode == 200 && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
@@ -264,6 +279,15 @@ class AppBootstrap {
       );
       await tokenManager.clearTokens();
     } catch (e) {
+      if (Env.isDev && e is DioException) {
+        log.devLog(
+          '✗ [BOOTSTRAP REFRESH] FAILED — Status: ${e.response?.statusCode}\n'
+          '  Error: ${e.message}\n'
+          '  Response body: ${e.response?.data}\n'
+          '  Response headers: ${e.response?.headers.map}',
+          category: LogCategory.bootstrap,
+        );
+      }
       log.warning(
         'Bootstrap refresh failed — clearing tokens',
         category: LogCategory.bootstrap,
