@@ -39,6 +39,9 @@ void main() {
     group('onRequest adds Authorization header', () {
       test('adds Bearer token when token exists', () async {
         when(() => mockTokenManager.accessToken).thenReturn('my-token');
+        when(() => mockTokenManager.hasToken).thenReturn(true);
+        when(() => mockTokenManager.isRefreshTokenExpired).thenReturn(false);
+        when(() => mockTokenManager.isAccessTokenExpired).thenReturn(false);
 
         dioAdapter.onGet('/test', (server) => server.reply(200, {'ok': true}));
 
@@ -48,6 +51,9 @@ void main() {
 
       test('does not add header when no token', () async {
         when(() => mockTokenManager.accessToken).thenReturn(null);
+        when(() => mockTokenManager.hasToken).thenReturn(false);
+        when(() => mockTokenManager.isRefreshTokenExpired).thenReturn(false);
+        when(() => mockTokenManager.isAccessTokenExpired).thenReturn(false);
 
         dioAdapter.onGet('/test', (server) => server.reply(200, {'ok': true}));
 
@@ -59,6 +65,9 @@ void main() {
     group('auth events on 403', () {
       test('emits reAuthRequired on reauth_required error code', () async {
         when(() => mockTokenManager.accessToken).thenReturn('token');
+        when(() => mockTokenManager.hasToken).thenReturn(true);
+        when(() => mockTokenManager.isRefreshTokenExpired).thenReturn(false);
+        when(() => mockTokenManager.isAccessTokenExpired).thenReturn(false);
 
         dioAdapter.onGet(
           '/protected',
@@ -82,6 +91,9 @@ void main() {
         'emits deviceApprovalRequired on device_approval_required',
         () async {
           when(() => mockTokenManager.accessToken).thenReturn('token');
+          when(() => mockTokenManager.hasToken).thenReturn(true);
+          when(() => mockTokenManager.isRefreshTokenExpired).thenReturn(false);
+          when(() => mockTokenManager.isAccessTokenExpired).thenReturn(false);
 
           dioAdapter.onGet(
             '/protected',

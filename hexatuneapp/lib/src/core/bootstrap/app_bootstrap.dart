@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/device/models/register_push_token_request.d
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
 import 'package:hexatuneapp/src/core/notification/local_notification_service.dart';
 import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 
@@ -148,6 +149,17 @@ class AppBootstrap {
           );
         }
       }
+
+      // Listen to auth events from the interceptor (force logout, re-auth).
+      authService.authEvents.listen((event) {
+        if (event == AuthEvent.forceLogout) {
+          log.warning(
+            'Force logout triggered by interceptor',
+            category: LogCategory.auth,
+          );
+          authService.forceLogout();
+        }
+      });
 
       log.info('Bootstrap complete', category: LogCategory.bootstrap);
     } catch (e, stackTrace) {

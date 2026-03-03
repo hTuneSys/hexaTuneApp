@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -9,6 +11,7 @@ import 'package:hexatuneapp/src/core/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/device/device_service.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
 import 'package:hexatuneapp/src/core/notification/local_notification_service.dart';
 import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 import 'package:hexatuneapp/src/core/bootstrap/app_bootstrap.dart';
@@ -69,6 +72,8 @@ void main() {
       when(() => mockNotif.fcmToken).thenReturn(null);
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
       when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
+      when(() => mockAuth.authEvents)
+          .thenAnswer((_) => const Stream<AuthEvent>.empty());
 
       await AppBootstrap.initialize();
 
@@ -92,6 +97,8 @@ void main() {
       when(() => mockNotif.init()).thenThrow(Exception('No Firebase'));
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
       when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
+      when(() => mockAuth.authEvents)
+          .thenAnswer((_) => const Stream<AuthEvent>.empty());
 
       // Should not throw despite notification failure.
       await AppBootstrap.initialize();

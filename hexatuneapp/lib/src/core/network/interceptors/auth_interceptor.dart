@@ -32,7 +32,62 @@ class AuthInterceptor extends QueuedInterceptor {
   Stream<AuthEvent> get authEvents => _authEventController.stream;
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+  Future<void> onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    // Check refresh token expiry first → force logout if session expired.
+    if (_tokenManager.hasToken && _tokenManager.isRefreshTokenExpired) {
+      _logService.warning(
+        'Refresh token expired — session ended',
+        category: LogCategory.auth,
+      );
+      if (Env.isDev) {
+        _logService.devLog(
+          '✗ Refresh token expired (refreshExp: ${_tokenManager.refreshExpiresAt}) '
+          '→ clearing tokens & force logout',
+          category: LogCategory.auth,
+        );
+      }
+      await _tokenManager.clearTokens();
+      _authEventController.add(AuthEvent.forceLogout);
+      return handler.reject(
+        DioException(
+          requestOptions: options,
+          type: DioExceptionType.cancel,
+          error: 'Session expired — refresh token is no longer valid',
+        ),
+      );
+    }
+
+    // Proactively refresh if access token has expired but refresh is still valid.
+    if (_tokenManager.isAccessTokenExpired &&
+        _tokenManager.refreshToken != null) {
+      if (Env.isDev) {
+        _logService.devLog(
+          '⏱ Access token expired (accessExp: ${_tokenManager.accessExpiresAt}) '
+          '→ proactive refresh before request',
+          category: LogCategory.auth,
+        );
+      }
+      final refreshed = await _tryRefresh(options);
+      if (!refreshed) {
+        _logService.warning(
+          'Proactive token refresh failed → force logout',
+          category: LogCategory.auth,
+        );
+        _authEventController.add(AuthEvent.forceLogout);
+        return handler.reject(
+          DioException(
+            requestOptions: options,
+            type: DioExceptionType.cancel,
+            error: 'Token refresh failed',
+          ),
+        );
+      }
+    }
+
+    // Attach the (possibly refreshed) access token.
     final token = _tokenManager.accessToken;
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
