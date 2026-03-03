@@ -65,10 +65,10 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       }
 
       if (!mounted) return;
-      _showMessage('Account created! Please sign in.');
+      _showMessage('Account created! Please verify your email.');
 
-      // Navigate to login after successful registration.
-      context.go(RouteNames.login);
+      // Navigate to OTP verification page with the registered email.
+      context.go('${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}');
     } catch (e) {
       if (Env.isDev) {
         log.devLog(

@@ -16,7 +16,7 @@ class Env {
 
   static const String apiBaseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://127.0.0.1:8080',
+    defaultValue: 'http://192.168.1.99:8080',
   );
 
   static bool get isDev => environment == 'dev';

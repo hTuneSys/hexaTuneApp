@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_login_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_register_page.dart';
 
 /// Application router with auth-aware redirect logic.
@@ -38,6 +39,13 @@ class AppRouter {
       GoRoute(
         path: RouteNames.register,
         builder: (context, state) => const DummyRegisterPage(),
+      ),
+      GoRoute(
+        path: RouteNames.verifyEmail,
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          return DummyOtpPage(email: email);
+        },
       ),
       GoRoute(
         path: RouteNames.home,
@@ -68,17 +76,20 @@ class AppRouter {
     }
 
     final isOnPublicPage =
-        currentPath == RouteNames.login || currentPath == RouteNames.register;
+        currentPath == RouteNames.login ||
+        currentPath == RouteNames.register ||
+        currentPath == RouteNames.verifyEmail;
     final isAuthenticated = authState == AuthState.authenticated;
+
+    // Authenticated user on splash or public page → go to home.
+    if (isAuthenticated && (isOnPublicPage || currentPath == RouteNames.splash)) {
+      _logRedirect(currentPath, authState, RouteNames.home);
+      return RouteNames.home;
+    }
 
     if (!isAuthenticated && !isOnPublicPage) {
       _logRedirect(currentPath, authState, RouteNames.login);
       return RouteNames.login;
-    }
-
-    if (isAuthenticated && isOnPublicPage) {
-      _logRedirect(currentPath, authState, RouteNames.home);
-      return RouteNames.home;
     }
 
     _logRedirect(currentPath, authState, null);

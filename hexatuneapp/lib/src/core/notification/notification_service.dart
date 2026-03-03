@@ -15,7 +15,7 @@ class NotificationService {
   NotificationService(this._logService);
 
   final LogService _logService;
-  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  late final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
   String? _fcmToken;
 

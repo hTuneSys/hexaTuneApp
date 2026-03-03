@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:hexatuneapp/src/core/bootstrap/app_bootstrap.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -11,6 +12,13 @@ import 'package:hexatuneapp/src/app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase (required for FCM notifications).
+  try {
+    await Firebase.initializeApp();
+  } catch (_) {
+    // Firebase may not be configured yet (no google-services.json).
+  }
 
   // Register all services via get_it + injectable.
   await configureDependencies();

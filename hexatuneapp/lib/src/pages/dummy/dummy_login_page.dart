@@ -99,6 +99,18 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
   Future<void> _registerPushToken() async {
     try {
       final notificationService = getIt<NotificationService>();
+
+      // Attempt to initialize notification service if not already done.
+      if (notificationService.fcmToken == null) {
+        if (Env.isDev) {
+          getIt<LogService>().devLog(
+            'Initializing NotificationService after login…',
+            category: LogCategory.notification,
+          );
+        }
+        await notificationService.init();
+      }
+
       final fcmToken = notificationService.fcmToken;
       if (fcmToken == null) {
         if (Env.isDev) {
