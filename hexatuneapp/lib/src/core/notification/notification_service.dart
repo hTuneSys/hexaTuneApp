@@ -20,6 +20,14 @@ class NotificationService {
 
   String? get fcmToken => _fcmToken;
 
+  /// Callback invoked when the FCM token refreshes.
+  void Function(String newToken)? _onTokenRefreshCallback;
+
+  /// Set a callback to be invoked when the FCM token refreshes.
+  set onTokenRefresh(void Function(String newToken) callback) {
+    _onTokenRefreshCallback = callback;
+  }
+
   /// Request permission and retrieve the FCM device token.
   Future<void> init() async {
     final settings = await _messaging.requestPermission();
@@ -44,7 +52,7 @@ class NotificationService {
         'FCM token refreshed',
         category: LogCategory.notification,
       );
-      // TODO: re-register new token with backend
+      _onTokenRefreshCallback?.call(newToken);
     });
 
     // Foreground message handler.

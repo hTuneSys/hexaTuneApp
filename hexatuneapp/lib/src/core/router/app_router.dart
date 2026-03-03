@@ -7,6 +7,9 @@ import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_login_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_register_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -26,11 +29,15 @@ class AppRouter {
       ),
       GoRoute(
         path: RouteNames.login,
-        builder: (context, state) => const _PlaceholderPage(title: 'Login'),
+        builder: (context, state) => const DummyLoginPage(),
+      ),
+      GoRoute(
+        path: RouteNames.register,
+        builder: (context, state) => const DummyRegisterPage(),
       ),
       GoRoute(
         path: RouteNames.home,
-        builder: (context, state) => const _PlaceholderPage(title: 'Home'),
+        builder: (context, state) => const DummyHomePage(),
       ),
       GoRoute(
         path: RouteNames.reAuth,
@@ -53,14 +60,16 @@ class AppRouter {
       return currentPath == RouteNames.splash ? null : RouteNames.splash;
     }
 
-    final isOnLogin = currentPath == RouteNames.login;
+    final isOnPublicPage =
+        currentPath == RouteNames.login ||
+        currentPath == RouteNames.register;
     final isAuthenticated = authState == AuthState.authenticated;
 
-    if (!isAuthenticated && !isOnLogin) {
+    if (!isAuthenticated && !isOnPublicPage) {
       return RouteNames.login;
     }
 
-    if (isAuthenticated && isOnLogin) {
+    if (isAuthenticated && isOnPublicPage) {
       return RouteNames.home;
     }
 

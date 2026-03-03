@@ -80,6 +80,34 @@ class AppBootstrap {
         );
       }
 
+      // Wire FCM token refresh → backend push token re-registration.
+      try {
+        final notificationService = getIt<NotificationService>();
+        final deviceRepo = getIt<DeviceRepository>();
+        notificationService.onTokenRefresh = (newToken) async {
+          try {
+            await deviceRepo.registerPushToken(
+              RegisterPushTokenRequest(
+                token: newToken,
+                platform: Platform.isIOS ? 'ios' : 'android',
+              ),
+            );
+            log.info(
+              'Push token re-registered after refresh',
+              category: LogCategory.notification,
+            );
+          } catch (e) {
+            log.warning(
+              'Push token re-registration failed (non-critical)',
+              category: LogCategory.notification,
+              exception: e,
+            );
+          }
+        };
+      } catch (_) {
+        // NotificationService may not be available
+      }
+
       // Check auth state and emit initial routing decision.
       final authService = getIt<AuthService>();
       await authService.checkAuthStatus();

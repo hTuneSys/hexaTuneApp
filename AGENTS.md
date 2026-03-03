@@ -46,6 +46,24 @@ AI Agents **MUST** ask for explicit user approval before:
 
 ---
 
+## 🎨 UI and Styling Rules
+
+**All production code MUST follow these rules:**
+
+- Use **only Material Design 3** components and theming — no custom widgets that bypass MD3
+- Use **only the app theme** (`Theme.of(context)`) for all styling — no inline/embedded styles
+- **No embedded strings** in UI code — all user-facing text must come from localization files (`l10n/`)
+- **No custom CSS, custom fonts, or custom text styles** outside the theme system
+- Full **localization (l10n) support** must be maintained everywhere — no hardcoded user-facing text
+- All colors, typography, and spacing must come from the Material theme
+
+**Exceptions:**
+
+- Dummy/test pages under `pages/dummy/` are exempt during development
+- Non-user-facing strings (log messages, debug labels) do not require localization
+
+---
+
 ## 📚 Documentation Index
 
 The `docs/` directory contains essential project documentation. Refer to these files when you need context about project conventions, architecture, or workflows:
