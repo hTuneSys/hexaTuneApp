@@ -135,7 +135,7 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
                     padding: const EdgeInsets.only(top: 16),
                     child: Text(
                       _error!,
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: Theme.of(context).colorScheme.error,
                       ),
                     ),
@@ -159,7 +159,7 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
                 Icon(
                   membership.isOwner ? Icons.star : Icons.business,
                   color: membership.isOwner
-                      ? Colors.amber
+                      ? Theme.of(context).colorScheme.tertiary
                       : Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(width: 8),

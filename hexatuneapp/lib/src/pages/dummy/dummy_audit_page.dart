@@ -112,7 +112,9 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        backgroundColor: isError
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -231,8 +233,8 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                                   ? Icons.check_circle
                                   : Icons.error,
                               color: entry.outcome == 'success'
-                                  ? Colors.green
-                                  : Colors.red,
+                                  ? Theme.of(context).colorScheme.tertiary
+                                  : Theme.of(context).colorScheme.error,
                             ),
                             title: Text(entry.action),
                             subtitle: Text(

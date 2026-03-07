@@ -385,7 +385,7 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                   const SizedBox(height: 16),
                   Text(
                     _error!,
-                    style: TextStyle(
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.error,
                     ),
                   ),

@@ -279,25 +279,27 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError ? Colors.red : Colors.green,
+        backgroundColor: isError
+            ? Theme.of(context).colorScheme.error
+            : Theme.of(context).colorScheme.primary,
       ),
     );
   }
 
-  Color _statusColor(String status) {
+  Color _statusColor(String status, ColorScheme colorScheme) {
     switch (status) {
       case 'pending':
-        return Colors.orange;
+        return colorScheme.tertiary;
       case 'running':
-        return Colors.blue;
+        return colorScheme.primary;
       case 'completed':
-        return Colors.green;
+        return colorScheme.secondary;
       case 'failed':
-        return Colors.red;
+        return colorScheme.error;
       case 'cancelled':
-        return Colors.grey;
+        return colorScheme.outline;
       default:
-        return Colors.grey;
+        return colorScheme.outline;
     }
   }
 
@@ -364,13 +366,17 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
                           );
                         }
                         final t = _tasks[i];
+                        final colorScheme = Theme.of(context).colorScheme;
                         return Card(
                           child: ListTile(
                             leading: CircleAvatar(
-                              backgroundColor: _statusColor(t.status),
-                              child: const Icon(
+                              backgroundColor: _statusColor(
+                                t.status,
+                                colorScheme,
+                              ),
+                              child: Icon(
                                 Icons.task,
-                                color: Colors.white,
+                                color: colorScheme.onPrimary,
                               ),
                             ),
                             title: Text(t.taskType),

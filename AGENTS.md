@@ -56,10 +56,14 @@ AI Agents **MUST** ask for explicit user approval before:
 - **No custom CSS, custom fonts, or custom text styles** outside the theme system
 - Full **localization (l10n) support** must be maintained everywhere — no hardcoded user-facing text
 - All colors, typography, and spacing must come from the Material theme
+- **No `Colors.xxx` constants** — all colors must come from `Theme.of(context).colorScheme`
+- **No bare `TextStyle()`** — always derive from `Theme.of(context).textTheme` with `.copyWith()` when customization is needed
+- Theme definitions live exclusively in `lib/src/core/theme/hexatune.dart` (color schemes) and `lib/src/core/utils/theme.dart` (typography/fonts) — no other files may define theme data
+
+**These rules apply to ALL pages and widgets, including dummy/test pages.**
 
 **Exceptions:**
 
-- Dummy/test pages under `pages/dummy/` are exempt during development
 - Non-user-facing strings (log messages, debug labels) do not require localization
 
 ---
