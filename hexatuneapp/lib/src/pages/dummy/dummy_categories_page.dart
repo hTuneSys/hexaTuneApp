@@ -307,8 +307,9 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
                   if (i == _categories.length) {
                     return Center(
                       child: TextButton(
-                        onPressed:
-                            _isLoading ? null : () => _load(loadMore: true),
+                        onPressed: _isLoading
+                            ? null
+                            : () => _load(loadMore: true),
                         child: const Text('Load More'),
                       ),
                     );
@@ -318,9 +319,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
                     child: ListTile(
                       title: Text(c.name),
                       subtitle: Text(
-                        c.labels.isEmpty
-                            ? 'No labels'
-                            : c.labels.join(', '),
+                        c.labels.isEmpty ? 'No labels' : c.labels.join(', '),
                       ),
                       trailing: Text(
                         c.id.substring(0, 8),

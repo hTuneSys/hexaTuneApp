@@ -6,6 +6,9 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/auth/models/apple_auth_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/google_auth_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/oauth_login_response.dart';
 import 'package:hexatuneapp/src/core/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
@@ -90,6 +93,99 @@ void main() {
 
         expect(authService.currentState, AuthState.unauthenticated);
         verify(() => mockTokenManager.clearTokens()).called(1);
+      });
+    });
+
+    group('loginWithGoogle', () {
+      test('saves tokens and emits authenticated', () async {
+        const request = GoogleAuthRequest(
+          idToken: 'google-jwt',
+          deviceId: 'dev-1',
+        );
+        const response = OAuthLoginResponse(
+          accessToken: 'at-google',
+          refreshToken: 'rt-google',
+          sessionId: 'sess-google',
+          accountId: 'acc-google',
+          expiresAt: '2026-12-31T23:59:59Z',
+          isNewAccount: false,
+        );
+
+        when(
+          () => mockAuthRepository.loginWithGoogle(request),
+        ).thenAnswer((_) async => response);
+        when(
+          () => mockTokenManager.saveTokens(
+            accessToken: any(named: 'accessToken'),
+            refreshToken: any(named: 'refreshToken'),
+            sessionId: any(named: 'sessionId'),
+            expiresAt: any(named: 'expiresAt'),
+          ),
+        ).thenAnswer((_) async {});
+
+        final states = <AuthState>[];
+        authService.authState.listen(states.add);
+
+        final result = await authService.loginWithGoogle(request);
+
+        expect(result.accessToken, 'at-google');
+        expect(result.isNewAccount, isFalse);
+        expect(authService.currentState, AuthState.authenticated);
+        verify(
+          () => mockTokenManager.saveTokens(
+            accessToken: 'at-google',
+            refreshToken: 'rt-google',
+            sessionId: 'sess-google',
+            expiresAt: '2026-12-31T23:59:59Z',
+          ),
+        ).called(1);
+      });
+    });
+
+    group('loginWithApple', () {
+      test('saves tokens and emits authenticated', () async {
+        const request = AppleAuthRequest(
+          idToken: 'apple-jwt',
+          authorizationCode: 'auth-code',
+          deviceId: 'dev-2',
+        );
+        const response = OAuthLoginResponse(
+          accessToken: 'at-apple',
+          refreshToken: 'rt-apple',
+          sessionId: 'sess-apple',
+          accountId: 'acc-apple',
+          expiresAt: '2026-12-31T23:59:59Z',
+          isNewAccount: true,
+        );
+
+        when(
+          () => mockAuthRepository.loginWithApple(request),
+        ).thenAnswer((_) async => response);
+        when(
+          () => mockTokenManager.saveTokens(
+            accessToken: any(named: 'accessToken'),
+            refreshToken: any(named: 'refreshToken'),
+            sessionId: any(named: 'sessionId'),
+            expiresAt: any(named: 'expiresAt'),
+          ),
+        ).thenAnswer((_) async {});
+
+        final states = <AuthState>[];
+        authService.authState.listen(states.add);
+
+        final result = await authService.loginWithApple(request);
+
+        expect(result.accessToken, 'at-apple');
+        expect(result.isNewAccount, isTrue);
+        expect(authService.currentState, AuthState.authenticated);
+        verify(
+          () => mockTokenManager.saveTokens(
+            accessToken: 'at-apple',
+            refreshToken: 'rt-apple',
+            sessionId: 'sess-apple',
+            expiresAt: '2026-12-31T23:59:59Z',
+          ),
+        ).called(1);
       });
     });
   });

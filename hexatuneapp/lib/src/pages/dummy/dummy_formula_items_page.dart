@@ -78,9 +78,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
 
   Future<List<InventoryResponse>> _fetchInventories() async {
     final invRepo = getIt<InventoryRepository>();
-    final resp = await invRepo.list(
-      params: const PaginationParams(limit: 100),
-    );
+    final resp = await invRepo.list(params: const PaginationParams(limit: 100));
     return resp.data;
   }
 
@@ -270,9 +268,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
           items: _items
               .asMap()
               .entries
-              .map(
-                (e) => ReorderEntry(itemId: e.value.id, sortOrder: e.key),
-              )
+              .map((e) => ReorderEntry(itemId: e.value.id, sortOrder: e.key))
               .toList(),
         ),
       );

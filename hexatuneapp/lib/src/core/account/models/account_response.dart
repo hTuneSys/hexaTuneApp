@@ -11,10 +11,11 @@ part 'account_response.g.dart';
 abstract class AccountResponse with _$AccountResponse {
   const factory AccountResponse({
     required String id,
-    required String email,
     required String status,
     required String createdAt,
     required String updatedAt,
+    String? lockedAt,
+    String? suspendedAt,
   }) = _AccountResponse;
 
   factory AccountResponse.fromJson(Map<String, dynamic> json) =>

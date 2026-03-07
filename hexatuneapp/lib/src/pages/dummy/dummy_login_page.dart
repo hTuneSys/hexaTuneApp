@@ -6,7 +6,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_service.dart';
+import 'package:hexatuneapp/src/core/auth/models/apple_auth_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_request.dart';
+import 'package:hexatuneapp/src/core/auth/oauth_service.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/device/device_service.dart';
@@ -29,14 +32,22 @@ class DummyLoginPage extends StatefulWidget {
 class _DummyLoginPageState extends State<DummyLoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _googleTokenController = TextEditingController();
+  final _appleTokenController = TextEditingController();
   bool _isLoading = false;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _googleTokenController.dispose();
+    _appleTokenController.dispose();
     super.dispose();
   }
+
+  // ---------------------------------------------------------------------------
+  // Email login
+  // ---------------------------------------------------------------------------
 
   Future<void> _login() async {
     final email = _emailController.text.trim();
@@ -77,30 +88,179 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         );
       }
 
-      // Register push token after successful login.
       await _registerPushToken();
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Login failed: $e', category: LogCategory.ui);
+      }
+      _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
-      // Router will auto-redirect to home via auth state change.
+  // ---------------------------------------------------------------------------
+  // Real OAuth flows (native SDK)
+  // ---------------------------------------------------------------------------
+
+  Future<void> _signInWithGoogle() async {
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+
+    try {
+      final oauthService = getIt<OAuthService>();
+      final authService = getIt<AuthService>();
+
+      final request = await oauthService.signInWithGoogle();
+      final response = await authService.loginWithGoogle(request);
+
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Google sign-in success: sessionId=${response.sessionId}, '
+          'isNewAccount=${response.isNewAccount}',
+          category: LogCategory.ui,
+        );
+      }
+
+      if (mounted && response.isNewAccount) {
+        _showInfo('New account created via Google');
+      }
+
+      await _registerPushToken();
+    } on OAuthCancelledException {
+      if (Env.isDev) {
+        log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
+      }
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
+      }
+      _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signInWithApple() async {
+    final oauthService = getIt<OAuthService>();
+    if (!oauthService.isAppleSignInAvailable) {
+      _showError('Apple Sign-In is only available on iOS');
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+
+    try {
+      final authService = getIt<AuthService>();
+
+      final request = await oauthService.signInWithApple();
+      final response = await authService.loginWithApple(request);
+
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Apple sign-in success: sessionId=${response.sessionId}, '
+          'isNewAccount=${response.isNewAccount}',
+          category: LogCategory.ui,
+        );
+      }
+
+      if (mounted && response.isNewAccount) {
+        _showInfo('New account created via Apple');
+      }
+
+      await _registerPushToken();
+    } on OAuthCancelledException {
+      if (Env.isDev) {
+        log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
+      }
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
+      }
+      _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Manual token login (Advanced — for debugging)
+  // ---------------------------------------------------------------------------
+
+  Future<void> _loginWithManualGoogleToken() async {
+    final idToken = _googleTokenController.text.trim();
+    if (idToken.isEmpty) {
+      _showError('Google ID token is required');
+      return;
+    }
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+    try {
+      final authService = getIt<AuthService>();
+      final deviceService = getIt<DeviceService>();
+      final response = await authService.loginWithGoogle(
+        GoogleAuthRequest(idToken: idToken, deviceId: deviceService.deviceId),
+      );
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Manual Google login: sessionId=${response.sessionId}',
+          category: LogCategory.ui,
+        );
+      }
+      await _registerPushToken();
     } catch (e) {
       if (Env.isDev) {
         log.devLog(
-          '✗ Login failed: $e',
+          '✗ Manual Google login failed: $e',
           category: LogCategory.ui,
         );
       }
       _showError(e.toString());
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
-      }
+      if (mounted) setState(() => _isLoading = false);
     }
   }
+
+  Future<void> _loginWithManualAppleToken() async {
+    final idToken = _appleTokenController.text.trim();
+    if (idToken.isEmpty) {
+      _showError('Apple ID token is required');
+      return;
+    }
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+    try {
+      final authService = getIt<AuthService>();
+      final deviceService = getIt<DeviceService>();
+      final response = await authService.loginWithApple(
+        AppleAuthRequest(idToken: idToken, deviceId: deviceService.deviceId),
+      );
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Manual Apple login: sessionId=${response.sessionId}',
+          category: LogCategory.ui,
+        );
+      }
+      await _registerPushToken();
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Manual Apple login failed: $e', category: LogCategory.ui);
+      }
+      _showError(e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Push token registration
+  // ---------------------------------------------------------------------------
 
   Future<void> _registerPushToken() async {
     try {
       final notificationService = getIt<NotificationService>();
 
-      // Attempt to initialize notification service if not already done.
       if (notificationService.fcmToken == null) {
         if (Env.isDev) {
           getIt<LogService>().devLog(
@@ -148,12 +308,30 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
   void _showError(String message) {
     if (!mounted) return;
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
   }
+
+  void _showInfo(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Build
+  // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -169,6 +347,8 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 48),
+
+              // — Email login —
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -207,6 +387,85 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
               TextButton(
                 onPressed: () => context.go(RouteNames.register),
                 child: const Text('or Sign Up'),
+              ),
+
+              // — OAuth sign-in (real SDK flow) —
+              const Divider(height: 48),
+              Text(
+                'OAuth Sign-In',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithGoogle,
+                  icon: const Icon(Icons.g_mobiledata),
+                  label: const Text('Sign in with Google'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signInWithApple,
+                  icon: const Icon(Icons.apple),
+                  label: const Text('Sign in with Apple'),
+                ),
+              ),
+
+              // — Advanced: manual token entry —
+              const SizedBox(height: 24),
+              ExpansionTile(
+                title: const Text('Advanced: Manual Token'),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      children: [
+                        TextField(
+                          controller: _googleTokenController,
+                          decoration: const InputDecoration(
+                            labelText: 'Google ID Token',
+                            border: OutlineInputBorder(),
+                            helperText: 'Paste a Google ID token for testing',
+                          ),
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: _isLoading
+                                ? null
+                                : _loginWithManualGoogleToken,
+                            child: const Text('Submit Google Token'),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        TextField(
+                          controller: _appleTokenController,
+                          decoration: const InputDecoration(
+                            labelText: 'Apple ID Token',
+                            border: OutlineInputBorder(),
+                            helperText: 'Paste an Apple ID token for testing',
+                          ),
+                          maxLines: 2,
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: _isLoading
+                                ? null
+                                : _loginWithManualAppleToken,
+                            child: const Text('Submit Apple Token'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

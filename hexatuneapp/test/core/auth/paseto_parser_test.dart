@@ -56,9 +56,7 @@ void main() {
 
     group('parseExpiry', () {
       test('returns DateTime for valid exp claim', () {
-        final token = buildTestToken({
-          'exp': '2026-03-03T04:54:54+00:00',
-        });
+        final token = buildTestToken({'exp': '2026-03-03T04:54:54+00:00'});
         final expiry = PasetoParser.parseExpiry(token);
 
         expect(expiry, isNotNull);

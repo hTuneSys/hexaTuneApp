@@ -1,6 +1,75 @@
 {
   "@@locale": "tr",
 
-  "app":"hexaTune",
-  "appName": "hexaTune App"
+  "app": "hexaTune",
+  "appName": "hexaTune App",
+
+  "signInTitle": "Giriş yap",
+  "signIn": "Giriş Yap",
+  "signUp": "Kayıt Ol",
+  "emailAddress": "E-posta adresi",
+  "password": "Şifre",
+  "confirmPassword": "Şifreyi onayla",
+  "newPassword": "Yeni Şifre",
+  "orContinueWith": "veya şununla devam et",
+  "apple": "Apple",
+  "google": "Google",
+
+  "forgotPasswordQuestion": "Şifrenizi mi unuttunuz?",
+  "dontHaveAccountPrefix": "Hesabınız yok mu? ",
+  "createAccount": "Hesap oluştur",
+  "createAnAccount": "Hesap oluştur",
+  "signUpSubtitle": "Başlamak için kayıt olun!",
+  "alreadyHaveAccountPrefix": "Zaten bir hesabınız var mı? ",
+  "signInLink": "Giriş Yap",
+
+  "forgotPasswordTitle": "Şifremi Unuttum",
+  "forgotPasswordSubtitle": "Sıfırlama kodu almak için e-postanızı girin.",
+  "sendResetCode": "Sıfırlama Kodu Gönder",
+
+  "enterOtpCode": "OTP Kodunu Girin",
+  "verificationCodeSentTo": "Doğrulama kodunu gönderdik:",
+  "enterDigitCodeBelow": "Lütfen aşağıdaki 8 haneli kodu girin.",
+  "verify": "Doğrula",
+  "didntReceiveCode": "Kodu almadınız mı?",
+  "resendIn": "{time} sonra tekrar gönder",
+  "@resendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Kodu Tekrar Gönder",
+
+  "resetYourPassword": "Şifrenizi Sıfırlayın",
+  "resetPasswordSubtitle": "Yeni bir şifre oluşturmak için kodu girin.",
+  "resetPassword": "Şifreyi Sıfırla",
+
+  "passwordStrengthWeak": "zayıf",
+  "passwordStrengthFair": "orta",
+  "passwordStrengthGood": "iyi",
+  "passwordStrengthStrong": "güçlü",
+
+  "emailRequired": "E-posta gerekli",
+  "passwordRequired": "Şifre gerekli",
+  "emailAndPasswordRequired": "E-posta ve şifre gerekli",
+  "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+  "otpRequired": "Lütfen doğrulama kodunu girin",
+
+  "emailVerifiedSignIn": "E-posta doğrulandı! Lütfen giriş yapın.",
+  "passwordResetSuccess": "Şifre başarıyla sıfırlandı!",
+  "otpSentTo": "Sıfırlama kodu {email} adresine gönderildi",
+  "@otpSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeResent": "Doğrulama kodu tekrar gönderildi",
+  "accountCreatedVerifyEmail": "Hesap oluşturuldu! Lütfen e-postanızı doğrulayın.",
+  "newAccountViaGoogle": "Google ile yeni hesap oluşturuldu",
+  "newAccountViaApple": "Apple ile yeni hesap oluşturuldu",
+  "appleSignInNotAvailable": "Apple ile giriş yalnızca iOS'ta kullanılabilir"
 }

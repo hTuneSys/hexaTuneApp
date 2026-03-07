@@ -1,7 +1,75 @@
 {
   "@@locale": "en",
 
-  "app":"hexaTune",
-  "appName": "hexaTune App"
+  "app": "hexaTune",
+  "appName": "hexaTune App",
 
-  }
+  "signInTitle": "Sign in",
+  "signIn": "Sign In",
+  "signUp": "Sign Up",
+  "emailAddress": "Email address",
+  "password": "Password",
+  "confirmPassword": "Confirm password",
+  "newPassword": "New Password",
+  "orContinueWith": "or continue with",
+  "apple": "Apple",
+  "google": "Google",
+
+  "forgotPasswordQuestion": "Forgot Password?",
+  "dontHaveAccountPrefix": "Don't have an account? ",
+  "createAccount": "Create account",
+  "createAnAccount": "Create an account",
+  "signUpSubtitle": "Sign up to get started!",
+  "alreadyHaveAccountPrefix": "Already have an account? ",
+  "signInLink": "Sign In",
+
+  "forgotPasswordTitle": "Forgot Password",
+  "forgotPasswordSubtitle": "Enter your email to receive a reset code.",
+  "sendResetCode": "Send Reset Code",
+
+  "enterOtpCode": "Enter OTP Code",
+  "verificationCodeSentTo": "We have sent a verification code to:",
+  "enterDigitCodeBelow": "Please enter the 8-digit code below.",
+  "verify": "Verify",
+  "didntReceiveCode": "Didn't receive the code?",
+  "resendIn": "Resend in {time}",
+  "@resendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Resend Code",
+
+  "resetYourPassword": "Reset Your Password",
+  "resetPasswordSubtitle": "Enter the code to create a new password.",
+  "resetPassword": "Reset Password",
+
+  "passwordStrengthWeak": "weak",
+  "passwordStrengthFair": "fair",
+  "passwordStrengthGood": "good",
+  "passwordStrengthStrong": "strong",
+
+  "emailRequired": "Email is required",
+  "passwordRequired": "Password is required",
+  "emailAndPasswordRequired": "Email and password are required",
+  "passwordsDoNotMatch": "Passwords do not match",
+  "otpRequired": "Please enter the verification code",
+
+  "emailVerifiedSignIn": "Email verified! Please sign in.",
+  "passwordResetSuccess": "Password reset successfully!",
+  "otpSentTo": "Reset code sent to {email}",
+  "@otpSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeResent": "Verification code resent",
+  "accountCreatedVerifyEmail": "Account created! Please verify your email.",
+  "newAccountViaGoogle": "New account created via Google",
+  "newAccountViaApple": "New account created via Apple",
+  "appleSignInNotAvailable": "Apple Sign-In is only available on iOS"
+}

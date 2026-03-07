@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AccountResponse {
 
- String get id; String get email; String get status; String get createdAt; String get updatedAt;
+ String get id; String get status; String get createdAt; String get updatedAt; String? get lockedAt; String? get suspendedAt;
 /// Create a copy of AccountResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AccountResponseCopyWith<AccountResponse> get copyWith => _$AccountResponseCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.suspendedAt, suspendedAt) || other.suspendedAt == suspendedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,status,createdAt,updatedAt,lockedAt,suspendedAt);
 
 @override
 String toString() {
-  return 'AccountResponse(id: $id, email: $email, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'AccountResponse(id: $id, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, lockedAt: $lockedAt, suspendedAt: $suspendedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AccountResponseCopyWith<$Res>  {
   factory $AccountResponseCopyWith(AccountResponse value, $Res Function(AccountResponse) _then) = _$AccountResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String email, String status, String createdAt, String updatedAt
+ String id, String status, String createdAt, String updatedAt, String? lockedAt, String? suspendedAt
 });
 
 
@@ -65,14 +65,15 @@ class _$AccountResponseCopyWithImpl<$Res>
 
 /// Create a copy of AccountResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? status = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? updatedAt = null,Object? lockedAt = freezed,Object? suspendedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String,lockedAt: freezed == lockedAt ? _self.lockedAt : lockedAt // ignore: cast_nullable_to_non_nullable
+as String?,suspendedAt: freezed == suspendedAt ? _self.suspendedAt : suspendedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String status,  String createdAt,  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  String updatedAt,  String? lockedAt,  String? suspendedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AccountResponse() when $default != null:
-return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.status,_that.createdAt,_that.updatedAt,_that.lockedAt,_that.suspendedAt);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String status,  String createdAt,  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status,  String createdAt,  String updatedAt,  String? lockedAt,  String? suspendedAt)  $default,) {final _that = this;
 switch (_that) {
 case _AccountResponse():
-return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.status,_that.createdAt,_that.updatedAt,_that.lockedAt,_that.suspendedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedA
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String status,  String createdAt,  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status,  String createdAt,  String updatedAt,  String? lockedAt,  String? suspendedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _AccountResponse() when $default != null:
-return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.status,_that.createdAt,_that.updatedAt,_that.lockedAt,_that.suspendedAt);case _:
   return null;
 
 }
@@ -213,14 +214,15 @@ return $default(_that.id,_that.email,_that.status,_that.createdAt,_that.updatedA
 @JsonSerializable()
 
 class _AccountResponse implements AccountResponse {
-  const _AccountResponse({required this.id, required this.email, required this.status, required this.createdAt, required this.updatedAt});
+  const _AccountResponse({required this.id, required this.status, required this.createdAt, required this.updatedAt, this.lockedAt, this.suspendedAt});
   factory _AccountResponse.fromJson(Map<String, dynamic> json) => _$AccountResponseFromJson(json);
 
 @override final  String id;
-@override final  String email;
 @override final  String status;
 @override final  String createdAt;
 @override final  String updatedAt;
+@override final  String? lockedAt;
+@override final  String? suspendedAt;
 
 /// Create a copy of AccountResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.lockedAt, lockedAt) || other.lockedAt == lockedAt)&&(identical(other.suspendedAt, suspendedAt) || other.suspendedAt == suspendedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,email,status,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,status,createdAt,updatedAt,lockedAt,suspendedAt);
 
 @override
 String toString() {
-  return 'AccountResponse(id: $id, email: $email, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'AccountResponse(id: $id, status: $status, createdAt: $createdAt, updatedAt: $updatedAt, lockedAt: $lockedAt, suspendedAt: $suspendedAt)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$AccountResponseCopyWith<$Res> implements $AccountResponse
   factory _$AccountResponseCopyWith(_AccountResponse value, $Res Function(_AccountResponse) _then) = __$AccountResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String email, String status, String createdAt, String updatedAt
+ String id, String status, String createdAt, String updatedAt, String? lockedAt, String? suspendedAt
 });
 
 
@@ -272,14 +274,15 @@ class __$AccountResponseCopyWithImpl<$Res>
 
 /// Create a copy of AccountResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? status = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? createdAt = null,Object? updatedAt = null,Object? lockedAt = freezed,Object? suspendedAt = freezed,}) {
   return _then(_AccountResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as String,
+as String,lockedAt: freezed == lockedAt ? _self.lockedAt : lockedAt // ignore: cast_nullable_to_non_nullable
+as String?,suspendedAt: freezed == suspendedAt ? _self.suspendedAt : suspendedAt // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

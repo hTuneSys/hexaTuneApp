@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ResetPasswordRequest {
 
- String get token; String get newPassword;
+ String get email; String get code; String get newPassword;
 /// Create a copy of ResetPasswordRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ResetPasswordRequestCopyWith<ResetPasswordRequest> get copyWith => _$ResetPassw
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ResetPasswordRequest&&(identical(other.email, email) || other.email == email)&&(identical(other.code, code) || other.code == code)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,newPassword);
+int get hashCode => Object.hash(runtimeType,email,code,newPassword);
 
 @override
 String toString() {
-  return 'ResetPasswordRequest(token: $token, newPassword: $newPassword)';
+  return 'ResetPasswordRequest(email: $email, code: $code, newPassword: $newPassword)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ResetPasswordRequestCopyWith<$Res>  {
   factory $ResetPasswordRequestCopyWith(ResetPasswordRequest value, $Res Function(ResetPasswordRequest) _then) = _$ResetPasswordRequestCopyWithImpl;
 @useResult
 $Res call({
- String token, String newPassword
+ String email, String code, String newPassword
 });
 
 
@@ -65,9 +65,10 @@ class _$ResetPasswordRequestCopyWithImpl<$Res>
 
 /// Create a copy of ResetPasswordRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? newPassword = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? email = null,Object? code = null,Object? newPassword = null,}) {
   return _then(_self.copyWith(
-token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String newPassword)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String email,  String code,  String newPassword)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ResetPasswordRequest() when $default != null:
-return $default(_that.token,_that.newPassword);case _:
+return $default(_that.email,_that.code,_that.newPassword);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.token,_that.newPassword);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String newPassword)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String email,  String code,  String newPassword)  $default,) {final _that = this;
 switch (_that) {
 case _ResetPasswordRequest():
-return $default(_that.token,_that.newPassword);case _:
+return $default(_that.email,_that.code,_that.newPassword);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.token,_that.newPassword);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String newPassword)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String email,  String code,  String newPassword)?  $default,) {final _that = this;
 switch (_that) {
 case _ResetPasswordRequest() when $default != null:
-return $default(_that.token,_that.newPassword);case _:
+return $default(_that.email,_that.code,_that.newPassword);case _:
   return null;
 
 }
@@ -210,10 +211,11 @@ return $default(_that.token,_that.newPassword);case _:
 @JsonSerializable()
 
 class _ResetPasswordRequest implements ResetPasswordRequest {
-  const _ResetPasswordRequest({required this.token, required this.newPassword});
+  const _ResetPasswordRequest({required this.email, required this.code, required this.newPassword});
   factory _ResetPasswordRequest.fromJson(Map<String, dynamic> json) => _$ResetPasswordRequestFromJson(json);
 
-@override final  String token;
+@override final  String email;
+@override final  String code;
 @override final  String newPassword;
 
 /// Create a copy of ResetPasswordRequest
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPasswordRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ResetPasswordRequest&&(identical(other.email, email) || other.email == email)&&(identical(other.code, code) || other.code == code)&&(identical(other.newPassword, newPassword) || other.newPassword == newPassword));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,newPassword);
+int get hashCode => Object.hash(runtimeType,email,code,newPassword);
 
 @override
 String toString() {
-  return 'ResetPasswordRequest(token: $token, newPassword: $newPassword)';
+  return 'ResetPasswordRequest(email: $email, code: $code, newPassword: $newPassword)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$ResetPasswordRequestCopyWith<$Res> implements $ResetPassw
   factory _$ResetPasswordRequestCopyWith(_ResetPasswordRequest value, $Res Function(_ResetPasswordRequest) _then) = __$ResetPasswordRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String token, String newPassword
+ String email, String code, String newPassword
 });
 
 
@@ -266,9 +268,10 @@ class __$ResetPasswordRequestCopyWithImpl<$Res>
 
 /// Create a copy of ResetPasswordRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? newPassword = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? email = null,Object? code = null,Object? newPassword = null,}) {
   return _then(_ResetPasswordRequest(
-token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,newPassword: null == newPassword ? _self.newPassword : newPassword // ignore: cast_nullable_to_non_nullable
 as String,
   ));

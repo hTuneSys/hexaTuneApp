@@ -245,27 +245,21 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SelectableText('ID: ${entry.id}'),
-                                    SelectableText(
-                                      'Tenant: ${entry.tenantId}',
-                                    ),
+                                    SelectableText('Tenant: ${entry.tenantId}'),
                                     SelectableText(
                                       'Actor: ${entry.actorType} / ${entry.actorId ?? "—"}',
                                     ),
                                     SelectableText(
                                       'Resource: ${entry.resourceType} / ${entry.resourceId ?? "—"}',
                                     ),
-                                    SelectableText(
-                                      'Outcome: ${entry.outcome}',
-                                    ),
+                                    SelectableText('Outcome: ${entry.outcome}'),
                                     SelectableText(
                                       'Severity: ${entry.severity}',
                                     ),
                                     SelectableText(
                                       'Trace ID: ${entry.traceId}',
                                     ),
-                                    SelectableText(
-                                      'PII: ${entry.containsPii}',
-                                    ),
+                                    SelectableText('PII: ${entry.containsPii}'),
                                     SelectableText(
                                       'Occurred: ${entry.occurredAt}',
                                     ),

@@ -19,11 +19,16 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_formula_items_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_formulas_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_inventories_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_login_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_register_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
+import 'package:hexatuneapp/src/pages/shared/forgot_password_page.dart';
+import 'package:hexatuneapp/src/pages/shared/login_page.dart';
+import 'package:hexatuneapp/src/pages/shared/register_page.dart';
+import 'package:hexatuneapp/src/pages/shared/reset_password_page.dart';
+import 'package:hexatuneapp/src/pages/shared/splash_page.dart';
+import 'package:hexatuneapp/src/pages/shared/verify_email_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -40,21 +45,32 @@ class AppRouter {
     routes: [
       GoRoute(
         path: RouteNames.splash,
-        builder: (context, state) => const _PlaceholderPage(title: 'Loading'),
+        builder: (context, state) => const SplashPage(),
       ),
       GoRoute(
         path: RouteNames.login,
-        builder: (context, state) => const DummyLoginPage(),
+        builder: (context, state) => const LoginPage(),
       ),
       GoRoute(
         path: RouteNames.register,
-        builder: (context, state) => const DummyRegisterPage(),
+        builder: (context, state) => const RegisterPage(),
       ),
       GoRoute(
         path: RouteNames.verifyEmail,
         builder: (context, state) {
           final email = state.uri.queryParameters['email'] ?? '';
-          return DummyOtpPage(email: email);
+          return VerifyEmailPage(email: email);
+        },
+      ),
+      GoRoute(
+        path: RouteNames.forgotPassword,
+        builder: (context, state) => const ForgotPasswordPage(),
+      ),
+      GoRoute(
+        path: RouteNames.resetPassword,
+        builder: (context, state) {
+          final email = state.uri.queryParameters['email'] ?? '';
+          return ResetPasswordPage(email: email);
         },
       ),
       GoRoute(
@@ -86,6 +102,14 @@ class AppRouter {
       GoRoute(
         path: RouteNames.devices,
         builder: (context, state) => const DummyDevicesPage(),
+      ),
+      GoRoute(
+        path: RouteNames.providers,
+        builder: (context, state) => const DummyProvidersPage(),
+      ),
+      GoRoute(
+        path: RouteNames.tenants,
+        builder: (context, state) => const DummyTenantsPage(),
       ),
       GoRoute(
         path: RouteNames.categories,
@@ -123,8 +147,9 @@ class AppRouter {
 
     // Still initializing — stay on splash.
     if (authState == AuthState.unknown) {
-      final decision =
-          currentPath == RouteNames.splash ? null : RouteNames.splash;
+      final decision = currentPath == RouteNames.splash
+          ? null
+          : RouteNames.splash;
       _logRedirect(currentPath, authState, decision);
       return decision;
     }
@@ -132,11 +157,14 @@ class AppRouter {
     final isOnPublicPage =
         currentPath == RouteNames.login ||
         currentPath == RouteNames.register ||
-        currentPath == RouteNames.verifyEmail;
+        currentPath == RouteNames.verifyEmail ||
+        currentPath == RouteNames.forgotPassword ||
+        currentPath == RouteNames.resetPassword;
     final isAuthenticated = authState == AuthState.authenticated;
 
     // Authenticated user on splash or public page → go to home.
-    if (isAuthenticated && (isOnPublicPage || currentPath == RouteNames.splash)) {
+    if (isAuthenticated &&
+        (isOnPublicPage || currentPath == RouteNames.splash)) {
       _logRedirect(currentPath, authState, RouteNames.home);
       return RouteNames.home;
     }

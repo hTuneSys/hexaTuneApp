@@ -136,8 +136,9 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
         CreateTaskRequest(
           taskType: typeCtrl.text.trim(),
           payload: payload,
-          cronExpression:
-              cronCtrl.text.trim().isEmpty ? null : cronCtrl.text.trim(),
+          cronExpression: cronCtrl.text.trim().isEmpty
+              ? null
+              : cronCtrl.text.trim(),
         ),
       );
       if (mounted) {
@@ -257,8 +258,9 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
       await repo.cancel(
         taskId,
         CancelTaskRequest(
-          reason:
-              reasonCtrl.text.trim().isEmpty ? null : reasonCtrl.text.trim(),
+          reason: reasonCtrl.text.trim().isEmpty
+              ? null
+              : reasonCtrl.text.trim(),
         ),
       );
       if (mounted) {
@@ -323,7 +325,14 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
             child: Wrap(
               spacing: 8,
               children: [
-                for (final s in [null, 'pending', 'running', 'completed', 'failed', 'cancelled'])
+                for (final s in [
+                  null,
+                  'pending',
+                  'running',
+                  'completed',
+                  'failed',
+                  'cancelled',
+                ])
                   ChoiceChip(
                     label: Text(s ?? 'All'),
                     selected: _statusFilter == s,

@@ -4,7 +4,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/auth/models/create_account_request.dart';
+import 'package:hexatuneapp/src/core/auth/oauth_service.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
@@ -67,20 +69,99 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       if (!mounted) return;
       _showMessage('Account created! Please verify your email.');
 
-      // Navigate to OTP verification page with the registered email.
-      context.go('${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}');
+      context.go(
+        '${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}',
+      );
     } catch (e) {
       if (Env.isDev) {
-        log.devLog(
-          '✗ Register failed: $e',
-          category: LogCategory.ui,
-        );
+        log.devLog('✗ Register failed: $e', category: LogCategory.ui);
       }
       _showMessage(e.toString(), isError: true);
     } finally {
-      if (mounted) {
-        setState(() => _isLoading = false);
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signUpWithGoogle() async {
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+
+    try {
+      final oauthService = getIt<OAuthService>();
+      final authService = getIt<AuthService>();
+
+      final request = await oauthService.signInWithGoogle();
+      final response = await authService.loginWithGoogle(request);
+
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Google sign-up: sessionId=${response.sessionId}, '
+          'isNewAccount=${response.isNewAccount}',
+          category: LogCategory.ui,
+        );
       }
+
+      if (!mounted) return;
+      if (response.isNewAccount) {
+        _showMessage('Account created via Google!');
+      } else {
+        _showMessage('Logged in — account already existed', isError: false);
+      }
+    } on OAuthCancelledException {
+      if (Env.isDev) {
+        log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
+      }
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
+      }
+      _showMessage(e.toString(), isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signUpWithApple() async {
+    final oauthService = getIt<OAuthService>();
+    if (!oauthService.isAppleSignInAvailable) {
+      _showMessage('Apple Sign-In is only available on iOS', isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    final log = getIt<LogService>();
+
+    try {
+      final authService = getIt<AuthService>();
+
+      final request = await oauthService.signInWithApple();
+      final response = await authService.loginWithApple(request);
+
+      if (Env.isDev) {
+        log.devLog(
+          '✓ Apple sign-up: sessionId=${response.sessionId}, '
+          'isNewAccount=${response.isNewAccount}',
+          category: LogCategory.ui,
+        );
+      }
+
+      if (!mounted) return;
+      if (response.isNewAccount) {
+        _showMessage('Account created via Apple!');
+      } else {
+        _showMessage('Logged in — account already existed', isError: false);
+      }
+    } on OAuthCancelledException {
+      if (Env.isDev) {
+        log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
+      }
+    } catch (e) {
+      if (Env.isDev) {
+        log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
+      }
+      _showMessage(e.toString(), isError: true);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
   }
 
@@ -108,6 +189,8 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
               const SizedBox(height: 48),
+
+              // — Email registration —
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -146,6 +229,31 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
               TextButton(
                 onPressed: () => context.go(RouteNames.login),
                 child: const Text('or Sign In'),
+              ),
+
+              // — OAuth sign-up (unified endpoint) —
+              const Divider(height: 48),
+              Text(
+                'OAuth Sign-Up',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signUpWithGoogle,
+                  icon: const Icon(Icons.g_mobiledata),
+                  label: const Text('Sign up with Google'),
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: _isLoading ? null : _signUpWithApple,
+                  icon: const Icon(Icons.apple),
+                  label: const Text('Sign up with Apple'),
+                ),
               ),
             ],
           ),

@@ -64,10 +64,7 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
         });
       }
       if (Env.isDev) {
-        log.devLog(
-          '✓ Account loaded: ${account.id}',
-          category: LogCategory.ui,
-        );
+        log.devLog('✓ Account loaded: ${account.id}', category: LogCategory.ui);
       }
     } catch (e) {
       if (Env.isDev) {
@@ -141,110 +138,110 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
       body: _isLoading && _account == null
           ? const Center(child: CircularProgressIndicator())
           : _error != null && _account == null
-              ? Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(_error!, style: theme.textTheme.bodyLarge),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _loadAccount,
-                        child: const Text('Retry'),
-                      ),
-                    ],
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(_error!, style: theme.textTheme.bodyLarge),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: _loadAccount,
+                    child: const Text('Retry'),
                   ),
-                )
-              : ListView(
-                  padding: const EdgeInsets.all(16),
-                  children: [
-                    // Account info
-                    Text('Account', style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    if (_account != null)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _infoRow('ID', _account!.id),
-                              _infoRow('Email', _account!.email),
-                              _infoRow('Status', _account!.status),
-                              _infoRow('Created', _account!.createdAt),
-                              _infoRow('Updated', _account!.updatedAt),
-                            ],
-                          ),
-                        ),
+                ],
+              ),
+            )
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // Account info
+                Text('Account', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 8),
+                if (_account != null)
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _infoRow('ID', _account!.id),
+                          _infoRow('Status', _account!.status),
+                          _infoRow('Created', _account!.createdAt),
+                          _infoRow('Updated', _account!.updatedAt),
+                          if (_account!.lockedAt != null)
+                            _infoRow('Locked At', _account!.lockedAt!),
+                          if (_account!.suspendedAt != null)
+                            _infoRow('Suspended At', _account!.suspendedAt!),
+                        ],
                       ),
-                    const Divider(height: 32),
+                    ),
+                  ),
+                const Divider(height: 32),
 
-                    // Profile
-                    Text('Profile', style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    if (_profile != null)
-                      Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              _infoRow('Account ID', _profile!.accountId),
-                              _infoRow(
-                                'Display Name',
-                                _profile!.displayName ?? '—',
-                              ),
-                              _infoRow(
-                                'Avatar URL',
-                                _profile!.avatarUrl ?? '—',
-                              ),
-                              _infoRow('Bio', _profile!.bio ?? '—'),
-                              _infoRow('Updated', _profile!.updatedAt),
-                            ],
+                // Profile
+                Text('Profile', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 8),
+                if (_profile != null)
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _infoRow('Account ID', _profile!.accountId),
+                          _infoRow(
+                            'Display Name',
+                            _profile!.displayName ?? '—',
                           ),
-                        ),
+                          _infoRow('Avatar URL', _profile!.avatarUrl ?? '—'),
+                          _infoRow('Bio', _profile!.bio ?? '—'),
+                          _infoRow('Updated', _profile!.updatedAt),
+                        ],
                       ),
-                    const Divider(height: 32),
+                    ),
+                  ),
+                const Divider(height: 32),
 
-                    // Update profile form
-                    Text('Update Profile', style: theme.textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _displayNameCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Display Name',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _avatarUrlCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Avatar URL',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: _bioCtrl,
-                      decoration: const InputDecoration(
-                        labelText: 'Bio',
-                        border: OutlineInputBorder(),
-                      ),
-                      maxLines: 3,
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: _isLoading ? null : _updateProfile,
-                      child: _isLoading
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            )
-                          : const Text('Save Profile'),
-                    ),
-                  ],
+                // Update profile form
+                Text('Update Profile', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _displayNameCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Display Name',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _avatarUrlCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Avatar URL',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TextField(
+                  controller: _bioCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Bio',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _updateProfile,
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Save Profile'),
+                ),
+              ],
+            ),
     );
   }
 
@@ -256,14 +253,9 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
         children: [
           SizedBox(
             width: 100,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
+            child: Text(label, style: Theme.of(context).textTheme.bodySmall),
           ),
-          Expanded(
-            child: SelectableText(value),
-          ),
+          Expanded(child: SelectableText(value)),
         ],
       ),
     );

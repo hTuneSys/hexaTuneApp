@@ -41,6 +41,18 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.devices,
     ),
     _NavItem(
+      icon: Icons.link,
+      title: 'Providers',
+      subtitle: 'Link/unlink auth providers',
+      route: RouteNames.providers,
+    ),
+    _NavItem(
+      icon: Icons.business,
+      title: 'Tenants',
+      subtitle: 'Memberships, switch tenant',
+      route: RouteNames.tenants,
+    ),
+    _NavItem(
       icon: Icons.category,
       title: 'Categories',
       subtitle: 'CRUD + search',
@@ -85,17 +97,11 @@ class DummyHomePage extends StatelessWidget {
             onPressed: () async {
               final log = getIt<LogService>();
               if (Env.isDev) {
-                log.devLog(
-                  '→ Logout button tapped',
-                  category: LogCategory.ui,
-                );
+                log.devLog('→ Logout button tapped', category: LogCategory.ui);
               }
               await getIt<AuthService>().logout();
               if (Env.isDev) {
-                log.devLog(
-                  '✓ Logout complete',
-                  category: LogCategory.ui,
-                );
+                log.devLog('✓ Logout complete', category: LogCategory.ui);
               }
             },
           ),

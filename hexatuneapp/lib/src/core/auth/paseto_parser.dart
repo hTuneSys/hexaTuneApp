@@ -32,8 +32,10 @@ class PasetoParser {
       if (decoded.length <= _signatureLength) return null;
 
       // Message is everything except the trailing 64-byte signature.
-      final messageBytes =
-          decoded.sublist(0, decoded.length - _signatureLength);
+      final messageBytes = decoded.sublist(
+        0,
+        decoded.length - _signatureLength,
+      );
       final jsonStr = utf8.decode(messageBytes);
       return json.decode(jsonStr) as Map<String, dynamic>;
     } catch (_) {

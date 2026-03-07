@@ -72,8 +72,9 @@ void main() {
       when(() => mockNotif.fcmToken).thenReturn(null);
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
       when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
-      when(() => mockAuth.authEvents)
-          .thenAnswer((_) => const Stream<AuthEvent>.empty());
+      when(
+        () => mockAuth.authEvents,
+      ).thenAnswer((_) => const Stream<AuthEvent>.empty());
 
       await AppBootstrap.initialize();
 
@@ -97,8 +98,9 @@ void main() {
       when(() => mockNotif.init()).thenThrow(Exception('No Firebase'));
       when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
       when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
-      when(() => mockAuth.authEvents)
-          .thenAnswer((_) => const Stream<AuthEvent>.empty());
+      when(
+        () => mockAuth.authEvents,
+      ).thenAnswer((_) => const Stream<AuthEvent>.empty());
 
       // Should not throw despite notification failure.
       await AppBootstrap.initialize();

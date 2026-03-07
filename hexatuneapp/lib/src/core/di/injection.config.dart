@@ -14,6 +14,9 @@ import 'package:hexatuneapp/src/core/account/account_repository.dart' as _i608;
 import 'package:hexatuneapp/src/core/audit/audit_repository.dart' as _i774;
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart' as _i1022;
 import 'package:hexatuneapp/src/core/auth/auth_service.dart' as _i386;
+import 'package:hexatuneapp/src/core/auth/oauth_service.dart' as _i523;
+import 'package:hexatuneapp/src/core/auth/provider_repository.dart' as _i432;
+import 'package:hexatuneapp/src/core/auth/tenant_repository.dart' as _i271;
 import 'package:hexatuneapp/src/core/auth/token_manager.dart' as _i1025;
 import 'package:hexatuneapp/src/core/category/category_repository.dart'
     as _i814;
@@ -88,6 +91,10 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i571.LogService>(),
       ),
     );
+    gh.singleton<_i523.OAuthService>(
+      () =>
+          _i523.OAuthService(gh<_i630.DeviceService>(), gh<_i571.LogService>()),
+    );
     gh.singleton<_i56.AuthInterceptor>(
       () => _i56.AuthInterceptor(
         gh<_i1025.TokenManager>(),
@@ -115,6 +122,16 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1022.AuthRepository>(
       () =>
           _i1022.AuthRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    );
+    gh.singleton<_i432.ProviderRepository>(
+      () => _i432.ProviderRepository(
+        gh<_i761.ApiClient>(),
+        gh<_i571.LogService>(),
+      ),
+    );
+    gh.singleton<_i271.TenantRepository>(
+      () =>
+          _i271.TenantRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
     gh.singleton<_i814.CategoryRepository>(
       () => _i814.CategoryRepository(

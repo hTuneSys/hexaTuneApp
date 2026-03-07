@@ -9,10 +9,8 @@ part 'forgot_password_request.g.dart';
 /// Request body for POST /api/v1/auth/forgot-password.
 @freezed
 abstract class ForgotPasswordRequest with _$ForgotPasswordRequest {
-  const factory ForgotPasswordRequest({
-    required String email,
-    String? tenantId,
-  }) = _ForgotPasswordRequest;
+  const factory ForgotPasswordRequest({required String email}) =
+      _ForgotPasswordRequest;
 
   factory ForgotPasswordRequest.fromJson(Map<String, dynamic> json) =>
       _$ForgotPasswordRequestFromJson(json);

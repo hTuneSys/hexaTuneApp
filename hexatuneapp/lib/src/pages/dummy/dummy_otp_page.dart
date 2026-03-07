@@ -58,10 +58,7 @@ class _DummyOtpPageState extends State<DummyOtpPage> {
       );
 
       if (Env.isDev) {
-        log.devLog(
-          '✓ Email verified successfully',
-          category: LogCategory.ui,
-        );
+        log.devLog('✓ Email verified successfully', category: LogCategory.ui);
       }
 
       if (!mounted) return;
@@ -95,10 +92,7 @@ class _DummyOtpPageState extends State<DummyOtpPage> {
       );
 
       if (Env.isDev) {
-        log.devLog(
-          '✓ Verification email resent',
-          category: LogCategory.ui,
-        );
+        log.devLog('✓ Verification email resent', category: LogCategory.ui);
       }
 
       if (mounted) _showMessage('Verification code resent to ${widget.email}');

@@ -155,8 +155,9 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
         context: context,
         builder: (ctx) {
           final nameCtrl = TextEditingController(text: detail.name);
-          final labelsCtrl =
-              TextEditingController(text: detail.labels.join(', '));
+          final labelsCtrl = TextEditingController(
+            text: detail.labels.join(', '),
+          );
           return AlertDialog(
             title: Text(detail.name),
             content: SingleChildScrollView(
@@ -192,9 +193,7 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(ctx);
-                  context.push(
-                    '/dev/formulas/${detail.id}/items',
-                  );
+                  context.push('/dev/formulas/${detail.id}/items');
                 },
                 child: const Text('Manage Items'),
               ),
@@ -321,8 +320,9 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
                   if (i == _formulas.length) {
                     return Center(
                       child: TextButton(
-                        onPressed:
-                            _isLoading ? null : () => _load(loadMore: true),
+                        onPressed: _isLoading
+                            ? null
+                            : () => _load(loadMore: true),
                         child: const Text('Load More'),
                       ),
                     );
@@ -333,9 +333,7 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
                       leading: const Icon(Icons.science),
                       title: Text(f.name),
                       subtitle: Text(
-                        f.labels.isEmpty
-                            ? 'No labels'
-                            : f.labels.join(', '),
+                        f.labels.isEmpty ? 'No labels' : f.labels.join(', '),
                       ),
                       trailing: Text(
                         f.id.substring(0, 8),

@@ -176,39 +176,39 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
       body: _isLoading && _sessions.isEmpty
           ? const Center(child: CircularProgressIndicator())
           : _error != null && _sessions.isEmpty
-              ? Center(child: Text(_error!))
-              : RefreshIndicator(
-                  onRefresh: () => _load(),
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(8),
-                    itemCount: _sessions.length + (_hasMore ? 1 : 0),
-                    itemBuilder: (ctx, i) {
-                      if (i == _sessions.length) {
-                        return Center(
-                          child: TextButton(
-                            onPressed: _isLoading
-                                ? null
-                                : () => _load(loadMore: true),
-                            child: const Text('Load More'),
-                          ),
-                        );
-                      }
-                      final s = _sessions[i];
-                      return Card(
-                        child: ListTile(
-                          leading: const Icon(Icons.devices),
-                          title: Text('Session ${s.id.substring(0, 8)}…'),
-                          subtitle: Text(
-                            'Device: ${s.deviceId.substring(0, 8)}…\n'
-                            'Created: ${s.createdAt}\n'
-                            'Expires: ${s.expiresAt}',
-                          ),
-                          isThreeLine: true,
-                        ),
-                      );
-                    },
-                  ),
-                ),
+          ? Center(child: Text(_error!))
+          : RefreshIndicator(
+              onRefresh: () => _load(),
+              child: ListView.builder(
+                padding: const EdgeInsets.all(8),
+                itemCount: _sessions.length + (_hasMore ? 1 : 0),
+                itemBuilder: (ctx, i) {
+                  if (i == _sessions.length) {
+                    return Center(
+                      child: TextButton(
+                        onPressed: _isLoading
+                            ? null
+                            : () => _load(loadMore: true),
+                        child: const Text('Load More'),
+                      ),
+                    );
+                  }
+                  final s = _sessions[i];
+                  return Card(
+                    child: ListTile(
+                      leading: const Icon(Icons.devices),
+                      title: Text('Session ${s.id.substring(0, 8)}…'),
+                      subtitle: Text(
+                        'Device: ${s.deviceId.substring(0, 8)}…\n'
+                        'Created: ${s.createdAt}\n'
+                        'Expires: ${s.expiresAt}',
+                      ),
+                      isThreeLine: true,
+                    ),
+                  );
+                },
+              ),
+            ),
     );
   }
 }

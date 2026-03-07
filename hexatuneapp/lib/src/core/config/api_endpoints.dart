@@ -9,7 +9,7 @@ class ApiEndpoints {
 
   static const String _v1 = '/api/v1';
 
-  // --- Authentication (9 endpoints) ---
+  // --- Authentication (12 endpoints) ---
   static const String login = '$_v1/auth/login';
   static const String register = '$_v1/auth/register';
   static const String logout = '$_v1/auth/logout';
@@ -17,8 +17,24 @@ class ApiEndpoints {
   static const String reAuth = '$_v1/auth/reauth';
   static const String forgotPassword = '$_v1/auth/forgot-password';
   static const String resetPassword = '$_v1/auth/reset-password';
+  static const String resendPasswordReset = '$_v1/auth/resend-password-reset';
   static const String verifyEmail = '$_v1/auth/verify-email';
   static const String resendVerification = '$_v1/auth/resend-verification';
+  static const String authGoogle = '$_v1/auth/google';
+  static const String authApple = '$_v1/auth/apple';
+
+  // --- Provider Management (5 endpoints) ---
+  static const String providers = '$_v1/accounts/me/providers';
+  static const String linkEmailProvider = '$_v1/auth/providers/email/link';
+  static const String linkGoogleProvider = '$_v1/auth/providers/google/link';
+  static const String linkAppleProvider = '$_v1/auth/providers/apple/link';
+
+  static String unlinkProvider(String providerType) =>
+      '$_v1/auth/providers/$providerType';
+
+  // --- Tenants (2 endpoints) ---
+  static const String tenants = '$_v1/accounts/me/tenants';
+  static const String switchTenant = '$_v1/auth/switch-tenant';
 
   // --- Accounts (1 endpoint) ---
   static const String account = '$_v1/accounts/me';

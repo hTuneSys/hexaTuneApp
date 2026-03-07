@@ -86,9 +86,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
 
   Future<List<CategoryResponse>> _fetchCategories() async {
     final catRepo = getIt<CategoryRepository>();
-    final resp = await catRepo.list(
-      params: const PaginationParams(limit: 100),
-    );
+    final resp = await catRepo.list(params: const PaginationParams(limit: 100));
     return resp.data;
   }
 
@@ -133,10 +131,8 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
                   ),
                   items: categories
                       .map(
-                        (c) => DropdownMenuItem(
-                          value: c.id,
-                          child: Text(c.name),
-                        ),
+                        (c) =>
+                            DropdownMenuItem(value: c.id, child: Text(c.name)),
                       )
                       .toList(),
                   onChanged: (val) {
@@ -219,8 +215,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
       await repo.create(
         categoryId: selectedCategoryId ?? '',
         name: nameCtrl.text.trim(),
-        description:
-            descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
+        description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
         imageFile: pickedImage != null ? XFile(pickedImage!.path) : null,
       );
@@ -365,10 +360,8 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
                   ),
                   items: categories
                       .map(
-                        (c) => DropdownMenuItem(
-                          value: c.id,
-                          child: Text(c.name),
-                        ),
+                        (c) =>
+                            DropdownMenuItem(value: c.id, child: Text(c.name)),
                       )
                       .toList(),
                   onChanged: (val) {
@@ -452,8 +445,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
         item.id,
         categoryId: selectedCategoryId,
         name: nameCtrl.text.trim().isEmpty ? null : nameCtrl.text.trim(),
-        description:
-            descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
+        description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
         imageFile: pickedImage != null ? XFile(pickedImage!.path) : null,
       );
@@ -540,8 +532,9 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
                   if (i == _items.length) {
                     return Center(
                       child: TextButton(
-                        onPressed:
-                            _isLoading ? null : () => _load(loadMore: true),
+                        onPressed: _isLoading
+                            ? null
+                            : () => _load(loadMore: true),
                         child: const Text('Load More'),
                       ),
                     );
@@ -550,9 +543,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
                   return Card(
                     child: ListTile(
                       leading: Icon(
-                        item.imageUploaded
-                            ? Icons.image
-                            : Icons.inventory_2,
+                        item.imageUploaded ? Icons.image : Icons.inventory_2,
                       ),
                       title: Text(item.name),
                       subtitle: Text(

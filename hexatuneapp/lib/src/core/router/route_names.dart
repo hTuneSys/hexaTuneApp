@@ -9,6 +9,8 @@ class RouteNames {
   static const String login = '/login';
   static const String register = '/register';
   static const String verifyEmail = '/verify-email';
+  static const String forgotPassword = '/forgot-password';
+  static const String resetPassword = '/reset-password';
   static const String home = '/home';
   static const String reAuth = '/re-auth';
   static const String deviceApproval = '/device-approval';
@@ -18,6 +20,8 @@ class RouteNames {
   static const String account = '/dev/account';
   static const String sessions = '/dev/sessions';
   static const String devices = '/dev/devices';
+  static const String providers = '/dev/providers';
+  static const String tenants = '/dev/tenants';
   static const String categories = '/dev/categories';
   static const String inventories = '/dev/inventories';
   static const String formulas = '/dev/formulas';

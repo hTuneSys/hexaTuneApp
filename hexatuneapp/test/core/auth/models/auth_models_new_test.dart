@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/auth/models/forgot_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/verify_email_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/resend_verification_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/resend_password_reset_request.dart';
 
 void main() {
   group('RefreshRequest', () {
@@ -146,28 +147,17 @@ void main() {
   });
 
   group('ForgotPasswordRequest', () {
-    test('fromJson with email and tenantId', () {
-      final json = {'email': 'forgot@test.com', 'tenantId': 'tenant-001'};
-      final request = ForgotPasswordRequest.fromJson(json);
-      expect(request.email, 'forgot@test.com');
-      expect(request.tenantId, 'tenant-001');
-    });
-
-    test('fromJson with email only (tenantId optional)', () {
+    test('fromJson with email', () {
       final json = {'email': 'forgot@test.com'};
       final request = ForgotPasswordRequest.fromJson(json);
       expect(request.email, 'forgot@test.com');
-      expect(request.tenantId, isNull);
     });
 
     test('toJson produces correct keys', () {
-      const request = ForgotPasswordRequest(
-        email: 'forgot@test.com',
-        tenantId: 'tenant-001',
-      );
+      const request = ForgotPasswordRequest(email: 'forgot@test.com');
       final json = request.toJson();
       expect(json['email'], 'forgot@test.com');
-      expect(json['tenantId'], 'tenant-001');
+      expect(json.containsKey('tenantId'), isFalse);
     });
 
     test('round-trip preserves values', () {
@@ -179,24 +169,36 @@ void main() {
 
   group('ResetPasswordRequest', () {
     test('fromJson creates instance', () {
-      final json = {'token': 'reset-tok', 'newPassword': 'newPass123'};
+      final json = {
+        'email': 'user@test.com',
+        'code': '12345678',
+        'newPassword': 'newPass123',
+      };
       final request = ResetPasswordRequest.fromJson(json);
-      expect(request.token, 'reset-tok');
+      expect(request.email, 'user@test.com');
+      expect(request.code, '12345678');
       expect(request.newPassword, 'newPass123');
     });
 
     test('toJson produces correct keys', () {
       const request = ResetPasswordRequest(
-        token: 'reset-tok',
+        email: 'user@test.com',
+        code: '12345678',
         newPassword: 'newPass123',
       );
       final json = request.toJson();
-      expect(json['token'], 'reset-tok');
+      expect(json['email'], 'user@test.com');
+      expect(json['code'], '12345678');
       expect(json['newPassword'], 'newPass123');
+      expect(json.containsKey('token'), isFalse);
     });
 
     test('round-trip preserves values', () {
-      const original = ResetPasswordRequest(token: 't', newPassword: 'p');
+      const original = ResetPasswordRequest(
+        email: 'e@t.com',
+        code: '99999999',
+        newPassword: 'p',
+      );
       final restored = ResetPasswordRequest.fromJson(original.toJson());
       expect(restored, original);
     });
@@ -243,6 +245,26 @@ void main() {
     test('round-trip preserves values', () {
       const original = ResendVerificationRequest(email: 'e');
       final restored = ResendVerificationRequest.fromJson(original.toJson());
+      expect(restored, original);
+    });
+  });
+
+  group('ResendPasswordResetRequest', () {
+    test('fromJson creates instance', () {
+      final json = {'email': 'reset@test.com'};
+      final request = ResendPasswordResetRequest.fromJson(json);
+      expect(request.email, 'reset@test.com');
+    });
+
+    test('toJson produces correct keys', () {
+      const request = ResendPasswordResetRequest(email: 'reset@test.com');
+      final json = request.toJson();
+      expect(json['email'], 'reset@test.com');
+    });
+
+    test('round-trip preserves values', () {
+      const original = ResendPasswordResetRequest(email: 'e');
+      final restored = ResendPasswordResetRequest.fromJson(original.toJson());
       expect(restored, original);
     });
   });

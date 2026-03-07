@@ -7,6 +7,7 @@ import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/auth/models/forgot_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/re_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/refresh_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/resend_password_reset_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
@@ -24,7 +25,8 @@ class DummyAuthExtrasPage extends StatefulWidget {
 
 class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
   final _forgotEmailCtrl = TextEditingController();
-  final _resetTokenCtrl = TextEditingController();
+  final _resetEmailCtrl = TextEditingController();
+  final _resetCodeCtrl = TextEditingController();
   final _resetPasswordCtrl = TextEditingController();
   final _reAuthPasswordCtrl = TextEditingController();
   String? _resultText;
@@ -33,7 +35,8 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
   @override
   void dispose() {
     _forgotEmailCtrl.dispose();
-    _resetTokenCtrl.dispose();
+    _resetEmailCtrl.dispose();
+    _resetCodeCtrl.dispose();
     _resetPasswordCtrl.dispose();
     _reAuthPasswordCtrl.dispose();
     super.dispose();
@@ -88,27 +91,54 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             onPressed: _isLoading
                 ? null
                 : () => _run('Forgot Password', () async {
-                      final repo = getIt<AuthRepository>();
-                      await repo.forgotPassword(
-                        ForgotPasswordRequest(
-                          email: _forgotEmailCtrl.text.trim(),
-                        ),
-                      );
-                      return 'Reset email sent to ${_forgotEmailCtrl.text.trim()}';
-                    }),
-            child: const Text('Send Reset Email'),
+                    final repo = getIt<AuthRepository>();
+                    await repo.forgotPassword(
+                      ForgotPasswordRequest(
+                        email: _forgotEmailCtrl.text.trim(),
+                      ),
+                    );
+                    return 'OTP code sent to ${_forgotEmailCtrl.text.trim()}';
+                  }),
+            child: const Text('Send Reset OTP'),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton(
+            onPressed: _isLoading
+                ? null
+                : () => _run('Resend Password Reset', () async {
+                    final repo = getIt<AuthRepository>();
+                    await repo.resendPasswordReset(
+                      ResendPasswordResetRequest(
+                        email: _forgotEmailCtrl.text.trim(),
+                      ),
+                    );
+                    return 'OTP code resent to ${_forgotEmailCtrl.text.trim()}';
+                  }),
+            child: const Text('Resend OTP'),
           ),
           const Divider(height: 32),
 
-          // Reset Password
+          // Reset Password (OTP-based)
           Text('Reset Password', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
           TextField(
-            controller: _resetTokenCtrl,
+            controller: _resetEmailCtrl,
             decoration: const InputDecoration(
-              labelText: 'Reset Token',
+              labelText: 'Email',
               border: OutlineInputBorder(),
             ),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _resetCodeCtrl,
+            decoration: const InputDecoration(
+              labelText: 'OTP Code (8 digits)',
+              hintText: '12345678',
+              border: OutlineInputBorder(),
+            ),
+            keyboardType: TextInputType.number,
+            maxLength: 8,
           ),
           const SizedBox(height: 8),
           TextField(
@@ -124,15 +154,16 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             onPressed: _isLoading
                 ? null
                 : () => _run('Reset Password', () async {
-                      final repo = getIt<AuthRepository>();
-                      await repo.resetPassword(
-                        ResetPasswordRequest(
-                          token: _resetTokenCtrl.text.trim(),
-                          newPassword: _resetPasswordCtrl.text,
-                        ),
-                      );
-                      return 'Password reset successfully';
-                    }),
+                    final repo = getIt<AuthRepository>();
+                    await repo.resetPassword(
+                      ResetPasswordRequest(
+                        email: _resetEmailCtrl.text.trim(),
+                        code: _resetCodeCtrl.text.trim(),
+                        newPassword: _resetPasswordCtrl.text,
+                      ),
+                    );
+                    return 'Password reset successfully';
+                  }),
             child: const Text('Reset Password'),
           ),
           const Divider(height: 32),
@@ -153,15 +184,13 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             onPressed: _isLoading
                 ? null
                 : () => _run('Re-Authenticate', () async {
-                      final repo = getIt<AuthRepository>();
-                      final resp = await repo.reAuthenticate(
-                        ReAuthRequest(
-                          password: _reAuthPasswordCtrl.text,
-                        ),
-                      );
-                      return 'Token: ${resp.token.substring(0, 20)}…\n'
-                          'Expires: ${resp.expiresAt}';
-                    }),
+                    final repo = getIt<AuthRepository>();
+                    final resp = await repo.reAuthenticate(
+                      ReAuthRequest(password: _reAuthPasswordCtrl.text),
+                    );
+                    return 'Token: ${resp.token.substring(0, 20)}…\n'
+                        'Expires: ${resp.expiresAt}';
+                  }),
             child: const Text('Re-Authenticate'),
           ),
           const Divider(height: 32),
@@ -173,22 +202,24 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             onPressed: _isLoading
                 ? null
                 : () => _run('Refresh Token', () async {
-                      final tokenMgr = getIt<TokenManager>();
-                      final refreshToken = tokenMgr.refreshToken;
-                      if (refreshToken == null) return 'No refresh token available';
-                      final repo = getIt<AuthRepository>();
-                      final resp = await repo.refresh(
-                        RefreshRequest(refreshToken: refreshToken),
-                      );
-                      await tokenMgr.saveTokens(
-                        accessToken: resp.accessToken,
-                        refreshToken: resp.refreshToken,
-                        sessionId: resp.sessionId,
-                        expiresAt: resp.expiresAt,
-                      );
-                      return 'Session: ${resp.sessionId}\n'
-                          'Expires: ${resp.expiresAt}';
-                    }),
+                    final tokenMgr = getIt<TokenManager>();
+                    final refreshToken = tokenMgr.refreshToken;
+                    if (refreshToken == null) {
+                      return 'No refresh token available';
+                    }
+                    final repo = getIt<AuthRepository>();
+                    final resp = await repo.refresh(
+                      RefreshRequest(refreshToken: refreshToken),
+                    );
+                    await tokenMgr.saveTokens(
+                      accessToken: resp.accessToken,
+                      refreshToken: resp.refreshToken,
+                      sessionId: resp.sessionId,
+                      expiresAt: resp.expiresAt,
+                    );
+                    return 'Session: ${resp.sessionId}\n'
+                        'Expires: ${resp.expiresAt}';
+                  }),
             child: const Text('Refresh Token'),
           ),
           const Divider(height: 32),

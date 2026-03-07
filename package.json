@@ -17,7 +17,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "flutter:run": "cd hexatuneapp && flutter run",
+    "flutter:run": "cd hexatuneapp && flutter run --dart-define-from-file=.env.dev",
     "flutter:format": "cd hexatuneapp && dart format lib test",
     "flutter:analyze": "cd hexatuneapp && flutter analyze",
     "flutter:test": "cd hexatuneapp && flutter test",

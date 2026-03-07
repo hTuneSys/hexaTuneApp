@@ -7,12 +7,17 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/create_account_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/forgot_password_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_response.dart';
+import 'package:hexatuneapp/src/core/auth/models/oauth_login_response.dart';
 import 'package:hexatuneapp/src/core/auth/models/refresh_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/refresh_response.dart';
+import 'package:hexatuneapp/src/core/auth/models/resend_password_reset_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/verify_email_request.dart';
 import 'package:hexatuneapp/src/core/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -89,7 +94,6 @@ void main() {
             '/api/v1/auth/register',
             (server) => server.reply(201, {
               'id': 'acc-new',
-              'email': 'new@example.com',
               'status': 'pending_verification',
               'createdAt': '2025-01-01T00:00:00Z',
               'updatedAt': '2025-01-01T00:00:00Z',
@@ -101,7 +105,6 @@ void main() {
 
           expect(result, isA<AccountResponse>());
           expect(result.id, 'acc-new');
-          expect(result.email, 'new@example.com');
           expect(result.status, 'pending_verification');
         },
       );
@@ -150,11 +153,43 @@ void main() {
 
         dioAdapter.onPost(
           '/api/v1/auth/forgot-password',
-          (server) => server.reply(204, null),
+          (server) => server.reply(200, null),
           data: request.toJson(),
         );
 
         await expectLater(repository.forgotPassword(request), completes);
+      });
+    });
+
+    group('resetPassword', () {
+      test('sends POST to /api/v1/auth/reset-password', () async {
+        const request = ResetPasswordRequest(
+          email: 'user@example.com',
+          code: '12345678',
+          newPassword: 'NewSecure123!',
+        );
+
+        dioAdapter.onPost(
+          '/api/v1/auth/reset-password',
+          (server) => server.reply(200, null),
+          data: request.toJson(),
+        );
+
+        await expectLater(repository.resetPassword(request), completes);
+      });
+    });
+
+    group('resendPasswordReset', () {
+      test('sends POST to /api/v1/auth/resend-password-reset', () async {
+        const request = ResendPasswordResetRequest(email: 'user@example.com');
+
+        dioAdapter.onPost(
+          '/api/v1/auth/resend-password-reset',
+          (server) => server.reply(200, null),
+          data: request.toJson(),
+        );
+
+        await expectLater(repository.resendPasswordReset(request), completes);
       });
     });
 
@@ -173,6 +208,94 @@ void main() {
 
         await expectLater(repository.verifyEmail(request), completes);
       });
+    });
+
+    group('loginWithGoogle', () {
+      test(
+        'sends POST to /api/v1/auth/google and returns OAuthLoginResponse',
+        () async {
+          const request = GoogleAuthRequest(
+            idToken: 'google-id-token-123',
+            deviceId: 'device-001',
+          );
+
+          dioAdapter.onPost(
+            '/api/v1/auth/google',
+            (server) => server.reply(200, {
+              'accessToken': 'at-google',
+              'refreshToken': 'rt-google',
+              'sessionId': 'sess-google',
+              'accountId': 'acc-google',
+              'expiresAt': '2025-12-31T23:59:59Z',
+              'isNewAccount': false,
+            }),
+            data: request.toJson(),
+          );
+
+          final result = await repository.loginWithGoogle(request);
+
+          expect(result, isA<OAuthLoginResponse>());
+          expect(result.accessToken, 'at-google');
+          expect(result.refreshToken, 'rt-google');
+          expect(result.sessionId, 'sess-google');
+          expect(result.accountId, 'acc-google');
+          expect(result.isNewAccount, isFalse);
+        },
+      );
+
+      test('returns isNewAccount true for new registrations', () async {
+        const request = GoogleAuthRequest(idToken: 'google-new-token');
+
+        dioAdapter.onPost(
+          '/api/v1/auth/google',
+          (server) => server.reply(201, {
+            'accessToken': 'at-new',
+            'refreshToken': 'rt-new',
+            'sessionId': 'sess-new',
+            'accountId': 'acc-new',
+            'expiresAt': '2025-12-31T23:59:59Z',
+            'isNewAccount': true,
+          }),
+          data: request.toJson(),
+        );
+
+        final result = await repository.loginWithGoogle(request);
+
+        expect(result.isNewAccount, isTrue);
+      });
+    });
+
+    group('loginWithApple', () {
+      test(
+        'sends POST to /api/v1/auth/apple and returns OAuthLoginResponse',
+        () async {
+          const request = AppleAuthRequest(
+            idToken: 'apple-id-token-123',
+            authorizationCode: 'auth-code-abc',
+            deviceId: 'device-001',
+          );
+
+          dioAdapter.onPost(
+            '/api/v1/auth/apple',
+            (server) => server.reply(200, {
+              'accessToken': 'at-apple',
+              'refreshToken': 'rt-apple',
+              'sessionId': 'sess-apple',
+              'accountId': 'acc-apple',
+              'expiresAt': '2025-12-31T23:59:59Z',
+              'isNewAccount': false,
+            }),
+            data: request.toJson(),
+          );
+
+          final result = await repository.loginWithApple(request);
+
+          expect(result, isA<OAuthLoginResponse>());
+          expect(result.accessToken, 'at-apple');
+          expect(result.accountId, 'acc-apple');
+          expect(result.isNewAccount, isFalse);
+        },
+      );
     });
   });
 }

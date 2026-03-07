@@ -82,22 +82,21 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                   onPressed: _isLoading
                       ? null
                       : () => _run('Register Push Token', () async {
-                            final notifService = getIt<NotificationService>();
-                            if (notifService.fcmToken == null) {
-                              await notifService.init();
-                            }
-                            final token = notifService.fcmToken;
-                            if (token == null) return 'No FCM token available';
-                            final repo = getIt<DeviceRepository>();
-                            await repo.registerPushToken(
-                              RegisterPushTokenRequest(
-                                token: token,
-                                platform:
-                                    Platform.isIOS ? 'ios' : 'android',
-                              ),
-                            );
-                            return 'Token registered: ${token.substring(0, 20)}…';
-                          }),
+                          final notifService = getIt<NotificationService>();
+                          if (notifService.fcmToken == null) {
+                            await notifService.init();
+                          }
+                          final token = notifService.fcmToken;
+                          if (token == null) return 'No FCM token available';
+                          final repo = getIt<DeviceRepository>();
+                          await repo.registerPushToken(
+                            RegisterPushTokenRequest(
+                              token: token,
+                              platform: Platform.isIOS ? 'ios' : 'android',
+                            ),
+                          );
+                          return 'Token registered: ${token.substring(0, 20)}…';
+                        }),
                 ),
               ),
               const SizedBox(width: 8),
@@ -108,10 +107,10 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                   onPressed: _isLoading
                       ? null
                       : () => _run('Remove Push Token', () async {
-                            final repo = getIt<DeviceRepository>();
-                            await repo.removePushToken();
-                            return 'Push token removed';
-                          }),
+                          final repo = getIt<DeviceRepository>();
+                          await repo.removePushToken();
+                          return 'Push token removed';
+                        }),
                 ),
               ),
             ],
@@ -133,19 +132,19 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
             onPressed: _isLoading
                 ? null
                 : () => _run('Request Approval', () async {
-                      final deviceService = getIt<DeviceService>();
-                      final repo = getIt<DeviceRepository>();
-                      final resp = await repo.requestApproval(
-                        CreateApprovalRequestDto(
-                          requestingDeviceId: deviceService.deviceId,
-                          operationType: _operationTypeCtrl.text.trim(),
-                        ),
-                      );
-                      _approvalIdCtrl.text = resp.requestId;
-                      return 'Request ID: ${resp.requestId}\n'
-                          'Status: ${resp.status}\n'
-                          'Expires: ${resp.expiresAt}';
-                    }),
+                    final deviceService = getIt<DeviceService>();
+                    final repo = getIt<DeviceRepository>();
+                    final resp = await repo.requestApproval(
+                      CreateApprovalRequestDto(
+                        requestingDeviceId: deviceService.deviceId,
+                        operationType: _operationTypeCtrl.text.trim(),
+                      ),
+                    );
+                    _approvalIdCtrl.text = resp.requestId;
+                    return 'Request ID: ${resp.requestId}\n'
+                        'Status: ${resp.status}\n'
+                        'Expires: ${resp.expiresAt}';
+                  }),
             child: const Text('Request Approval'),
           ),
           const Divider(height: 32),
@@ -169,46 +168,46 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                 onPressed: _isLoading
                     ? null
                     : () => _run('Check Status', () async {
-                          final repo = getIt<DeviceRepository>();
-                          final resp = await repo.checkApprovalStatus(
-                            _approvalIdCtrl.text.trim(),
-                          );
-                          return 'Status: ${resp.status}\n'
-                              'Expired: ${resp.isExpired}\n'
-                              'Created: ${resp.createdAt}';
-                        }),
+                        final repo = getIt<DeviceRepository>();
+                        final resp = await repo.checkApprovalStatus(
+                          _approvalIdCtrl.text.trim(),
+                        );
+                        return 'Status: ${resp.status}\n'
+                            'Expired: ${resp.isExpired}\n'
+                            'Created: ${resp.createdAt}';
+                      }),
                 child: const Text('Check Status'),
               ),
               FilledButton(
                 onPressed: _isLoading
                     ? null
                     : () => _run('Approve', () async {
-                          final deviceService = getIt<DeviceService>();
-                          final repo = getIt<DeviceRepository>();
-                          final resp = await repo.approveRequest(
-                            _approvalIdCtrl.text.trim(),
-                            ApproveRequestDto(
-                              approvingDeviceId: deviceService.deviceId,
-                            ),
-                          );
-                          return 'Approved at: ${resp.approvedAt}';
-                        }),
+                        final deviceService = getIt<DeviceService>();
+                        final repo = getIt<DeviceRepository>();
+                        final resp = await repo.approveRequest(
+                          _approvalIdCtrl.text.trim(),
+                          ApproveRequestDto(
+                            approvingDeviceId: deviceService.deviceId,
+                          ),
+                        );
+                        return 'Approved at: ${resp.approvedAt}';
+                      }),
                 child: const Text('Approve'),
               ),
               OutlinedButton(
                 onPressed: _isLoading
                     ? null
                     : () => _run('Reject', () async {
-                          final deviceService = getIt<DeviceService>();
-                          final repo = getIt<DeviceRepository>();
-                          final resp = await repo.rejectRequest(
-                            _approvalIdCtrl.text.trim(),
-                            RejectRequestDto(
-                              rejectingDeviceId: deviceService.deviceId,
-                            ),
-                          );
-                          return 'Rejected at: ${resp.rejectedAt}';
-                        }),
+                        final deviceService = getIt<DeviceService>();
+                        final repo = getIt<DeviceRepository>();
+                        final resp = await repo.rejectRequest(
+                          _approvalIdCtrl.text.trim(),
+                          RejectRequestDto(
+                            rejectingDeviceId: deviceService.deviceId,
+                          ),
+                        );
+                        return 'Rejected at: ${resp.rejectedAt}';
+                      }),
                 child: const Text('Reject'),
               ),
             ],

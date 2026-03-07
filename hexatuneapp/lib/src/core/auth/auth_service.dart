@@ -6,8 +6,11 @@ import 'dart:async';
 import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/auth/models/apple_auth_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_response.dart';
+import 'package:hexatuneapp/src/core/auth/models/oauth_login_response.dart';
 import 'package:hexatuneapp/src/core/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
@@ -82,6 +85,78 @@ class AuthService {
     _logService.info('Login successful', category: LogCategory.auth);
 
     return loginResponse;
+  }
+
+  /// Log in with Google. On success, stores tokens.
+  Future<OAuthLoginResponse> loginWithGoogle(GoogleAuthRequest request) async {
+    _logService.info('Google login attempt', category: LogCategory.auth);
+    if (Env.isDev) {
+      _logService.devLog(
+        '→ Google login request: deviceId=${request.deviceId}',
+        category: LogCategory.auth,
+      );
+    }
+
+    final response = await _authRepository.loginWithGoogle(request);
+
+    if (Env.isDev) {
+      _logService.devLog(
+        '← Google login response: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}, '
+        'expiresAt=${response.expiresAt}, '
+        'accessToken=${LogService.maskToken(response.accessToken)}, '
+        'refreshToken=${LogService.maskToken(response.refreshToken)}',
+        category: LogCategory.auth,
+      );
+    }
+
+    await _tokenManager.saveTokens(
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      sessionId: response.sessionId,
+      expiresAt: response.expiresAt,
+    );
+
+    _updateState(AuthState.authenticated);
+    _logService.info('Google login successful', category: LogCategory.auth);
+
+    return response;
+  }
+
+  /// Log in with Apple. On success, stores tokens.
+  Future<OAuthLoginResponse> loginWithApple(AppleAuthRequest request) async {
+    _logService.info('Apple login attempt', category: LogCategory.auth);
+    if (Env.isDev) {
+      _logService.devLog(
+        '→ Apple login request: deviceId=${request.deviceId}',
+        category: LogCategory.auth,
+      );
+    }
+
+    final response = await _authRepository.loginWithApple(request);
+
+    if (Env.isDev) {
+      _logService.devLog(
+        '← Apple login response: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}, '
+        'expiresAt=${response.expiresAt}, '
+        'accessToken=${LogService.maskToken(response.accessToken)}, '
+        'refreshToken=${LogService.maskToken(response.refreshToken)}',
+        category: LogCategory.auth,
+      );
+    }
+
+    await _tokenManager.saveTokens(
+      accessToken: response.accessToken,
+      refreshToken: response.refreshToken,
+      sessionId: response.sessionId,
+      expiresAt: response.expiresAt,
+    );
+
+    _updateState(AuthState.authenticated);
+    _logService.info('Apple login successful', category: LogCategory.auth);
+
+    return response;
   }
 
   /// Log out: notify backend, clear local tokens, update state.

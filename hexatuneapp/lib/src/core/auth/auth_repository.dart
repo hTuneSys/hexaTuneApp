@@ -6,12 +6,16 @@ import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/auth/models/create_account_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/forgot_password_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/google_auth_request.dart';
+import 'package:hexatuneapp/src/core/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/login_response.dart';
+import 'package:hexatuneapp/src/core/auth/models/oauth_login_response.dart';
 import 'package:hexatuneapp/src/core/auth/models/re_auth_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/re_auth_response.dart';
 import 'package:hexatuneapp/src/core/auth/models/refresh_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/refresh_response.dart';
+import 'package:hexatuneapp/src/core/auth/models/resend_password_reset_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/resend_verification_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/auth/models/verify_email_request.dart';
@@ -89,6 +93,15 @@ class AuthRepository {
     await _dio.post(ApiEndpoints.resetPassword, data: request.toJson());
   }
 
+  /// POST /api/v1/auth/resend-password-reset
+  Future<void> resendPasswordReset(ResendPasswordResetRequest request) async {
+    _logService.debug(
+      'POST resend-password-reset',
+      category: LogCategory.network,
+    );
+    await _dio.post(ApiEndpoints.resendPasswordReset, data: request.toJson());
+  }
+
   /// POST /api/v1/auth/verify-email
   Future<void> verifyEmail(VerifyEmailRequest request) async {
     _logService.debug('POST verify-email', category: LogCategory.network);
@@ -102,5 +115,25 @@ class AuthRepository {
       category: LogCategory.network,
     );
     await _dio.post(ApiEndpoints.resendVerification, data: request.toJson());
+  }
+
+  /// POST /api/v1/auth/google
+  Future<OAuthLoginResponse> loginWithGoogle(GoogleAuthRequest request) async {
+    _logService.debug('POST auth/google', category: LogCategory.network);
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.authGoogle,
+      data: request.toJson(),
+    );
+    return OAuthLoginResponse.fromJson(response.data!);
+  }
+
+  /// POST /api/v1/auth/apple
+  Future<OAuthLoginResponse> loginWithApple(AppleAuthRequest request) async {
+    _logService.debug('POST auth/apple', category: LogCategory.network);
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.authApple,
+      data: request.toJson(),
+    );
+    return OAuthLoginResponse.fromJson(response.data!);
   }
 }

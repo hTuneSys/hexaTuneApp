@@ -90,10 +90,7 @@ class AppBootstrap {
         fcmToken = notificationService.fcmToken;
         log.info('NotificationService ready', category: LogCategory.bootstrap);
         if (Env.isDev) {
-          log.devLog(
-            'FCM token: $fcmToken',
-            category: LogCategory.bootstrap,
-          );
+          log.devLog('FCM token: $fcmToken', category: LogCategory.bootstrap);
         }
       } catch (e) {
         log.warning(
