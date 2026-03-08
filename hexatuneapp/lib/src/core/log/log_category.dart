@@ -14,4 +14,5 @@ enum LogCategory {
   router,
   bootstrap,
   ui,
+  hardware,
 }

@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
 import 'package:hexatuneapp/src/core/notification/local_notification_service.dart';
@@ -29,6 +30,8 @@ class MockNotificationService extends Mock implements NotificationService {}
 
 class MockAuthService extends Mock implements AuthService {}
 
+class MockHeadsetService extends Mock implements HeadsetService {}
+
 void main() {
   group('AppBootstrap', () {
     late MockLogService mockLog;
@@ -37,6 +40,7 @@ void main() {
     late MockLocalNotificationService mockLocalNotif;
     late MockNotificationService mockNotif;
     late MockAuthService mockAuth;
+    late MockHeadsetService mockHeadset;
 
     setUp(() {
       mockLog = MockLogService();
@@ -45,6 +49,7 @@ void main() {
       mockLocalNotif = MockLocalNotificationService();
       mockNotif = MockNotificationService();
       mockAuth = MockAuthService();
+      mockHeadset = MockHeadsetService();
 
       // Register mocks in get_it.
       getIt.allowReassignment = true;
@@ -54,6 +59,7 @@ void main() {
       getIt.registerSingleton<LocalNotificationService>(mockLocalNotif);
       getIt.registerSingleton<NotificationService>(mockNotif);
       getIt.registerSingleton<AuthService>(mockAuth);
+      getIt.registerSingleton<HeadsetService>(mockHeadset);
     });
 
     tearDown(() async {
@@ -63,6 +69,7 @@ void main() {
     test('calls all services in order', () async {
       when(() => mockDevice.init()).thenAnswer((_) async {});
       when(() => mockDevice.deviceId).thenReturn('test-device-id');
+      when(() => mockHeadset.init()).thenAnswer((_) async {});
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
       when(() => mockTokenManager.hasToken).thenReturn(false);
       when(() => mockTokenManager.sessionId).thenReturn(null);
@@ -80,6 +87,7 @@ void main() {
 
       verifyInOrder([
         () => mockDevice.init(),
+        () => mockHeadset.init(),
         () => mockTokenManager.loadTokens(),
         () => mockLocalNotif.init(),
         () => mockNotif.init(),
@@ -90,6 +98,7 @@ void main() {
     test('continues when notification service fails', () async {
       when(() => mockDevice.init()).thenAnswer((_) async {});
       when(() => mockDevice.deviceId).thenReturn('test-device-id');
+      when(() => mockHeadset.init()).thenAnswer((_) async {});
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
       when(() => mockTokenManager.hasToken).thenReturn(false);
       when(() => mockTokenManager.sessionId).thenReturn(null);

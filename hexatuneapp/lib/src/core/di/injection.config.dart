@@ -10,6 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart'
+    as _i494;
 import 'package:hexatuneapp/src/core/log/log_service.dart' as _i571;
 import 'package:hexatuneapp/src/core/media/image_service.dart' as _i207;
 import 'package:hexatuneapp/src/core/network/api_client.dart' as _i761;
@@ -66,6 +68,10 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.singleton<_i494.HeadsetService>(
+      () => _i494.HeadsetService(gh<_i571.LogService>()),
+      dispose: (i) => i.dispose(),
+    );
     gh.singleton<_i207.ImageService>(
       () => _i207.ImageService(gh<_i571.LogService>()),
     );

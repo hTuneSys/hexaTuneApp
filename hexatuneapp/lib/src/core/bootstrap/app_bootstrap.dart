@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
@@ -49,6 +50,11 @@ class AppBootstrap {
           category: LogCategory.bootstrap,
         );
       }
+
+      // Headset connection monitoring.
+      final headsetService = getIt<HeadsetService>();
+      await headsetService.init();
+      log.info('HeadsetService ready', category: LogCategory.bootstrap);
 
       // Load stored tokens.
       final tokenManager = getIt<TokenManager>();
