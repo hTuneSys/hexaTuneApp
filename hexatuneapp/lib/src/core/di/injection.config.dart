@@ -47,6 +47,8 @@ import 'package:hexatuneapp/src/core/rest/device/device_repository.dart'
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart' as _i292;
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart'
     as _i770;
+import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart'
+    as _i53;
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart'
     as _i778;
 import 'package:hexatuneapp/src/core/rest/session/session_repository.dart'
@@ -166,6 +168,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i770.FormulaRepository>(
       () => _i770.FormulaRepository(
+        gh<_i761.ApiClient>(),
+        gh<_i571.LogService>(),
+      ),
+    );
+    gh.singleton<_i53.HarmonicsRepository>(
+      () => _i53.HarmonicsRepository(
         gh<_i761.ApiClient>(),
         gh<_i571.LogService>(),
       ),

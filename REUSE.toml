@@ -23,6 +23,7 @@ SPDX-License-Identifier = "MIT"
 [[annotations]]
 path = [
   "AGENTS.md",
+  "openapi.json",
   "openapi_old.json",
   "openapinew.json",
 ]

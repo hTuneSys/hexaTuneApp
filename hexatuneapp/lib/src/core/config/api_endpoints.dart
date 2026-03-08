@@ -97,4 +97,7 @@ class ApiEndpoints {
   static String task(String id) => '$_v1/tasks/$id';
 
   static String taskCancel(String id) => '$_v1/tasks/$id/cancel';
+
+  // --- Harmonics (1 endpoint) ---
+  static const String harmonicsGenerate = '$_v1/harmonics/generate';
 }

@@ -28,4 +28,5 @@ class RouteNames {
   static const String formulaItems = '/dev/formulas/:formulaId/items';
   static const String tasks = '/dev/tasks';
   static const String audit = '/dev/audit';
+  static const String harmonics = '/dev/harmonics';
 }

@@ -82,6 +82,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Query with filters',
       route: RouteNames.audit,
     ),
+    _NavItem(
+      icon: Icons.music_note,
+      title: 'Harmonics',
+      subtitle: 'Generate harmonic numbers',
+      route: RouteNames.harmonics,
+    ),
   ];
 
   @override
