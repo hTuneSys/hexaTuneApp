@@ -60,7 +60,7 @@ Java_com_hexatune_hexatuneapp_DspNativeAudioBridge_nativeRender(
     float *buf = (*env)->GetPrimitiveArrayCritical(env, output, NULL);
     if (!buf) return -1;
     int32_t rc = htd_engine_render((void*)engine_ptr, buf, (uint32_t)num_frames);
-    (*env)->ReleasePrimitiveArrayCritical(env, output, buf, JNI_COMMIT);
+    (*env)->ReleasePrimitiveArrayCritical(env, output, buf, 0);
     return rc;
 }
 
