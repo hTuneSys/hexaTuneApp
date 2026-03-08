@@ -5,12 +5,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/auth/models/link_apple_provider_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/link_email_provider_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/link_google_provider_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/provider_response.dart';
-import 'package:hexatuneapp/src/core/auth/oauth_service.dart';
-import 'package:hexatuneapp/src/core/auth/provider_repository.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/link_apple_provider_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/link_email_provider_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/link_google_provider_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/provider_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
+import 'package:hexatuneapp/src/core/rest/auth/provider_repository.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

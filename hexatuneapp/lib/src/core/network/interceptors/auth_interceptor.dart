@@ -6,7 +6,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

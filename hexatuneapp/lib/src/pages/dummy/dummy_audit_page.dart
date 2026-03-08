@@ -3,9 +3,9 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/audit/audit_repository.dart';
-import 'package:hexatuneapp/src/core/audit/models/audit_log_dto.dart';
-import 'package:hexatuneapp/src/core/audit/models/audit_log_query_params.dart';
+import 'package:hexatuneapp/src/core/rest/audit/audit_repository.dart';
+import 'package:hexatuneapp/src/core/rest/audit/models/audit_log_dto.dart';
+import 'package:hexatuneapp/src/core/rest/audit/models/audit_log_query_params.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

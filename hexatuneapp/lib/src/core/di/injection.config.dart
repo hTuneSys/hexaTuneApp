@@ -10,21 +10,6 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
-import 'package:hexatuneapp/src/core/account/account_repository.dart' as _i608;
-import 'package:hexatuneapp/src/core/audit/audit_repository.dart' as _i774;
-import 'package:hexatuneapp/src/core/auth/auth_repository.dart' as _i1022;
-import 'package:hexatuneapp/src/core/auth/auth_service.dart' as _i386;
-import 'package:hexatuneapp/src/core/auth/oauth_service.dart' as _i523;
-import 'package:hexatuneapp/src/core/auth/provider_repository.dart' as _i432;
-import 'package:hexatuneapp/src/core/auth/tenant_repository.dart' as _i271;
-import 'package:hexatuneapp/src/core/auth/token_manager.dart' as _i1025;
-import 'package:hexatuneapp/src/core/category/category_repository.dart'
-    as _i814;
-import 'package:hexatuneapp/src/core/device/device_repository.dart' as _i537;
-import 'package:hexatuneapp/src/core/device/device_service.dart' as _i630;
-import 'package:hexatuneapp/src/core/formula/formula_repository.dart' as _i420;
-import 'package:hexatuneapp/src/core/inventory/inventory_repository.dart'
-    as _i752;
 import 'package:hexatuneapp/src/core/log/log_service.dart' as _i571;
 import 'package:hexatuneapp/src/core/media/image_service.dart' as _i207;
 import 'package:hexatuneapp/src/core/network/api_client.dart' as _i761;
@@ -40,12 +25,32 @@ import 'package:hexatuneapp/src/core/notification/notification_service.dart'
     as _i623;
 import 'package:hexatuneapp/src/core/permission/permission_service.dart'
     as _i1001;
+import 'package:hexatuneapp/src/core/rest/account/account_repository.dart'
+    as _i87;
+import 'package:hexatuneapp/src/core/rest/audit/audit_repository.dart' as _i501;
+import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart' as _i10;
+import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart' as _i907;
+import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart' as _i815;
+import 'package:hexatuneapp/src/core/rest/auth/provider_repository.dart'
+    as _i226;
+import 'package:hexatuneapp/src/core/rest/auth/tenant_repository.dart' as _i20;
+import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart' as _i815;
+import 'package:hexatuneapp/src/core/rest/category/category_repository.dart'
+    as _i883;
+import 'package:hexatuneapp/src/core/rest/device/device_repository.dart'
+    as _i864;
+import 'package:hexatuneapp/src/core/rest/device/device_service.dart' as _i292;
+import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart'
+    as _i770;
+import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart'
+    as _i778;
+import 'package:hexatuneapp/src/core/rest/session/session_repository.dart'
+    as _i80;
+import 'package:hexatuneapp/src/core/rest/task/task_repository.dart' as _i266;
 import 'package:hexatuneapp/src/core/router/app_router.dart' as _i877;
-import 'package:hexatuneapp/src/core/session/session_repository.dart' as _i318;
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart' as _i148;
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
     as _i325;
-import 'package:hexatuneapp/src/core/task/task_repository.dart' as _i876;
 import 'package:injectable/injectable.dart' as _i526;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -79,25 +84,25 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i325.SecureStorageService>(
       () => _i325.SecureStorageService(gh<_i571.LogService>())..init(),
     );
-    gh.singleton<_i1025.TokenManager>(
-      () => _i1025.TokenManager(
+    gh.singleton<_i815.TokenManager>(
+      () => _i815.TokenManager(
         gh<_i325.SecureStorageService>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i630.DeviceService>(
-      () => _i630.DeviceService(
+    gh.singleton<_i292.DeviceService>(
+      () => _i292.DeviceService(
         gh<_i325.SecureStorageService>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i523.OAuthService>(
+    gh.singleton<_i815.OAuthService>(
       () =>
-          _i523.OAuthService(gh<_i630.DeviceService>(), gh<_i571.LogService>()),
+          _i815.OAuthService(gh<_i292.DeviceService>(), gh<_i571.LogService>()),
     );
     gh.singleton<_i56.AuthInterceptor>(
       () => _i56.AuthInterceptor(
-        gh<_i1025.TokenManager>(),
+        gh<_i815.TokenManager>(),
         gh<_i571.LogService>(),
       ),
     );
@@ -109,71 +114,66 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i1063.LoggingInterceptor>(),
       )..init(),
     );
-    gh.singleton<_i608.AccountRepository>(
-      () => _i608.AccountRepository(
-        gh<_i761.ApiClient>(),
-        gh<_i571.LogService>(),
-      ),
-    );
-    gh.singleton<_i774.AuditRepository>(
+    gh.singleton<_i87.AccountRepository>(
       () =>
-          _i774.AuditRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+          _i87.AccountRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i1022.AuthRepository>(
+    gh.singleton<_i501.AuditRepository>(
       () =>
-          _i1022.AuthRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+          _i501.AuditRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i432.ProviderRepository>(
-      () => _i432.ProviderRepository(
+    gh.singleton<_i10.AuthRepository>(
+      () => _i10.AuthRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    );
+    gh.singleton<_i226.ProviderRepository>(
+      () => _i226.ProviderRepository(
         gh<_i761.ApiClient>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i271.TenantRepository>(
+    gh.singleton<_i20.TenantRepository>(
       () =>
-          _i271.TenantRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+          _i20.TenantRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i814.CategoryRepository>(
-      () => _i814.CategoryRepository(
+    gh.singleton<_i883.CategoryRepository>(
+      () => _i883.CategoryRepository(
         gh<_i761.ApiClient>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i537.DeviceRepository>(
+    gh.singleton<_i864.DeviceRepository>(
       () =>
-          _i537.DeviceRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+          _i864.DeviceRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i420.FormulaRepository>(
-      () => _i420.FormulaRepository(
+    gh.singleton<_i770.FormulaRepository>(
+      () => _i770.FormulaRepository(
         gh<_i761.ApiClient>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i752.InventoryRepository>(
-      () => _i752.InventoryRepository(
+    gh.singleton<_i778.InventoryRepository>(
+      () => _i778.InventoryRepository(
         gh<_i761.ApiClient>(),
         gh<_i571.LogService>(),
       ),
     );
-    gh.singleton<_i318.SessionRepository>(
-      () => _i318.SessionRepository(
-        gh<_i761.ApiClient>(),
-        gh<_i571.LogService>(),
-      ),
+    gh.singleton<_i80.SessionRepository>(
+      () =>
+          _i80.SessionRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i876.TaskRepository>(
-      () => _i876.TaskRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    gh.singleton<_i266.TaskRepository>(
+      () => _i266.TaskRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
-    gh.singleton<_i386.AuthService>(
-      () => _i386.AuthService(
-        gh<_i1025.TokenManager>(),
-        gh<_i1022.AuthRepository>(),
+    gh.singleton<_i907.AuthService>(
+      () => _i907.AuthService(
+        gh<_i815.TokenManager>(),
+        gh<_i10.AuthRepository>(),
         gh<_i56.AuthInterceptor>(),
         gh<_i571.LogService>(),
       ),
     );
     gh.singleton<_i877.AppRouter>(
-      () => _i877.AppRouter(gh<_i386.AuthService>(), gh<_i571.LogService>()),
+      () => _i877.AppRouter(gh<_i907.AuthService>(), gh<_i571.LogService>()),
     );
     return this;
   }

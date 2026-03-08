@@ -3,10 +3,10 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/category/category_repository.dart';
-import 'package:hexatuneapp/src/core/category/models/category_response.dart';
-import 'package:hexatuneapp/src/core/category/models/create_category_request.dart';
-import 'package:hexatuneapp/src/core/category/models/update_category_request.dart';
+import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
+import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
+import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
+import 'package:hexatuneapp/src/core/rest/category/models/update_category_request.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

@@ -5,11 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import 'package:hexatuneapp/src/core/config/env.dart';
-import 'package:hexatuneapp/src/core/category/category_repository.dart';
-import 'package:hexatuneapp/src/core/category/models/category_response.dart';
+import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
+import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
-import 'package:hexatuneapp/src/core/inventory/inventory_repository.dart';
-import 'package:hexatuneapp/src/core/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
+import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';

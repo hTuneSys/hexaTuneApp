@@ -3,10 +3,10 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/account/account_repository.dart';
-import 'package:hexatuneapp/src/core/account/models/account_response.dart';
-import 'package:hexatuneapp/src/core/account/models/profile_response.dart';
-import 'package:hexatuneapp/src/core/account/models/update_profile_request.dart';
+import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

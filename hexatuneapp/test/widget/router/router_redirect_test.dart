@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:hexatuneapp/src/core/auth/auth_service.dart';
+import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 
 class MockAuthService extends Mock implements AuthService {}

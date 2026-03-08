@@ -7,9 +7,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
-import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/core/auth/models/resend_verification_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/verify_email_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/resend_verification_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/verify_email_request.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

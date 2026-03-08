@@ -8,8 +8,8 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
-import 'package:hexatuneapp/src/core/session/models/session_response.dart';
-import 'package:hexatuneapp/src/core/session/session_repository.dart';
+import 'package:hexatuneapp/src/core/rest/session/models/session_response.dart';
+import 'package:hexatuneapp/src/core/rest/session/session_repository.dart';
 
 /// Dummy page for testing session management endpoints.
 class DummySessionsPage extends StatefulWidget {

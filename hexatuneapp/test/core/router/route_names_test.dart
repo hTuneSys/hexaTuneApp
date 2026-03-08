@@ -1,0 +1,44 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:hexatuneapp/src/core/router/route_names.dart';
+
+void main() {
+  group('RouteNames', () {
+    test('public routes have correct paths', () {
+      expect(RouteNames.splash, '/');
+      expect(RouteNames.login, '/login');
+      expect(RouteNames.register, '/register');
+      expect(RouteNames.verifyEmail, '/verify-email');
+      expect(RouteNames.forgotPassword, '/forgot-password');
+      expect(RouteNames.resetPassword, '/reset-password');
+    });
+
+    test('protected routes have correct paths', () {
+      expect(RouteNames.home, '/home');
+      expect(RouteNames.reAuth, '/re-auth');
+      expect(RouteNames.deviceApproval, '/device-approval');
+    });
+
+    test('dev test pages have /dev/ prefix', () {
+      expect(RouteNames.authExtras, startsWith('/dev/'));
+      expect(RouteNames.account, startsWith('/dev/'));
+      expect(RouteNames.sessions, startsWith('/dev/'));
+      expect(RouteNames.devices, startsWith('/dev/'));
+      expect(RouteNames.providers, startsWith('/dev/'));
+      expect(RouteNames.tenants, startsWith('/dev/'));
+      expect(RouteNames.categories, startsWith('/dev/'));
+      expect(RouteNames.inventories, startsWith('/dev/'));
+      expect(RouteNames.formulas, startsWith('/dev/'));
+      expect(RouteNames.formulaItems, startsWith('/dev/'));
+      expect(RouteNames.tasks, startsWith('/dev/'));
+      expect(RouteNames.audit, startsWith('/dev/'));
+    });
+
+    test('formulaItems contains path parameter', () {
+      expect(RouteNames.formulaItems, contains(':formulaId'));
+    });
+  });
+}

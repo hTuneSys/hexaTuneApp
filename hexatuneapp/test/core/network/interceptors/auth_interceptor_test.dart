@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 
-import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
 

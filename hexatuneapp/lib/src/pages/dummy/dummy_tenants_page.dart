@@ -3,14 +3,14 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/auth/models/switch_tenant_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/tenant_membership_response.dart';
-import 'package:hexatuneapp/src/core/auth/tenant_repository.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/switch_tenant_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/tenant_membership_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/tenant_repository.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
-import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 
 /// Dummy page for testing tenant membership and switching endpoints.
 class DummyTenantsPage extends StatefulWidget {

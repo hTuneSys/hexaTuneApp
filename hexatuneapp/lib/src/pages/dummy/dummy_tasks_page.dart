@@ -10,10 +10,10 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
-import 'package:hexatuneapp/src/core/task/models/cancel_task_request.dart';
-import 'package:hexatuneapp/src/core/task/models/create_task_request.dart';
-import 'package:hexatuneapp/src/core/task/models/task_summary_dto.dart';
-import 'package:hexatuneapp/src/core/task/task_repository.dart';
+import 'package:hexatuneapp/src/core/rest/task/models/cancel_task_request.dart';
+import 'package:hexatuneapp/src/core/rest/task/models/create_task_request.dart';
+import 'package:hexatuneapp/src/core/rest/task/models/task_summary_dto.dart';
+import 'package:hexatuneapp/src/core/rest/task/task_repository.dart';
 
 /// Dummy page for testing task workflow endpoints.
 class DummyTasksPage extends StatefulWidget {

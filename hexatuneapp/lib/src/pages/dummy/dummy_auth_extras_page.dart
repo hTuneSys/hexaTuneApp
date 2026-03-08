@@ -3,13 +3,13 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/core/auth/models/forgot_password_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/re_auth_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/refresh_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/resend_password_reset_request.dart';
-import 'package:hexatuneapp/src/core/auth/models/reset_password_request.dart';
-import 'package:hexatuneapp/src/core/auth/token_manager.dart';
+import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/forgot_password_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/re_auth_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/refresh_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/resend_password_reset_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/reset_password_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

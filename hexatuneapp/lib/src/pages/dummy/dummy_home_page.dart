@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:hexatuneapp/src/core/auth/auth_service.dart';
+import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';

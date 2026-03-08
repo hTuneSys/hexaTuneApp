@@ -6,10 +6,10 @@ import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
-import 'package:hexatuneapp/src/core/formula/formula_repository.dart';
-import 'package:hexatuneapp/src/core/formula/models/create_formula_request.dart';
-import 'package:hexatuneapp/src/core/formula/models/formula_response.dart';
-import 'package:hexatuneapp/src/core/formula/models/update_formula_request.dart';
+import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/create_formula_request.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/update_formula_request.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
