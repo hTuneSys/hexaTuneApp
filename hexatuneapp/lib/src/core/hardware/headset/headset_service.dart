@@ -3,9 +3,9 @@
 
 import 'dart:async';
 
-import 'package:flutter_headset_detector/flutter_headset_detector.dart' as hd;
 import 'package:injectable/injectable.dart';
 
+import 'package:hexatuneapp/src/core/hardware/headset/headset_detector_channel.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_state.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -20,9 +20,10 @@ class HeadsetService {
   HeadsetService(this._logService);
 
   final LogService _logService;
-  final hd.HeadsetDetector _detector = hd.HeadsetDetector();
+  final HeadsetDetectorChannel _channel = HeadsetDetectorChannel();
 
   final _stateController = StreamController<HeadsetState>.broadcast();
+  StreamSubscription<String>? _eventSubscription;
 
   HeadsetState _currentState = const HeadsetState();
 
@@ -38,17 +39,15 @@ class HeadsetService {
   /// Reads the initial headset state and starts listening for changes.
   Future<void> init() async {
     try {
-      final initial = await _detector.getCurrentState;
+      final initial = await _channel.getCurrentState();
       _updateState(
         HeadsetState(
-          wiredConnected:
-              initial[hd.HeadsetType.WIRED] == hd.HeadsetState.CONNECTED,
-          wirelessConnected:
-              initial[hd.HeadsetType.WIRELESS] == hd.HeadsetState.CONNECTED,
+          wiredConnected: initial.wired,
+          wirelessConnected: initial.wireless,
         ),
       );
 
-      _detector.setListener(_onHeadsetEvent);
+      _eventSubscription = _channel.events.listen(_onHeadsetEvent);
 
       _logService.info(
         'HeadsetService initialized — '
@@ -66,20 +65,20 @@ class HeadsetService {
     }
   }
 
-  void _onHeadsetEvent(hd.HeadsetChangedEvent event) {
+  void _onHeadsetEvent(String event) {
     _logService.devLog(
-      'Headset event received: ${event.name}',
+      'Headset event received: $event',
       category: LogCategory.hardware,
     );
 
     switch (event) {
-      case hd.HeadsetChangedEvent.WIRED_CONNECTED:
+      case 'wired_connected':
         _updateState(_currentState.copyWith(wiredConnected: true));
-      case hd.HeadsetChangedEvent.WIRED_DISCONNECTED:
+      case 'wired_disconnected':
         _updateState(_currentState.copyWith(wiredConnected: false));
-      case hd.HeadsetChangedEvent.WIRELESS_CONNECTED:
+      case 'wireless_connected':
         _updateState(_currentState.copyWith(wirelessConnected: true));
-      case hd.HeadsetChangedEvent.WIRELESS_DISCONNECTED:
+      case 'wireless_disconnected':
         _updateState(_currentState.copyWith(wirelessConnected: false));
     }
   }
@@ -103,7 +102,7 @@ class HeadsetService {
   /// Stops listening and closes the state stream.
   @disposeMethod
   void dispose() {
-    _detector.removeListener();
+    _eventSubscription?.cancel();
     _stateController.close();
   }
 }

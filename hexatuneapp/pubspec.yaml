@@ -88,7 +88,6 @@ dependencies:
   uuid: ^4.5.1
   google_sign_in: ^7.2.0
   sign_in_with_apple: ^7.0.1
-  flutter_headset_detector: ^3.1.0
 
   # FFI (Native Library Bindings)
   ffi: ^2.1.0

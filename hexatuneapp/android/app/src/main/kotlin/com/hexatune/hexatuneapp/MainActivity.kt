@@ -5,11 +5,31 @@ import android.app.NotificationManager
 import android.os.Build
 import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
+    private var audioDeviceDetector: AudioDeviceDetector? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         createNotificationChannel()
+        setupAudioDeviceDetector()
+    }
+
+    override fun onDestroy() {
+        audioDeviceDetector?.stop()
+        audioDeviceDetector = null
+        super.onDestroy()
+    }
+
+    private fun setupAudioDeviceDetector() {
+        val messenger = flutterEngine?.dartExecutor?.binaryMessenger ?: return
+        val methodChannel = MethodChannel(messenger, "com.hexatune/audio_device_detector")
+        val eventChannel = EventChannel(messenger, "com.hexatune/audio_device_events")
+        audioDeviceDetector = AudioDeviceDetector(this, methodChannel, eventChannel).also {
+            it.start()
+        }
     }
 
     private fun createNotificationChannel() {
