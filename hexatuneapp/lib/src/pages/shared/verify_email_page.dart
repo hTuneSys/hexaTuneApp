@@ -10,7 +10,6 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/resend_verification_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/verify_email_request.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -84,29 +83,23 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     final log = getIt<LogService>();
 
     try {
-      if (Env.isDev) {
-        log.devLog(
-          '→ Verify email: email=${widget.email}, code=$_otpCode',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '→ Verify email: email=${widget.email}, code=$_otpCode',
+        category: LogCategory.ui,
+      );
 
       final authRepo = getIt<AuthRepository>();
       await authRepo.verifyEmail(
         VerifyEmailRequest(email: widget.email, code: _otpCode),
       );
 
-      if (Env.isDev) {
-        log.devLog('✓ Email verified successfully', category: LogCategory.ui);
-      }
+      log.devLog('✓ Email verified successfully', category: LogCategory.ui);
 
       if (!mounted) return;
       _showMessage(l10n.emailVerifiedSignIn, isError: false);
       context.go(RouteNames.login);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Verify failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Verify failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -122,21 +115,17 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     final log = getIt<LogService>();
 
     try {
-      if (Env.isDev) {
-        log.devLog(
-          '→ Resend OTP: email=${widget.email}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '→ Resend OTP: email=${widget.email}',
+        category: LogCategory.ui,
+      );
 
       final authRepo = getIt<AuthRepository>();
       await authRepo.resendVerification(
         ResendVerificationRequest(email: widget.email),
       );
 
-      if (Env.isDev) {
-        log.devLog('✓ Verification email resent', category: LogCategory.ui);
-      }
+      log.devLog('✓ Verification email resent', category: LogCategory.ui);
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
@@ -144,9 +133,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
         _startResendTimer();
       }
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Resend failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Resend failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isResending = false);

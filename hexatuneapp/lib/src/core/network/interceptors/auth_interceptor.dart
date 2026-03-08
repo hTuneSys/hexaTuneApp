@@ -42,13 +42,11 @@ class AuthInterceptor extends QueuedInterceptor {
         'Refresh token expired — session ended',
         category: LogCategory.auth,
       );
-      if (Env.isDev) {
-        _logService.devLog(
-          '✗ Refresh token expired (refreshExp: ${_tokenManager.refreshExpiresAt}) '
-          '→ clearing tokens & force logout',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '✗ Refresh token expired (refreshExp: ${_tokenManager.refreshExpiresAt}) '
+        '→ clearing tokens & force logout',
+        category: LogCategory.auth,
+      );
       await _tokenManager.clearTokens();
       _authEventController.add(AuthEvent.forceLogout);
       return handler.reject(
@@ -63,13 +61,11 @@ class AuthInterceptor extends QueuedInterceptor {
     // Proactively refresh if access token has expired but refresh is still valid.
     if (_tokenManager.isAccessTokenExpired &&
         _tokenManager.refreshToken != null) {
-      if (Env.isDev) {
-        _logService.devLog(
-          '⏱ Access token expired (accessExp: ${_tokenManager.accessExpiresAt}) '
-          '→ proactive refresh before request',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '⏱ Access token expired (accessExp: ${_tokenManager.accessExpiresAt}) '
+        '→ proactive refresh before request',
+        category: LogCategory.auth,
+      );
       final refreshed = await _tryRefresh(options);
       if (!refreshed) {
         _logService.warning(
@@ -92,13 +88,11 @@ class AuthInterceptor extends QueuedInterceptor {
     if (token != null) {
       options.headers['Authorization'] = 'Bearer $token';
     }
-    if (Env.isDev) {
-      _logService.devLog(
-        '→ ${options.method} ${options.uri} '
-        '| auth: ${token != null ? 'Bearer ${LogService.maskToken(token)}' : 'none'}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '→ ${options.method} ${options.uri} '
+      '| auth: ${token != null ? 'Bearer ${LogService.maskToken(token)}' : 'none'}',
+      category: LogCategory.auth,
+    );
     handler.next(options);
   }
 
@@ -110,13 +104,11 @@ class AuthInterceptor extends QueuedInterceptor {
     final statusCode = err.response?.statusCode;
 
     if (statusCode == 401 && _tokenManager.refreshToken != null) {
-      if (Env.isDev) {
-        _logService.devLog(
-          '⚠ 401 received for ${err.requestOptions.method} ${err.requestOptions.uri} '
-          '| body: ${err.response?.data}',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '⚠ 401 received for ${err.requestOptions.method} ${err.requestOptions.uri} '
+        '| body: ${err.response?.data}',
+        category: LogCategory.auth,
+      );
       final refreshed = await _tryRefresh(err.requestOptions);
       if (refreshed) {
         // Retry the original request with the new token.
@@ -125,39 +117,31 @@ class AuthInterceptor extends QueuedInterceptor {
           retryOptions.headers['Authorization'] =
               'Bearer ${_tokenManager.accessToken}';
 
-          if (Env.isDev) {
-            _logService.devLog(
-              '↻ Retrying ${retryOptions.method} ${retryOptions.uri} with new token',
-              category: LogCategory.auth,
-            );
-          }
+          _logService.devLog(
+            '↻ Retrying ${retryOptions.method} ${retryOptions.uri} with new token',
+            category: LogCategory.auth,
+          );
 
           final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
           final response = await dio.fetch(retryOptions);
-          if (Env.isDev) {
-            _logService.devLog(
-              '✓ Retry succeeded: ${response.statusCode}',
-              category: LogCategory.auth,
-            );
-          }
+          _logService.devLog(
+            '✓ Retry succeeded: ${response.statusCode}',
+            category: LogCategory.auth,
+          );
           return handler.resolve(response);
         } on DioException catch (retryErr) {
-          if (Env.isDev) {
-            _logService.devLog(
-              '✗ Retry failed: ${retryErr.response?.statusCode} ${retryErr.message}',
-              category: LogCategory.auth,
-            );
-          }
+          _logService.devLog(
+            '✗ Retry failed: ${retryErr.response?.statusCode} ${retryErr.message}',
+            category: LogCategory.auth,
+          );
           return handler.reject(retryErr);
         }
       }
       // Refresh failed — force logout.
-      if (Env.isDev) {
-        _logService.devLog(
-          '✗ Token refresh failed → force logout',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '✗ Token refresh failed → force logout',
+        category: LogCategory.auth,
+      );
       _authEventController.add(AuthEvent.forceLogout);
       return handler.reject(err);
     }
@@ -168,13 +152,11 @@ class AuthInterceptor extends QueuedInterceptor {
           ? data['error_code'] as String?
           : null;
 
-      if (Env.isDev) {
-        _logService.devLog(
-          '⚠ 403 received for ${err.requestOptions.uri} '
-          '| error_code: $errorCode | body: $data',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '⚠ 403 received for ${err.requestOptions.uri} '
+        '| error_code: $errorCode | body: $data',
+        category: LogCategory.auth,
+      );
 
       if (errorCode == 'reauth_required') {
         _authEventController.add(AuthEvent.reAuthRequired);
@@ -201,30 +183,26 @@ class AuthInterceptor extends QueuedInterceptor {
         'Content-Type': 'application/json',
       };
 
-      if (Env.isDev) {
-        _logService.devLog(
-          '→ [AUTH REFRESH] POST $fullUrl\n'
-          '  Headers: {\n'
-          '    Authorization: Bearer ${LogService.maskToken(_tokenManager.accessToken)}\n'
-          '    Content-Type: application/json\n'
-          '  }\n'
-          '  Body: {refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '→ [AUTH REFRESH] POST $fullUrl\n'
+        '  Headers: {\n'
+        '    Authorization: Bearer ${LogService.maskToken(_tokenManager.accessToken)}\n'
+        '    Content-Type: application/json\n'
+        '  }\n'
+        '  Body: {refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
+        category: LogCategory.auth,
+      );
       final response = await dio.post(
         ApiEndpoints.refresh,
         data: refreshData,
         options: Options(headers: headers),
       );
 
-      if (Env.isDev) {
-        _logService.devLog(
-          '← [AUTH REFRESH] Status: ${response.statusCode}\n'
-          '  Body: ${response.data}',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '← [AUTH REFRESH] Status: ${response.statusCode}\n'
+        '  Body: ${response.data}',
+        category: LogCategory.auth,
+      );
 
       if (response.statusCode == 200 && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
@@ -233,14 +211,12 @@ class AuthInterceptor extends QueuedInterceptor {
         final sessionId = data['sessionId'] as String?;
         final expiresAt = data['expiresAt'] as String?;
 
-        if (Env.isDev) {
-          _logService.devLog(
-            '← Refresh response: accessToken=${LogService.maskToken(newAccessToken)}, '
-            'refreshToken=${LogService.maskToken(newRefreshToken)}, '
-            'sessionId=$sessionId, expiresAt=$expiresAt',
-            category: LogCategory.auth,
-          );
-        }
+        _logService.devLog(
+          '← Refresh response: accessToken=${LogService.maskToken(newAccessToken)}, '
+          'refreshToken=${LogService.maskToken(newRefreshToken)}, '
+          'sessionId=$sessionId, expiresAt=$expiresAt',
+          category: LogCategory.auth,
+        );
 
         if (newAccessToken != null && newRefreshToken != null) {
           await _tokenManager.saveTokens(

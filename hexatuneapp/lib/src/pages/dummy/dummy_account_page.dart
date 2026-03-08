@@ -7,7 +7,6 @@ import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -63,13 +62,9 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
           _bioCtrl.text = profile.bio ?? '';
         });
       }
-      if (Env.isDev) {
-        log.devLog('✓ Account loaded: ${account.id}', category: LogCategory.ui);
-      }
+      log.devLog('✓ Account loaded: ${account.id}', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load account failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load account failed: $e', category: LogCategory.ui);
       if (mounted) setState(() => _error = e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -99,13 +94,9 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
         setState(() => _profile = updated);
         _showMessage('Profile updated');
       }
-      if (Env.isDev) {
-        log.devLog('✓ Profile updated', category: LogCategory.ui);
-      }
+      log.devLog('✓ Profile updated', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Update profile failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Update profile failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

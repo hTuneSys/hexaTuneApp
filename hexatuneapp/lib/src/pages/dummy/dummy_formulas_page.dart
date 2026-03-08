@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/create_formula_request.dart';
@@ -63,16 +62,12 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
           _hasMore = resp.pagination.hasMore;
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Formulas loaded: ${resp.data.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Formulas loaded: ${resp.data.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load formulas failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load formulas failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

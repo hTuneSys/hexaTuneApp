@@ -10,7 +10,6 @@ import 'package:hexatuneapp/src/core/rest/auth/models/refresh_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/resend_password_reset_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -49,17 +48,13 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
     });
     final log = getIt<LogService>();
     try {
-      if (Env.isDev) {
-        log.devLog('→ $label', category: LogCategory.ui);
-      }
+      log.devLog('→ $label', category: LogCategory.ui);
       final result = await action();
       if (mounted) {
         setState(() => _resultText = '✓ $label\n$result');
       }
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ $label failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ $label failed: $e', category: LogCategory.ui);
       if (mounted) {
         setState(() => _resultText = '✗ $label\n$e');
       }

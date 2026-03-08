@@ -4,7 +4,6 @@
 import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/rest/auth/paseto_parser.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart';
@@ -50,17 +49,15 @@ class TokenManager {
       'session: $_cachedSessionId',
       category: LogCategory.auth,
     );
-    if (Env.isDev) {
-      _logService.devLog(
-        'Token details — '
-        'access: ${LogService.maskToken(_cachedAccessToken)}, '
-        'refresh: ${LogService.maskToken(_cachedRefreshToken)}, '
-        'session: $_cachedSessionId, '
-        'accessExp: $_accessExpiresAt, '
-        'refreshExp: $_refreshExpiresAt',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      'Token details — '
+      'access: ${LogService.maskToken(_cachedAccessToken)}, '
+      'refresh: ${LogService.maskToken(_cachedRefreshToken)}, '
+      'session: $_cachedSessionId, '
+      'accessExp: $_accessExpiresAt, '
+      'refreshExp: $_refreshExpiresAt',
+      category: LogCategory.auth,
+    );
   }
 
   /// Store tokens from a login or refresh response.
@@ -89,17 +86,15 @@ class TokenManager {
     _parseRefreshTokenExpiry();
 
     _logService.debug('Tokens saved', category: LogCategory.auth);
-    if (Env.isDev) {
-      _logService.devLog(
-        'Saved tokens — '
-        'access: ${LogService.maskToken(accessToken)}, '
-        'refresh: ${LogService.maskToken(refreshToken)}, '
-        'session: $sessionId, '
-        'accessExp: $_accessExpiresAt, '
-        'refreshExp: $_refreshExpiresAt',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      'Saved tokens — '
+      'access: ${LogService.maskToken(accessToken)}, '
+      'refresh: ${LogService.maskToken(refreshToken)}, '
+      'session: $sessionId, '
+      'accessExp: $_accessExpiresAt, '
+      'refreshExp: $_refreshExpiresAt',
+      category: LogCategory.auth,
+    );
   }
 
   /// Clear all tokens (on logout or refresh failure).

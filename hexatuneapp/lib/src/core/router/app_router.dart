@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
@@ -189,13 +188,11 @@ class AppRouter {
   }
 
   void _logRedirect(String path, AuthState authState, String? redirect) {
-    if (Env.isDev) {
-      _logService.devLog(
-        '🧭 Router: path=$path, auth=${authState.name} '
-        '→ ${redirect ?? 'no redirect'}',
-        category: LogCategory.router,
-      );
-    }
+    _logService.devLog(
+      '🧭 Router: path=$path, auth=${authState.name} '
+      '→ ${redirect ?? 'no redirect'}',
+      category: LogCategory.router,
+    );
   }
 }
 

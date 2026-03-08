@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -108,13 +107,9 @@ class DummyHomePage extends StatelessWidget {
             tooltip: 'Logout',
             onPressed: () async {
               final log = getIt<LogService>();
-              if (Env.isDev) {
-                log.devLog('→ Logout button tapped', category: LogCategory.ui);
-              }
+              log.devLog('→ Logout button tapped', category: LogCategory.ui);
               await getIt<AuthService>().logout();
-              if (Env.isDev) {
-                log.devLog('✓ Logout complete', category: LogCategory.ui);
-              }
+              log.devLog('✓ Logout complete', category: LogCategory.ui);
             },
           ),
         ],

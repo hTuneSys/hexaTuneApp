@@ -4,7 +4,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 
@@ -82,12 +81,10 @@ class SecureStorageService {
     await _storage.delete(key: _keyRefreshToken);
     await _storage.delete(key: _keySessionId);
     await _storage.delete(key: _keyExpiresAt);
-    if (Env.isDev) {
-      _logService.devLog(
-        '🗑 Storage: cleared all auth tokens',
-        category: LogCategory.storage,
-      );
-    }
+    _logService.devLog(
+      '🗑 Storage: cleared all auth tokens',
+      category: LogCategory.storage,
+    );
   }
 
   // --- Device ID ---
@@ -118,39 +115,31 @@ class SecureStorageService {
 
   Future<void> delete(String key) async {
     await _storage.delete(key: key);
-    if (Env.isDev) {
-      _logService.devLog(
-        '🗑 Storage: deleted key=$key',
-        category: LogCategory.storage,
-      );
-    }
+    _logService.devLog(
+      '🗑 Storage: deleted key=$key',
+      category: LogCategory.storage,
+    );
   }
 
   Future<void> clearAll() async {
     await _storage.deleteAll();
-    if (Env.isDev) {
-      _logService.devLog(
-        '🗑 Storage: cleared ALL data',
-        category: LogCategory.storage,
-      );
-    }
+    _logService.devLog(
+      '🗑 Storage: cleared ALL data',
+      category: LogCategory.storage,
+    );
   }
 
   void _devLogWrite(String key, int valueLength) {
-    if (Env.isDev) {
-      _logService.devLog(
-        '💾 Storage: write key=$key, valueLength=$valueLength',
-        category: LogCategory.storage,
-      );
-    }
+    _logService.devLog(
+      '💾 Storage: write key=$key, valueLength=$valueLength',
+      category: LogCategory.storage,
+    );
   }
 
   void _devLogRead(String key, bool found) {
-    if (Env.isDev) {
-      _logService.devLog(
-        '📖 Storage: read key=$key, found=$found',
-        category: LogCategory.storage,
-      );
-    }
+    _logService.devLog(
+      '📖 Storage: read key=$key, found=$found',
+      category: LogCategory.storage,
+    );
   }
 }

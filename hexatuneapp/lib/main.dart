@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'package:hexatuneapp/src/core/bootstrap/app_bootstrap.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -20,7 +21,10 @@ void main() async {
     // Firebase may not be configured yet — run `flutterfire configure`.
     // The app works without Firebase, but FCM notifications will be
     // unavailable until google-services.json is added.
-    debugPrint('[BOOTSTRAP] Firebase init failed — FCM unavailable: $e');
+    // LogService is not available yet (pre-DI), so use debugPrint.
+    if (Env.isDev) {
+      debugPrint('[BOOTSTRAP] Firebase init failed — FCM unavailable: $e');
+    }
   }
 
   // Register all services via get_it + injectable.

@@ -7,7 +7,6 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/update_category_request.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -62,16 +61,12 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
           _hasMore = resp.pagination.hasMore;
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Categories loaded: ${resp.data.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Categories loaded: ${resp.data.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load categories failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load categories failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

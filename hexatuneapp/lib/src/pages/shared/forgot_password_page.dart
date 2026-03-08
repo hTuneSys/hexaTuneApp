@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/forgot_password_request.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -46,16 +45,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     final log = getIt<LogService>();
 
     try {
-      if (Env.isDev) {
-        log.devLog('→ Forgot password: email=$email', category: LogCategory.ui);
-      }
+      log.devLog('→ Forgot password: email=$email', category: LogCategory.ui);
 
       final authRepo = getIt<AuthRepository>();
       await authRepo.forgotPassword(ForgotPasswordRequest(email: email));
 
-      if (Env.isDev) {
-        log.devLog('✓ Reset code sent', category: LogCategory.ui);
-      }
+      log.devLog('✓ Reset code sent', category: LogCategory.ui);
 
       if (!mounted) return;
       _showInfo(l10n.otpSentTo(email));
@@ -64,9 +59,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         '${RouteNames.resetPassword}?email=${Uri.encodeComponent(email)}',
       );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Forgot password failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Forgot password failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);

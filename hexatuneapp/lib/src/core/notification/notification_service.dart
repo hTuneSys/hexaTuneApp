@@ -5,7 +5,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 
@@ -68,12 +67,10 @@ class NotificationService {
         'FCM token obtained',
         category: LogCategory.notification,
       );
-      if (Env.isDev) {
-        _logService.devLog(
-          'FCM token: $_fcmToken',
-          category: LogCategory.notification,
-        );
-      }
+      _logService.devLog(
+        'FCM token: $_fcmToken',
+        category: LogCategory.notification,
+      );
     }
 
     // Listen for token refreshes.
@@ -83,12 +80,10 @@ class NotificationService {
         'FCM token refreshed',
         category: LogCategory.notification,
       );
-      if (Env.isDev) {
-        _logService.devLog(
-          'New FCM token: $newToken',
-          category: LogCategory.notification,
-        );
-      }
+      _logService.devLog(
+        'New FCM token: $newToken',
+        category: LogCategory.notification,
+      );
       _onTokenRefreshCallback?.call(newToken);
     });
 
@@ -104,15 +99,13 @@ class NotificationService {
       'Foreground message: ${message.notification?.title}',
       category: LogCategory.notification,
     );
-    if (Env.isDev) {
-      _logService.devLog(
-        'Foreground message details — '
-        'title: ${message.notification?.title}, '
-        'body: ${message.notification?.body}, '
-        'data: ${message.data}',
-        category: LogCategory.notification,
-      );
-    }
+    _logService.devLog(
+      'Foreground message details — '
+      'title: ${message.notification?.title}, '
+      'body: ${message.notification?.body}, '
+      'data: ${message.data}',
+      category: LogCategory.notification,
+    );
     // TODO: show local notification via LocalNotificationService
   }
 
@@ -121,15 +114,13 @@ class NotificationService {
       'Message opened app: ${message.data}',
       category: LogCategory.notification,
     );
-    if (Env.isDev) {
-      _logService.devLog(
-        'Message opened app details — '
-        'title: ${message.notification?.title}, '
-        'body: ${message.notification?.body}, '
-        'data: ${message.data}',
-        category: LogCategory.notification,
-      );
-    }
+    _logService.devLog(
+      'Message opened app details — '
+      'title: ${message.notification?.title}, '
+      'body: ${message.notification?.body}, '
+      'data: ${message.data}',
+      category: LogCategory.notification,
+    );
     // TODO: deep-link navigation based on message data
   }
 

@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approve_request_dto.dart';
@@ -47,15 +46,11 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
     });
     final log = getIt<LogService>();
     try {
-      if (Env.isDev) {
-        log.devLog('→ $label', category: LogCategory.ui);
-      }
+      log.devLog('→ $label', category: LogCategory.ui);
       final result = await action();
       if (mounted) setState(() => _resultText = '✓ $label\n$result');
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ $label failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ $label failed: $e', category: LogCategory.ui);
       if (mounted) setState(() => _resultText = '✗ $label\n$e');
     } finally {
       if (mounted) setState(() => _isLoading = false);

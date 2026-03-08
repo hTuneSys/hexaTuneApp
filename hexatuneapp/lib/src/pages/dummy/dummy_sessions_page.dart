@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -54,16 +53,12 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
           _hasMore = resp.pagination.hasMore;
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Sessions loaded: ${resp.data.length}, hasMore=$_hasMore',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Sessions loaded: ${resp.data.length}, hasMore=$_hasMore',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load sessions failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load sessions failed: $e', category: LogCategory.ui);
       if (mounted) setState(() => _error = e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);

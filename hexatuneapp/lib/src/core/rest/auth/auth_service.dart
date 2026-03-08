@@ -12,7 +12,6 @@ import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/oauth_login_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
@@ -54,25 +53,21 @@ class AuthService {
   /// Log in with the given [request]. On success, stores tokens.
   Future<LoginResponse> login(LoginRequest request) async {
     _logService.info('Login attempt', category: LogCategory.auth);
-    if (Env.isDev) {
-      _logService.devLog(
-        '→ Login request: email=${request.email}, '
-        'deviceId=${request.deviceId}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '→ Login request: email=${request.email}, '
+      'deviceId=${request.deviceId}',
+      category: LogCategory.auth,
+    );
 
     final loginResponse = await _authRepository.login(request);
 
-    if (Env.isDev) {
-      _logService.devLog(
-        '← Login response: sessionId=${loginResponse.sessionId}, '
-        'expiresAt=${loginResponse.expiresAt}, '
-        'accessToken=${LogService.maskToken(loginResponse.accessToken)}, '
-        'refreshToken=${LogService.maskToken(loginResponse.refreshToken)}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '← Login response: sessionId=${loginResponse.sessionId}, '
+      'expiresAt=${loginResponse.expiresAt}, '
+      'accessToken=${LogService.maskToken(loginResponse.accessToken)}, '
+      'refreshToken=${LogService.maskToken(loginResponse.refreshToken)}',
+      category: LogCategory.auth,
+    );
 
     await _tokenManager.saveTokens(
       accessToken: loginResponse.accessToken,
@@ -90,25 +85,21 @@ class AuthService {
   /// Log in with Google. On success, stores tokens.
   Future<OAuthLoginResponse> loginWithGoogle(GoogleAuthRequest request) async {
     _logService.info('Google login attempt', category: LogCategory.auth);
-    if (Env.isDev) {
-      _logService.devLog(
-        '→ Google login request: deviceId=${request.deviceId}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '→ Google login request: deviceId=${request.deviceId}',
+      category: LogCategory.auth,
+    );
 
     final response = await _authRepository.loginWithGoogle(request);
 
-    if (Env.isDev) {
-      _logService.devLog(
-        '← Google login response: sessionId=${response.sessionId}, '
-        'isNewAccount=${response.isNewAccount}, '
-        'expiresAt=${response.expiresAt}, '
-        'accessToken=${LogService.maskToken(response.accessToken)}, '
-        'refreshToken=${LogService.maskToken(response.refreshToken)}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '← Google login response: sessionId=${response.sessionId}, '
+      'isNewAccount=${response.isNewAccount}, '
+      'expiresAt=${response.expiresAt}, '
+      'accessToken=${LogService.maskToken(response.accessToken)}, '
+      'refreshToken=${LogService.maskToken(response.refreshToken)}',
+      category: LogCategory.auth,
+    );
 
     await _tokenManager.saveTokens(
       accessToken: response.accessToken,
@@ -126,25 +117,21 @@ class AuthService {
   /// Log in with Apple. On success, stores tokens.
   Future<OAuthLoginResponse> loginWithApple(AppleAuthRequest request) async {
     _logService.info('Apple login attempt', category: LogCategory.auth);
-    if (Env.isDev) {
-      _logService.devLog(
-        '→ Apple login request: deviceId=${request.deviceId}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '→ Apple login request: deviceId=${request.deviceId}',
+      category: LogCategory.auth,
+    );
 
     final response = await _authRepository.loginWithApple(request);
 
-    if (Env.isDev) {
-      _logService.devLog(
-        '← Apple login response: sessionId=${response.sessionId}, '
-        'isNewAccount=${response.isNewAccount}, '
-        'expiresAt=${response.expiresAt}, '
-        'accessToken=${LogService.maskToken(response.accessToken)}, '
-        'refreshToken=${LogService.maskToken(response.refreshToken)}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      '← Apple login response: sessionId=${response.sessionId}, '
+      'isNewAccount=${response.isNewAccount}, '
+      'expiresAt=${response.expiresAt}, '
+      'accessToken=${LogService.maskToken(response.accessToken)}, '
+      'refreshToken=${LogService.maskToken(response.refreshToken)}',
+      category: LogCategory.auth,
+    );
 
     await _tokenManager.saveTokens(
       accessToken: response.accessToken,
@@ -166,12 +153,10 @@ class AuthService {
     // Best-effort server notification.
     try {
       await _authRepository.logout();
-      if (Env.isDev) {
-        _logService.devLog(
-          '✓ Logout server call succeeded',
-          category: LogCategory.auth,
-        );
-      }
+      _logService.devLog(
+        '✓ Logout server call succeeded',
+        category: LogCategory.auth,
+      );
     } catch (e) {
       _logService.warning(
         'Logout server call failed (non-critical)',
@@ -199,12 +184,10 @@ class AuthService {
     final previous = _currentState;
     _currentState = state;
     _authStateController.add(state);
-    if (Env.isDev) {
-      _logService.devLog(
-        'Auth state: ${previous.name} → ${state.name}',
-        category: LogCategory.auth,
-      );
-    }
+    _logService.devLog(
+      'Auth state: ${previous.name} → ${state.name}',
+      category: LogCategory.auth,
+    );
   }
 
   void dispose() {

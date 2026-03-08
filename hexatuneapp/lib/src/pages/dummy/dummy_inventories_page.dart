@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -64,16 +63,12 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
           _hasMore = resp.pagination.hasMore;
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Inventories loaded: ${resp.data.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Inventories loaded: ${resp.data.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load inventories failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load inventories failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

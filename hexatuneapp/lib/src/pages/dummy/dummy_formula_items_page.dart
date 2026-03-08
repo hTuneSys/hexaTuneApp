@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/add_formula_item_entry.dart';
@@ -57,19 +56,12 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
             ..sort((a, b) => a.sortOrder.compareTo(b.sortOrder));
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Formula detail loaded: ${detail.items.length} items',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Formula detail loaded: ${detail.items.length} items',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog(
-          '✗ Load formula detail failed: $e',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog('✗ Load formula detail failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

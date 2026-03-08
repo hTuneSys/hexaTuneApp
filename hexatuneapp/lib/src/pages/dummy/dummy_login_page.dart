@@ -10,7 +10,6 @@ import 'package:hexatuneapp/src/core/rest/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
@@ -65,12 +64,10 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final authService = getIt<AuthService>();
       final deviceService = getIt<DeviceService>();
 
-      if (Env.isDev) {
-        log.devLog(
-          '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
+        category: LogCategory.ui,
+      );
 
       final response = await authService.login(
         LoginRequest(
@@ -80,19 +77,15 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         ),
       );
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Login success: sessionId=${response.sessionId}, '
-          'expiresAt=${response.expiresAt}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Login success: sessionId=${response.sessionId}, '
+        'expiresAt=${response.expiresAt}',
+        category: LogCategory.ui,
+      );
 
       await _registerPushToken();
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Login failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Login failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -114,13 +107,11 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final request = await oauthService.signInWithGoogle();
       final response = await authService.loginWithGoogle(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Google sign-in success: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Google sign-in success: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (mounted && response.isNewAccount) {
         _showInfo('New account created via Google');
@@ -128,13 +119,9 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
 
       await _registerPushToken();
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -157,13 +144,11 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final request = await oauthService.signInWithApple();
       final response = await authService.loginWithApple(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Apple sign-in success: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Apple sign-in success: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (mounted && response.isNewAccount) {
         _showInfo('New account created via Apple');
@@ -171,13 +156,9 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
 
       await _registerPushToken();
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -202,20 +183,13 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final response = await authService.loginWithGoogle(
         GoogleAuthRequest(idToken: idToken, deviceId: deviceService.deviceId),
       );
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Manual Google login: sessionId=${response.sessionId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Manual Google login: sessionId=${response.sessionId}',
+        category: LogCategory.ui,
+      );
       await _registerPushToken();
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog(
-          '✗ Manual Google login failed: $e',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog('✗ Manual Google login failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -236,17 +210,13 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final response = await authService.loginWithApple(
         AppleAuthRequest(idToken: idToken, deviceId: deviceService.deviceId),
       );
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Manual Apple login: sessionId=${response.sessionId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Manual Apple login: sessionId=${response.sessionId}',
+        category: LogCategory.ui,
+      );
       await _registerPushToken();
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Manual Apple login failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Manual Apple login failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -262,23 +232,19 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
       final notificationService = getIt<NotificationService>();
 
       if (notificationService.fcmToken == null) {
-        if (Env.isDev) {
-          getIt<LogService>().devLog(
-            'Initializing NotificationService after login…',
-            category: LogCategory.notification,
-          );
-        }
+        getIt<LogService>().devLog(
+          'Initializing NotificationService after login…',
+          category: LogCategory.notification,
+        );
         await notificationService.init();
       }
 
       final fcmToken = notificationService.fcmToken;
       if (fcmToken == null) {
-        if (Env.isDev) {
-          getIt<LogService>().devLog(
-            'Push token registration skipped — no FCM token',
-            category: LogCategory.notification,
-          );
-        }
+        getIt<LogService>().devLog(
+          'Push token registration skipped — no FCM token',
+          category: LogCategory.notification,
+        );
         return;
       }
 
@@ -293,12 +259,10 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         'Push token registered after login',
         category: LogCategory.notification,
       );
-      if (Env.isDev) {
-        getIt<LogService>().devLog(
-          '✓ Push token registered: $fcmToken',
-          category: LogCategory.notification,
-        );
-      }
+      getIt<LogService>().devLog(
+        '✓ Push token registered: $fcmToken',
+        category: LogCategory.notification,
+      );
     } catch (e) {
       getIt<LogService>().warning(
         'Push token registration failed (non-critical)',

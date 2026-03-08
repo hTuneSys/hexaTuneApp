@@ -46,6 +46,23 @@ AI Agents **MUST** ask for explicit user approval before:
 
 ---
 
+## 🔇 Logging Rules: Dev-Only Enforcement
+
+**All logging output MUST be restricted to the dev environment (`Env.isDev`).**
+
+`LogService` enforces this at the service level — every log method (`verbose`, `debug`, `info`, `warning`, `error`, `critical`, `devLog`) is a **no-op** when `Env.isDev` is `false`. This means:
+
+- **Do NOT wrap log calls with `if (Env.isDev)`** — the service already handles this. Redundant guards are prohibited.
+- **Do NOT use `print()` or `debugPrint()`** anywhere in `lib/` — always use `LogService`. The only exception is `main.dart` before DI is configured, where `debugPrint` must still be wrapped in `if (Env.isDev)`.
+- **Do NOT bypass `LogService`** by accessing `Talker` directly or using any other output mechanism.
+- **Always use `LogCategory`** — every log call must include a category for structured filtering.
+- Use `LogService.maskToken()` for any sensitive data (tokens, secrets) even in dev logs.
+- Log definitions live exclusively in `lib/src/core/log/` — no other files may define logging utilities.
+
+**Result: zero console output in test, stage, and prod builds. No exceptions.**
+
+---
+
 ## 🎨 UI and Styling Rules
 
 **All production code MUST follow these rules:**

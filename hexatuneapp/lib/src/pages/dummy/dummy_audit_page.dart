@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hexatuneapp/src/core/rest/audit/audit_repository.dart';
 import 'package:hexatuneapp/src/core/rest/audit/models/audit_log_dto.dart';
 import 'package:hexatuneapp/src/core/rest/audit/models/audit_log_query_params.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -70,16 +69,12 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
           _hasMore = resp.pagination.hasMore;
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Audit logs loaded: ${resp.data.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Audit logs loaded: ${resp.data.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load audit logs failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load audit logs failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

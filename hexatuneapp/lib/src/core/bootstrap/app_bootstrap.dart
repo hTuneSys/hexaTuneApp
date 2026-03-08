@@ -45,12 +45,10 @@ class AppBootstrap {
       final deviceService = getIt<DeviceService>();
       await deviceService.init();
       log.info('DeviceService ready', category: LogCategory.bootstrap);
-      if (Env.isDev) {
-        log.devLog(
-          'Device ID: ${deviceService.deviceId}',
-          category: LogCategory.bootstrap,
-        );
-      }
+      log.devLog(
+        'Device ID: ${deviceService.deviceId}',
+        category: LogCategory.bootstrap,
+      );
 
       // Headset connection monitoring.
       final headsetService = getIt<HeadsetService>();
@@ -66,15 +64,13 @@ class AppBootstrap {
       final tokenManager = getIt<TokenManager>();
       await tokenManager.loadTokens();
       log.info('TokenManager ready', category: LogCategory.bootstrap);
-      if (Env.isDev) {
-        log.devLog(
-          'Token state — hasToken: ${tokenManager.hasToken}, '
-          'session: ${tokenManager.sessionId}, '
-          'accessExp: ${tokenManager.accessExpiresAt}, '
-          'refreshExp: ${tokenManager.refreshExpiresAt}',
-          category: LogCategory.bootstrap,
-        );
-      }
+      log.devLog(
+        'Token state — hasToken: ${tokenManager.hasToken}, '
+        'session: ${tokenManager.sessionId}, '
+        'accessExp: ${tokenManager.accessExpiresAt}, '
+        'refreshExp: ${tokenManager.refreshExpiresAt}',
+        category: LogCategory.bootstrap,
+      );
 
       // Proactive token refresh during bootstrap.
       // If the access token has expired, refresh it now so the user
@@ -101,9 +97,7 @@ class AppBootstrap {
         await notificationService.init();
         fcmToken = notificationService.fcmToken;
         log.info('NotificationService ready', category: LogCategory.bootstrap);
-        if (Env.isDev) {
-          log.devLog('FCM token: $fcmToken', category: LogCategory.bootstrap);
-        }
+        log.devLog('FCM token: $fcmToken', category: LogCategory.bootstrap);
       } catch (e) {
         log.warning(
           'NotificationService init failed '
@@ -224,17 +218,15 @@ class AppBootstrap {
         'Content-Type': 'application/json',
       };
 
-      if (Env.isDev) {
-        log.devLog(
-          '→ [BOOTSTRAP REFRESH] POST $fullUrl\n'
-          '  Headers: {\n'
-          '    Authorization: Bearer ${LogService.maskToken(tokenManager.accessToken)}\n'
-          '    Content-Type: application/json\n'
-          '  }\n'
-          '  Body: {refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}}',
-          category: LogCategory.bootstrap,
-        );
-      }
+      log.devLog(
+        '→ [BOOTSTRAP REFRESH] POST $fullUrl\n'
+        '  Headers: {\n'
+        '    Authorization: Bearer ${LogService.maskToken(tokenManager.accessToken)}\n'
+        '    Content-Type: application/json\n'
+        '  }\n'
+        '  Body: {refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}}',
+        category: LogCategory.bootstrap,
+      );
 
       final response = await dio.post(
         ApiEndpoints.refresh,
@@ -242,14 +234,12 @@ class AppBootstrap {
         options: Options(headers: headers),
       );
 
-      if (Env.isDev) {
-        log.devLog(
-          '← [BOOTSTRAP REFRESH] Status: ${response.statusCode}\n'
-          '  Headers: ${response.headers.map}\n'
-          '  Body: ${response.data}',
-          category: LogCategory.bootstrap,
-        );
-      }
+      log.devLog(
+        '← [BOOTSTRAP REFRESH] Status: ${response.statusCode}\n'
+        '  Headers: ${response.headers.map}\n'
+        '  Body: ${response.data}',
+        category: LogCategory.bootstrap,
+      );
 
       if (response.statusCode == 200 && response.data is Map) {
         final data = response.data as Map<String, dynamic>;
@@ -269,14 +259,12 @@ class AppBootstrap {
             'Access token refreshed during bootstrap',
             category: LogCategory.bootstrap,
           );
-          if (Env.isDev) {
-            log.devLog(
-              '✓ Bootstrap refresh succeeded — '
-              'newAccessExp: ${tokenManager.accessExpiresAt}, '
-              'newRefreshExp: ${tokenManager.refreshExpiresAt}',
-              category: LogCategory.bootstrap,
-            );
-          }
+          log.devLog(
+            '✓ Bootstrap refresh succeeded — '
+            'newAccessExp: ${tokenManager.accessExpiresAt}, '
+            'newRefreshExp: ${tokenManager.refreshExpiresAt}',
+            category: LogCategory.bootstrap,
+          );
           return;
         }
       }

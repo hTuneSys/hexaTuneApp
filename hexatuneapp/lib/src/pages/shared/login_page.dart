@@ -10,7 +10,6 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
@@ -65,12 +64,10 @@ class _LoginPageState extends State<LoginPage> {
       final authService = getIt<AuthService>();
       final deviceService = getIt<DeviceService>();
 
-      if (Env.isDev) {
-        log.devLog(
-          '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
+        category: LogCategory.ui,
+      );
 
       final response = await authService.login(
         LoginRequest(
@@ -80,19 +77,15 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Login success: sessionId=${response.sessionId}, '
-          'expiresAt=${response.expiresAt}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Login success: sessionId=${response.sessionId}, '
+        'expiresAt=${response.expiresAt}',
+        category: LogCategory.ui,
+      );
 
       await _registerPushToken();
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Login failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Login failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -114,13 +107,11 @@ class _LoginPageState extends State<LoginPage> {
       final request = await oauthService.signInWithGoogle();
       final response = await authService.loginWithGoogle(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Google sign-in: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Google sign-in: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (mounted && response.isNewAccount) {
         final l10n = AppLocalizations.of(context)!;
@@ -129,13 +120,9 @@ class _LoginPageState extends State<LoginPage> {
 
       await _registerPushToken();
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -158,13 +145,11 @@ class _LoginPageState extends State<LoginPage> {
       final request = await oauthService.signInWithApple();
       final response = await authService.loginWithApple(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Apple sign-in: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Apple sign-in: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (mounted && response.isNewAccount) {
         final l10n = AppLocalizations.of(context)!;
@@ -173,13 +158,9 @@ class _LoginPageState extends State<LoginPage> {
 
       await _registerPushToken();
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
       _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -195,12 +176,10 @@ class _LoginPageState extends State<LoginPage> {
       final notificationService = getIt<NotificationService>();
 
       if (notificationService.fcmToken == null) {
-        if (Env.isDev) {
-          getIt<LogService>().devLog(
-            'Initializing NotificationService after login…',
-            category: LogCategory.notification,
-          );
-        }
+        getIt<LogService>().devLog(
+          'Initializing NotificationService after login…',
+          category: LogCategory.notification,
+        );
         await notificationService.init();
       }
 

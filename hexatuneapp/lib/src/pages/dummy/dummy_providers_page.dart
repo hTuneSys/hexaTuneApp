@@ -11,7 +11,6 @@ import 'package:hexatuneapp/src/core/rest/auth/models/link_google_provider_reque
 import 'package:hexatuneapp/src/core/rest/auth/models/provider_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/provider_repository.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -68,17 +67,13 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
             ..addAll(providers);
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Providers loaded: ${providers.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Providers loaded: ${providers.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog('✗ Load providers failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load providers failed: $e', category: LogCategory.ui);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -114,12 +109,7 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
       _showSnack('Google Sign-In cancelled');
     } on OAuthException catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog(
-          '✗ Google link sign-in failed: $e',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog('✗ Google link sign-in failed: $e', category: LogCategory.ui);
     }
   }
 
@@ -152,9 +142,7 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
       _showSnack('Apple Sign-In is not available on this platform');
     } on OAuthException catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog('✗ Apple link sign-in failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Apple link sign-in failed: $e', category: LogCategory.ui);
     }
   }
 
@@ -185,16 +173,12 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
     final log = getIt<LogService>();
     try {
       await action();
-      if (Env.isDev) {
-        log.devLog('✓ $label succeeded', category: LogCategory.ui);
-      }
+      log.devLog('✓ $label succeeded', category: LogCategory.ui);
       _showSnack('$label succeeded');
       await _loadProviders();
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog('✗ $label failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ $label failed: $e', category: LogCategory.ui);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

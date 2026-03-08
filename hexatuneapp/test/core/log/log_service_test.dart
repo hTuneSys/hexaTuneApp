@@ -74,11 +74,18 @@ void main() {
       );
     });
 
+    test('devLog is a no-throw alias for debug', () {
+      expect(
+        () => logService.devLog('dev message', category: LogCategory.app),
+        returnsNormally,
+      );
+    });
+
     test('logs without category', () {
       expect(() => logService.info('no category'), returnsNormally);
     });
 
-    test('talker history captures logs', () {
+    test('talker history captures logs in dev mode', () {
       logService.info('history test', category: LogCategory.app);
       final history = logService.talker.history;
       expect(history, isNotEmpty);
@@ -86,6 +93,27 @@ void main() {
         history.any((r) => r.message?.contains('history test') ?? false),
         isTrue,
       );
+    });
+  });
+
+  group('LogService.maskToken', () {
+    test('returns "null" for null input', () {
+      expect(LogService.maskToken(null), equals('null'));
+    });
+
+    test('returns "***" for short tokens (<=16 chars)', () {
+      expect(LogService.maskToken(''), equals('***'));
+      expect(LogService.maskToken('abc'), equals('***'));
+      expect(LogService.maskToken('1234567890123456'), equals('***'));
+    });
+
+    test('masks middle of long tokens', () {
+      const token = '12345678_middle_section_87654321';
+      final masked = LogService.maskToken(token);
+      expect(masked, startsWith('12345678'));
+      expect(masked, endsWith('87654321'));
+      expect(masked, contains('…'));
+      expect(masked.length, lessThan(token.length));
     });
   });
 

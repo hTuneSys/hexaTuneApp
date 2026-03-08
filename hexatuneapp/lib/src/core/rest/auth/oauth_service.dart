@@ -46,14 +46,12 @@ class OAuthService {
   /// Throws [OAuthCancelledException] if the user cancels.
   /// Throws [OAuthException] on SDK or token errors.
   Future<GoogleAuthRequest> signInWithGoogle() async {
-    if (Env.isDev) {
-      _log.devLog(
-        '→ Google Sign-In: starting native flow\n'
-        '  apiBaseUrl=${Env.apiBaseUrl}\n'
-        '  serverClientId=${Env.googleOAuthServerClientId.isNotEmpty ? Env.googleOAuthServerClientId : "(empty)"}',
-        category: LogCategory.auth,
-      );
-    }
+    _log.devLog(
+      '→ Google Sign-In: starting native flow\n'
+      '  apiBaseUrl=${Env.apiBaseUrl}\n'
+      '  serverClientId=${Env.googleOAuthServerClientId.isNotEmpty ? Env.googleOAuthServerClientId : "(empty)"}',
+      category: LogCategory.auth,
+    );
 
     await _ensureGoogleInitialized();
 
@@ -67,12 +65,10 @@ class OAuthService {
         );
       }
 
-      if (Env.isDev) {
-        _log.devLog(
-          '✓ Google Sign-In: got ID token (${idToken.length} chars)',
-          category: LogCategory.auth,
-        );
-      }
+      _log.devLog(
+        '✓ Google Sign-In: got ID token (${idToken.length} chars)',
+        category: LogCategory.auth,
+      );
 
       return GoogleAuthRequest(
         idToken: idToken,
@@ -99,15 +95,13 @@ class OAuthService {
       );
     }
 
-    if (Env.isDev) {
-      _log.devLog(
-        '→ Apple Sign-In: starting native flow\n'
-        '  apiBaseUrl=${Env.apiBaseUrl}\n'
-        '  serviceId=${Env.appleSignInServiceId.isNotEmpty ? Env.appleSignInServiceId : "(empty)"}\n'
-        '  redirectUrl=${Env.appleSignInRedirectUrl.isNotEmpty ? Env.appleSignInRedirectUrl : "(empty)"}',
-        category: LogCategory.auth,
-      );
-    }
+    _log.devLog(
+      '→ Apple Sign-In: starting native flow\n'
+      '  apiBaseUrl=${Env.apiBaseUrl}\n'
+      '  serviceId=${Env.appleSignInServiceId.isNotEmpty ? Env.appleSignInServiceId : "(empty)"}\n'
+      '  redirectUrl=${Env.appleSignInRedirectUrl.isNotEmpty ? Env.appleSignInRedirectUrl : "(empty)"}',
+      category: LogCategory.auth,
+    );
 
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
@@ -124,12 +118,10 @@ class OAuthService {
         );
       }
 
-      if (Env.isDev) {
-        _log.devLog(
-          '✓ Apple Sign-In: got ID token (${idToken.length} chars)',
-          category: LogCategory.auth,
-        );
-      }
+      _log.devLog(
+        '✓ Apple Sign-In: got ID token (${idToken.length} chars)',
+        category: LogCategory.auth,
+      );
 
       return AppleAuthRequest(
         idToken: idToken,
@@ -148,9 +140,7 @@ class OAuthService {
   Future<void> signOutGoogle() async {
     if (!_googleInitialized) return;
     await GoogleSignIn.instance.signOut();
-    if (Env.isDev) {
-      _log.devLog('✓ Google Sign-In: signed out', category: LogCategory.auth);
-    }
+    _log.devLog('✓ Google Sign-In: signed out', category: LogCategory.auth);
   }
 }
 

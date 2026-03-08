@@ -9,7 +9,6 @@ import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/create_account_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -66,21 +65,14 @@ class _RegisterPageState extends State<RegisterPage> {
     final log = getIt<LogService>();
 
     try {
-      if (Env.isDev) {
-        log.devLog(
-          '→ Register attempt: email=$email',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog('→ Register attempt: email=$email', category: LogCategory.ui);
 
       final authRepo = getIt<AuthRepository>();
       await authRepo.register(
         CreateAccountRequest(email: email, password: password),
       );
 
-      if (Env.isDev) {
-        log.devLog('✓ Register success', category: LogCategory.ui);
-      }
+      log.devLog('✓ Register success', category: LogCategory.ui);
 
       if (!mounted) return;
       _showMessage(l10n.accountCreatedVerifyEmail, isError: false);
@@ -89,9 +81,7 @@ class _RegisterPageState extends State<RegisterPage> {
         '${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}',
       );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Register failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Register failed: $e', category: LogCategory.ui);
       _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -113,13 +103,11 @@ class _RegisterPageState extends State<RegisterPage> {
       final request = await oauthService.signInWithGoogle();
       final response = await authService.loginWithGoogle(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Google sign-up: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Google sign-up: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (!mounted) return;
       final l10n = AppLocalizations.of(context)!;
@@ -127,13 +115,9 @@ class _RegisterPageState extends State<RegisterPage> {
         _showMessage(l10n.newAccountViaGoogle, isError: false);
       }
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
       _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -156,13 +140,11 @@ class _RegisterPageState extends State<RegisterPage> {
       final request = await oauthService.signInWithApple();
       final response = await authService.loginWithApple(request);
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Apple sign-up: sessionId=${response.sessionId}, '
-          'isNewAccount=${response.isNewAccount}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Apple sign-up: sessionId=${response.sessionId}, '
+        'isNewAccount=${response.isNewAccount}',
+        category: LogCategory.ui,
+      );
 
       if (!mounted) return;
       final l10n = AppLocalizations.of(context)!;
@@ -170,13 +152,9 @@ class _RegisterPageState extends State<RegisterPage> {
         _showMessage(l10n.newAccountViaApple, isError: false);
       }
     } on OAuthCancelledException {
-      if (Env.isDev) {
-        log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
-      }
+      log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
       _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

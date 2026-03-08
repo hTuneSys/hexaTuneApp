@@ -8,10 +8,17 @@ import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 
 /// Application-wide logging service built on Talker.
+///
+/// **All logging is restricted to dev environment only.**
+/// In non-dev builds (test, stage, prod) every log method is a no-op,
+/// ensuring zero console output and zero processing overhead.
 @singleton
 class LogService {
   late final Talker _talker;
 
+  /// Exposes the underlying Talker instance for integrations that require
+  /// it (e.g. [TalkerDioLogger]). Console output is already disabled in
+  /// non-dev environments via [TalkerSettings.useConsoleLogs].
   Talker get talker => _talker;
 
   /// Initialize the logging system.
@@ -19,8 +26,8 @@ class LogService {
   void init() {
     _talker = Talker(
       settings: TalkerSettings(
-        useConsoleLogs: true,
-        useHistory: true,
+        useConsoleLogs: Env.isDev,
+        useHistory: Env.isDev,
         maxHistoryItems: 1000,
       ),
     );
@@ -34,11 +41,10 @@ class LogService {
     return '${token.substring(0, 8)}…${token.substring(token.length - 8)}';
   }
 
-  /// Log a message only when running in dev environment.
+  /// Alias for [debug] kept for backward compatibility.
   void devLog(String message, {LogCategory? category}) {
-    if (Env.isDev) {
-      debug(_formatMessage(message, category: category));
-    }
+    if (!Env.isDev) return;
+    _talker.debug(_formatMessage(message, category: category));
   }
 
   String _formatMessage(String message, {LogCategory? category}) {
@@ -49,14 +55,17 @@ class LogService {
   }
 
   void verbose(String message, {LogCategory? category}) {
+    if (!Env.isDev) return;
     _talker.verbose(_formatMessage(message, category: category));
   }
 
   void debug(String message, {LogCategory? category}) {
+    if (!Env.isDev) return;
     _talker.debug(_formatMessage(message, category: category));
   }
 
   void info(String message, {LogCategory? category}) {
+    if (!Env.isDev) return;
     _talker.info(_formatMessage(message, category: category));
   }
 
@@ -66,6 +75,7 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    if (!Env.isDev) return;
     _talker.warning(
       _formatMessage(message, category: category),
       exception,
@@ -79,6 +89,7 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    if (!Env.isDev) return;
     _talker.error(
       _formatMessage(message, category: category),
       exception,
@@ -92,6 +103,7 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    if (!Env.isDev) return;
     _talker.critical(
       _formatMessage(message, category: category),
       exception,

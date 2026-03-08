@@ -3,7 +3,6 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -48,16 +47,12 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
             ..addAll(resp.data);
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Inventories loaded: ${resp.data.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Inventories loaded: ${resp.data.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Load inventories failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load inventories failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -85,22 +80,18 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
           _selectedIds.clear();
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Harmonics generated: ${response.totalAssigned} assignments, '
-          'requestId=${response.requestId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Harmonics generated: ${response.totalAssigned} assignments, '
+        'requestId=${response.requestId}',
+        category: LogCategory.ui,
+      );
       if (mounted) {
         _showMessage(
           'Generated ${response.totalAssigned} harmonic assignments',
         );
       }
     } catch (e) {
-      if (Env.isDev) {
-        log.devLog('✗ Generate harmonics failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Generate harmonics failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);

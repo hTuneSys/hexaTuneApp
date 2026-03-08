@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/switch_tenant_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/tenant_membership_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/tenant_repository.dart';
-import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -47,17 +46,13 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
             ..addAll(memberships);
         });
       }
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Tenant memberships loaded: ${memberships.length}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Tenant memberships loaded: ${memberships.length}',
+        category: LogCategory.ui,
+      );
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog('✗ Load memberships failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Load memberships failed: $e', category: LogCategory.ui);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -82,20 +77,16 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
         refreshToken: response.refreshToken,
       );
 
-      if (Env.isDev) {
-        log.devLog(
-          '✓ Switched to tenant $tenantId, '
-          'sessionId=${response.sessionId}',
-          category: LogCategory.ui,
-        );
-      }
+      log.devLog(
+        '✓ Switched to tenant $tenantId, '
+        'sessionId=${response.sessionId}',
+        category: LogCategory.ui,
+      );
       _showSnack('Switched to tenant $tenantId');
       await _loadMemberships();
     } catch (e) {
       if (mounted) setState(() => _error = e.toString());
-      if (Env.isDev) {
-        log.devLog('✗ Switch tenant failed: $e', category: LogCategory.ui);
-      }
+      log.devLog('✗ Switch tenant failed: $e', category: LogCategory.ui);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
