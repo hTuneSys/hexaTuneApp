@@ -5,6 +5,7 @@ import AVFoundation
 @main
 @objc class AppDelegate: FlutterAppDelegate {
   private var audioDeviceDetector: AudioDeviceDetector?
+  private var dspChannelHandler: DspMethodChannelHandler?
 
   override func application(
     _ application: UIApplication,
@@ -15,6 +16,9 @@ import AVFoundation
     if let controller = window?.rootViewController as? FlutterViewController {
       audioDeviceDetector = AudioDeviceDetector(messenger: controller.binaryMessenger)
       audioDeviceDetector?.start()
+
+      dspChannelHandler = DspMethodChannelHandler()
+      dspChannelHandler?.register(with: controller.binaryMessenger)
     }
 
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)

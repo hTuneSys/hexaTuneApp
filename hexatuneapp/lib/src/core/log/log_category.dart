@@ -15,4 +15,5 @@ enum LogCategory {
   bootstrap,
   ui,
   hardware,
+  dsp,
 }

@@ -10,6 +10,9 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart' as _i845;
+import 'package:hexatuneapp/src/core/dsp/dsp_bindings.dart' as _i1000;
+import 'package:hexatuneapp/src/core/dsp/dsp_service.dart' as _i716;
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart'
     as _i494;
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart'
@@ -73,6 +76,12 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.singleton<_i845.DspAssetService>(
+      () => _i845.DspAssetService(gh<_i571.LogService>()),
+    );
+    gh.singleton<_i1000.DspBindings>(
+      () => _i1000.DspBindings(gh<_i571.LogService>()),
+    );
     gh.singleton<_i494.HeadsetService>(
       () => _i494.HeadsetService(gh<_i571.LogService>()),
       dispose: (i) => i.dispose(),
@@ -133,6 +142,10 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i571.LogService>(),
         gh<_i410.ProtoService>(),
       ),
+      dispose: (i) => i.dispose(),
+    );
+    gh.singleton<_i716.DspService>(
+      () => _i716.DspService(gh<_i1000.DspBindings>(), gh<_i571.LogService>()),
       dispose: (i) => i.dispose(),
     );
     gh.singleton<_i87.AccountRepository>(

@@ -8,7 +8,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 void main() {
   group('LogCategory', () {
     test('has all expected values', () {
-      expect(LogCategory.values, hasLength(12));
+      expect(LogCategory.values, hasLength(13));
     });
 
     test('contains all required categories', () {
@@ -25,6 +25,7 @@ void main() {
       expect(names, contains('bootstrap'));
       expect(names, contains('ui'));
       expect(names, contains('hardware'));
+      expect(names, contains('dsp'));
     });
 
     test('each value has unique name', () {

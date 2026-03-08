@@ -29,4 +29,5 @@ class RouteNames {
   static const String tasks = '/dev/tasks';
   static const String audit = '/dev/audit';
   static const String harmonics = '/dev/harmonics';
+  static const String dsp = '/dev/dsp';
 }

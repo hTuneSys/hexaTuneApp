@@ -88,6 +88,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Generate harmonic numbers',
       route: RouteNames.harmonics,
     ),
+    _NavItem(
+      icon: Icons.equalizer,
+      title: 'DSP Audio Engine',
+      subtitle: 'Multi-layer audio with binaural beats',
+      route: RouteNames.dsp,
+    ),
   ];
 
   @override
