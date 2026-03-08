@@ -130,7 +130,7 @@ class HexagenService {
     final hexaDevice = await _deviceManager.findHexagenDevice();
 
     if (hexaDevice != null) {
-      _logService.devLog(
+      _logService.info(
         'hexaGen device found: ${hexaDevice.name}',
         category: LogCategory.hardware,
       );
@@ -142,25 +142,32 @@ class HexagenService {
       );
       unawaited(_connectDevice(hexaDevice));
     } else {
-      _logService.devLog(
-        'No hexaGen device found',
-        category: LogCategory.hardware,
-      );
+      if (_currentState.isConnected) {
+        _logService.info(
+          'hexaGen device disconnected',
+          category: LogCategory.hardware,
+        );
+      } else {
+        _logService.devLog(
+          'No hexaGen device found',
+          category: LogCategory.hardware,
+        );
+      }
       _deviceManager.clearConnection();
       _updateState(const HexagenState(isInitialized: true));
     }
   }
 
   void _onDeviceChanged() {
-    _logService.devLog(
-      'Device configuration changed (plug/unplug)',
+    _logService.info(
+      'MIDI device configuration changed (plug/unplug)',
       category: LogCategory.hardware,
     );
     _loadDevices();
   }
 
   Future<void> _connectDevice(dynamic device) async {
-    _logService.devLog(
+    _logService.info(
       'Connecting to hexaGen device: ${device.name}',
       category: LogCategory.hardware,
     );
@@ -168,6 +175,11 @@ class HexagenService {
     try {
       await _deviceManager.connectAndQueryVersion(device);
       _updateState(_currentState.copyWith(isConnected: true));
+      _logService.info(
+        'hexaGen device connected — '
+        'firmware: ${_currentState.firmwareVersion ?? "querying..."}',
+        category: LogCategory.hardware,
+      );
     } catch (e, stack) {
       _logService.error(
         'hexaGen connection failed',
@@ -197,8 +209,8 @@ class HexagenService {
     required bool waiting,
   }) {
     if (version != null) {
-      _logService.devLog(
-        'Device version: $version',
+      _logService.info(
+        'hexaGen firmware version: $version',
         category: LogCategory.hardware,
       );
       _updateState(_currentState.copyWith(firmwareVersion: version));
@@ -206,12 +218,17 @@ class HexagenService {
 
     if (error != null) {
       _logService.warning(
-        'Device error: ${error.code}',
+        'hexaGen device error: ${error.code}',
         category: LogCategory.hardware,
       );
     }
 
     if (operationStatus != null) {
+      _logService.info(
+        'hexaGen operation status: $operationStatus'
+        '${operationStepId != null ? " (step $operationStepId)" : ""}',
+        category: LogCategory.hardware,
+      );
       _currentOperationStatus = operationStatus;
       _currentGeneratingStepId = operationStepId;
     }
@@ -254,7 +271,7 @@ class HexagenService {
     final sysex = command.buildSysEx(_protoService);
     _trackCommand(command.id, compiled);
 
-    _logService.devLog(
+    _logService.info(
       'Sending ${command.type.name}: $compiled',
       category: LogCategory.hardware,
     );
@@ -273,7 +290,7 @@ class HexagenService {
     final timeout = Duration(milliseconds: timeMs + 5000);
     _trackCommand(id, compiled, timeout: timeout);
 
-    _logService.devLog(
+    _logService.info(
       'Sending FREQ and waiting: $compiled',
       category: LogCategory.hardware,
     );
@@ -313,7 +330,7 @@ class HexagenService {
     final command = ATCommand.operationGenerate(operationId);
     _currentOperationStatus = 'GENERATE';
 
-    _logService.devLog(
+    _logService.info(
       'Sending OPERATION GENERATE: ${command.compile()}',
       category: LogCategory.hardware,
     );
@@ -390,11 +407,12 @@ class HexagenService {
     _stateController.add(newState);
 
     if (previous != newState) {
-      _logService.devLog(
+      _logService.info(
         'hexaGen state changed: '
         'connected ${previous.isConnected} → ${newState.isConnected}, '
         'device: ${newState.deviceName ?? "none"}, '
-        'firmware: ${newState.firmwareVersion ?? "unknown"}',
+        'firmware: ${newState.firmwareVersion ?? "unknown"}'
+        '${newState.isReady ? " ✓ READY" : ""}',
         category: LogCategory.hardware,
       );
     }

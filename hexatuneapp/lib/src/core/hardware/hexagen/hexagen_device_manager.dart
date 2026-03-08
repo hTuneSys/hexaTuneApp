@@ -169,7 +169,7 @@ class HexagenDeviceManager {
     _sysexBuffer.clear();
     _notifyResponse(waiting: true);
 
-    _logService.devLog(
+    _logService.info(
       'Sending AT+VERSION? (${bytes.length} bytes)',
       category: LogCategory.hardware,
     );
@@ -221,7 +221,7 @@ class HexagenDeviceManager {
         return;
       }
 
-      _logService.devLog(
+      _logService.info(
         'Decoded AT response: type=${response.type}, id=${response.id}',
         category: LogCategory.hardware,
       );
