@@ -71,5 +71,71 @@
   "accountCreatedVerifyEmail": "Hesap oluşturuldu! Lütfen e-postanızı doğrulayın.",
   "newAccountViaGoogle": "Google ile yeni hesap oluşturuldu",
   "newAccountViaApple": "Apple ile yeni hesap oluşturuldu",
-  "appleSignInNotAvailable": "Apple ile giriş yalnızca iOS'ta kullanılabilir"
+  "appleSignInNotAvailable": "Apple ile giriş yalnızca iOS'ta kullanılabilir",
+
+  "ambienceBaseForest": "Orman",
+  "ambienceBaseOcean": "Okyanus",
+  "ambienceBaseRain": "Yağmur",
+  "ambienceTextureWave": "Dalga",
+  "ambienceTextureWindThroughTrees": "Ağaçların Arasında Rüzgâr",
+  "ambienceEventBird": "Kuş",
+  "ambienceEventCat": "Kedi",
+  "ambienceEventFish": "Balık",
+  "ambienceEventThunder": "Gök Gürültüsü",
+
+  "dspPageTitle": "DSP Ses Motoru",
+  "dspSoundLayers": "Ses Katmanları",
+  "dspGainControls": "Ses Ayarları",
+  "dspBinauralConfig": "Binaural Yapılandırma",
+  "dspCycleSteps": "Frekans Döngü Adımları",
+  "dspSectionBase": "Temel",
+  "dspSectionTexture": "Doku",
+  "dspSectionEvents": "Olaylar",
+  "dspSelectedCount": "{count}/{max}",
+  "@dspSelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "dspNoSelection": "Seçmek için dokunun",
+  "dspPlay": "OYNAT",
+  "dspStop": "DURDUR",
+  "dspGraceful": "YUMUŞAK",
+  "dspLoading": "YÜKLENİYOR...",
+  "dspFinishing": "BİTİRİLİYOR...",
+  "dspPlaying": "Çalıyor...",
+  "dspStopped": "Durduruldu",
+  "dspGracefullyStopped": "Yumuşak geçişle durduruldu",
+  "dspFinishingCycle": "Döngü tamamlanıyor...",
+  "dspCarrierFrequency": "Taşıyıcı Frekans (Hz)",
+  "dspBinauralMode": "Binaural Mod",
+  "dspBinauralStereo": "Stereo binaural atışlar",
+  "dspBinauralMono": "AM mono darbeli",
+  "dspDeltaHz": "Delta Hz",
+  "dspDurationS": "Süre s",
+  "dspAddStep": "Adım Ekle",
+  "dspBaseLoaded": "Temel yüklendi: {name}",
+  "@dspBaseLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspTextureLoaded": "Doku {index} yüklendi: {name}",
+  "@dspTextureLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspEventLoaded": "Olay {index} yüklendi: {name}",
+  "@dspEventLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspSelectBaseFirst": "Önce bir Temel katman seçin",
+  "dspLoadFailed": "Yükleme başarısız (rc={code})",
+  "@dspLoadFailed": {
+    "placeholders": { "code": { "type": "int" } }
+  }
 }

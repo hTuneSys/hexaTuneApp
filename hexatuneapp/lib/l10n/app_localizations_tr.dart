@@ -162,4 +162,134 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get appleSignInNotAvailable =>
       'Apple ile giriş yalnızca iOS\'ta kullanılabilir';
+
+  @override
+  String get ambienceBaseForest => 'Orman';
+
+  @override
+  String get ambienceBaseOcean => 'Okyanus';
+
+  @override
+  String get ambienceBaseRain => 'Yağmur';
+
+  @override
+  String get ambienceTextureWave => 'Dalga';
+
+  @override
+  String get ambienceTextureWindThroughTrees => 'Ağaçların Arasında Rüzgâr';
+
+  @override
+  String get ambienceEventBird => 'Kuş';
+
+  @override
+  String get ambienceEventCat => 'Kedi';
+
+  @override
+  String get ambienceEventFish => 'Balık';
+
+  @override
+  String get ambienceEventThunder => 'Gök Gürültüsü';
+
+  @override
+  String get dspPageTitle => 'DSP Ses Motoru';
+
+  @override
+  String get dspSoundLayers => 'Ses Katmanları';
+
+  @override
+  String get dspGainControls => 'Ses Ayarları';
+
+  @override
+  String get dspBinauralConfig => 'Binaural Yapılandırma';
+
+  @override
+  String get dspCycleSteps => 'Frekans Döngü Adımları';
+
+  @override
+  String get dspSectionBase => 'Temel';
+
+  @override
+  String get dspSectionTexture => 'Doku';
+
+  @override
+  String get dspSectionEvents => 'Olaylar';
+
+  @override
+  String dspSelectedCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get dspNoSelection => 'Seçmek için dokunun';
+
+  @override
+  String get dspPlay => 'OYNAT';
+
+  @override
+  String get dspStop => 'DURDUR';
+
+  @override
+  String get dspGraceful => 'YUMUŞAK';
+
+  @override
+  String get dspLoading => 'YÜKLENİYOR...';
+
+  @override
+  String get dspFinishing => 'BİTİRİLİYOR...';
+
+  @override
+  String get dspPlaying => 'Çalıyor...';
+
+  @override
+  String get dspStopped => 'Durduruldu';
+
+  @override
+  String get dspGracefullyStopped => 'Yumuşak geçişle durduruldu';
+
+  @override
+  String get dspFinishingCycle => 'Döngü tamamlanıyor...';
+
+  @override
+  String get dspCarrierFrequency => 'Taşıyıcı Frekans (Hz)';
+
+  @override
+  String get dspBinauralMode => 'Binaural Mod';
+
+  @override
+  String get dspBinauralStereo => 'Stereo binaural atışlar';
+
+  @override
+  String get dspBinauralMono => 'AM mono darbeli';
+
+  @override
+  String get dspDeltaHz => 'Delta Hz';
+
+  @override
+  String get dspDurationS => 'Süre s';
+
+  @override
+  String get dspAddStep => 'Adım Ekle';
+
+  @override
+  String dspBaseLoaded(String name) {
+    return 'Temel yüklendi: $name';
+  }
+
+  @override
+  String dspTextureLoaded(int index, String name) {
+    return 'Doku $index yüklendi: $name';
+  }
+
+  @override
+  String dspEventLoaded(int index, String name) {
+    return 'Olay $index yüklendi: $name';
+  }
+
+  @override
+  String get dspSelectBaseFirst => 'Önce bir Temel katman seçin';
+
+  @override
+  String dspLoadFailed(int code) {
+    return 'Yükleme başarısız (rc=$code)';
+  }
 }

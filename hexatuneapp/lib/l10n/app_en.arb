@@ -71,5 +71,71 @@
   "accountCreatedVerifyEmail": "Account created! Please verify your email.",
   "newAccountViaGoogle": "New account created via Google",
   "newAccountViaApple": "New account created via Apple",
-  "appleSignInNotAvailable": "Apple Sign-In is only available on iOS"
+  "appleSignInNotAvailable": "Apple Sign-In is only available on iOS",
+
+  "ambienceBaseForest": "Forest",
+  "ambienceBaseOcean": "Ocean",
+  "ambienceBaseRain": "Rain",
+  "ambienceTextureWave": "Wave",
+  "ambienceTextureWindThroughTrees": "Wind Through Trees",
+  "ambienceEventBird": "Bird",
+  "ambienceEventCat": "Cat",
+  "ambienceEventFish": "Fish",
+  "ambienceEventThunder": "Thunder",
+
+  "dspPageTitle": "DSP Audio Engine",
+  "dspSoundLayers": "Sound Layers",
+  "dspGainControls": "Gain Controls",
+  "dspBinauralConfig": "Binaural Configuration",
+  "dspCycleSteps": "Frequency Cycle Steps",
+  "dspSectionBase": "Base",
+  "dspSectionTexture": "Texture",
+  "dspSectionEvents": "Events",
+  "dspSelectedCount": "{count}/{max}",
+  "@dspSelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "dspNoSelection": "Tap to select",
+  "dspPlay": "PLAY",
+  "dspStop": "STOP",
+  "dspGraceful": "GRACEFUL",
+  "dspLoading": "LOADING...",
+  "dspFinishing": "FINISHING...",
+  "dspPlaying": "Playing...",
+  "dspStopped": "Stopped",
+  "dspGracefullyStopped": "Gracefully stopped",
+  "dspFinishingCycle": "Finishing cycle...",
+  "dspCarrierFrequency": "Carrier Frequency (Hz)",
+  "dspBinauralMode": "Binaural Mode",
+  "dspBinauralStereo": "Stereo binaural beats",
+  "dspBinauralMono": "AM mono pulsing",
+  "dspDeltaHz": "Delta Hz",
+  "dspDurationS": "Duration s",
+  "dspAddStep": "Add Step",
+  "dspBaseLoaded": "Base loaded: {name}",
+  "@dspBaseLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspTextureLoaded": "Texture {index} loaded: {name}",
+  "@dspTextureLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspEventLoaded": "Event {index} loaded: {name}",
+  "@dspEventLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspSelectBaseFirst": "Select a Base layer first",
+  "dspLoadFailed": "Load failed (rc={code})",
+  "@dspLoadFailed": {
+    "placeholders": { "code": { "type": "int" } }
+  }
 }

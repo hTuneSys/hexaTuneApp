@@ -391,6 +391,246 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Apple Sign-In is only available on iOS'**
   String get appleSignInNotAvailable;
+
+  /// No description provided for @ambienceBaseForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get ambienceBaseForest;
+
+  /// No description provided for @ambienceBaseOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get ambienceBaseOcean;
+
+  /// No description provided for @ambienceBaseRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get ambienceBaseRain;
+
+  /// No description provided for @ambienceTextureWave.
+  ///
+  /// In en, this message translates to:
+  /// **'Wave'**
+  String get ambienceTextureWave;
+
+  /// No description provided for @ambienceTextureWindThroughTrees.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind Through Trees'**
+  String get ambienceTextureWindThroughTrees;
+
+  /// No description provided for @ambienceEventBird.
+  ///
+  /// In en, this message translates to:
+  /// **'Bird'**
+  String get ambienceEventBird;
+
+  /// No description provided for @ambienceEventCat.
+  ///
+  /// In en, this message translates to:
+  /// **'Cat'**
+  String get ambienceEventCat;
+
+  /// No description provided for @ambienceEventFish.
+  ///
+  /// In en, this message translates to:
+  /// **'Fish'**
+  String get ambienceEventFish;
+
+  /// No description provided for @ambienceEventThunder.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunder'**
+  String get ambienceEventThunder;
+
+  /// No description provided for @dspPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'DSP Audio Engine'**
+  String get dspPageTitle;
+
+  /// No description provided for @dspSoundLayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Layers'**
+  String get dspSoundLayers;
+
+  /// No description provided for @dspGainControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain Controls'**
+  String get dspGainControls;
+
+  /// No description provided for @dspBinauralConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural Configuration'**
+  String get dspBinauralConfig;
+
+  /// No description provided for @dspCycleSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Cycle Steps'**
+  String get dspCycleSteps;
+
+  /// No description provided for @dspSectionBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Base'**
+  String get dspSectionBase;
+
+  /// No description provided for @dspSectionTexture.
+  ///
+  /// In en, this message translates to:
+  /// **'Texture'**
+  String get dspSectionTexture;
+
+  /// No description provided for @dspSectionEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get dspSectionEvents;
+
+  /// No description provided for @dspSelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{max}'**
+  String dspSelectedCount(int count, int max);
+
+  /// No description provided for @dspNoSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select'**
+  String get dspNoSelection;
+
+  /// No description provided for @dspPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY'**
+  String get dspPlay;
+
+  /// No description provided for @dspStop.
+  ///
+  /// In en, this message translates to:
+  /// **'STOP'**
+  String get dspStop;
+
+  /// No description provided for @dspGraceful.
+  ///
+  /// In en, this message translates to:
+  /// **'GRACEFUL'**
+  String get dspGraceful;
+
+  /// No description provided for @dspLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'LOADING...'**
+  String get dspLoading;
+
+  /// No description provided for @dspFinishing.
+  ///
+  /// In en, this message translates to:
+  /// **'FINISHING...'**
+  String get dspFinishing;
+
+  /// No description provided for @dspPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing...'**
+  String get dspPlaying;
+
+  /// No description provided for @dspStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get dspStopped;
+
+  /// No description provided for @dspGracefullyStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Gracefully stopped'**
+  String get dspGracefullyStopped;
+
+  /// No description provided for @dspFinishingCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing cycle...'**
+  String get dspFinishingCycle;
+
+  /// No description provided for @dspCarrierFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Carrier Frequency (Hz)'**
+  String get dspCarrierFrequency;
+
+  /// No description provided for @dspBinauralMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural Mode'**
+  String get dspBinauralMode;
+
+  /// No description provided for @dspBinauralStereo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stereo binaural beats'**
+  String get dspBinauralStereo;
+
+  /// No description provided for @dspBinauralMono.
+  ///
+  /// In en, this message translates to:
+  /// **'AM mono pulsing'**
+  String get dspBinauralMono;
+
+  /// No description provided for @dspDeltaHz.
+  ///
+  /// In en, this message translates to:
+  /// **'Delta Hz'**
+  String get dspDeltaHz;
+
+  /// No description provided for @dspDurationS.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration s'**
+  String get dspDurationS;
+
+  /// No description provided for @dspAddStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Step'**
+  String get dspAddStep;
+
+  /// No description provided for @dspBaseLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Base loaded: {name}'**
+  String dspBaseLoaded(String name);
+
+  /// No description provided for @dspTextureLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Texture {index} loaded: {name}'**
+  String dspTextureLoaded(int index, String name);
+
+  /// No description provided for @dspEventLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Event {index} loaded: {name}'**
+  String dspEventLoaded(int index, String name);
+
+  /// No description provided for @dspSelectBaseFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a Base layer first'**
+  String get dspSelectBaseFirst;
+
+  /// No description provided for @dspLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Load failed (rc={code})'**
+  String dspLoadFailed(int code);
 }
 
 class _AppLocalizationsDelegate

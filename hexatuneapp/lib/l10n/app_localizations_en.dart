@@ -162,4 +162,134 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appleSignInNotAvailable =>
       'Apple Sign-In is only available on iOS';
+
+  @override
+  String get ambienceBaseForest => 'Forest';
+
+  @override
+  String get ambienceBaseOcean => 'Ocean';
+
+  @override
+  String get ambienceBaseRain => 'Rain';
+
+  @override
+  String get ambienceTextureWave => 'Wave';
+
+  @override
+  String get ambienceTextureWindThroughTrees => 'Wind Through Trees';
+
+  @override
+  String get ambienceEventBird => 'Bird';
+
+  @override
+  String get ambienceEventCat => 'Cat';
+
+  @override
+  String get ambienceEventFish => 'Fish';
+
+  @override
+  String get ambienceEventThunder => 'Thunder';
+
+  @override
+  String get dspPageTitle => 'DSP Audio Engine';
+
+  @override
+  String get dspSoundLayers => 'Sound Layers';
+
+  @override
+  String get dspGainControls => 'Gain Controls';
+
+  @override
+  String get dspBinauralConfig => 'Binaural Configuration';
+
+  @override
+  String get dspCycleSteps => 'Frequency Cycle Steps';
+
+  @override
+  String get dspSectionBase => 'Base';
+
+  @override
+  String get dspSectionTexture => 'Texture';
+
+  @override
+  String get dspSectionEvents => 'Events';
+
+  @override
+  String dspSelectedCount(int count, int max) {
+    return '$count/$max';
+  }
+
+  @override
+  String get dspNoSelection => 'Tap to select';
+
+  @override
+  String get dspPlay => 'PLAY';
+
+  @override
+  String get dspStop => 'STOP';
+
+  @override
+  String get dspGraceful => 'GRACEFUL';
+
+  @override
+  String get dspLoading => 'LOADING...';
+
+  @override
+  String get dspFinishing => 'FINISHING...';
+
+  @override
+  String get dspPlaying => 'Playing...';
+
+  @override
+  String get dspStopped => 'Stopped';
+
+  @override
+  String get dspGracefullyStopped => 'Gracefully stopped';
+
+  @override
+  String get dspFinishingCycle => 'Finishing cycle...';
+
+  @override
+  String get dspCarrierFrequency => 'Carrier Frequency (Hz)';
+
+  @override
+  String get dspBinauralMode => 'Binaural Mode';
+
+  @override
+  String get dspBinauralStereo => 'Stereo binaural beats';
+
+  @override
+  String get dspBinauralMono => 'AM mono pulsing';
+
+  @override
+  String get dspDeltaHz => 'Delta Hz';
+
+  @override
+  String get dspDurationS => 'Duration s';
+
+  @override
+  String get dspAddStep => 'Add Step';
+
+  @override
+  String dspBaseLoaded(String name) {
+    return 'Base loaded: $name';
+  }
+
+  @override
+  String dspTextureLoaded(int index, String name) {
+    return 'Texture $index loaded: $name';
+  }
+
+  @override
+  String dspEventLoaded(int index, String name) {
+    return 'Event $index loaded: $name';
+  }
+
+  @override
+  String get dspSelectBaseFirst => 'Select a Base layer first';
+
+  @override
+  String dspLoadFailed(int code) {
+    return 'Load failed (rc=$code)';
+  }
 }

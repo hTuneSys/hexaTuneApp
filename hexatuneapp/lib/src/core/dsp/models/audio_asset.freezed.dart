@@ -14,10 +14,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AudioAsset {
 
-/// Layer type: "base", "texture", or "events".
- String get layerType;/// Display name derived from the filename (without extension).
- String get name;/// Full asset path for loading via the asset bundle.
- String get assetPath;
+/// Unique identifier (e.g. "forest", "bird").
+ String get id;/// Layer type: "base", "texture", or "events".
+ String get layerType;/// Fallback display name derived from the filename.
+ String get name;/// Full asset path for loading audio via the asset bundle.
+ String get assetPath;/// Asset path for the icon image.
+ String get iconAsset;/// Localization key for the display name (e.g. "ambienceBaseForest").
+ String get nameKey;
 /// Create a copy of AudioAsset
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +31,16 @@ $AudioAssetCopyWith<AudioAsset> get copyWith => _$AudioAssetCopyWithImpl<AudioAs
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AudioAsset&&(identical(other.layerType, layerType) || other.layerType == layerType)&&(identical(other.name, name) || other.name == name)&&(identical(other.assetPath, assetPath) || other.assetPath == assetPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AudioAsset&&(identical(other.id, id) || other.id == id)&&(identical(other.layerType, layerType) || other.layerType == layerType)&&(identical(other.name, name) || other.name == name)&&(identical(other.assetPath, assetPath) || other.assetPath == assetPath)&&(identical(other.iconAsset, iconAsset) || other.iconAsset == iconAsset)&&(identical(other.nameKey, nameKey) || other.nameKey == nameKey));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,layerType,name,assetPath);
+int get hashCode => Object.hash(runtimeType,id,layerType,name,assetPath,iconAsset,nameKey);
 
 @override
 String toString() {
-  return 'AudioAsset(layerType: $layerType, name: $name, assetPath: $assetPath)';
+  return 'AudioAsset(id: $id, layerType: $layerType, name: $name, assetPath: $assetPath, iconAsset: $iconAsset, nameKey: $nameKey)';
 }
 
 
@@ -48,7 +51,7 @@ abstract mixin class $AudioAssetCopyWith<$Res>  {
   factory $AudioAssetCopyWith(AudioAsset value, $Res Function(AudioAsset) _then) = _$AudioAssetCopyWithImpl;
 @useResult
 $Res call({
- String layerType, String name, String assetPath
+ String id, String layerType, String name, String assetPath, String iconAsset, String nameKey
 });
 
 
@@ -65,11 +68,14 @@ class _$AudioAssetCopyWithImpl<$Res>
 
 /// Create a copy of AudioAsset
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? layerType = null,Object? name = null,Object? assetPath = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? layerType = null,Object? name = null,Object? assetPath = null,Object? iconAsset = null,Object? nameKey = null,}) {
   return _then(_self.copyWith(
-layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,assetPath: null == assetPath ? _self.assetPath : assetPath // ignore: cast_nullable_to_non_nullable
+as String,iconAsset: null == iconAsset ? _self.iconAsset : iconAsset // ignore: cast_nullable_to_non_nullable
+as String,nameKey: null == nameKey ? _self.nameKey : nameKey // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -155,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String layerType,  String name,  String assetPath)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String layerType,  String name,  String assetPath,  String iconAsset,  String nameKey)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AudioAsset() when $default != null:
-return $default(_that.layerType,_that.name,_that.assetPath);case _:
+return $default(_that.id,_that.layerType,_that.name,_that.assetPath,_that.iconAsset,_that.nameKey);case _:
   return orElse();
 
 }
@@ -176,10 +182,10 @@ return $default(_that.layerType,_that.name,_that.assetPath);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String layerType,  String name,  String assetPath)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String layerType,  String name,  String assetPath,  String iconAsset,  String nameKey)  $default,) {final _that = this;
 switch (_that) {
 case _AudioAsset():
-return $default(_that.layerType,_that.name,_that.assetPath);case _:
+return $default(_that.id,_that.layerType,_that.name,_that.assetPath,_that.iconAsset,_that.nameKey);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +202,10 @@ return $default(_that.layerType,_that.name,_that.assetPath);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String layerType,  String name,  String assetPath)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String layerType,  String name,  String assetPath,  String iconAsset,  String nameKey)?  $default,) {final _that = this;
 switch (_that) {
 case _AudioAsset() when $default != null:
-return $default(_that.layerType,_that.name,_that.assetPath);case _:
+return $default(_that.id,_that.layerType,_that.name,_that.assetPath,_that.iconAsset,_that.nameKey);case _:
   return null;
 
 }
@@ -211,15 +217,21 @@ return $default(_that.layerType,_that.name,_that.assetPath);case _:
 
 
 class _AudioAsset implements AudioAsset {
-  const _AudioAsset({required this.layerType, required this.name, required this.assetPath});
+  const _AudioAsset({required this.id, required this.layerType, required this.name, required this.assetPath, this.iconAsset = '', this.nameKey = ''});
   
 
+/// Unique identifier (e.g. "forest", "bird").
+@override final  String id;
 /// Layer type: "base", "texture", or "events".
 @override final  String layerType;
-/// Display name derived from the filename (without extension).
+/// Fallback display name derived from the filename.
 @override final  String name;
-/// Full asset path for loading via the asset bundle.
+/// Full asset path for loading audio via the asset bundle.
 @override final  String assetPath;
+/// Asset path for the icon image.
+@override@JsonKey() final  String iconAsset;
+/// Localization key for the display name (e.g. "ambienceBaseForest").
+@override@JsonKey() final  String nameKey;
 
 /// Create a copy of AudioAsset
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +243,16 @@ _$AudioAssetCopyWith<_AudioAsset> get copyWith => __$AudioAssetCopyWithImpl<_Aud
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AudioAsset&&(identical(other.layerType, layerType) || other.layerType == layerType)&&(identical(other.name, name) || other.name == name)&&(identical(other.assetPath, assetPath) || other.assetPath == assetPath));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AudioAsset&&(identical(other.id, id) || other.id == id)&&(identical(other.layerType, layerType) || other.layerType == layerType)&&(identical(other.name, name) || other.name == name)&&(identical(other.assetPath, assetPath) || other.assetPath == assetPath)&&(identical(other.iconAsset, iconAsset) || other.iconAsset == iconAsset)&&(identical(other.nameKey, nameKey) || other.nameKey == nameKey));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,layerType,name,assetPath);
+int get hashCode => Object.hash(runtimeType,id,layerType,name,assetPath,iconAsset,nameKey);
 
 @override
 String toString() {
-  return 'AudioAsset(layerType: $layerType, name: $name, assetPath: $assetPath)';
+  return 'AudioAsset(id: $id, layerType: $layerType, name: $name, assetPath: $assetPath, iconAsset: $iconAsset, nameKey: $nameKey)';
 }
 
 
@@ -251,7 +263,7 @@ abstract mixin class _$AudioAssetCopyWith<$Res> implements $AudioAssetCopyWith<$
   factory _$AudioAssetCopyWith(_AudioAsset value, $Res Function(_AudioAsset) _then) = __$AudioAssetCopyWithImpl;
 @override @useResult
 $Res call({
- String layerType, String name, String assetPath
+ String id, String layerType, String name, String assetPath, String iconAsset, String nameKey
 });
 
 
@@ -268,11 +280,14 @@ class __$AudioAssetCopyWithImpl<$Res>
 
 /// Create a copy of AudioAsset
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? layerType = null,Object? name = null,Object? assetPath = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? layerType = null,Object? name = null,Object? assetPath = null,Object? iconAsset = null,Object? nameKey = null,}) {
   return _then(_AudioAsset(
-layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,layerType: null == layerType ? _self.layerType : layerType // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,assetPath: null == assetPath ? _self.assetPath : assetPath // ignore: cast_nullable_to_non_nullable
+as String,iconAsset: null == iconAsset ? _self.iconAsset : iconAsset // ignore: cast_nullable_to_non_nullable
+as String,nameKey: null == nameKey ? _self.nameKey : nameKey // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

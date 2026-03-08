@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
@@ -34,24 +35,11 @@ class _DummyDspPageState extends State<DummyDspPage> {
   ];
 
   AudioAsset? _selectedBase;
-  late final List<AudioAsset?> _selectedTextures = List.filled(
-    DspConstants.maxTextureLayers,
-    null,
-  );
-  late final List<AudioAsset?> _selectedEvents = List.filled(
-    DspConstants.maxEventSlots,
-    null,
-  );
+  final List<AudioAsset> _selectedTextures = [];
+  final List<AudioAsset> _selectedEvents = [];
 
   bool _baseLoading = false;
-  late final List<bool> _textureLoading = List.filled(
-    DspConstants.maxTextureLayers,
-    false,
-  );
-  late final List<bool> _eventLoading = List.filled(
-    DspConstants.maxEventSlots,
-    false,
-  );
+  final Set<String> _loadingIds = {};
 
   double _baseGain = DspConstants.defaultBaseGain;
   double _textureGain = DspConstants.defaultTextureGain;
@@ -83,57 +71,50 @@ class _DummyDspPageState extends State<DummyDspPage> {
     super.dispose();
   }
 
-  bool get _anyLoading =>
-      _baseLoading ||
-      _textureLoading.any((l) => l) ||
-      _eventLoading.any((l) => l);
+  bool get _anyLoading => _baseLoading || _loadingIds.isNotEmpty;
 
   // ---------------------------------------------------------------------------
-  // Layer selection handlers
+  // Base selection
   // ---------------------------------------------------------------------------
 
-  Future<void> _onBaseSelected(AudioAsset? asset) async {
-    setState(() {
-      _selectedBase = asset;
-      _baseLoading = asset != null;
-    });
+  Future<void> _onBaseTapped(AudioAsset asset) async {
+    if (_baseLoading) return;
 
-    if (asset == null) {
+    if (_selectedBase?.id == asset.id) {
+      setState(() {
+        _selectedBase = null;
+        _baseLoading = false;
+      });
       final cascaded = await _dspService.clearBase();
       setState(() {
         _statusMessage = null;
         if (cascaded) {
-          for (var i = 0; i < _selectedTextures.length; i++) {
-            _selectedTextures[i] = null;
-            _textureLoading[i] = false;
-          }
-          for (var i = 0; i < _selectedEvents.length; i++) {
-            _selectedEvents[i] = null;
-            _eventLoading[i] = false;
-          }
+          _selectedTextures.clear();
+          _selectedEvents.clear();
+          _loadingIds.clear();
         }
       });
       return;
     }
 
     setState(() {
-      for (var i = 0; i < _selectedTextures.length; i++) {
-        _selectedTextures[i] = null;
-        _textureLoading[i] = false;
-      }
-      for (var i = 0; i < _selectedEvents.length; i++) {
-        _selectedEvents[i] = null;
-        _eventLoading[i] = false;
-      }
+      _selectedBase = asset;
+      _baseLoading = true;
+      _selectedTextures.clear();
+      _selectedEvents.clear();
+      _loadingIds.clear();
     });
 
     try {
       final rc = await _dspService.loadBase(asset.assetPath);
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      final name = DspAssetService.resolveLocalizedName(context, asset);
       setState(() {
         _baseLoading = false;
         _statusMessage = rc == 0
-            ? 'Base loaded: ${asset.name}'
-            : 'Base load failed (rc=$rc)';
+            ? l10n.dspBaseLoaded(name)
+            : l10n.dspLoadFailed(rc);
       });
     } catch (e) {
       setState(() {
@@ -143,67 +124,101 @@ class _DummyDspPageState extends State<DummyDspPage> {
     }
   }
 
-  Future<void> _onTextureSelected(int index, AudioAsset? asset) async {
-    setState(() {
-      _selectedTextures[index] = asset;
-      _textureLoading[index] = asset != null;
-    });
+  // ---------------------------------------------------------------------------
+  // Texture selection (multi, up to maxTextureLayers)
+  // ---------------------------------------------------------------------------
 
-    if (asset == null) {
-      await _dspService.clearTexture(index);
-      setState(() => _textureLoading[index] = false);
+  Future<void> _onTextureTapped(AudioAsset asset) async {
+    final l10n = AppLocalizations.of(context)!;
+    final existingIdx = _selectedTextures.indexWhere((a) => a.id == asset.id);
+
+    if (existingIdx >= 0) {
+      final slotIdx = existingIdx;
+      await _dspService.clearTexture(slotIdx);
+      setState(() {
+        _selectedTextures.removeAt(existingIdx);
+        _loadingIds.remove(asset.id);
+      });
       return;
     }
 
+    if (_selectedTextures.length >= DspConstants.maxTextureLayers) return;
+    if (_loadingIds.contains(asset.id)) return;
+
+    final slotIdx = _selectedTextures.length;
+    setState(() {
+      _selectedTextures.add(asset);
+      _loadingIds.add(asset.id);
+    });
+
     try {
-      final rc = await _dspService.loadTexture(index, asset.assetPath);
+      final rc = await _dspService.loadTexture(slotIdx, asset.assetPath);
+      if (!mounted) return;
+      final name = DspAssetService.resolveLocalizedName(context, asset);
       setState(() {
-        _textureLoading[index] = false;
+        _loadingIds.remove(asset.id);
         if (rc == HtdError.baseRequired.code) {
-          _statusMessage = 'Select a Base layer first';
-          _selectedTextures[index] = null;
+          _statusMessage = l10n.dspSelectBaseFirst;
+          _selectedTextures.removeWhere((a) => a.id == asset.id);
         } else {
           _statusMessage = rc == 0
-              ? 'Texture ${index + 1} loaded: ${asset.name}'
-              : 'Texture load failed (rc=$rc)';
+              ? l10n.dspTextureLoaded(slotIdx + 1, name)
+              : l10n.dspLoadFailed(rc);
         }
       });
     } catch (e) {
       setState(() {
-        _textureLoading[index] = false;
+        _loadingIds.remove(asset.id);
         _statusMessage = 'Texture error: $e';
       });
     }
   }
 
-  Future<void> _onEventSelected(int index, AudioAsset? asset) async {
-    setState(() {
-      _selectedEvents[index] = asset;
-      _eventLoading[index] = asset != null;
-    });
+  // ---------------------------------------------------------------------------
+  // Event selection (multi, up to maxEventSlots)
+  // ---------------------------------------------------------------------------
 
-    if (asset == null) {
-      await _dspService.clearEvent(index);
-      setState(() => _eventLoading[index] = false);
+  Future<void> _onEventTapped(AudioAsset asset) async {
+    final l10n = AppLocalizations.of(context)!;
+    final existingIdx = _selectedEvents.indexWhere((a) => a.id == asset.id);
+
+    if (existingIdx >= 0) {
+      final slotIdx = existingIdx;
+      await _dspService.clearEvent(slotIdx);
+      setState(() {
+        _selectedEvents.removeAt(existingIdx);
+        _loadingIds.remove(asset.id);
+      });
       return;
     }
 
+    if (_selectedEvents.length >= DspConstants.maxEventSlots) return;
+    if (_loadingIds.contains(asset.id)) return;
+
+    final slotIdx = _selectedEvents.length;
+    setState(() {
+      _selectedEvents.add(asset);
+      _loadingIds.add(asset.id);
+    });
+
     try {
-      final rc = await _dspService.loadEvent(index, asset.assetPath);
+      final rc = await _dspService.loadEvent(slotIdx, asset.assetPath);
+      if (!mounted) return;
+      final name = DspAssetService.resolveLocalizedName(context, asset);
       setState(() {
-        _eventLoading[index] = false;
+        _loadingIds.remove(asset.id);
         if (rc == HtdError.baseRequired.code) {
-          _statusMessage = 'Select a Base layer first';
-          _selectedEvents[index] = null;
+          _statusMessage = l10n.dspSelectBaseFirst;
+          _selectedEvents.removeWhere((a) => a.id == asset.id);
         } else {
           _statusMessage = rc == 0
-              ? 'Event ${index + 1} loaded: ${asset.name}'
-              : 'Event load failed (rc=$rc)';
+              ? l10n.dspEventLoaded(slotIdx + 1, name)
+              : l10n.dspLoadFailed(rc);
         }
       });
     } catch (e) {
       setState(() {
-        _eventLoading[index] = false;
+        _loadingIds.remove(asset.id);
         _statusMessage = 'Event error: $e';
       });
     }
@@ -234,31 +249,38 @@ class _DummyDspPageState extends State<DummyDspPage> {
       return;
     }
 
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isPlaying = true;
-      _statusMessage = 'Playing...';
+      _statusMessage = l10n.dspPlaying;
     });
   }
 
   Future<void> _stop() async {
     await _dspService.stop();
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isPlaying = false;
       _isStopping = false;
-      _statusMessage = 'Stopped';
+      _statusMessage = l10n.dspStopped;
     });
   }
 
   Future<void> _stopGraceful() async {
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isStopping = true;
-      _statusMessage = 'Finishing cycle...';
+      _statusMessage = l10n.dspFinishingCycle;
     });
     await _dspService.stopGraceful();
+    if (!mounted) return;
     setState(() {
       _isPlaying = false;
       _isStopping = false;
-      _statusMessage = 'Gracefully stopped';
+      _statusMessage = l10n.dspGracefullyStopped;
     });
   }
 
@@ -289,9 +311,10 @@ class _DummyDspPageState extends State<DummyDspPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('DSP Audio Engine')),
+      appBar: AppBar(title: Text(l10n.dspPageTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -301,55 +324,56 @@ class _DummyDspPageState extends State<DummyDspPage> {
             const SizedBox(height: 12),
 
             // Sound Layers
-            _buildSectionTitle(theme, 'Sound Layers'),
-            _buildLayerSelector(
-              theme,
-              'Base',
-              'base',
-              _selectedBase,
-              _baseLoading,
-              _onBaseSelected,
+            _buildSectionTitle(theme, l10n.dspSoundLayers),
+            _buildSoundLayerSection(
+              theme: theme,
+              l10n: l10n,
+              title: l10n.dspSectionBase,
+              layerType: 'base',
+              selectedCount: _selectedBase != null ? 1 : 0,
+              maxCount: 1,
+              isSelected: (a) => _selectedBase?.id == a.id,
+              onTap: _onBaseTapped,
             ),
-            const SizedBox(height: 8),
-            for (var i = 0; i < DspConstants.maxTextureLayers; i++) ...[
-              _buildLayerSelector(
-                theme,
-                'Texture ${i + 1}',
-                'texture',
-                _selectedTextures[i],
-                _textureLoading[i],
-                (asset) => _onTextureSelected(i, asset),
-              ),
-              const SizedBox(height: 8),
-            ],
-            for (var i = 0; i < DspConstants.maxEventSlots; i++) ...[
-              _buildLayerSelector(
-                theme,
-                'Event ${i + 1}',
-                'events',
-                _selectedEvents[i],
-                _eventLoading[i],
-                (asset) => _onEventSelected(i, asset),
-              ),
-              const SizedBox(height: 8),
-            ],
+            const SizedBox(height: 4),
+            _buildSoundLayerSection(
+              theme: theme,
+              l10n: l10n,
+              title: l10n.dspSectionTexture,
+              layerType: 'texture',
+              selectedCount: _selectedTextures.length,
+              maxCount: DspConstants.maxTextureLayers,
+              isSelected: (a) => _selectedTextures.any((t) => t.id == a.id),
+              onTap: _onTextureTapped,
+            ),
+            const SizedBox(height: 4),
+            _buildSoundLayerSection(
+              theme: theme,
+              l10n: l10n,
+              title: l10n.dspSectionEvents,
+              layerType: 'events',
+              selectedCount: _selectedEvents.length,
+              maxCount: DspConstants.maxEventSlots,
+              isSelected: (a) => _selectedEvents.any((e) => e.id == a.id),
+              onTap: _onEventTapped,
+            ),
             const SizedBox(height: 16),
 
             // Gain Controls
-            _buildSectionTitle(theme, 'Gain Controls'),
-            _buildGainSlider(theme, 'Base', _baseGain, (v) {
+            _buildSectionTitle(theme, l10n.dspGainControls),
+            _buildGainSlider(theme, l10n.dspSectionBase, _baseGain, (v) {
               setState(() => _baseGain = v);
               _dspService.setBaseGain(v);
             }),
-            _buildGainSlider(theme, 'Texture', _textureGain, (v) {
+            _buildGainSlider(theme, l10n.dspSectionTexture, _textureGain, (v) {
               setState(() => _textureGain = v);
               _dspService.setTextureGain(v);
             }),
-            _buildGainSlider(theme, 'Event', _eventGain, (v) {
+            _buildGainSlider(theme, l10n.dspSectionEvents, _eventGain, (v) {
               setState(() => _eventGain = v);
               _dspService.setEventGain(v);
             }),
-            _buildGainSlider(theme, 'Binaural', _binauralGain, (v) {
+            _buildGainSlider(theme, l10n.dspBinauralMode, _binauralGain, (v) {
               setState(() => _binauralGain = v);
               _dspService.setBinauralGain(v);
             }),
@@ -360,17 +384,22 @@ class _DummyDspPageState extends State<DummyDspPage> {
             const SizedBox(height: 16),
 
             // Binaural Configuration
-            _buildSectionTitle(theme, 'Binaural Configuration'),
+            _buildSectionTitle(theme, l10n.dspBinauralConfig),
             _buildNumberField(
               _carrierFreqCtrl,
-              'Carrier Frequency (Hz)',
+              l10n.dspCarrierFrequency,
               enabled: !_isPlaying,
             ),
             const SizedBox(height: 8),
             SwitchListTile(
-              title: Text('Binaural Mode', style: theme.textTheme.bodyMedium),
+              title: Text(
+                l10n.dspBinauralMode,
+                style: theme.textTheme.bodyMedium,
+              ),
               subtitle: Text(
-                _binauralEnabled ? 'Stereo binaural beats' : 'AM mono pulsing',
+                _binauralEnabled
+                    ? l10n.dspBinauralStereo
+                    : l10n.dspBinauralMono,
                 style: theme.textTheme.bodySmall,
               ),
               value: _binauralEnabled,
@@ -382,7 +411,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
             const SizedBox(height: 8),
 
             // Cycle Steps
-            _buildSectionTitle(theme, 'Frequency Cycle Steps'),
+            _buildSectionTitle(theme, l10n.dspCycleSteps),
             ..._cycleSteps.asMap().entries.map((entry) {
               final i = entry.key;
               final step = entry.value;
@@ -393,7 +422,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                     Expanded(
                       child: _buildNumberField(
                         step.deltaCtrl,
-                        'Delta Hz',
+                        l10n.dspDeltaHz,
                         enabled: !_isPlaying,
                       ),
                     ),
@@ -401,24 +430,20 @@ class _DummyDspPageState extends State<DummyDspPage> {
                     Expanded(
                       child: _buildNumberField(
                         step.durationCtrl,
-                        'Duration s',
+                        l10n.dspDurationS,
                         enabled: !_isPlaying,
                       ),
                     ),
                     SizedBox(
                       width: 32,
-                      child: Tooltip(
-                        message: 'One-shot (first cycle only)',
-                        child: Checkbox(
-                          value: step.oneshot,
-                          onChanged: _isPlaying
-                              ? null
-                              : (val) =>
-                                    setState(() => step.oneshot = val ?? false),
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
-                          visualDensity: VisualDensity.compact,
-                        ),
+                      child: Checkbox(
+                        value: step.oneshot,
+                        onChanged: _isPlaying
+                            ? null
+                            : (val) =>
+                                  setState(() => step.oneshot = val ?? false),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
                       ),
                     ),
                     if (!_isPlaying && _cycleSteps.length > 1)
@@ -438,72 +463,102 @@ class _DummyDspPageState extends State<DummyDspPage> {
               TextButton.icon(
                 onPressed: _addCycleStep,
                 icon: const Icon(Icons.add, size: 18),
-                label: const Text('Add Step'),
+                label: Text(l10n.dspAddStep),
               ),
             const SizedBox(height: 24),
 
             // Play / Stop
-            if (!_isPlaying)
-              SizedBox(
-                height: 56,
-                child: FilledButton.icon(
-                  onPressed: _anyLoading ? null : _play,
-                  icon: _anyLoading
-                      ? const SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.play_arrow, size: 28),
-                  label: Text(
-                    _anyLoading ? 'LOADING...' : 'PLAY',
-                    style: theme.textTheme.titleMedium,
-                  ),
-                ),
-              )
-            else
-              Row(
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      height: 56,
-                      child: FilledButton.icon(
-                        onPressed: _isStopping ? null : _stop,
-                        icon: const Icon(Icons.stop, size: 24),
-                        label: Text('STOP', style: theme.textTheme.titleSmall),
-                        style: FilledButton.styleFrom(
-                          backgroundColor: colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: SizedBox(
-                      height: 56,
-                      child: FilledButton.tonalIcon(
-                        onPressed: _isStopping ? null : _stopGraceful,
-                        icon: _isStopping
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : const Icon(Icons.timelapse, size: 24),
-                        label: Text(
-                          _isStopping ? 'FINISHING...' : 'GRACEFUL',
-                          style: theme.textTheme.titleSmall,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            _buildPlayStopButtons(theme, colorScheme, l10n),
             const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Sound layer accordion sections
+  // ---------------------------------------------------------------------------
+
+  Widget _buildSoundLayerSection({
+    required ThemeData theme,
+    required AppLocalizations l10n,
+    required String title,
+    required String layerType,
+    required int selectedCount,
+    required int maxCount,
+    required bool Function(AudioAsset) isSelected,
+    required Future<void> Function(AudioAsset) onTap,
+  }) {
+    final colorScheme = theme.colorScheme;
+    final assets = _assetService.assetsForLayer(layerType);
+    final counter = l10n.dspSelectedCount(selectedCount, maxCount);
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: ExpansionTile(
+        title: Row(
+          children: [
+            Expanded(child: Text(title, style: theme.textTheme.titleSmall)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: selectedCount > 0
+                    ? colorScheme.primaryContainer
+                    : colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                counter,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: selectedCount > 0
+                      ? colorScheme.onPrimaryContainer
+                      : colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ],
+        ),
+        initiallyExpanded: true,
+        childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+        children: [
+          if (assets.isEmpty)
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                l10n.dspNoSelection,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
+                ),
+              ),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: assets.map((asset) {
+                final selected = isSelected(asset);
+                final loading =
+                    _loadingIds.contains(asset.id) ||
+                    (_baseLoading && _selectedBase?.id == asset.id);
+                final atLimit = !selected && selectedCount >= maxCount;
+                final name = DspAssetService.resolveLocalizedName(
+                  context,
+                  asset,
+                );
+
+                return _SoundCard(
+                  asset: asset,
+                  name: name,
+                  selected: selected,
+                  loading: loading,
+                  disabled: atLimit,
+                  theme: theme,
+                  onTap: () => onTap(asset),
+                );
+              }).toList(),
+            ),
+        ],
       ),
     );
   }
@@ -570,7 +625,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     return Row(
       children: [
         SizedBox(
-          width: 64,
+          width: 72,
           child: Text(label, style: theme.textTheme.bodySmall),
         ),
         Expanded(
@@ -587,98 +642,177 @@ class _DummyDspPageState extends State<DummyDspPage> {
     );
   }
 
-  Widget _buildLayerSelector(
+  Widget _buildPlayStopButtons(
     ThemeData theme,
-    String label,
-    String layerType,
-    AudioAsset? selected,
-    bool isLoading,
-    ValueChanged<AudioAsset?> onChanged,
+    ColorScheme colorScheme,
+    AppLocalizations l10n,
   ) {
-    final assets = _assetService.assetsForLayer(layerType);
-    final colorScheme = theme.colorScheme;
-
-    final usedPaths = <String>{};
-    if (layerType == 'texture') {
-      for (final t in _selectedTextures) {
-        if (t != null && t != selected) usedPaths.add(t.assetPath);
-      }
-    } else if (layerType == 'events') {
-      for (final e in _selectedEvents) {
-        if (e != null && e != selected) usedPaths.add(e.assetPath);
-      }
+    if (!_isPlaying) {
+      return SizedBox(
+        height: 56,
+        child: FilledButton.icon(
+          onPressed: _anyLoading ? null : _play,
+          icon: _anyLoading
+              ? const SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.play_arrow, size: 28),
+          label: Text(
+            _anyLoading ? l10n.dspLoading : l10n.dspPlay,
+            style: theme.textTheme.titleMedium,
+          ),
+        ),
+      );
     }
-
-    final available = assets
-        .where((a) => !usedPaths.contains(a.assetPath))
-        .toList();
-
     return Row(
       children: [
-        SizedBox(
-          width: 80,
-          child: Text(label, style: theme.textTheme.labelMedium),
-        ),
         Expanded(
-          child: Container(
-            height: 36,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: isLoading ? colorScheme.tertiary : colorScheme.outline,
-                width: isLoading ? 2 : 1,
-              ),
-              borderRadius: BorderRadius.circular(6),
+          child: SizedBox(
+            height: 56,
+            child: FilledButton.icon(
+              onPressed: _isStopping ? null : _stop,
+              icon: const Icon(Icons.stop, size: 24),
+              label: Text(l10n.dspStop, style: theme.textTheme.titleSmall),
+              style: FilledButton.styleFrom(backgroundColor: colorScheme.error),
             ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<AudioAsset?>(
-                value: selected,
-                isExpanded: true,
-                isDense: true,
-                hint: Text(
-                  available.isEmpty ? 'No files' : 'Select...',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: SizedBox(
+            height: 56,
+            child: FilledButton.tonalIcon(
+              onPressed: _isStopping ? null : _stopGraceful,
+              icon: _isStopping
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.timelapse, size: 24),
+              label: Text(
+                _isStopping ? l10n.dspFinishing : l10n.dspGraceful,
+                style: theme.textTheme.titleSmall,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Sound card widget
+// ---------------------------------------------------------------------------
+
+class _SoundCard extends StatelessWidget {
+  const _SoundCard({
+    required this.asset,
+    required this.name,
+    required this.selected,
+    required this.loading,
+    required this.disabled,
+    required this.theme,
+    required this.onTap,
+  });
+
+  final AudioAsset asset;
+  final String name;
+  final bool selected;
+  final bool loading;
+  final bool disabled;
+  final ThemeData theme;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = theme.colorScheme;
+
+    return SizedBox(
+      width: 88,
+      child: Material(
+        color: selected
+            ? colorScheme.primaryContainer
+            : disabled
+            ? colorScheme.surfaceContainerHighest.withAlpha(128)
+            : colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: disabled ? null : onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: 48,
+                  height: 48,
+                  child: loading
+                      ? const Center(
+                          child: SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          ),
+                        )
+                      : asset.iconAsset.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.asset(
+                            asset.iconAsset,
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, trace) => Icon(
+                              Icons.music_note,
+                              size: 32,
+                              color: selected
+                                  ? colorScheme.onPrimaryContainer
+                                  : colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        )
+                      : Icon(
+                          Icons.music_note,
+                          size: 32,
+                          color: selected
+                              ? colorScheme.onPrimaryContainer
+                              : colorScheme.onSurfaceVariant,
+                        ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: selected
+                        ? colorScheme.onPrimaryContainer
+                        : disabled
+                        ? colorScheme.onSurface.withAlpha(97)
+                        : colorScheme.onSurface,
                   ),
                 ),
-                items: [
-                  DropdownMenuItem<AudioAsset?>(
-                    child: Text(
-                      '-- None --',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        fontStyle: FontStyle.italic,
-                      ),
+                if (selected)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 14,
+                      color: colorScheme.primary,
                     ),
                   ),
-                  ...available.map(
-                    (a) => DropdownMenuItem<AudioAsset?>(
-                      value: a,
-                      child: Text(a.name, style: theme.textTheme.bodySmall),
-                    ),
-                  ),
-                ],
-                onChanged: isLoading ? null : onChanged,
-              ),
+              ],
             ),
           ),
         ),
-        if (isLoading)
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-            child: SizedBox(
-              width: 18,
-              height: 18,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            ),
-          ),
-        if (selected != null && !isLoading)
-          IconButton(
-            icon: const Icon(Icons.clear, size: 18),
-            onPressed: () => onChanged(null),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
-          ),
-      ],
+      ),
     );
   }
 }
