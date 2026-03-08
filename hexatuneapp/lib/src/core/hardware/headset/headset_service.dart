@@ -67,6 +67,11 @@ class HeadsetService {
   }
 
   void _onHeadsetEvent(hd.HeadsetChangedEvent event) {
+    _logService.devLog(
+      'Headset event received: ${event.name}',
+      category: LogCategory.hardware,
+    );
+
     switch (event) {
       case hd.HeadsetChangedEvent.WIRED_CONNECTED:
         _updateState(_currentState.copyWith(wiredConnected: true));
@@ -85,7 +90,7 @@ class HeadsetService {
     _stateController.add(newState);
 
     if (previous != newState) {
-      _logService.devLog(
+      _logService.info(
         'Headset state changed: '
         'wired ${previous.wiredConnected} → ${newState.wiredConnected}, '
         'wireless ${previous.wirelessConnected} → ${newState.wirelessConnected} '
