@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
 import 'package:hexatuneapp/src/core/notification/local_notification_service.dart';
@@ -32,6 +33,8 @@ class MockAuthService extends Mock implements AuthService {}
 
 class MockHeadsetService extends Mock implements HeadsetService {}
 
+class MockHexagenService extends Mock implements HexagenService {}
+
 void main() {
   group('AppBootstrap', () {
     late MockLogService mockLog;
@@ -41,6 +44,7 @@ void main() {
     late MockNotificationService mockNotif;
     late MockAuthService mockAuth;
     late MockHeadsetService mockHeadset;
+    late MockHexagenService mockHexagen;
 
     setUp(() {
       mockLog = MockLogService();
@@ -50,6 +54,7 @@ void main() {
       mockNotif = MockNotificationService();
       mockAuth = MockAuthService();
       mockHeadset = MockHeadsetService();
+      mockHexagen = MockHexagenService();
 
       // Register mocks in get_it.
       getIt.allowReassignment = true;
@@ -60,6 +65,7 @@ void main() {
       getIt.registerSingleton<NotificationService>(mockNotif);
       getIt.registerSingleton<AuthService>(mockAuth);
       getIt.registerSingleton<HeadsetService>(mockHeadset);
+      getIt.registerSingleton<HexagenService>(mockHexagen);
     });
 
     tearDown(() async {
@@ -70,6 +76,7 @@ void main() {
       when(() => mockDevice.init()).thenAnswer((_) async {});
       when(() => mockDevice.deviceId).thenReturn('test-device-id');
       when(() => mockHeadset.init()).thenAnswer((_) async {});
+      when(() => mockHexagen.init()).thenAnswer((_) async {});
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
       when(() => mockTokenManager.hasToken).thenReturn(false);
       when(() => mockTokenManager.sessionId).thenReturn(null);
@@ -88,6 +95,7 @@ void main() {
       verifyInOrder([
         () => mockDevice.init(),
         () => mockHeadset.init(),
+        () => mockHexagen.init(),
         () => mockTokenManager.loadTokens(),
         () => mockLocalNotif.init(),
         () => mockNotif.init(),
@@ -99,6 +107,7 @@ void main() {
       when(() => mockDevice.init()).thenAnswer((_) async {});
       when(() => mockDevice.deviceId).thenReturn('test-device-id');
       when(() => mockHeadset.init()).thenAnswer((_) async {});
+      when(() => mockHexagen.init()).thenAnswer((_) async {});
       when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
       when(() => mockTokenManager.hasToken).thenReturn(false);
       when(() => mockTokenManager.sessionId).thenReturn(null);

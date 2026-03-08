@@ -12,6 +12,8 @@
 import 'package:get_it/get_it.dart' as _i174;
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart'
     as _i494;
+import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart'
+    as _i475;
 import 'package:hexatuneapp/src/core/log/log_service.dart' as _i571;
 import 'package:hexatuneapp/src/core/media/image_service.dart' as _i207;
 import 'package:hexatuneapp/src/core/network/api_client.dart' as _i761;
@@ -27,6 +29,7 @@ import 'package:hexatuneapp/src/core/notification/notification_service.dart'
     as _i623;
 import 'package:hexatuneapp/src/core/permission/permission_service.dart'
     as _i1001;
+import 'package:hexatuneapp/src/core/proto/proto_service.dart' as _i410;
 import 'package:hexatuneapp/src/core/rest/account/account_repository.dart'
     as _i87;
 import 'package:hexatuneapp/src/core/rest/audit/audit_repository.dart' as _i501;
@@ -87,6 +90,9 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i1001.PermissionService>(
       () => _i1001.PermissionService(gh<_i571.LogService>()),
     );
+    gh.singleton<_i410.ProtoService>(
+      () => _i410.ProtoService(gh<_i571.LogService>()),
+    );
     gh.singleton<_i325.SecureStorageService>(
       () => _i325.SecureStorageService(gh<_i571.LogService>())..init(),
     );
@@ -119,6 +125,13 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i782.ErrorInterceptor>(),
         gh<_i1063.LoggingInterceptor>(),
       )..init(),
+    );
+    gh.singleton<_i475.HexagenService>(
+      () => _i475.HexagenService(
+        gh<_i571.LogService>(),
+        gh<_i410.ProtoService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     gh.singleton<_i87.AccountRepository>(
       () =>

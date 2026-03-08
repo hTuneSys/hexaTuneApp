@@ -1,0 +1,402 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+import 'dart:async';
+import 'dart:typed_data';
+
+import 'package:injectable/injectable.dart';
+
+import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_device_manager.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_command.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_device_error.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_state.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/proto/at_command.dart';
+import 'package:hexatuneapp/src/core/log/log_category.dart';
+import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/proto/proto_service.dart';
+
+/// High-level orchestrator for the hexaGen hardware device.
+///
+/// Exposes a reactive broadcast [Stream] of [HexagenState] changes
+/// and manages command tracking, connection lifecycle, and error handling.
+/// Follows the same pattern as [HeadsetService].
+@singleton
+class HexagenService {
+  HexagenService(this._logService, this._protoService);
+
+  final LogService _logService;
+  final ProtoService _protoService;
+
+  late final HexagenDeviceManager _deviceManager;
+  bool _deviceManagerInitialized = false;
+  final _stateController = StreamController<HexagenState>.broadcast();
+
+  HexagenState _currentState = const HexagenState();
+
+  // Command tracking
+  static const int _maxId = 9999;
+  int _nextId = 1;
+  final Map<int, SentCommand> _sentCommands = {};
+  final Map<int, Timer> _commandTimers = {};
+  final Map<int, Completer<CommandStatus>> _commandCompleters = {};
+
+  // Operation tracking
+  int? _currentOperationId;
+  String? _currentOperationStatus;
+  int? _currentGeneratingStepId;
+
+  // -----------------------------------------------------------------------
+  // Public getters
+  // -----------------------------------------------------------------------
+
+  /// The current device state.
+  HexagenState get currentState => _currentState;
+
+  /// A broadcast stream of state changes.
+  Stream<HexagenState> get state => _stateController.stream;
+
+  /// Whether the device is connected.
+  bool get isConnected => _currentState.isConnected;
+
+  /// Current operation ID, if any.
+  int? get currentOperationId => _currentOperationId;
+
+  /// Current operation status.
+  String? get currentOperationStatus => _currentOperationStatus;
+
+  /// Current generating step ID.
+  int? get currentGeneratingStepId => _currentGeneratingStepId;
+
+  // -----------------------------------------------------------------------
+  // Lifecycle
+  // -----------------------------------------------------------------------
+
+  /// Initialize the service — loads FFI, starts MIDI listening, scans for
+  /// devices.
+  Future<void> init() async {
+    try {
+      _protoService.init();
+
+      _deviceManager = HexagenDeviceManager(_logService, _protoService);
+      _deviceManagerInitialized = true;
+      _deviceManager.initialize(
+        onDeviceChanged: _onDeviceChanged,
+        onResponse: _onResponse,
+      );
+
+      await _loadDevices();
+
+      _updateState(_currentState.copyWith(isInitialized: true));
+
+      _logService.info(
+        'HexagenService initialized — '
+        'connected: ${_currentState.isConnected}, '
+        'device: ${_currentState.deviceName ?? "none"}',
+        category: LogCategory.hardware,
+      );
+    } catch (e, st) {
+      _logService.warning(
+        'HexagenService initialization failed: $e',
+        category: LogCategory.hardware,
+        exception: e,
+        stackTrace: st,
+      );
+    }
+  }
+
+  /// Dispose all resources.
+  @disposeMethod
+  void dispose() {
+    if (_deviceManagerInitialized) {
+      _deviceManager.dispose();
+    }
+    for (final timer in _commandTimers.values) {
+      timer.cancel();
+    }
+    _commandTimers.clear();
+    _stateController.close();
+  }
+
+  // -----------------------------------------------------------------------
+  // Device discovery
+  // -----------------------------------------------------------------------
+
+  Future<void> _loadDevices() async {
+    _logService.devLog(
+      'Scanning for hexaGen devices',
+      category: LogCategory.hardware,
+    );
+
+    final hexaDevice = await _deviceManager.findHexagenDevice();
+
+    if (hexaDevice != null) {
+      _logService.devLog(
+        'hexaGen device found: ${hexaDevice.name}',
+        category: LogCategory.hardware,
+      );
+      _updateState(
+        _currentState.copyWith(
+          deviceId: hexaDevice.id,
+          deviceName: hexaDevice.name,
+        ),
+      );
+      unawaited(_connectDevice(hexaDevice));
+    } else {
+      _logService.devLog(
+        'No hexaGen device found',
+        category: LogCategory.hardware,
+      );
+      _deviceManager.clearConnection();
+      _updateState(const HexagenState(isInitialized: true));
+    }
+  }
+
+  void _onDeviceChanged() {
+    _logService.devLog(
+      'Device configuration changed (plug/unplug)',
+      category: LogCategory.hardware,
+    );
+    _loadDevices();
+  }
+
+  Future<void> _connectDevice(dynamic device) async {
+    _logService.devLog(
+      'Connecting to hexaGen device: ${device.name}',
+      category: LogCategory.hardware,
+    );
+
+    try {
+      await _deviceManager.connectAndQueryVersion(device);
+      _updateState(_currentState.copyWith(isConnected: true));
+    } catch (e, stack) {
+      _logService.error(
+        'hexaGen connection failed',
+        category: LogCategory.hardware,
+        exception: e,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  /// Manually trigger a device rescan.
+  Future<void> refresh() async {
+    await _loadDevices();
+  }
+
+  // -----------------------------------------------------------------------
+  // Response handling
+  // -----------------------------------------------------------------------
+
+  void _onResponse({
+    String? version,
+    HexagenDeviceError? error,
+    DeviceStatus? status,
+    int? responseId,
+    String? operationStatus,
+    int? operationStepId,
+    required bool waiting,
+  }) {
+    if (version != null) {
+      _logService.devLog(
+        'Device version: $version',
+        category: LogCategory.hardware,
+      );
+      _updateState(_currentState.copyWith(firmwareVersion: version));
+    }
+
+    if (error != null) {
+      _logService.warning(
+        'Device error: ${error.code}',
+        category: LogCategory.hardware,
+      );
+    }
+
+    if (operationStatus != null) {
+      _currentOperationStatus = operationStatus;
+      _currentGeneratingStepId = operationStepId;
+    }
+
+    // Update command tracking
+    if (responseId != null) {
+      if (error != null) {
+        _updateCommandStatus(
+          responseId,
+          CommandStatus.error,
+          errorCode: error.code,
+        );
+      } else {
+        _updateCommandStatus(responseId, CommandStatus.success);
+      }
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // Command sending
+  // -----------------------------------------------------------------------
+
+  /// Generate the next sequential command ID (1–9999, wrapping).
+  int generateId() {
+    final id = _nextId;
+    _nextId = _nextId % _maxId + 1;
+    return id;
+  }
+
+  /// Send an AT command to the connected device.
+  Future<void> sendATCommand(ATCommand command) async {
+    if (_deviceManager.connectedId == null) {
+      _logService.warning(
+        'Cannot send ${command.type.name}: no device connected',
+        category: LogCategory.hardware,
+      );
+      return;
+    }
+    final compiled = command.compile();
+    final sysex = command.buildSysEx(_protoService);
+    _trackCommand(command.id, compiled);
+
+    _logService.devLog(
+      'Sending ${command.type.name}: $compiled',
+      category: LogCategory.hardware,
+    );
+
+    _deviceManager.sendData(sysex, _deviceManager.connectedId!);
+  }
+
+  /// Send AT+FREQ and return a future that completes on response.
+  Future<CommandStatus> sendFreqCommandAndWait(int freq, int timeMs) async {
+    final completer = Completer<CommandStatus>();
+    final id = generateId();
+    final command = ATCommand.freq(id, freq, timeMs);
+    final compiled = command.compile();
+
+    _commandCompleters[id] = completer;
+    final timeout = Duration(milliseconds: timeMs + 5000);
+    _trackCommand(id, compiled, timeout: timeout);
+
+    _logService.devLog(
+      'Sending FREQ and waiting: $compiled',
+      category: LogCategory.hardware,
+    );
+    _deviceManager.sendData(
+      command.buildSysEx(_protoService),
+      _deviceManager.connectedId!,
+    );
+
+    return completer.future;
+  }
+
+  /// Send AT+OPERATION=id#PREPARE and wait for response.
+  Future<CommandStatus> sendOperationPrepare(int operationId) async {
+    final completer = Completer<CommandStatus>();
+    final command = ATCommand.operationPrepare(operationId);
+
+    _commandCompleters[operationId] = completer;
+    _currentOperationId = operationId;
+    _currentOperationStatus = 'PREPARE';
+
+    _trackCommand(
+      operationId,
+      command.compile(),
+      timeout: const Duration(seconds: 5),
+    );
+
+    _deviceManager.sendData(
+      command.buildSysEx(_protoService),
+      _deviceManager.connectedId!,
+    );
+
+    return completer.future;
+  }
+
+  /// Send AT+OPERATION=id#GENERATE (polling, no wait).
+  Future<void> sendOperationGenerate(int operationId) async {
+    final command = ATCommand.operationGenerate(operationId);
+    _currentOperationStatus = 'GENERATE';
+
+    _logService.devLog(
+      'Sending OPERATION GENERATE: ${command.compile()}',
+      category: LogCategory.hardware,
+    );
+    _deviceManager.sendData(
+      command.buildSysEx(_protoService),
+      _deviceManager.connectedId!,
+    );
+  }
+
+  /// Query current operation status (AT+OPERATION?).
+  Future<void> queryOperationStatus() async {
+    if (_deviceManager.connectedId == null) return;
+    final command = ATCommand.operationQuery();
+    _deviceManager.sendData(
+      command.buildSysEx(_protoService),
+      _deviceManager.connectedId!,
+    );
+  }
+
+  /// Send raw data to the device.
+  void sendData(Uint8List bytes, String deviceId) {
+    _deviceManager.sendData(bytes, deviceId);
+  }
+
+  /// Reset operation tracking state.
+  void resetOperationState() {
+    _currentOperationId = null;
+    _currentOperationStatus = null;
+    _currentGeneratingStepId = null;
+  }
+
+  // -----------------------------------------------------------------------
+  // Command tracking
+  // -----------------------------------------------------------------------
+
+  void _trackCommand(int id, String command, {Duration? timeout}) {
+    _sentCommands[id] = SentCommand(
+      id,
+      command,
+      DateTime.now(),
+      CommandStatus.pending,
+    );
+    if (timeout != null) {
+      _commandTimers[id] = Timer(timeout, () {
+        _updateCommandStatus(id, CommandStatus.timeout);
+        _commandTimers.remove(id);
+      });
+    }
+  }
+
+  void _updateCommandStatus(int id, CommandStatus status, {String? errorCode}) {
+    final command = _sentCommands[id];
+    if (command != null) {
+      command.status = status;
+      command.errorCode = errorCode;
+      _commandTimers[id]?.cancel();
+      _commandTimers.remove(id);
+    }
+
+    final completer = _commandCompleters[id];
+    if (completer != null && !completer.isCompleted) {
+      completer.complete(status);
+      _commandCompleters.remove(id);
+    }
+  }
+
+  // -----------------------------------------------------------------------
+  // State management
+  // -----------------------------------------------------------------------
+
+  void _updateState(HexagenState newState) {
+    final previous = _currentState;
+    _currentState = newState;
+    _stateController.add(newState);
+
+    if (previous != newState) {
+      _logService.devLog(
+        'hexaGen state changed: '
+        'connected ${previous.isConnected} → ${newState.isConnected}, '
+        'device: ${newState.deviceName ?? "none"}, '
+        'firmware: ${newState.firmwareVersion ?? "unknown"}',
+        category: LogCategory.hardware,
+      );
+    }
+  }
+}
