@@ -410,41 +410,149 @@ abstract class AppLocalizations {
   /// **'Rain'**
   String get ambienceBaseRain;
 
+  /// No description provided for @ambienceTextureFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get ambienceTextureFire;
+
+  /// No description provided for @ambienceTextureGrass.
+  ///
+  /// In en, this message translates to:
+  /// **'Grass'**
+  String get ambienceTextureGrass;
+
+  /// No description provided for @ambienceTextureLeaf.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaf'**
+  String get ambienceTextureLeaf;
+
+  /// No description provided for @ambienceTextureNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get ambienceTextureNight;
+
+  /// No description provided for @ambienceTextureSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get ambienceTextureSnow;
+
+  /// No description provided for @ambienceTextureSoftWind.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Wind'**
+  String get ambienceTextureSoftWind;
+
+  /// No description provided for @ambienceTextureStrongWind.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong Wind'**
+  String get ambienceTextureStrongWind;
+
+  /// No description provided for @ambienceTextureWaterDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drop'**
+  String get ambienceTextureWaterDrop;
+
   /// No description provided for @ambienceTextureWave.
   ///
   /// In en, this message translates to:
   /// **'Wave'**
   String get ambienceTextureWave;
 
-  /// No description provided for @ambienceTextureWindThroughTrees.
+  /// No description provided for @ambienceEventBirdChirping1.
   ///
   /// In en, this message translates to:
-  /// **'Wind Through Trees'**
-  String get ambienceTextureWindThroughTrees;
+  /// **'Bird Chirping 1'**
+  String get ambienceEventBirdChirping1;
 
-  /// No description provided for @ambienceEventBird.
+  /// No description provided for @ambienceEventBirdChirping2.
   ///
   /// In en, this message translates to:
-  /// **'Bird'**
-  String get ambienceEventBird;
+  /// **'Bird Chirping 2'**
+  String get ambienceEventBirdChirping2;
 
-  /// No description provided for @ambienceEventCat.
+  /// No description provided for @ambienceEventBirdWing.
   ///
   /// In en, this message translates to:
-  /// **'Cat'**
-  String get ambienceEventCat;
+  /// **'Bird Wing'**
+  String get ambienceEventBirdWing;
 
-  /// No description provided for @ambienceEventFish.
+  /// No description provided for @ambienceEventBush.
   ///
   /// In en, this message translates to:
-  /// **'Fish'**
-  String get ambienceEventFish;
+  /// **'Bush'**
+  String get ambienceEventBush;
+
+  /// No description provided for @ambienceEventCrumble.
+  ///
+  /// In en, this message translates to:
+  /// **'Crumble'**
+  String get ambienceEventCrumble;
+
+  /// No description provided for @ambienceEventFrog.
+  ///
+  /// In en, this message translates to:
+  /// **'Frog'**
+  String get ambienceEventFrog;
+
+  /// No description provided for @ambienceEventInsect.
+  ///
+  /// In en, this message translates to:
+  /// **'Insect'**
+  String get ambienceEventInsect;
+
+  /// No description provided for @ambienceEventOwl.
+  ///
+  /// In en, this message translates to:
+  /// **'Owl'**
+  String get ambienceEventOwl;
+
+  /// No description provided for @ambienceEventStone.
+  ///
+  /// In en, this message translates to:
+  /// **'Stone'**
+  String get ambienceEventStone;
 
   /// No description provided for @ambienceEventThunder.
   ///
   /// In en, this message translates to:
   /// **'Thunder'**
   String get ambienceEventThunder;
+
+  /// No description provided for @ambienceEventTwig.
+  ///
+  /// In en, this message translates to:
+  /// **'Twig'**
+  String get ambienceEventTwig;
+
+  /// No description provided for @ambienceEventWaterDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drop'**
+  String get ambienceEventWaterDrop;
+
+  /// No description provided for @ambienceEventWaterSplash.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Splash'**
+  String get ambienceEventWaterSplash;
+
+  /// No description provided for @ambienceEventWoodCrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood Crack'**
+  String get ambienceEventWoodCrack;
+
+  /// No description provided for @ambienceEventWoodpecker.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodpecker'**
+  String get ambienceEventWoodpecker;
 
   /// No description provided for @dspPageTitle.
   ///

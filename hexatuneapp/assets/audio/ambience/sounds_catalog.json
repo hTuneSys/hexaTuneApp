@@ -4,64 +4,190 @@
       "id": "forest",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/forest.wav",
-      "iconAsset": "assets/icon/ambience/base/forest.png",
+      "iconAsset": "assets/icon/ambience/base/forest.svg",
       "nameKey": "ambienceBaseForest"
     },
     {
       "id": "ocean",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/ocean.wav",
-      "iconAsset": "assets/icon/ambience/base/ocean.png",
+      "iconAsset": "assets/icon/ambience/base/ocean.svg",
       "nameKey": "ambienceBaseOcean"
     },
     {
       "id": "rain",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/rain.wav",
-      "iconAsset": "assets/icon/ambience/base/rain.png",
+      "iconAsset": "assets/icon/ambience/base/rain.svg",
       "nameKey": "ambienceBaseRain"
+    },
+    {
+      "id": "fire",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/fire.wav",
+      "iconAsset": "assets/icon/ambience/texture/fire.svg",
+      "nameKey": "ambienceTextureFire"
+    },
+    {
+      "id": "grass",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/grass.wav",
+      "iconAsset": "assets/icon/ambience/texture/grass.svg",
+      "nameKey": "ambienceTextureGrass"
+    },
+    {
+      "id": "leaf",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/leaf.wav",
+      "iconAsset": "assets/icon/ambience/texture/leaf.svg",
+      "nameKey": "ambienceTextureLeaf"
+    },
+    {
+      "id": "night",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/night.wav",
+      "iconAsset": "assets/icon/ambience/texture/night.svg",
+      "nameKey": "ambienceTextureNight"
+    },
+    {
+      "id": "snow",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/snow.wav",
+      "iconAsset": "assets/icon/ambience/texture/snow.svg",
+      "nameKey": "ambienceTextureSnow"
+    },
+    {
+      "id": "soft_wind",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/soft_wind.wav",
+      "iconAsset": "assets/icon/ambience/texture/soft_wind.svg",
+      "nameKey": "ambienceTextureSoftWind"
+    },
+    {
+      "id": "strong_wind",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/strong_wind.wav",
+      "iconAsset": "assets/icon/ambience/texture/strong_wind.svg",
+      "nameKey": "ambienceTextureStrongWind"
+    },
+    {
+      "id": "water_drop",
+      "type": "texture",
+      "audioAsset": "assets/audio/ambience/texture/water_drop.wav",
+      "iconAsset": "assets/icon/ambience/texture/water_drop.svg",
+      "nameKey": "ambienceTextureWaterDrop"
     },
     {
       "id": "wave",
       "type": "texture",
       "audioAsset": "assets/audio/ambience/texture/wave.wav",
-      "iconAsset": "assets/icon/ambience/texture/wave.png",
+      "iconAsset": "assets/icon/ambience/texture/wave.svg",
       "nameKey": "ambienceTextureWave"
     },
     {
-      "id": "wind_through_trees",
-      "type": "texture",
-      "audioAsset": "assets/audio/ambience/texture/wind_through_trees.wav",
-      "iconAsset": "assets/icon/ambience/texture/wind_through_trees.png",
-      "nameKey": "ambienceTextureWindThroughTrees"
+      "id": "bird_chirping_1",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/bird_chirping_1.wav",
+      "iconAsset": "assets/icon/ambience/events/bird_chirping_1.svg",
+      "nameKey": "ambienceEventBirdChirping1"
     },
     {
-      "id": "bird",
+      "id": "bird_chirping_2",
       "type": "events",
-      "audioAsset": "assets/audio/ambience/events/bird.wav",
-      "iconAsset": "assets/icon/ambience/events/bird.png",
-      "nameKey": "ambienceEventBird"
+      "audioAsset": "assets/audio/ambience/events/bird_chirping_2.wav",
+      "iconAsset": "assets/icon/ambience/events/bird_chirping_2.svg",
+      "nameKey": "ambienceEventBirdChirping2"
     },
     {
-      "id": "cat",
+      "id": "bird_wing",
       "type": "events",
-      "audioAsset": "assets/audio/ambience/events/cat.wav",
-      "iconAsset": "assets/icon/ambience/events/cat.png",
-      "nameKey": "ambienceEventCat"
+      "audioAsset": "assets/audio/ambience/events/bird_wing.wav",
+      "iconAsset": "assets/icon/ambience/events/bird_wing.svg",
+      "nameKey": "ambienceEventBirdWing"
     },
     {
-      "id": "fish",
+      "id": "bush",
       "type": "events",
-      "audioAsset": "assets/audio/ambience/events/fish.wav",
-      "iconAsset": "assets/icon/ambience/events/fish.png",
-      "nameKey": "ambienceEventFish"
+      "audioAsset": "assets/audio/ambience/events/bush.wav",
+      "iconAsset": "assets/icon/ambience/events/bush.svg",
+      "nameKey": "ambienceEventBush"
+    },
+    {
+      "id": "crumble",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/crumble.wav",
+      "iconAsset": "assets/icon/ambience/events/crumble.svg",
+      "nameKey": "ambienceEventCrumble"
+    },
+    {
+      "id": "frog",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/frog.wav",
+      "iconAsset": "assets/icon/ambience/events/frog.svg",
+      "nameKey": "ambienceEventFrog"
+    },
+    {
+      "id": "insect",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/insect.wav",
+      "iconAsset": "assets/icon/ambience/events/insect.svg",
+      "nameKey": "ambienceEventInsect"
+    },
+    {
+      "id": "owl",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/owl.wav",
+      "iconAsset": "assets/icon/ambience/events/owl.svg",
+      "nameKey": "ambienceEventOwl"
+    },
+    {
+      "id": "stone",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/stone.wav",
+      "iconAsset": "assets/icon/ambience/events/stone.svg",
+      "nameKey": "ambienceEventStone"
     },
     {
       "id": "thunder",
       "type": "events",
       "audioAsset": "assets/audio/ambience/events/thunder.wav",
-      "iconAsset": "assets/icon/ambience/events/thunder.png",
+      "iconAsset": "assets/icon/ambience/events/thunder.svg",
       "nameKey": "ambienceEventThunder"
+    },
+    {
+      "id": "twig",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/twig.wav",
+      "iconAsset": "assets/icon/ambience/events/twig.svg",
+      "nameKey": "ambienceEventTwig"
+    },
+    {
+      "id": "water_drop",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/water_drop.wav",
+      "iconAsset": "assets/icon/ambience/events/water_drop.svg",
+      "nameKey": "ambienceEventWaterDrop"
+    },
+    {
+      "id": "water_splash",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/water_splash.wav",
+      "iconAsset": "assets/icon/ambience/events/water_splash.svg",
+      "nameKey": "ambienceEventWaterSplash"
+    },
+    {
+      "id": "wood_crack",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/wood_crack.wav",
+      "iconAsset": "assets/icon/ambience/events/wood_crack.svg",
+      "nameKey": "ambienceEventWoodCrack"
+    },
+    {
+      "id": "woodpecker",
+      "type": "events",
+      "audioAsset": "assets/audio/ambience/events/woodpecker.wav",
+      "iconAsset": "assets/icon/ambience/events/woodpecker.svg",
+      "nameKey": "ambienceEventWoodpecker"
     }
   ]
 }

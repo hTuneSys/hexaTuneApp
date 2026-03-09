@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -715,15 +716,23 @@ class _SoundChip extends StatelessWidget {
                 SizedBox(
                   width: 48,
                   height: 48,
-                  child: asset.iconAsset.isNotEmpty
+                  child:
+                      asset.iconAsset.isNotEmpty &&
+                          asset.iconAsset.endsWith('.svg')
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Image.asset(
+                          child: SvgPicture.asset(
                             asset.iconAsset,
                             width: 48,
                             height: 48,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, trace) => Icon(
+                            colorFilter: ColorFilter.mode(
+                              selected
+                                  ? colorScheme.onPrimaryContainer
+                                  : colorScheme.onSurfaceVariant,
+                              BlendMode.srcIn,
+                            ),
+                            placeholderBuilder: (_) => Icon(
                               Icons.music_note,
                               size: 32,
                               color: selected

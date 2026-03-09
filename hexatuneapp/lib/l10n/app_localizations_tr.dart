@@ -173,22 +173,76 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ambienceBaseRain => 'Yağmur';
 
   @override
+  String get ambienceTextureFire => 'Ateş';
+
+  @override
+  String get ambienceTextureGrass => 'Çimen';
+
+  @override
+  String get ambienceTextureLeaf => 'Yaprak';
+
+  @override
+  String get ambienceTextureNight => 'Gece';
+
+  @override
+  String get ambienceTextureSnow => 'Kar';
+
+  @override
+  String get ambienceTextureSoftWind => 'Hafif Rüzgâr';
+
+  @override
+  String get ambienceTextureStrongWind => 'Kuvvetli Rüzgâr';
+
+  @override
+  String get ambienceTextureWaterDrop => 'Su Damlası';
+
+  @override
   String get ambienceTextureWave => 'Dalga';
 
   @override
-  String get ambienceTextureWindThroughTrees => 'Ağaçların Arasında Rüzgâr';
+  String get ambienceEventBirdChirping1 => 'Kuş Cıvıltısı 1';
 
   @override
-  String get ambienceEventBird => 'Kuş';
+  String get ambienceEventBirdChirping2 => 'Kuş Cıvıltısı 2';
 
   @override
-  String get ambienceEventCat => 'Kedi';
+  String get ambienceEventBirdWing => 'Kuş Kanadı';
 
   @override
-  String get ambienceEventFish => 'Balık';
+  String get ambienceEventBush => 'Çalılık';
+
+  @override
+  String get ambienceEventCrumble => 'Çıtırtı';
+
+  @override
+  String get ambienceEventFrog => 'Kurbağa';
+
+  @override
+  String get ambienceEventInsect => 'Böcek';
+
+  @override
+  String get ambienceEventOwl => 'Baykuş';
+
+  @override
+  String get ambienceEventStone => 'Taş';
 
   @override
   String get ambienceEventThunder => 'Gök Gürültüsü';
+
+  @override
+  String get ambienceEventTwig => 'Dal';
+
+  @override
+  String get ambienceEventWaterDrop => 'Su Damlası';
+
+  @override
+  String get ambienceEventWaterSplash => 'Su Sıçraması';
+
+  @override
+  String get ambienceEventWoodCrack => 'Odun Çıtırtısı';
+
+  @override
+  String get ambienceEventWoodpecker => 'Ağaçkakan';
 
   @override
   String get dspPageTitle => 'DSP Ses Motoru';

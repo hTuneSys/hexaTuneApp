@@ -173,22 +173,76 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceBaseRain => 'Rain';
 
   @override
+  String get ambienceTextureFire => 'Fire';
+
+  @override
+  String get ambienceTextureGrass => 'Grass';
+
+  @override
+  String get ambienceTextureLeaf => 'Leaf';
+
+  @override
+  String get ambienceTextureNight => 'Night';
+
+  @override
+  String get ambienceTextureSnow => 'Snow';
+
+  @override
+  String get ambienceTextureSoftWind => 'Soft Wind';
+
+  @override
+  String get ambienceTextureStrongWind => 'Strong Wind';
+
+  @override
+  String get ambienceTextureWaterDrop => 'Water Drop';
+
+  @override
   String get ambienceTextureWave => 'Wave';
 
   @override
-  String get ambienceTextureWindThroughTrees => 'Wind Through Trees';
+  String get ambienceEventBirdChirping1 => 'Bird Chirping 1';
 
   @override
-  String get ambienceEventBird => 'Bird';
+  String get ambienceEventBirdChirping2 => 'Bird Chirping 2';
 
   @override
-  String get ambienceEventCat => 'Cat';
+  String get ambienceEventBirdWing => 'Bird Wing';
 
   @override
-  String get ambienceEventFish => 'Fish';
+  String get ambienceEventBush => 'Bush';
+
+  @override
+  String get ambienceEventCrumble => 'Crumble';
+
+  @override
+  String get ambienceEventFrog => 'Frog';
+
+  @override
+  String get ambienceEventInsect => 'Insect';
+
+  @override
+  String get ambienceEventOwl => 'Owl';
+
+  @override
+  String get ambienceEventStone => 'Stone';
 
   @override
   String get ambienceEventThunder => 'Thunder';
+
+  @override
+  String get ambienceEventTwig => 'Twig';
+
+  @override
+  String get ambienceEventWaterDrop => 'Water Drop';
+
+  @override
+  String get ambienceEventWaterSplash => 'Water Splash';
+
+  @override
+  String get ambienceEventWoodCrack => 'Wood Crack';
+
+  @override
+  String get ambienceEventWoodpecker => 'Woodpecker';
 
   @override
   String get dspPageTitle => 'DSP Audio Engine';
