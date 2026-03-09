@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
 import 'package:hexatuneapp/src/core/dsp/ambience/models/ambience_config.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
+import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 
 /// Dummy page for creating, editing, and managing ambience presets.
@@ -23,6 +24,7 @@ class DummyAmbiencePage extends StatefulWidget {
 class _DummyAmbiencePageState extends State<DummyAmbiencePage> {
   late final AmbienceService _ambienceService;
   late final DspAssetService _assetService;
+  late final DspService _dspService;
   bool _isLoading = true;
 
   @override
@@ -30,6 +32,7 @@ class _DummyAmbiencePageState extends State<DummyAmbiencePage> {
     super.initState();
     _ambienceService = getIt<AmbienceService>();
     _assetService = getIt<DspAssetService>();
+    _dspService = getIt<DspService>();
     _initServices();
   }
 
@@ -57,6 +60,7 @@ class _DummyAmbiencePageState extends State<DummyAmbiencePage> {
         builder: (_) => _AmbienceEditorPage(
           assetService: _assetService,
           ambienceService: _ambienceService,
+          dspService: _dspService,
         ),
       ),
     );
@@ -69,6 +73,7 @@ class _DummyAmbiencePageState extends State<DummyAmbiencePage> {
         builder: (_) => _AmbienceEditorPage(
           assetService: _assetService,
           ambienceService: _ambienceService,
+          dspService: _dspService,
           existing: config,
         ),
       ),
@@ -273,11 +278,13 @@ class _AmbienceEditorPage extends StatefulWidget {
   const _AmbienceEditorPage({
     required this.assetService,
     required this.ambienceService,
+    required this.dspService,
     this.existing,
   });
 
   final DspAssetService assetService;
   final AmbienceService ambienceService;
+  final DspService dspService;
   final AmbienceConfig? existing;
 
   @override
@@ -296,6 +303,8 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
   double _masterGain = DspConstants.defaultMasterGain;
 
   bool _saving = false;
+  bool _isPlaying = false;
+  bool _isLoadingPlayback = false;
 
   bool get _isEditing => widget.existing != null;
 
@@ -317,6 +326,9 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
 
   @override
   void dispose() {
+    if (_isPlaying) {
+      widget.dspService.stop();
+    }
     _nameCtrl.dispose();
     super.dispose();
   }
@@ -327,6 +339,9 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
       _showError('Name cannot be empty');
       return;
     }
+
+    // Stop preview playback before saving
+    if (_isPlaying) await _stop();
 
     setState(() => _saving = true);
     try {
@@ -371,6 +386,94 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
         backgroundColor: Theme.of(context).colorScheme.error,
       ),
     );
+  }
+
+  bool get _hasLayers =>
+      _selectedBase != null ||
+      _selectedTextures.isNotEmpty ||
+      _selectedEvents.isNotEmpty;
+
+  AudioAsset? _findAssetById(String id) {
+    for (final a in widget.assetService.allAssets) {
+      if (a.id == id) return a;
+    }
+    return null;
+  }
+
+  Future<void> _play() async {
+    if (_isPlaying || _isLoadingPlayback || !_hasLayers) return;
+    setState(() => _isLoadingPlayback = true);
+
+    try {
+      final dsp = widget.dspService;
+
+      // Stop if already playing from a previous preview
+      if (dsp.isPlaying) await dsp.stop();
+
+      // Clear previous layers
+      await dsp.clearAllLayers();
+
+      // Load base layer
+      if (_selectedBase != null) {
+        final asset = _findAssetById(_selectedBase!);
+        if (asset != null) {
+          final rc = await dsp.loadBase(asset.assetPath);
+          if (rc != 0) {
+            _showError('Failed to load base: ${asset.id} (code $rc)');
+            return;
+          }
+        }
+      }
+
+      // Load texture layers
+      for (var i = 0; i < _selectedTextures.length; i++) {
+        final asset = _findAssetById(_selectedTextures[i]);
+        if (asset != null) {
+          final rc = await dsp.loadTexture(i, asset.assetPath);
+          if (rc != 0) {
+            _showError('Failed to load texture: ${asset.id} (code $rc)');
+            return;
+          }
+        }
+      }
+
+      // Load event layers
+      for (var i = 0; i < _selectedEvents.length; i++) {
+        final asset = _findAssetById(_selectedEvents[i]);
+        if (asset != null) {
+          final rc = await dsp.loadEvent(i, asset.assetPath);
+          if (rc != 0) {
+            _showError('Failed to load event: ${asset.id} (code $rc)');
+            return;
+          }
+        }
+      }
+
+      // Apply gains
+      dsp.setBaseGain(_baseGain);
+      dsp.setTextureGain(_textureGain);
+      dsp.setEventGain(_eventGain);
+      dsp.setMasterGain(_masterGain);
+
+      // Start playback
+      final err = await dsp.start();
+      if (err != null) {
+        _showError(err);
+        return;
+      }
+
+      if (mounted) setState(() => _isPlaying = true);
+    } catch (e) {
+      _showError('Playback error: $e');
+    } finally {
+      if (mounted) setState(() => _isLoadingPlayback = false);
+    }
+  }
+
+  Future<void> _stop() async {
+    if (!_isPlaying) return;
+    await widget.dspService.stop();
+    if (mounted) setState(() => _isPlaying = false);
   }
 
   void _onBaseTapped(AudioAsset asset) {
@@ -477,16 +580,70 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
             _buildSectionTitle(theme, l10n.dspGainControls),
             _buildGainSlider(theme, l10n.dspSectionBase, _baseGain, (v) {
               setState(() => _baseGain = v);
+              if (_isPlaying) widget.dspService.setBaseGain(v);
             }),
             _buildGainSlider(theme, l10n.dspSectionTexture, _textureGain, (v) {
               setState(() => _textureGain = v);
+              if (_isPlaying) widget.dspService.setTextureGain(v);
             }),
             _buildGainSlider(theme, l10n.dspSectionEvents, _eventGain, (v) {
               setState(() => _eventGain = v);
+              if (_isPlaying) widget.dspService.setEventGain(v);
             }),
             _buildGainSlider(theme, 'Master', _masterGain, (v) {
               setState(() => _masterGain = v);
+              if (_isPlaying) widget.dspService.setMasterGain(v);
             }),
+            const SizedBox(height: 16),
+
+            // Play / Stop controls
+            Row(
+              children: [
+                Expanded(
+                  child: FilledButton.icon(
+                    onPressed: _isPlaying || !_hasLayers || _isLoadingPlayback
+                        ? null
+                        : _play,
+                    icon: _isLoadingPlayback
+                        ? const SizedBox(
+                            width: 18,
+                            height: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.play_arrow),
+                    label: Text(l10n.dspPlay),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton.icon(
+                    onPressed: _isPlaying ? _stop : null,
+                    icon: const Icon(Icons.stop),
+                    label: Text(l10n.dspStop),
+                  ),
+                ),
+              ],
+            ),
+            if (_isPlaying)
+              Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.graphic_eq,
+                      size: 16,
+                      color: colorScheme.primary,
+                    ),
+                    const SizedBox(width: 4),
+                    Text(
+                      l10n.dspPlaying,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             const SizedBox(height: 24),
 
             // Save button
