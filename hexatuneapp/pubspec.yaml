@@ -162,9 +162,9 @@ flutter:
     - assets/audio/ambience/texture/
     - assets/audio/ambience/events/
     - assets/audio/ambience/sounds_catalog.json
-    - assets/icons/ambience/base/
-    - assets/icons/ambience/texture/
-    - assets/icons/ambience/events/
+    - assets/icon/ambience/base/
+    - assets/icon/ambience/texture/
+    - assets/icon/ambience/events/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

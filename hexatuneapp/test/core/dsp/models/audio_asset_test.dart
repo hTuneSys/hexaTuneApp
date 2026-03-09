@@ -28,10 +28,10 @@ void main() {
         layerType: 'base',
         name: 'Forest',
         assetPath: 'assets/audio/ambience/base/forest.wav',
-        iconAsset: 'assets/icons/ambience/base/forest.png',
+        iconAsset: 'assets/icon/ambience/base/forest.png',
         nameKey: 'ambienceBaseForest',
       );
-      expect(asset.iconAsset, 'assets/icons/ambience/base/forest.png');
+      expect(asset.iconAsset, 'assets/icon/ambience/base/forest.png');
       expect(asset.nameKey, 'ambienceBaseForest');
     });
 

@@ -4,63 +4,63 @@
       "id": "forest",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/forest.wav",
-      "iconAsset": "assets/icons/ambience/base/forest.png",
+      "iconAsset": "assets/icon/ambience/base/forest.png",
       "nameKey": "ambienceBaseForest"
     },
     {
       "id": "ocean",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/ocean.wav",
-      "iconAsset": "assets/icons/ambience/base/ocean.png",
+      "iconAsset": "assets/icon/ambience/base/ocean.png",
       "nameKey": "ambienceBaseOcean"
     },
     {
       "id": "rain",
       "type": "base",
       "audioAsset": "assets/audio/ambience/base/rain.wav",
-      "iconAsset": "assets/icons/ambience/base/rain.png",
+      "iconAsset": "assets/icon/ambience/base/rain.png",
       "nameKey": "ambienceBaseRain"
     },
     {
       "id": "wave",
       "type": "texture",
       "audioAsset": "assets/audio/ambience/texture/wave.wav",
-      "iconAsset": "assets/icons/ambience/texture/wave.png",
+      "iconAsset": "assets/icon/ambience/texture/wave.png",
       "nameKey": "ambienceTextureWave"
     },
     {
       "id": "wind_through_trees",
       "type": "texture",
       "audioAsset": "assets/audio/ambience/texture/wind_through_trees.wav",
-      "iconAsset": "assets/icons/ambience/texture/wind_through_trees.png",
+      "iconAsset": "assets/icon/ambience/texture/wind_through_trees.png",
       "nameKey": "ambienceTextureWindThroughTrees"
     },
     {
       "id": "bird",
       "type": "events",
       "audioAsset": "assets/audio/ambience/events/bird.wav",
-      "iconAsset": "assets/icons/ambience/events/bird.png",
+      "iconAsset": "assets/icon/ambience/events/bird.png",
       "nameKey": "ambienceEventBird"
     },
     {
       "id": "cat",
       "type": "events",
       "audioAsset": "assets/audio/ambience/events/cat.wav",
-      "iconAsset": "assets/icons/ambience/events/cat.png",
+      "iconAsset": "assets/icon/ambience/events/cat.png",
       "nameKey": "ambienceEventCat"
     },
     {
       "id": "fish",
       "type": "events",
       "audioAsset": "assets/audio/ambience/events/fish.wav",
-      "iconAsset": "assets/icons/ambience/events/fish.png",
+      "iconAsset": "assets/icon/ambience/events/fish.png",
       "nameKey": "ambienceEventFish"
     },
     {
       "id": "thunder",
       "type": "events",
       "audioAsset": "assets/audio/ambience/events/thunder.wav",
-      "iconAsset": "assets/icons/ambience/events/thunder.png",
+      "iconAsset": "assets/icon/ambience/events/thunder.png",
       "nameKey": "ambienceEventThunder"
     }
   ]
