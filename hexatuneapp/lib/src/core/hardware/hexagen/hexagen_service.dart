@@ -282,13 +282,21 @@ class HexagenService {
   }
 
   /// Send AT+FREQ and return a future that completes on response.
-  Future<CommandStatus> sendFreqCommandAndWait(int freq, int timeMs) async {
+  ///
+  /// When [stepId] is provided it is used as the command ID (useful for
+  /// operation-scoped freq steps so firmware reports the same step index
+  /// during GENERATE progress). Otherwise an auto-incremented ID is used.
+  Future<CommandStatus> sendFreqCommandAndWait(
+    int freq,
+    int timeMs, {
+    int? stepId,
+  }) async {
     final deviceId = _deviceManager.connectedId;
     if (deviceId == null) {
       return CommandStatus.error;
     }
     final completer = Completer<CommandStatus>();
-    final id = generateId();
+    final id = stepId ?? generateId();
     final command = ATCommand.freq(id, freq, timeMs);
     final compiled = command.compile();
 

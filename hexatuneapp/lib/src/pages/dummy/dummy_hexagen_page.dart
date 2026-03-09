@@ -174,8 +174,9 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
     for (int i = 0; i < _freqList.length; i++) {
       if (!mounted || !_isRunning) break;
       final entry = _freqList[i];
+      final stepId = i + 1;
       _logService.devLog(
-        '→ FREQ [${i + 1}/${_freqList.length}] '
+        '→ FREQ step=$stepId [${i + 1}/${_freqList.length}] '
         '${entry.freq} Hz / ${entry.durationMs} ms',
         category: LogCategory.ui,
       );
@@ -188,6 +189,7 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
       final status = await _hexagenService.sendFreqCommandAndWait(
         entry.freq,
         entry.durationMs,
+        stepId: stepId,
       );
 
       if (!mounted || !_isRunning) break;
