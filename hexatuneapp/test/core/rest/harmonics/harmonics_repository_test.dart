@@ -24,22 +24,17 @@ void main() {
     late MockLogService mockLogService;
     late HarmonicsRepository repository;
 
-    final assignmentJson = {
-      'inventoryId': 'inv-001',
-      'harmonicNumber': 42,
-      'assignedAt': '2026-03-08T03:00:00Z',
-    };
+    final packetJson = {'value': 440, 'durationMs': 30000, 'isOneShot': false};
 
     final responseJson = {
       'requestId': 'req-abc-123',
-      'totalAssigned': 2,
-      'assignments': [
-        assignmentJson,
-        {
-          'inventoryId': 'inv-002',
-          'harmonicNumber': 43,
-          'assignedAt': '2026-03-08T03:00:01Z',
-        },
+      'generationType': 'Binaural',
+      'sourceType': 'Formula',
+      'sourceId': 'frm-001',
+      'totalItems': 2,
+      'sequence': [
+        packetJson,
+        {'value': 528, 'durationMs': 15000, 'isOneShot': true},
       ],
     };
 
@@ -58,48 +53,97 @@ void main() {
     });
 
     group('generate', () {
-      test('sends POST with inventoryIds and returns response', () async {
+      test('sends POST with generation params and returns response', () async {
         dioAdapter.onPost(
           ApiEndpoints.harmonicsGenerate,
           (server) => server.reply(201, responseJson),
           data: {
-            'inventoryIds': ['inv-001', 'inv-002'],
+            'generationType': 'Binaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-001',
           },
         );
 
         final result = await repository.generate(
-          const GenerateHarmonicsRequest(inventoryIds: ['inv-001', 'inv-002']),
+          const GenerateHarmonicsRequest(
+            generationType: 'Binaural',
+            sourceType: 'Formula',
+            sourceId: 'frm-001',
+          ),
         );
 
         expect(result.requestId, 'req-abc-123');
-        expect(result.totalAssigned, 2);
-        expect(result.assignments, hasLength(2));
-        expect(result.assignments[0].inventoryId, 'inv-001');
-        expect(result.assignments[0].harmonicNumber, 42);
-        expect(result.assignments[1].inventoryId, 'inv-002');
-        expect(result.assignments[1].harmonicNumber, 43);
+        expect(result.generationType, 'Binaural');
+        expect(result.sourceType, 'Formula');
+        expect(result.sourceId, 'frm-001');
+        expect(result.totalItems, 2);
+        expect(result.sequence, hasLength(2));
+        expect(result.sequence[0].value, 440);
+        expect(result.sequence[0].durationMs, 30000);
+        expect(result.sequence[0].isOneShot, false);
+        expect(result.sequence[1].value, 528);
+        expect(result.sequence[1].isOneShot, true);
       });
 
-      test('sends POST with single inventoryId', () async {
+      test('sends POST with single packet response', () async {
         dioAdapter.onPost(
           ApiEndpoints.harmonicsGenerate,
           (server) => server.reply(201, {
             'requestId': 'req-single',
-            'totalAssigned': 1,
-            'assignments': [assignmentJson],
+            'generationType': 'Monaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-002',
+            'totalItems': 1,
+            'sequence': [packetJson],
           }),
           data: {
-            'inventoryIds': ['inv-001'],
+            'generationType': 'Monaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-002',
           },
         );
 
         final result = await repository.generate(
-          const GenerateHarmonicsRequest(inventoryIds: ['inv-001']),
+          const GenerateHarmonicsRequest(
+            generationType: 'Monaural',
+            sourceType: 'Formula',
+            sourceId: 'frm-002',
+          ),
         );
 
         expect(result.requestId, 'req-single');
-        expect(result.totalAssigned, 1);
-        expect(result.assignments, hasLength(1));
+        expect(result.totalItems, 1);
+        expect(result.sequence, hasLength(1));
+      });
+
+      test('handles empty sequence for unsupported types', () async {
+        dioAdapter.onPost(
+          ApiEndpoints.harmonicsGenerate,
+          (server) => server.reply(201, {
+            'requestId': 'req-photonic',
+            'generationType': 'Photonic',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-003',
+            'totalItems': 0,
+            'sequence': [],
+          }),
+          data: {
+            'generationType': 'Photonic',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-003',
+          },
+        );
+
+        final result = await repository.generate(
+          const GenerateHarmonicsRequest(
+            generationType: 'Photonic',
+            sourceType: 'Formula',
+            sourceId: 'frm-003',
+          ),
+        );
+
+        expect(result.sequence, isEmpty);
+        expect(result.totalItems, 0);
       });
 
       test('throws DioException on server error', () async {
@@ -111,35 +155,46 @@ void main() {
             'status': 500,
           }),
           data: {
-            'inventoryIds': ['inv-001'],
+            'generationType': 'Binaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-001',
           },
         );
 
         expect(
           () => repository.generate(
-            const GenerateHarmonicsRequest(inventoryIds: ['inv-001']),
+            const GenerateHarmonicsRequest(
+              generationType: 'Binaural',
+              sourceType: 'Formula',
+              sourceId: 'frm-001',
+            ),
           ),
           throwsA(isA<DioException>()),
         );
       });
 
-      test('throws DioException on conflict (409)', () async {
+      test('throws DioException on not found (404)', () async {
         dioAdapter.onPost(
           ApiEndpoints.harmonicsGenerate,
-          (server) => server.reply(409, {
-            'type': 'https://httpstatuses.com/409',
-            'title': 'Conflict',
-            'status': 409,
-            'detail': 'All 100 harmonic numbers exhausted',
+          (server) => server.reply(404, {
+            'type': 'https://httpstatuses.com/404',
+            'title': 'Not Found',
+            'status': 404,
           }),
           data: {
-            'inventoryIds': ['inv-001'],
+            'generationType': 'Binaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-missing',
           },
         );
 
         expect(
           () => repository.generate(
-            const GenerateHarmonicsRequest(inventoryIds: ['inv-001']),
+            const GenerateHarmonicsRequest(
+              generationType: 'Binaural',
+              sourceType: 'Formula',
+              sourceId: 'frm-missing',
+            ),
           ),
           throwsA(isA<DioException>()),
         );
@@ -150,12 +205,18 @@ void main() {
           ApiEndpoints.harmonicsGenerate,
           (server) => server.reply(201, responseJson),
           data: {
-            'inventoryIds': ['inv-001'],
+            'generationType': 'Binaural',
+            'sourceType': 'Formula',
+            'sourceId': 'frm-001',
           },
         );
 
         await repository.generate(
-          const GenerateHarmonicsRequest(inventoryIds: ['inv-001']),
+          const GenerateHarmonicsRequest(
+            generationType: 'Binaural',
+            sourceType: 'Formula',
+            sourceId: 'frm-001',
+          ),
         );
 
         verify(

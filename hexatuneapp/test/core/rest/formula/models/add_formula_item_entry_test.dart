@@ -10,18 +10,39 @@ void main() {
     test('can be created with required fields', () {
       final result = const AddFormulaItemEntry(inventoryId: 'inv-001');
       expect(result.inventoryId, 'inv-001');
+      expect(result.timeMs, isNull);
+    });
+
+    test('can be created with optional timeMs', () {
+      final result = const AddFormulaItemEntry(
+        inventoryId: 'inv-001',
+        timeMs: 5000,
+      );
+      expect(result.inventoryId, 'inv-001');
+      expect(result.timeMs, 5000);
     });
 
     test('serializes to JSON correctly', () {
+      final result = const AddFormulaItemEntry(
+        inventoryId: 'inv-001',
+        timeMs: 3000,
+      );
+      final json = result.toJson();
+      expect(json['inventoryId'], 'inv-001');
+      expect(json['timeMs'], 3000);
+    });
+
+    test('serializes to JSON without timeMs when null', () {
       final result = const AddFormulaItemEntry(inventoryId: 'inv-001');
       final json = result.toJson();
       expect(json['inventoryId'], 'inv-001');
     });
 
     test('deserializes from JSON correctly', () {
-      final json = <String, dynamic>{'inventoryId': 'inv-001'};
+      final json = <String, dynamic>{'inventoryId': 'inv-001', 'timeMs': 10000};
       final result = AddFormulaItemEntry.fromJson(json);
       expect(result.inventoryId, 'inv-001');
+      expect(result.timeMs, 10000);
     });
 
     test('equality works correctly', () {

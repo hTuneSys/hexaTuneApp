@@ -15,7 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$FormulaItemResponse {
 
- String get id; String get inventoryId; int get sortOrder; int get quantity;
+ String get id; String get inventoryId; int get sortOrder; int get quantity;/// Duration in milliseconds.
+ int get timeMs;
 /// Create a copy of FormulaItemResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $FormulaItemResponseCopyWith<FormulaItemResponse> get copyWith => _$FormulaItemR
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FormulaItemResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FormulaItemResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.timeMs, timeMs) || other.timeMs == timeMs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,inventoryId,sortOrder,quantity);
+int get hashCode => Object.hash(runtimeType,id,inventoryId,sortOrder,quantity,timeMs);
 
 @override
 String toString() {
-  return 'FormulaItemResponse(id: $id, inventoryId: $inventoryId, sortOrder: $sortOrder, quantity: $quantity)';
+  return 'FormulaItemResponse(id: $id, inventoryId: $inventoryId, sortOrder: $sortOrder, quantity: $quantity, timeMs: $timeMs)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $FormulaItemResponseCopyWith<$Res>  {
   factory $FormulaItemResponseCopyWith(FormulaItemResponse value, $Res Function(FormulaItemResponse) _then) = _$FormulaItemResponseCopyWithImpl;
 @useResult
 $Res call({
- String id, String inventoryId, int sortOrder, int quantity
+ String id, String inventoryId, int sortOrder, int quantity, int timeMs
 });
 
 
@@ -65,12 +66,13 @@ class _$FormulaItemResponseCopyWithImpl<$Res>
 
 /// Create a copy of FormulaItemResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? inventoryId = null,Object? sortOrder = null,Object? quantity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? inventoryId = null,Object? sortOrder = null,Object? quantity = null,Object? timeMs = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,inventoryId: null == inventoryId ? _self.inventoryId : inventoryId // ignore: cast_nullable_to_non_nullable
 as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as int,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,timeMs: null == timeMs ? _self.timeMs : timeMs // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -156,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String inventoryId,  int sortOrder,  int quantity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String inventoryId,  int sortOrder,  int quantity,  int timeMs)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FormulaItemResponse() when $default != null:
-return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case _:
+return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity,_that.timeMs);case _:
   return orElse();
 
 }
@@ -177,10 +179,10 @@ return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String inventoryId,  int sortOrder,  int quantity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String inventoryId,  int sortOrder,  int quantity,  int timeMs)  $default,) {final _that = this;
 switch (_that) {
 case _FormulaItemResponse():
-return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case _:
+return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity,_that.timeMs);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +199,10 @@ return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case 
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String inventoryId,  int sortOrder,  int quantity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String inventoryId,  int sortOrder,  int quantity,  int timeMs)?  $default,) {final _that = this;
 switch (_that) {
 case _FormulaItemResponse() when $default != null:
-return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case _:
+return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity,_that.timeMs);case _:
   return null;
 
 }
@@ -212,13 +214,15 @@ return $default(_that.id,_that.inventoryId,_that.sortOrder,_that.quantity);case 
 @JsonSerializable()
 
 class _FormulaItemResponse implements FormulaItemResponse {
-  const _FormulaItemResponse({required this.id, required this.inventoryId, required this.sortOrder, required this.quantity});
+  const _FormulaItemResponse({required this.id, required this.inventoryId, required this.sortOrder, required this.quantity, required this.timeMs});
   factory _FormulaItemResponse.fromJson(Map<String, dynamic> json) => _$FormulaItemResponseFromJson(json);
 
 @override final  String id;
 @override final  String inventoryId;
 @override final  int sortOrder;
 @override final  int quantity;
+/// Duration in milliseconds.
+@override final  int timeMs;
 
 /// Create a copy of FormulaItemResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FormulaItemResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.quantity, quantity) || other.quantity == quantity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FormulaItemResponse&&(identical(other.id, id) || other.id == id)&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.timeMs, timeMs) || other.timeMs == timeMs));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,inventoryId,sortOrder,quantity);
+int get hashCode => Object.hash(runtimeType,id,inventoryId,sortOrder,quantity,timeMs);
 
 @override
 String toString() {
-  return 'FormulaItemResponse(id: $id, inventoryId: $inventoryId, sortOrder: $sortOrder, quantity: $quantity)';
+  return 'FormulaItemResponse(id: $id, inventoryId: $inventoryId, sortOrder: $sortOrder, quantity: $quantity, timeMs: $timeMs)';
 }
 
 
@@ -253,7 +257,7 @@ abstract mixin class _$FormulaItemResponseCopyWith<$Res> implements $FormulaItem
   factory _$FormulaItemResponseCopyWith(_FormulaItemResponse value, $Res Function(_FormulaItemResponse) _then) = __$FormulaItemResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String inventoryId, int sortOrder, int quantity
+ String id, String inventoryId, int sortOrder, int quantity, int timeMs
 });
 
 
@@ -270,12 +274,13 @@ class __$FormulaItemResponseCopyWithImpl<$Res>
 
 /// Create a copy of FormulaItemResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? inventoryId = null,Object? sortOrder = null,Object? quantity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? inventoryId = null,Object? sortOrder = null,Object? quantity = null,Object? timeMs = null,}) {
   return _then(_FormulaItemResponse(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,inventoryId: null == inventoryId ? _self.inventoryId : inventoryId // ignore: cast_nullable_to_non_nullable
 as String,sortOrder: null == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
 as int,quantity: null == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
+as int,timeMs: null == timeMs ? _self.timeMs : timeMs // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

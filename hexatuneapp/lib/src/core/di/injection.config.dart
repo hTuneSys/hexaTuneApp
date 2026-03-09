@@ -105,6 +105,7 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i623.NotificationService>(
       () => _i623.NotificationService(gh<_i571.LogService>()),
+      dispose: (i) => i.dispose(),
     );
     gh.singleton<_i1001.PermissionService>(
       () => _i1001.PermissionService(gh<_i571.LogService>()),

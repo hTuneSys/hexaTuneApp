@@ -86,8 +86,23 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     }
     if (!mounted) return;
 
+    // Filter out inventories already present in formula items
+    final existingInvIds = _items.map((i) => i.inventoryId).toSet();
+    final availableInventories = inventories
+        .where((inv) => !existingInvIds.contains(inv.id))
+        .toList();
+
+    if (availableInventories.isEmpty) {
+      _showMessage(
+        'All inventory items are already added to this formula',
+        isError: true,
+      );
+      return;
+    }
+
     String? selectedInventoryId;
     final quantityCtrl = TextEditingController(text: '1');
+    final timeMsCtrl = TextEditingController(text: '1000');
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -102,7 +117,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
                   labelText: 'Inventory *',
                   border: OutlineInputBorder(),
                 ),
-                items: inventories
+                items: availableInventories
                     .map(
                       (inv) => DropdownMenuItem(
                         value: inv.id,
@@ -121,6 +136,16 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
                 decoration: const InputDecoration(
                   labelText: 'Quantity',
                   border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(height: 8),
+              TextField(
+                controller: timeMsCtrl,
+                decoration: const InputDecoration(
+                  labelText: 'Time (ms)',
+                  border: OutlineInputBorder(),
+                  helperText: 'Optional, defaults to 1000ms',
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -144,6 +169,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     setState(() => _isLoading = true);
     try {
       final repo = getIt<FormulaRepository>();
+      final timeMsValue = int.tryParse(timeMsCtrl.text.trim());
       await repo.addItems(
         widget.formulaId,
         AddFormulaItemsRequest(
@@ -151,6 +177,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
             AddFormulaItemEntry(
               inventoryId: selectedInventoryId!,
               quantity: int.tryParse(quantityCtrl.text.trim()),
+              timeMs: timeMsValue,
             ),
           ],
         ),
@@ -355,7 +382,9 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
                           title: Text(
                             'Inventory: ${item.inventoryId.substring(0, 12)}…',
                           ),
-                          subtitle: Text('Qty: ${item.quantity}'),
+                          subtitle: Text(
+                            'Qty: ${item.quantity} • ${item.timeMs}ms',
+                          ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [

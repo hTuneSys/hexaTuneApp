@@ -6,13 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
-import 'package:hexatuneapp/src/core/network/pagination_params.dart';
+import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_request.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_response.dart';
-import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_assignment_dto.dart';
-import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
-import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.dart';
+import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 
 /// Dummy page for testing the harmonics generation endpoint.
 class DummyHarmonicsPage extends StatefulWidget {
@@ -23,36 +23,48 @@ class DummyHarmonicsPage extends StatefulWidget {
 }
 
 class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
-  final List<InventoryResponse> _inventories = [];
-  final Set<String> _selectedIds = {};
+  static const _generationTypes = [
+    'Monaural',
+    'Binaural',
+    'Magnetic',
+    'Photonic',
+    'Quantal',
+  ];
+  static const _sourceTypes = ['Flow', 'Formula'];
+
+  final List<FormulaResponse> _formulas = [];
   bool _isLoading = false;
   GenerateHarmonicsResponse? _lastResponse;
+
+  String _selectedGenType = 'Monaural';
+  String _selectedSourceType = 'Formula';
+  String? _selectedSourceId;
 
   @override
   void initState() {
     super.initState();
-    _loadInventories();
+    _loadFormulas();
   }
 
-  Future<void> _loadInventories() async {
+  Future<void> _loadFormulas() async {
     setState(() => _isLoading = true);
     final log = getIt<LogService>();
     try {
-      final repo = getIt<InventoryRepository>();
+      final repo = getIt<FormulaRepository>();
       final resp = await repo.list(params: const PaginationParams(limit: 50));
       if (mounted) {
         setState(() {
-          _inventories
+          _formulas
             ..clear()
             ..addAll(resp.data);
         });
       }
       log.devLog(
-        '✓ Inventories loaded: ${resp.data.length}',
+        '✓ Formulas loaded: ${resp.data.length}',
         category: LogCategory.ui,
       );
     } catch (e) {
-      log.devLog('✗ Load inventories failed: $e', category: LogCategory.ui);
+      log.devLog('✗ Load formulas failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -60,8 +72,8 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
   }
 
   Future<void> _generate() async {
-    if (_selectedIds.isEmpty) {
-      _showMessage('Select at least one inventory item', isError: true);
+    if (_selectedSourceId == null) {
+      _showMessage('Select a source', isError: true);
       return;
     }
 
@@ -70,25 +82,22 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
     try {
       final repo = getIt<HarmonicsRepository>();
       final request = GenerateHarmonicsRequest(
-        inventoryIds: _selectedIds.toList(),
+        generationType: _selectedGenType,
+        sourceType: _selectedSourceType,
+        sourceId: _selectedSourceId!,
       );
       final response = await repo.generate(request);
 
       if (mounted) {
-        setState(() {
-          _lastResponse = response;
-          _selectedIds.clear();
-        });
+        setState(() => _lastResponse = response);
       }
       log.devLog(
-        '✓ Harmonics generated: ${response.totalAssigned} assignments, '
+        '✓ Harmonics generated: ${response.totalItems} packets, '
         'requestId=${response.requestId}',
         category: LogCategory.ui,
       );
       if (mounted) {
-        _showMessage(
-          'Generated ${response.totalAssigned} harmonic assignments',
-        );
+        _showMessage('Generated ${response.totalItems} harmonic packets');
       }
     } catch (e) {
       log.devLog('✗ Generate harmonics failed: $e', category: LogCategory.ui);
@@ -121,77 +130,116 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: _isLoading ? null : _loadInventories,
+            onPressed: _isLoading ? null : _loadFormulas,
           ),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _isLoading ? null : _generate,
+        onPressed: _isLoading || _selectedSourceId == null ? null : _generate,
         icon: const Icon(Icons.music_note),
-        label: Text('Generate (${_selectedIds.length})'),
+        label: const Text('Generate'),
       ),
       body: Column(
         children: [
-          // Result banner
           if (_lastResponse != null) _buildResponseBanner(colorScheme),
 
-          // Inventory selection list
+          // Generation type selector
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Text(
-                  'Select inventory items',
-                  style: theme.textTheme.titleSmall,
-                ),
-                const Spacer(),
-                if (_selectedIds.isNotEmpty)
-                  TextButton(
-                    onPressed: () => setState(() => _selectedIds.clear()),
-                    child: const Text('Clear'),
-                  ),
-              ],
+            child: DropdownButtonFormField<String>(
+              initialValue: _selectedGenType,
+              decoration: const InputDecoration(
+                labelText: 'Generation Type',
+                border: OutlineInputBorder(),
+              ),
+              items: _generationTypes
+                  .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                  .toList(),
+              onChanged: (val) {
+                if (val != null) setState(() => _selectedGenType = val);
+              },
             ),
           ),
+
+          // Source type selector
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: DropdownButtonFormField<String>(
+              initialValue: _selectedSourceType,
+              decoration: const InputDecoration(
+                labelText: 'Source Type',
+                border: OutlineInputBorder(),
+              ),
+              items: _sourceTypes
+                  .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                  .toList(),
+              onChanged: (val) {
+                if (val != null) {
+                  setState(() {
+                    _selectedSourceType = val;
+                    _selectedSourceId = null;
+                  });
+                }
+              },
+            ),
+          ),
+
+          // Source ID selector (formulas)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: DropdownButtonFormField<String>(
+              initialValue: _selectedSourceId,
+              decoration: const InputDecoration(
+                labelText: 'Source',
+                border: OutlineInputBorder(),
+              ),
+              items: _formulas
+                  .map(
+                    (f) => DropdownMenuItem(value: f.id, child: Text(f.name)),
+                  )
+                  .toList(),
+              onChanged: (val) => setState(() => _selectedSourceId = val),
+              hint: const Text('Select a source'),
+            ),
+          ),
+
+          const Divider(),
+
+          // Packet sequence list (from last response)
+          if (_lastResponse != null && _lastResponse!.sequence.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Text('Sequence', style: theme.textTheme.titleSmall),
+                  const Spacer(),
+                  Text(
+                    '${_lastResponse!.sequence.length} packets',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
           Expanded(
-            child: _isLoading && _inventories.isEmpty
+            child: _isLoading && _formulas.isEmpty
                 ? const Center(child: CircularProgressIndicator())
-                : RefreshIndicator(
-                    onRefresh: _loadInventories,
-                    child: _inventories.isEmpty
-                        ? const Center(child: Text('No inventories found'))
-                        : ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            itemCount: _inventories.length,
-                            itemBuilder: (ctx, i) {
-                              final inv = _inventories[i];
-                              final selected = _selectedIds.contains(inv.id);
-                              return CheckboxListTile(
-                                value: selected,
-                                onChanged: (val) {
-                                  setState(() {
-                                    if (val == true) {
-                                      _selectedIds.add(inv.id);
-                                    } else {
-                                      _selectedIds.remove(inv.id);
-                                    }
-                                  });
-                                },
-                                title: Text(inv.name),
-                                subtitle: Text(
-                                  inv.description ?? inv.id,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                secondary: Icon(
-                                  Icons.inventory_2,
-                                  color: selected
-                                      ? colorScheme.primary
-                                      : colorScheme.outline,
-                                ),
-                              );
-                            },
-                          ),
+                : _lastResponse == null || _lastResponse!.sequence.isEmpty
+                ? Center(
+                    child: Text(
+                      'Select parameters and generate',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: colorScheme.outline,
+                      ),
+                    ),
+                  )
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemCount: _lastResponse!.sequence.length,
+                    itemBuilder: (ctx, i) => _buildPacketTile(
+                      _lastResponse!.sequence[i],
+                      i,
+                      colorScheme,
+                    ),
                   ),
           ),
         ],
@@ -204,40 +252,44 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
     return Card(
       margin: const EdgeInsets.all(8),
       color: colorScheme.primaryContainer,
-      child: ExpansionTile(
+      child: ListTile(
         leading: Icon(Icons.check_circle, color: colorScheme.primary),
         title: Text(
-          '${resp.totalAssigned} assignments',
+          '${resp.totalItems} packets — ${resp.generationType}',
           style: TextStyle(color: colorScheme.onPrimaryContainer),
         ),
         subtitle: Text(
+          'Source: ${resp.sourceType}/${resp.sourceId}\n'
           'Request: ${resp.requestId}',
           style: TextStyle(color: colorScheme.onPrimaryContainer),
         ),
-        children: [
-          for (final a in resp.assignments)
-            _buildAssignmentTile(a, colorScheme),
-        ],
       ),
     );
   }
 
-  Widget _buildAssignmentTile(
-    HarmonicAssignmentDto assignment,
+  Widget _buildPacketTile(
+    HarmonicPacketDto packet,
+    int index,
     ColorScheme colorScheme,
   ) {
-    return ListTile(
-      dense: true,
-      leading: CircleAvatar(
-        radius: 16,
-        backgroundColor: colorScheme.tertiary,
-        child: Text(
-          '${assignment.harmonicNumber}',
-          style: TextStyle(color: colorScheme.onTertiary, fontSize: 12),
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: colorScheme.tertiary,
+          child: Text(
+            '${index + 1}',
+            style: TextStyle(color: colorScheme.onTertiary, fontSize: 12),
+          ),
         ),
+        title: Text('Value: ${packet.value}'),
+        subtitle: Text(
+          'Duration: ${packet.durationMs}ms'
+          '${packet.isOneShot ? ' • One-shot' : ''}',
+        ),
+        trailing: packet.isOneShot
+            ? Icon(Icons.looks_one, color: colorScheme.tertiary)
+            : null,
       ),
-      title: SelectableText(assignment.inventoryId),
-      subtitle: Text('Assigned: ${assignment.assignedAt}'),
     );
   }
 }

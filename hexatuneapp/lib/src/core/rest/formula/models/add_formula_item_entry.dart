@@ -13,6 +13,9 @@ abstract class AddFormulaItemEntry with _$AddFormulaItemEntry {
     required String inventoryId,
     int? quantity,
     int? sortOrder,
+
+    /// Duration in milliseconds (defaults to 1000 if not provided).
+    int? timeMs,
   }) = _AddFormulaItemEntry;
 
   factory AddFormulaItemEntry.fromJson(Map<String, dynamic> json) =>

@@ -26,6 +26,7 @@ path = [
   "openapi.json",
   "openapi_old.json",
   "openapinew.json",
+  "plans.md",
 ]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 hexaTune LLC"

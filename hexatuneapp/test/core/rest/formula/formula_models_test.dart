@@ -56,6 +56,7 @@ void main() {
             'inventoryId': 'inv-001',
             'sortOrder': 1,
             'quantity': 5,
+            'timeMs': 1000,
           },
         ],
         'createdAt': '2025-01-01T00:00:00Z',
@@ -74,12 +75,14 @@ void main() {
         'inventoryId': 'inv-001',
         'sortOrder': 1,
         'quantity': 10,
+        'timeMs': 1000,
       };
       final item = FormulaItemResponse.fromJson(json);
       expect(item.id, 'item-001');
       expect(item.inventoryId, 'inv-001');
       expect(item.sortOrder, 1);
       expect(item.quantity, 10);
+      expect(item.timeMs, 1000);
     });
 
     test('toJson produces correct keys', () {
@@ -88,6 +91,7 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 1000,
       );
       final json = item.toJson();
       expect(json['id'], 'item-001');

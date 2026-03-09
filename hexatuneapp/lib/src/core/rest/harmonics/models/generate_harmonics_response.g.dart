@@ -10,16 +10,22 @@ _GenerateHarmonicsResponse _$GenerateHarmonicsResponseFromJson(
   Map<String, dynamic> json,
 ) => _GenerateHarmonicsResponse(
   requestId: json['requestId'] as String,
-  assignments: (json['assignments'] as List<dynamic>)
-      .map((e) => HarmonicAssignmentDto.fromJson(e as Map<String, dynamic>))
+  generationType: json['generationType'] as String,
+  sourceType: json['sourceType'] as String,
+  sourceId: json['sourceId'] as String,
+  sequence: (json['sequence'] as List<dynamic>)
+      .map((e) => HarmonicPacketDto.fromJson(e as Map<String, dynamic>))
       .toList(),
-  totalAssigned: (json['totalAssigned'] as num).toInt(),
+  totalItems: (json['totalItems'] as num).toInt(),
 );
 
 Map<String, dynamic> _$GenerateHarmonicsResponseToJson(
   _GenerateHarmonicsResponse instance,
 ) => <String, dynamic>{
   'requestId': instance.requestId,
-  'assignments': instance.assignments,
-  'totalAssigned': instance.totalAssigned,
+  'generationType': instance.generationType,
+  'sourceType': instance.sourceType,
+  'sourceId': instance.sourceId,
+  'sequence': instance.sequence,
+  'totalItems': instance.totalItems,
 };

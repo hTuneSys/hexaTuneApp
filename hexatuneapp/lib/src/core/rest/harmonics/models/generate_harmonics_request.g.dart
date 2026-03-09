@@ -9,11 +9,15 @@ part of 'generate_harmonics_request.dart';
 _GenerateHarmonicsRequest _$GenerateHarmonicsRequestFromJson(
   Map<String, dynamic> json,
 ) => _GenerateHarmonicsRequest(
-  inventoryIds: (json['inventoryIds'] as List<dynamic>)
-      .map((e) => e as String)
-      .toList(),
+  generationType: json['generationType'] as String,
+  sourceType: json['sourceType'] as String,
+  sourceId: json['sourceId'] as String,
 );
 
 Map<String, dynamic> _$GenerateHarmonicsRequestToJson(
   _GenerateHarmonicsRequest instance,
-) => <String, dynamic>{'inventoryIds': instance.inventoryIds};
+) => <String, dynamic>{
+  'generationType': instance.generationType,
+  'sourceType': instance.sourceType,
+  'sourceId': instance.sourceId,
+};

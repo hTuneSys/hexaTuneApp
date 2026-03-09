@@ -68,6 +68,7 @@ void main() {
         'inventoryId': 'inv-001',
         'sortOrder': 1,
         'quantity': 5,
+        'timeMs': 1000,
       };
       final item = FormulaItemResponse.fromJson(json);
       expect(item.id, 'item-001');
@@ -82,6 +83,7 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 2,
         quantity: 10,
+        timeMs: 1000,
       );
       final json = item.toJson();
       expect(json['id'], 'item-001');
@@ -96,6 +98,7 @@ void main() {
         inventoryId: 'v',
         sortOrder: 0,
         quantity: 1,
+        timeMs: 500,
       );
       final restored = FormulaItemResponse.fromJson(original.toJson());
       expect(restored, original);
@@ -114,12 +117,14 @@ void main() {
             'inventoryId': 'inv-001',
             'sortOrder': 1,
             'quantity': 3,
+            'timeMs': 1000,
           },
           {
             'id': 'item-002',
             'inventoryId': 'inv-002',
             'sortOrder': 2,
             'quantity': 7,
+            'timeMs': 2000,
           },
         ],
         'createdAt': '2025-01-01T00:00:00Z',
@@ -159,6 +164,7 @@ void main() {
             inventoryId: 'inv-001',
             sortOrder: 1,
             quantity: 2,
+            timeMs: 1000,
           ),
         ],
         createdAt: '2025-01-01T00:00:00Z',
@@ -182,6 +188,7 @@ void main() {
             inventoryId: 'v',
             sortOrder: 0,
             quantity: 1,
+            timeMs: 500,
           ),
         ],
         createdAt: 'c',

@@ -15,7 +15,13 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GenerateHarmonicsResponse {
 
- String get requestId; List<HarmonicAssignmentDto> get assignments; int get totalAssigned;
+/// The unique request identifier for this generation.
+ String get requestId;/// The generation type used.
+ String get generationType;/// The source type used.
+ String get sourceType;/// The source identifier.
+ String get sourceId;/// The generated harmonic packet sequence.
+ List<HarmonicPacketDto> get sequence;/// Total number of packets in the sequence.
+ int get totalItems;
 /// Create a copy of GenerateHarmonicsResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +34,16 @@ $GenerateHarmonicsResponseCopyWith<GenerateHarmonicsResponse> get copyWith => _$
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenerateHarmonicsResponse&&(identical(other.requestId, requestId) || other.requestId == requestId)&&const DeepCollectionEquality().equals(other.assignments, assignments)&&(identical(other.totalAssigned, totalAssigned) || other.totalAssigned == totalAssigned));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenerateHarmonicsResponse&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&const DeepCollectionEquality().equals(other.sequence, sequence)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,const DeepCollectionEquality().hash(assignments),totalAssigned);
+int get hashCode => Object.hash(runtimeType,requestId,generationType,sourceType,sourceId,const DeepCollectionEquality().hash(sequence),totalItems);
 
 @override
 String toString() {
-  return 'GenerateHarmonicsResponse(requestId: $requestId, assignments: $assignments, totalAssigned: $totalAssigned)';
+  return 'GenerateHarmonicsResponse(requestId: $requestId, generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId, sequence: $sequence, totalItems: $totalItems)';
 }
 
 
@@ -48,7 +54,7 @@ abstract mixin class $GenerateHarmonicsResponseCopyWith<$Res>  {
   factory $GenerateHarmonicsResponseCopyWith(GenerateHarmonicsResponse value, $Res Function(GenerateHarmonicsResponse) _then) = _$GenerateHarmonicsResponseCopyWithImpl;
 @useResult
 $Res call({
- String requestId, List<HarmonicAssignmentDto> assignments, int totalAssigned
+ String requestId, String generationType, String sourceType, String sourceId, List<HarmonicPacketDto> sequence, int totalItems
 });
 
 
@@ -65,11 +71,14 @@ class _$GenerateHarmonicsResponseCopyWithImpl<$Res>
 
 /// Create a copy of GenerateHarmonicsResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? assignments = null,Object? totalAssigned = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? generationType = null,Object? sourceType = null,Object? sourceId = null,Object? sequence = null,Object? totalItems = null,}) {
   return _then(_self.copyWith(
 requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,assignments: null == assignments ? _self.assignments : assignments // ignore: cast_nullable_to_non_nullable
-as List<HarmonicAssignmentDto>,totalAssigned: null == totalAssigned ? _self.totalAssigned : totalAssigned // ignore: cast_nullable_to_non_nullable
+as String,generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
+as String,sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
+as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
+as String,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
+as List<HarmonicPacketDto>,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }
@@ -155,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  List<HarmonicAssignmentDto> assignments,  int totalAssigned)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  String generationType,  String sourceType,  String sourceId,  List<HarmonicPacketDto> sequence,  int totalItems)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsResponse() when $default != null:
-return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
+return $default(_that.requestId,_that.generationType,_that.sourceType,_that.sourceId,_that.sequence,_that.totalItems);case _:
   return orElse();
 
 }
@@ -176,10 +185,10 @@ return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  List<HarmonicAssignmentDto> assignments,  int totalAssigned)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  String generationType,  String sourceType,  String sourceId,  List<HarmonicPacketDto> sequence,  int totalItems)  $default,) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsResponse():
-return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
+return $default(_that.requestId,_that.generationType,_that.sourceType,_that.sourceId,_that.sequence,_that.totalItems);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +205,10 @@ return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  List<HarmonicAssignmentDto> assignments,  int totalAssigned)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  String generationType,  String sourceType,  String sourceId,  List<HarmonicPacketDto> sequence,  int totalItems)?  $default,) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsResponse() when $default != null:
-return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
+return $default(_that.requestId,_that.generationType,_that.sourceType,_that.sourceId,_that.sequence,_that.totalItems);case _:
   return null;
 
 }
@@ -211,18 +220,28 @@ return $default(_that.requestId,_that.assignments,_that.totalAssigned);case _:
 @JsonSerializable()
 
 class _GenerateHarmonicsResponse implements GenerateHarmonicsResponse {
-  const _GenerateHarmonicsResponse({required this.requestId, required final  List<HarmonicAssignmentDto> assignments, required this.totalAssigned}): _assignments = assignments;
+  const _GenerateHarmonicsResponse({required this.requestId, required this.generationType, required this.sourceType, required this.sourceId, required final  List<HarmonicPacketDto> sequence, required this.totalItems}): _sequence = sequence;
   factory _GenerateHarmonicsResponse.fromJson(Map<String, dynamic> json) => _$GenerateHarmonicsResponseFromJson(json);
 
+/// The unique request identifier for this generation.
 @override final  String requestId;
- final  List<HarmonicAssignmentDto> _assignments;
-@override List<HarmonicAssignmentDto> get assignments {
-  if (_assignments is EqualUnmodifiableListView) return _assignments;
+/// The generation type used.
+@override final  String generationType;
+/// The source type used.
+@override final  String sourceType;
+/// The source identifier.
+@override final  String sourceId;
+/// The generated harmonic packet sequence.
+ final  List<HarmonicPacketDto> _sequence;
+/// The generated harmonic packet sequence.
+@override List<HarmonicPacketDto> get sequence {
+  if (_sequence is EqualUnmodifiableListView) return _sequence;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_assignments);
+  return EqualUnmodifiableListView(_sequence);
 }
 
-@override final  int totalAssigned;
+/// Total number of packets in the sequence.
+@override final  int totalItems;
 
 /// Create a copy of GenerateHarmonicsResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +256,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GenerateHarmonicsResponse&&(identical(other.requestId, requestId) || other.requestId == requestId)&&const DeepCollectionEquality().equals(other._assignments, _assignments)&&(identical(other.totalAssigned, totalAssigned) || other.totalAssigned == totalAssigned));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GenerateHarmonicsResponse&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&const DeepCollectionEquality().equals(other._sequence, _sequence)&&(identical(other.totalItems, totalItems) || other.totalItems == totalItems));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,const DeepCollectionEquality().hash(_assignments),totalAssigned);
+int get hashCode => Object.hash(runtimeType,requestId,generationType,sourceType,sourceId,const DeepCollectionEquality().hash(_sequence),totalItems);
 
 @override
 String toString() {
-  return 'GenerateHarmonicsResponse(requestId: $requestId, assignments: $assignments, totalAssigned: $totalAssigned)';
+  return 'GenerateHarmonicsResponse(requestId: $requestId, generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId, sequence: $sequence, totalItems: $totalItems)';
 }
 
 
@@ -257,7 +276,7 @@ abstract mixin class _$GenerateHarmonicsResponseCopyWith<$Res> implements $Gener
   factory _$GenerateHarmonicsResponseCopyWith(_GenerateHarmonicsResponse value, $Res Function(_GenerateHarmonicsResponse) _then) = __$GenerateHarmonicsResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String requestId, List<HarmonicAssignmentDto> assignments, int totalAssigned
+ String requestId, String generationType, String sourceType, String sourceId, List<HarmonicPacketDto> sequence, int totalItems
 });
 
 
@@ -274,11 +293,14 @@ class __$GenerateHarmonicsResponseCopyWithImpl<$Res>
 
 /// Create a copy of GenerateHarmonicsResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? assignments = null,Object? totalAssigned = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? generationType = null,Object? sourceType = null,Object? sourceId = null,Object? sequence = null,Object? totalItems = null,}) {
   return _then(_GenerateHarmonicsResponse(
 requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,assignments: null == assignments ? _self._assignments : assignments // ignore: cast_nullable_to_non_nullable
-as List<HarmonicAssignmentDto>,totalAssigned: null == totalAssigned ? _self.totalAssigned : totalAssigned // ignore: cast_nullable_to_non_nullable
+as String,generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
+as String,sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
+as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
+as String,sequence: null == sequence ? _self._sequence : sequence // ignore: cast_nullable_to_non_nullable
+as List<HarmonicPacketDto>,totalItems: null == totalItems ? _self.totalItems : totalItems // ignore: cast_nullable_to_non_nullable
 as int,
   ));
 }

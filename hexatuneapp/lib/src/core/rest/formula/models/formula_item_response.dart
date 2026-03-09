@@ -14,6 +14,9 @@ abstract class FormulaItemResponse with _$FormulaItemResponse {
     required String inventoryId,
     required int sortOrder,
     required int quantity,
+
+    /// Duration in milliseconds.
+    required int timeMs,
   }) = _FormulaItemResponse;
 
   factory FormulaItemResponse.fromJson(Map<String, dynamic> json) =>

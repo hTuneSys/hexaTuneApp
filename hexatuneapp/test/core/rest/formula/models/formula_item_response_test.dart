@@ -13,11 +13,13 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 1000,
       );
       expect(result.id, 'item-001');
       expect(result.inventoryId, 'inv-001');
       expect(result.sortOrder, 1);
       expect(result.quantity, 10);
+      expect(result.timeMs, 1000);
     });
 
     test('serializes to JSON correctly', () {
@@ -26,12 +28,14 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 5000,
       );
       final json = result.toJson();
       expect(json['id'], 'item-001');
       expect(json['inventoryId'], 'inv-001');
       expect(json['sortOrder'], 1);
       expect(json['quantity'], 10);
+      expect(json['timeMs'], 5000);
     });
 
     test('deserializes from JSON correctly', () {
@@ -40,12 +44,14 @@ void main() {
         'inventoryId': 'inv-001',
         'sortOrder': 1,
         'quantity': 10,
+        'timeMs': 30000,
       };
       final result = FormulaItemResponse.fromJson(json);
       expect(result.id, 'item-001');
       expect(result.inventoryId, 'inv-001');
       expect(result.sortOrder, 1);
       expect(result.quantity, 10);
+      expect(result.timeMs, 30000);
     });
 
     test('equality works correctly', () {
@@ -54,18 +60,21 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 1000,
       );
       final b = const FormulaItemResponse(
         id: 'item-001',
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 1000,
       );
       final c = const FormulaItemResponse(
         id: 'different',
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 1000,
       );
       expect(a, equals(b));
       expect(a, isNot(equals(c)));
@@ -77,6 +86,7 @@ void main() {
         inventoryId: 'inv-001',
         sortOrder: 1,
         quantity: 10,
+        timeMs: 15000,
       );
       final roundTripped = FormulaItemResponse.fromJson(original.toJson());
       expect(roundTripped, equals(original));

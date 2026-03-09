@@ -46,6 +46,7 @@ void main() {
       'inventoryId': 'inv-001',
       'sortOrder': 1,
       'quantity': 10,
+      'timeMs': 1000,
     };
 
     setUp(() {

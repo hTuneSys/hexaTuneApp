@@ -12,6 +12,7 @@ _FormulaItemResponse _$FormulaItemResponseFromJson(Map<String, dynamic> json) =>
       inventoryId: json['inventoryId'] as String,
       sortOrder: (json['sortOrder'] as num).toInt(),
       quantity: (json['quantity'] as num).toInt(),
+      timeMs: (json['timeMs'] as num).toInt(),
     );
 
 Map<String, dynamic> _$FormulaItemResponseToJson(
@@ -21,4 +22,5 @@ Map<String, dynamic> _$FormulaItemResponseToJson(
   'inventoryId': instance.inventoryId,
   'sortOrder': instance.sortOrder,
   'quantity': instance.quantity,
+  'timeMs': instance.timeMs,
 };
