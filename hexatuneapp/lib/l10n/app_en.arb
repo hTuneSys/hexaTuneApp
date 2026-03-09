@@ -162,5 +162,75 @@
   "@dspAmbienceLoaded": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "dspAmbienceManage": "Manage"
+  "dspAmbienceManage": "Manage",
+
+  "hexagenTitle": "hexaGen Device",
+  "hexagenRefresh": "Refresh",
+  "hexagenConnection": "Connection",
+  "hexagenStatusReady": "Ready",
+  "hexagenStatusConnected": "Connected",
+  "hexagenStatusDisconnected": "Disconnected",
+  "hexagenDevice": "Device",
+  "hexagenDeviceId": "Device ID",
+  "hexagenFirmware": "Firmware",
+  "hexagenInitialized": "Initialized",
+  "hexagenYes": "Yes",
+  "hexagenNo": "No",
+  "hexagenNone": "None",
+  "hexagenInit": "Initialize",
+  "hexagenReset": "Reset",
+  "hexagenInitSuccess": "HexaGen service initialized",
+  "hexagenRefreshed": "Device scan completed",
+  "hexagenResetSent": "Reset command sent",
+  "hexagenRgb": "RGB LED",
+  "hexagenRed": "R",
+  "hexagenGreen": "G",
+  "hexagenBlue": "B",
+  "hexagenSendRgb": "Send RGB",
+  "hexagenRgbSent": "RGB command sent",
+  "hexagenFreqSweep": "Frequency Sweep",
+  "hexagenFreqEmpty": "No frequencies added",
+  "hexagenFreqHz": "Freq (Hz)",
+  "hexagenDurationMs": "Duration (ms)",
+  "hexagenFreqRun": "Run ({count})",
+  "@hexagenFreqRun": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "hexagenFreqStop": "Stop",
+  "hexagenFreqProgress": "Freq {current}/{total}: {freq} Hz",
+  "@hexagenFreqProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" },
+      "freq": { "type": "int" }
+    }
+  },
+  "hexagenFreqFailed": "Freq {freq} Hz failed: {status}",
+  "@hexagenFreqFailed": {
+    "placeholders": {
+      "freq": { "type": "int" },
+      "status": { "type": "String" }
+    }
+  },
+  "hexagenFreqListDone": "Frequency list completed",
+  "hexagenOperation": "Operation",
+  "hexagenOpId": "Operation ID",
+  "hexagenOpCurrentStatus": "Status",
+  "hexagenOpStep": "Step",
+  "hexagenOpStart": "Start Operation",
+  "hexagenOpRunning": "Running...",
+  "hexagenOpPreparing": "Preparing operation...",
+  "hexagenOpPrepareFailed": "Prepare failed: {status}",
+  "@hexagenOpPrepareFailed": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "hexagenOpGenerating": "Generating...",
+  "hexagenOpStatus": "Operation: {status} (step {step})",
+  "@hexagenOpStatus": {
+    "placeholders": {
+      "status": { "type": "String" },
+      "step": { "type": "int" }
+    }
+  },
+  "hexagenOpDone": "Operation completed"
 }

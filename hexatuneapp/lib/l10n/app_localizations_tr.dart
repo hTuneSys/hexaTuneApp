@@ -351,4 +351,146 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dspAmbienceManage => 'Yönet';
+
+  @override
+  String get hexagenTitle => 'hexaGen Cihazı';
+
+  @override
+  String get hexagenRefresh => 'Yenile';
+
+  @override
+  String get hexagenConnection => 'Bağlantı';
+
+  @override
+  String get hexagenStatusReady => 'Hazır';
+
+  @override
+  String get hexagenStatusConnected => 'Bağlı';
+
+  @override
+  String get hexagenStatusDisconnected => 'Bağlı Değil';
+
+  @override
+  String get hexagenDevice => 'Cihaz';
+
+  @override
+  String get hexagenDeviceId => 'Cihaz ID';
+
+  @override
+  String get hexagenFirmware => 'Firmware';
+
+  @override
+  String get hexagenInitialized => 'Başlatıldı';
+
+  @override
+  String get hexagenYes => 'Evet';
+
+  @override
+  String get hexagenNo => 'Hayır';
+
+  @override
+  String get hexagenNone => 'Yok';
+
+  @override
+  String get hexagenInit => 'Başlat';
+
+  @override
+  String get hexagenReset => 'Sıfırla';
+
+  @override
+  String get hexagenInitSuccess => 'HexaGen servisi başlatıldı';
+
+  @override
+  String get hexagenRefreshed => 'Cihaz taraması tamamlandı';
+
+  @override
+  String get hexagenResetSent => 'Sıfırlama komutu gönderildi';
+
+  @override
+  String get hexagenRgb => 'RGB LED';
+
+  @override
+  String get hexagenRed => 'K';
+
+  @override
+  String get hexagenGreen => 'Y';
+
+  @override
+  String get hexagenBlue => 'M';
+
+  @override
+  String get hexagenSendRgb => 'RGB Gönder';
+
+  @override
+  String get hexagenRgbSent => 'RGB komutu gönderildi';
+
+  @override
+  String get hexagenFreqSweep => 'Frekans Taraması';
+
+  @override
+  String get hexagenFreqEmpty => 'Frekans eklenmedi';
+
+  @override
+  String get hexagenFreqHz => 'Frekans (Hz)';
+
+  @override
+  String get hexagenDurationMs => 'Süre (ms)';
+
+  @override
+  String hexagenFreqRun(int count) {
+    return 'Çalıştır ($count)';
+  }
+
+  @override
+  String get hexagenFreqStop => 'Durdur';
+
+  @override
+  String hexagenFreqProgress(int current, int total, int freq) {
+    return 'Frekans $current/$total: $freq Hz';
+  }
+
+  @override
+  String hexagenFreqFailed(int freq, String status) {
+    return 'Frekans $freq Hz başarısız: $status';
+  }
+
+  @override
+  String get hexagenFreqListDone => 'Frekans listesi tamamlandı';
+
+  @override
+  String get hexagenOperation => 'Operasyon';
+
+  @override
+  String get hexagenOpId => 'Operasyon ID';
+
+  @override
+  String get hexagenOpCurrentStatus => 'Durum';
+
+  @override
+  String get hexagenOpStep => 'Adım';
+
+  @override
+  String get hexagenOpStart => 'Operasyonu Başlat';
+
+  @override
+  String get hexagenOpRunning => 'Çalışıyor...';
+
+  @override
+  String get hexagenOpPreparing => 'Operasyon hazırlanıyor...';
+
+  @override
+  String hexagenOpPrepareFailed(String status) {
+    return 'Hazırlık başarısız: $status';
+  }
+
+  @override
+  String get hexagenOpGenerating => 'Üretiliyor...';
+
+  @override
+  String hexagenOpStatus(String status, int step) {
+    return 'Operasyon: $status (adım $step)';
+  }
+
+  @override
+  String get hexagenOpDone => 'Operasyon tamamlandı';
 }

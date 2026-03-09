@@ -162,5 +162,75 @@
   "@dspAmbienceLoaded": {
     "placeholders": { "name": { "type": "String" } }
   },
-  "dspAmbienceManage": "Yönet"
+  "dspAmbienceManage": "Yönet",
+
+  "hexagenTitle": "hexaGen Cihazı",
+  "hexagenRefresh": "Yenile",
+  "hexagenConnection": "Bağlantı",
+  "hexagenStatusReady": "Hazır",
+  "hexagenStatusConnected": "Bağlı",
+  "hexagenStatusDisconnected": "Bağlı Değil",
+  "hexagenDevice": "Cihaz",
+  "hexagenDeviceId": "Cihaz ID",
+  "hexagenFirmware": "Firmware",
+  "hexagenInitialized": "Başlatıldı",
+  "hexagenYes": "Evet",
+  "hexagenNo": "Hayır",
+  "hexagenNone": "Yok",
+  "hexagenInit": "Başlat",
+  "hexagenReset": "Sıfırla",
+  "hexagenInitSuccess": "HexaGen servisi başlatıldı",
+  "hexagenRefreshed": "Cihaz taraması tamamlandı",
+  "hexagenResetSent": "Sıfırlama komutu gönderildi",
+  "hexagenRgb": "RGB LED",
+  "hexagenRed": "K",
+  "hexagenGreen": "Y",
+  "hexagenBlue": "M",
+  "hexagenSendRgb": "RGB Gönder",
+  "hexagenRgbSent": "RGB komutu gönderildi",
+  "hexagenFreqSweep": "Frekans Taraması",
+  "hexagenFreqEmpty": "Frekans eklenmedi",
+  "hexagenFreqHz": "Frekans (Hz)",
+  "hexagenDurationMs": "Süre (ms)",
+  "hexagenFreqRun": "Çalıştır ({count})",
+  "@hexagenFreqRun": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "hexagenFreqStop": "Durdur",
+  "hexagenFreqProgress": "Frekans {current}/{total}: {freq} Hz",
+  "@hexagenFreqProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" },
+      "freq": { "type": "int" }
+    }
+  },
+  "hexagenFreqFailed": "Frekans {freq} Hz başarısız: {status}",
+  "@hexagenFreqFailed": {
+    "placeholders": {
+      "freq": { "type": "int" },
+      "status": { "type": "String" }
+    }
+  },
+  "hexagenFreqListDone": "Frekans listesi tamamlandı",
+  "hexagenOperation": "Operasyon",
+  "hexagenOpId": "Operasyon ID",
+  "hexagenOpCurrentStatus": "Durum",
+  "hexagenOpStep": "Adım",
+  "hexagenOpStart": "Operasyonu Başlat",
+  "hexagenOpRunning": "Çalışıyor...",
+  "hexagenOpPreparing": "Operasyon hazırlanıyor...",
+  "hexagenOpPrepareFailed": "Hazırlık başarısız: {status}",
+  "@hexagenOpPrepareFailed": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "hexagenOpGenerating": "Üretiliyor...",
+  "hexagenOpStatus": "Operasyon: {status} (adım {step})",
+  "@hexagenOpStatus": {
+    "placeholders": {
+      "status": { "type": "String" },
+      "step": { "type": "int" }
+    }
+  },
+  "hexagenOpDone": "Operasyon tamamlandı"
 }

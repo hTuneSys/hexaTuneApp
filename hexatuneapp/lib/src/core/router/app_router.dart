@@ -21,6 +21,7 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_ambience_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_formula_items_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_formulas_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_harmonics_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_inventories_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
@@ -153,6 +154,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.ambience,
         builder: (context, state) => const DummyAmbiencePage(),
+      ),
+      GoRoute(
+        path: RouteNames.hexagen,
+        builder: (context, state) => const DummyHexagenPage(),
       ),
     ],
   );

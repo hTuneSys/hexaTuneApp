@@ -739,6 +739,270 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Manage'**
   String get dspAmbienceManage;
+
+  /// No description provided for @hexagenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'hexaGen Device'**
+  String get hexagenTitle;
+
+  /// No description provided for @hexagenRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get hexagenRefresh;
+
+  /// No description provided for @hexagenConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get hexagenConnection;
+
+  /// No description provided for @hexagenStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get hexagenStatusReady;
+
+  /// No description provided for @hexagenStatusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get hexagenStatusConnected;
+
+  /// No description provided for @hexagenStatusDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get hexagenStatusDisconnected;
+
+  /// No description provided for @hexagenDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get hexagenDevice;
+
+  /// No description provided for @hexagenDeviceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Device ID'**
+  String get hexagenDeviceId;
+
+  /// No description provided for @hexagenFirmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware'**
+  String get hexagenFirmware;
+
+  /// No description provided for @hexagenInitialized.
+  ///
+  /// In en, this message translates to:
+  /// **'Initialized'**
+  String get hexagenInitialized;
+
+  /// No description provided for @hexagenYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get hexagenYes;
+
+  /// No description provided for @hexagenNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get hexagenNo;
+
+  /// No description provided for @hexagenNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get hexagenNone;
+
+  /// No description provided for @hexagenInit.
+  ///
+  /// In en, this message translates to:
+  /// **'Initialize'**
+  String get hexagenInit;
+
+  /// No description provided for @hexagenReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get hexagenReset;
+
+  /// No description provided for @hexagenInitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'HexaGen service initialized'**
+  String get hexagenInitSuccess;
+
+  /// No description provided for @hexagenRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Device scan completed'**
+  String get hexagenRefreshed;
+
+  /// No description provided for @hexagenResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset command sent'**
+  String get hexagenResetSent;
+
+  /// No description provided for @hexagenRgb.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB LED'**
+  String get hexagenRgb;
+
+  /// No description provided for @hexagenRed.
+  ///
+  /// In en, this message translates to:
+  /// **'R'**
+  String get hexagenRed;
+
+  /// No description provided for @hexagenGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'G'**
+  String get hexagenGreen;
+
+  /// No description provided for @hexagenBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'B'**
+  String get hexagenBlue;
+
+  /// No description provided for @hexagenSendRgb.
+  ///
+  /// In en, this message translates to:
+  /// **'Send RGB'**
+  String get hexagenSendRgb;
+
+  /// No description provided for @hexagenRgbSent.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB command sent'**
+  String get hexagenRgbSent;
+
+  /// No description provided for @hexagenFreqSweep.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Sweep'**
+  String get hexagenFreqSweep;
+
+  /// No description provided for @hexagenFreqEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No frequencies added'**
+  String get hexagenFreqEmpty;
+
+  /// No description provided for @hexagenFreqHz.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq (Hz)'**
+  String get hexagenFreqHz;
+
+  /// No description provided for @hexagenDurationMs.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (ms)'**
+  String get hexagenDurationMs;
+
+  /// No description provided for @hexagenFreqRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run ({count})'**
+  String hexagenFreqRun(int count);
+
+  /// No description provided for @hexagenFreqStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get hexagenFreqStop;
+
+  /// No description provided for @hexagenFreqProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq {current}/{total}: {freq} Hz'**
+  String hexagenFreqProgress(int current, int total, int freq);
+
+  /// No description provided for @hexagenFreqFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq {freq} Hz failed: {status}'**
+  String hexagenFreqFailed(int freq, String status);
+
+  /// No description provided for @hexagenFreqListDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency list completed'**
+  String get hexagenFreqListDone;
+
+  /// No description provided for @hexagenOperation.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation'**
+  String get hexagenOperation;
+
+  /// No description provided for @hexagenOpId.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation ID'**
+  String get hexagenOpId;
+
+  /// No description provided for @hexagenOpCurrentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get hexagenOpCurrentStatus;
+
+  /// No description provided for @hexagenOpStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get hexagenOpStep;
+
+  /// No description provided for @hexagenOpStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Operation'**
+  String get hexagenOpStart;
+
+  /// No description provided for @hexagenOpRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running...'**
+  String get hexagenOpRunning;
+
+  /// No description provided for @hexagenOpPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing operation...'**
+  String get hexagenOpPreparing;
+
+  /// No description provided for @hexagenOpPrepareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare failed: {status}'**
+  String hexagenOpPrepareFailed(String status);
+
+  /// No description provided for @hexagenOpGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating...'**
+  String get hexagenOpGenerating;
+
+  /// No description provided for @hexagenOpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation: {status} (step {step})'**
+  String hexagenOpStatus(String status, int step);
+
+  /// No description provided for @hexagenOpDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation completed'**
+  String get hexagenOpDone;
 }
 
 class _AppLocalizationsDelegate

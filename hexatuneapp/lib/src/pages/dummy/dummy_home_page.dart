@@ -99,6 +99,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Create and manage sound ambiences',
       route: RouteNames.ambience,
     ),
+    _NavItem(
+      icon: Icons.cable,
+      title: 'hexaGen Device',
+      subtitle: 'Hardware connection, RGB, freq sweep, operations',
+      route: RouteNames.hexagen,
+    ),
   ];
 
   @override

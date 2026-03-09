@@ -350,4 +350,146 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dspAmbienceManage => 'Manage';
+
+  @override
+  String get hexagenTitle => 'hexaGen Device';
+
+  @override
+  String get hexagenRefresh => 'Refresh';
+
+  @override
+  String get hexagenConnection => 'Connection';
+
+  @override
+  String get hexagenStatusReady => 'Ready';
+
+  @override
+  String get hexagenStatusConnected => 'Connected';
+
+  @override
+  String get hexagenStatusDisconnected => 'Disconnected';
+
+  @override
+  String get hexagenDevice => 'Device';
+
+  @override
+  String get hexagenDeviceId => 'Device ID';
+
+  @override
+  String get hexagenFirmware => 'Firmware';
+
+  @override
+  String get hexagenInitialized => 'Initialized';
+
+  @override
+  String get hexagenYes => 'Yes';
+
+  @override
+  String get hexagenNo => 'No';
+
+  @override
+  String get hexagenNone => 'None';
+
+  @override
+  String get hexagenInit => 'Initialize';
+
+  @override
+  String get hexagenReset => 'Reset';
+
+  @override
+  String get hexagenInitSuccess => 'HexaGen service initialized';
+
+  @override
+  String get hexagenRefreshed => 'Device scan completed';
+
+  @override
+  String get hexagenResetSent => 'Reset command sent';
+
+  @override
+  String get hexagenRgb => 'RGB LED';
+
+  @override
+  String get hexagenRed => 'R';
+
+  @override
+  String get hexagenGreen => 'G';
+
+  @override
+  String get hexagenBlue => 'B';
+
+  @override
+  String get hexagenSendRgb => 'Send RGB';
+
+  @override
+  String get hexagenRgbSent => 'RGB command sent';
+
+  @override
+  String get hexagenFreqSweep => 'Frequency Sweep';
+
+  @override
+  String get hexagenFreqEmpty => 'No frequencies added';
+
+  @override
+  String get hexagenFreqHz => 'Freq (Hz)';
+
+  @override
+  String get hexagenDurationMs => 'Duration (ms)';
+
+  @override
+  String hexagenFreqRun(int count) {
+    return 'Run ($count)';
+  }
+
+  @override
+  String get hexagenFreqStop => 'Stop';
+
+  @override
+  String hexagenFreqProgress(int current, int total, int freq) {
+    return 'Freq $current/$total: $freq Hz';
+  }
+
+  @override
+  String hexagenFreqFailed(int freq, String status) {
+    return 'Freq $freq Hz failed: $status';
+  }
+
+  @override
+  String get hexagenFreqListDone => 'Frequency list completed';
+
+  @override
+  String get hexagenOperation => 'Operation';
+
+  @override
+  String get hexagenOpId => 'Operation ID';
+
+  @override
+  String get hexagenOpCurrentStatus => 'Status';
+
+  @override
+  String get hexagenOpStep => 'Step';
+
+  @override
+  String get hexagenOpStart => 'Start Operation';
+
+  @override
+  String get hexagenOpRunning => 'Running...';
+
+  @override
+  String get hexagenOpPreparing => 'Preparing operation...';
+
+  @override
+  String hexagenOpPrepareFailed(String status) {
+    return 'Prepare failed: $status';
+  }
+
+  @override
+  String get hexagenOpGenerating => 'Generating...';
+
+  @override
+  String hexagenOpStatus(String status, int step) {
+    return 'Operation: $status (step $step)';
+  }
+
+  @override
+  String get hexagenOpDone => 'Operation completed';
 }
