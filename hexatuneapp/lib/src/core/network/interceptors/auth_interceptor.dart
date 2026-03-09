@@ -122,7 +122,14 @@ class AuthInterceptor extends QueuedInterceptor {
             category: LogCategory.auth,
           );
 
-          final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
+          final dio = Dio(
+            BaseOptions(
+              baseUrl: Env.apiBaseUrl,
+              connectTimeout: const Duration(seconds: 10),
+              receiveTimeout: const Duration(seconds: 10),
+              sendTimeout: const Duration(seconds: 10),
+            ),
+          );
           try {
             final response = await dio.fetch(retryOptions);
             _logService.devLog(
@@ -179,7 +186,14 @@ class AuthInterceptor extends QueuedInterceptor {
     );
 
     try {
-      final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: Env.apiBaseUrl,
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
+        ),
+      );
       try {
         final refreshData = {'refreshToken': _tokenManager.refreshToken};
         final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';

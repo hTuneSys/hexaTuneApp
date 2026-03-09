@@ -223,7 +223,14 @@ class AppBootstrap {
 
     try {
       // Use a fresh Dio to bypass the auth interceptor chain.
-      final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
+      final dio = Dio(
+        BaseOptions(
+          baseUrl: Env.apiBaseUrl,
+          connectTimeout: const Duration(seconds: 10),
+          receiveTimeout: const Duration(seconds: 10),
+          sendTimeout: const Duration(seconds: 10),
+        ),
+      );
       try {
         final refreshData = {'refreshToken': tokenManager.refreshToken};
 

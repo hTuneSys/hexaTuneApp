@@ -43,8 +43,16 @@ class TaskRepository {
       ApiEndpoints.tasks,
       queryParameters: queryParameters,
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Tasks response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (json) => TaskSummaryDto.fromJson(json as Map<String, dynamic>),
     );
   }
@@ -56,7 +64,15 @@ class TaskRepository {
       ApiEndpoints.tasks,
       data: request.toJson(),
     );
-    return CreateTaskResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Create task response body is null',
+      );
+    }
+    return CreateTaskResponse.fromJson(data);
   }
 
   /// GET /api/v1/tasks/{id}
@@ -65,7 +81,15 @@ class TaskRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.task(id),
     );
-    return TaskStatusResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Task status response body is null',
+      );
+    }
+    return TaskStatusResponse.fromJson(data);
   }
 
   /// POST /api/v1/tasks/{id}/cancel
@@ -78,6 +102,14 @@ class TaskRepository {
       ApiEndpoints.taskCancel(id),
       data: request.toJson(),
     );
-    return CancelTaskResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Cancel task response body is null',
+      );
+    }
+    return CancelTaskResponse.fromJson(data);
   }
 }

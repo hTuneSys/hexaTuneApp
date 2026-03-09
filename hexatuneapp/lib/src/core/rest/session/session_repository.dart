@@ -32,8 +32,16 @@ class SessionRepository {
       ApiEndpoints.sessions,
       queryParameters: params?.toQueryParameters(),
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Sessions response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (json) => SessionResponse.fromJson(json as Map<String, dynamic>),
     );
   }
@@ -50,6 +58,14 @@ class SessionRepository {
     final response = await _dio.delete<Map<String, dynamic>>(
       ApiEndpoints.sessionsOthers,
     );
-    return RevokeSessionsResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Revoke sessions response body is null',
+      );
+    }
+    return RevokeSessionsResponse.fromJson(data);
   }
 }

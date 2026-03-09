@@ -33,8 +33,16 @@ class CategoryRepository {
       ApiEndpoints.categories,
       queryParameters: params?.toQueryParameters(),
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Categories response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (item) => CategoryResponse.fromJson(item as Map<String, dynamic>),
     );
   }
@@ -46,7 +54,15 @@ class CategoryRepository {
       ApiEndpoints.categories,
       data: request.toJson(),
     );
-    return CategoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Create category response body is null',
+      );
+    }
+    return CategoryResponse.fromJson(data);
   }
 
   /// GET /api/v1/categories/{id}
@@ -55,7 +71,15 @@ class CategoryRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.category(id),
     );
-    return CategoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Category response body is null',
+      );
+    }
+    return CategoryResponse.fromJson(data);
   }
 
   /// PATCH /api/v1/categories/{id}
@@ -68,7 +92,15 @@ class CategoryRepository {
       ApiEndpoints.category(id),
       data: request.toJson(),
     );
-    return CategoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Update category response body is null',
+      );
+    }
+    return CategoryResponse.fromJson(data);
   }
 
   /// DELETE /api/v1/categories/{id}

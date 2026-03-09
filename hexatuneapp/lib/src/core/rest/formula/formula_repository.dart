@@ -38,8 +38,16 @@ class FormulaRepository {
       ApiEndpoints.formulas,
       queryParameters: params?.toQueryParameters() ?? {},
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Formulas response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (json) => FormulaResponse.fromJson(json as Map<String, dynamic>),
     );
   }
@@ -51,7 +59,15 @@ class FormulaRepository {
       ApiEndpoints.formulas,
       data: request.toJson(),
     );
-    return FormulaResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Create formula response body is null',
+      );
+    }
+    return FormulaResponse.fromJson(data);
   }
 
   /// GET /api/v1/formulas/{id}
@@ -60,7 +76,15 @@ class FormulaRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.formula(id),
     );
-    return FormulaDetailResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Formula detail response body is null',
+      );
+    }
+    return FormulaDetailResponse.fromJson(data);
   }
 
   /// PATCH /api/v1/formulas/{id}
@@ -73,7 +97,15 @@ class FormulaRepository {
       ApiEndpoints.formula(id),
       data: request.toJson(),
     );
-    return FormulaResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Update formula response body is null',
+      );
+    }
+    return FormulaResponse.fromJson(data);
   }
 
   /// DELETE /api/v1/formulas/{id}
@@ -95,7 +127,15 @@ class FormulaRepository {
       ApiEndpoints.formulaItems(formulaId),
       data: request.toJson(),
     );
-    return response.data!
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Add formula items response body is null',
+      );
+    }
+    return data
         .map((e) => FormulaItemResponse.fromJson(e as Map<String, dynamic>))
         .toList();
   }
@@ -123,7 +163,15 @@ class FormulaRepository {
       ApiEndpoints.formulaItem(formulaId, itemId),
       data: request.toJson(),
     );
-    return FormulaItemResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Update formula item response body is null',
+      );
+    }
+    return FormulaItemResponse.fromJson(data);
   }
 
   /// PUT /api/v1/formulas/{formulaId}/items/reorder

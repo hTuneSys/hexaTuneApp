@@ -114,6 +114,7 @@ class HexagenService {
       timer.cancel();
     }
     _commandTimers.clear();
+    _commandCompleters.clear();
     _stateController.close();
   }
 

@@ -26,14 +26,30 @@ class AccountRepository {
   Future<AccountResponse> getAccount() async {
     _logService.debug('GET account', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.account);
-    return AccountResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Account response body is null',
+      );
+    }
+    return AccountResponse.fromJson(data);
   }
 
   /// GET /api/v1/accounts/me/profile
   Future<ProfileResponse> getProfile() async {
     _logService.debug('GET profile', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(ApiEndpoints.profile);
-    return ProfileResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Profile response body is null',
+      );
+    }
+    return ProfileResponse.fromJson(data);
   }
 
   /// PATCH /api/v1/accounts/me/profile
@@ -43,6 +59,14 @@ class AccountRepository {
       ApiEndpoints.profile,
       data: request.toJson(),
     );
-    return ProfileResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Update profile response body is null',
+      );
+    }
+    return ProfileResponse.fromJson(data);
   }
 }

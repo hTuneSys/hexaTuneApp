@@ -165,10 +165,10 @@ class AmbienceService {
   ///
   /// Returns true if found and deleted, false otherwise.
   Future<bool> delete(String id) async {
-    final removed = _configs.length;
+    final initialLength = _configs.length;
     _configs.removeWhere((c) => c.id == id);
 
-    if (_configs.length == removed) return false;
+    if (_configs.length == initialLength) return false;
 
     await _persist();
     _logService.info(

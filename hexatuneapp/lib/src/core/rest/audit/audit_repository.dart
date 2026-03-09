@@ -37,8 +37,16 @@ class AuditRepository {
       ApiEndpoints.auditLogs,
       queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Audit logs response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (json) => AuditLogDto.fromJson(json as Map<String, dynamic>),
     );
   }

@@ -40,15 +40,16 @@ class DeviceService {
   DeviceMetadata? _deviceMetadata;
 
   String get deviceId {
-    assert(_deviceId != null, 'Call init() before accessing deviceId');
+    if (_deviceId == null) {
+      throw StateError('DeviceService not initialized. Call init() first.');
+    }
     return _deviceId!;
   }
 
   DeviceMetadata get deviceMetadata {
-    assert(
-      _deviceMetadata != null,
-      'Call init() before accessing deviceMetadata',
-    );
+    if (_deviceMetadata == null) {
+      throw StateError('DeviceService not initialized. Call init() first.');
+    }
     return _deviceMetadata!;
   }
 

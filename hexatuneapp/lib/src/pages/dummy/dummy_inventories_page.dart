@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -212,7 +214,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
         name: nameCtrl.text.trim(),
         description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
-        imageFile: pickedImage != null ? XFile(pickedImage!.path) : null,
+        imageFile: pickedImage != null ? File(pickedImage!.path) : null,
       );
       if (mounted) {
         _showMessage('Inventory created');
@@ -442,7 +444,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
         name: nameCtrl.text.trim().isEmpty ? null : nameCtrl.text.trim(),
         description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
-        imageFile: pickedImage != null ? XFile(pickedImage!.path) : null,
+        imageFile: pickedImage != null ? File(pickedImage!.path) : null,
       );
       if (mounted) {
         _showMessage('Inventory updated');

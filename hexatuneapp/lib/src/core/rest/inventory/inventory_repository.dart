@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
@@ -34,8 +35,16 @@ class InventoryRepository {
       ApiEndpoints.inventories,
       queryParameters: params?.toQueryParameters(),
     );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Inventories response body is null',
+      );
+    }
     return PaginatedResponse.fromJson(
-      response.data!,
+      data,
       (item) => InventoryResponse.fromJson(item as Map<String, dynamic>),
     );
   }
@@ -46,7 +55,7 @@ class InventoryRepository {
     required String name,
     String? description,
     List<String>? labels,
-    dynamic imageFile,
+    File? imageFile,
   }) async {
     _logService.debug('POST inventory', category: LogCategory.network);
     final formData = FormData.fromMap(<String, dynamic>{
@@ -55,13 +64,21 @@ class InventoryRepository {
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
       if (imageFile != null)
-        'image': await MultipartFile.fromFile(imageFile.path as String),
+        'image': await MultipartFile.fromFile(imageFile.path),
     });
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.inventories,
       data: formData,
     );
-    return InventoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Create inventory response body is null',
+      );
+    }
+    return InventoryResponse.fromJson(data);
   }
 
   /// GET /api/v1/inventories/{id}
@@ -70,7 +87,15 @@ class InventoryRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.inventory(id),
     );
-    return InventoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Inventory response body is null',
+      );
+    }
+    return InventoryResponse.fromJson(data);
   }
 
   /// PATCH /api/v1/inventories/{id} (multipart)
@@ -80,7 +105,7 @@ class InventoryRepository {
     String? name,
     String? description,
     List<String>? labels,
-    dynamic imageFile,
+    File? imageFile,
   }) async {
     _logService.debug('PATCH inventory $id', category: LogCategory.network);
     final formData = FormData.fromMap(<String, dynamic>{
@@ -89,13 +114,21 @@ class InventoryRepository {
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
       if (imageFile != null)
-        'image': await MultipartFile.fromFile(imageFile.path as String),
+        'image': await MultipartFile.fromFile(imageFile.path),
     });
     final response = await _dio.patch<Map<String, dynamic>>(
       ApiEndpoints.inventory(id),
       data: formData,
     );
-    return InventoryResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Update inventory response body is null',
+      );
+    }
+    return InventoryResponse.fromJson(data);
   }
 
   /// DELETE /api/v1/inventories/{id}
@@ -110,6 +143,14 @@ class InventoryRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.inventoryImage(id),
     );
-    return ImageUrlResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Image URL response body is null',
+      );
+    }
+    return ImageUrlResponse.fromJson(data);
   }
 }

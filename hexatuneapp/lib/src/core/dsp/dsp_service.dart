@@ -55,6 +55,7 @@ class DspService {
 
   bool _isPlaying = false;
   bool _isInitialized = false;
+  bool _isInitializing = false;
   bool _baseLoaded = false;
 
   // --- Reactive state ---
@@ -159,6 +160,26 @@ class DspService {
       return null;
     }
 
+    if (_isInitializing) {
+      _logService.devLog(
+        'ensureInitialized() already in progress, waiting',
+        category: LogCategory.dsp,
+      );
+      while (_isInitializing) {
+        await Future<void>.delayed(const Duration(milliseconds: 10));
+      }
+      return _isInitialized ? null : 'Initialization failed concurrently';
+    }
+
+    _isInitializing = true;
+    try {
+      return await _doInitialize();
+    } finally {
+      _isInitializing = false;
+    }
+  }
+
+  Future<String?> _doInitialize() async {
     _logService.info(
       'Initializing DSP engine: carrier=$_carrierFreq Hz, '
       'binaural=$_binaural, steps=${_steps.length}',

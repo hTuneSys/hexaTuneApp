@@ -185,6 +185,7 @@ class HexagenDeviceManager {
           category: LogCategory.hardware,
         );
         _waitingForResponse = false;
+        _connectedId = null;
         _sysexBuffer.clear();
         _notifyResponse(version: 'No response', waiting: false);
       }
@@ -211,6 +212,7 @@ class HexagenDeviceManager {
       );
       _sysexBuffer.clear();
       _waitingForResponse = false;
+      _responseTimeout?.cancel();
       return;
     }
 

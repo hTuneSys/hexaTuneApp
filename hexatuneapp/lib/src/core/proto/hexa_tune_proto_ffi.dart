@@ -406,6 +406,18 @@ class HexaTuneProto {
       if (rc < 0) throw HexaTuneProtoError(-rc, 'htp_at_parse');
 
       final r = resultPtr.ref;
+
+      // Validate bounds from native result before accessing input.
+      if (r.nameOffset + r.nameLen > input.length) {
+        throw HexaTuneProtoError(0, 'htp_at_parse: name bounds exceed input');
+      }
+      if (r.paramCount > 8) {
+        throw HexaTuneProtoError(
+          0,
+          'htp_at_parse: paramCount ${r.paramCount} exceeds max 8',
+        );
+      }
+
       final name = String.fromCharCodes(
         input.sublist(r.nameOffset, r.nameOffset + r.nameLen),
       );
@@ -413,6 +425,12 @@ class HexaTuneProto {
       for (var i = 0; i < r.paramCount; i++) {
         final off = r.paramOffsets[i];
         final len = r.paramLens[i];
+        if (off + len > input.length) {
+          throw HexaTuneProtoError(
+            0,
+            'htp_at_parse: param[$i] bounds exceed input',
+          );
+        }
         params.add(String.fromCharCodes(input.sublist(off, off + len)));
       }
 
