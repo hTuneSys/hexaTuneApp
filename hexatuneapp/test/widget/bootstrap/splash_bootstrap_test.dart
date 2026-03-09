@@ -127,8 +127,38 @@ void main() {
       verify(() => mockAuth.checkAuthStatus()).called(1);
     });
 
-    test('rethrows on critical failure', () async {
+    test('continues when device service fails', () async {
       when(() => mockDevice.init()).thenThrow(StateError('Device init failed'));
+      when(() => mockHeadset.init()).thenAnswer((_) async {});
+      when(() => mockHexagen.init()).thenAnswer((_) async {});
+      when(() => mockTokenManager.loadTokens()).thenAnswer((_) async {});
+      when(() => mockTokenManager.hasToken).thenReturn(false);
+      when(() => mockTokenManager.sessionId).thenReturn(null);
+      when(() => mockTokenManager.expiresAt).thenReturn(null);
+      when(() => mockLocalNotif.init()).thenAnswer((_) async {});
+      when(() => mockNotif.init()).thenAnswer((_) async {});
+      when(() => mockNotif.fcmToken).thenReturn(null);
+      when(() => mockAuth.checkAuthStatus()).thenAnswer((_) async {});
+      when(() => mockAuth.currentState).thenReturn(AuthState.unauthenticated);
+      when(
+        () => mockAuth.authEvents,
+      ).thenAnswer((_) => const Stream<AuthEvent>.empty());
+
+      // Should not throw despite device service failure.
+      await AppBootstrap.initialize();
+
+      // Auth check should still be called.
+      verify(() => mockAuth.checkAuthStatus()).called(1);
+    });
+
+    test('rethrows on critical failure', () async {
+      when(() => mockDevice.init()).thenAnswer((_) async {});
+      when(() => mockDevice.deviceId).thenReturn('test-device-id');
+      when(() => mockHeadset.init()).thenAnswer((_) async {});
+      when(() => mockHexagen.init()).thenAnswer((_) async {});
+      when(
+        () => mockTokenManager.loadTokens(),
+      ).thenThrow(StateError('Token load failed'));
 
       expect(() => AppBootstrap.initialize(), throwsStateError);
     });

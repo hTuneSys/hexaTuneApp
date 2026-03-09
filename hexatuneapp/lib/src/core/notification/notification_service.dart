@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:injectable/injectable.dart';
@@ -22,6 +24,11 @@ class NotificationService {
   FirebaseMessaging? _messaging;
 
   String? _fcmToken;
+
+  // Stream subscriptions for cleanup.
+  StreamSubscription<String>? _tokenRefreshSub;
+  StreamSubscription<RemoteMessage>? _foregroundSub;
+  StreamSubscription<RemoteMessage>? _messageOpenedSub;
 
   String? get fcmToken => _fcmToken;
 
@@ -68,30 +75,34 @@ class NotificationService {
         category: LogCategory.notification,
       );
       _logService.devLog(
-        'FCM token: $_fcmToken',
+        'FCM token: ${LogService.maskToken(_fcmToken)}',
         category: LogCategory.notification,
       );
     }
 
     // Listen for token refreshes.
-    _messaging!.onTokenRefresh.listen((newToken) {
+    _tokenRefreshSub = _messaging!.onTokenRefresh.listen((newToken) {
       _fcmToken = newToken;
       _logService.info(
         'FCM token refreshed',
         category: LogCategory.notification,
       );
       _logService.devLog(
-        'New FCM token: $newToken',
+        'New FCM token: ${LogService.maskToken(newToken)}',
         category: LogCategory.notification,
       );
       _onTokenRefreshCallback?.call(newToken);
     });
 
     // Foreground message handler.
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
+    _foregroundSub = FirebaseMessaging.onMessage.listen(
+      _handleForegroundMessage,
+    );
 
     // Background/terminated tap handler.
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageOpenedApp);
+    _messageOpenedSub = FirebaseMessaging.onMessageOpenedApp.listen(
+      _handleMessageOpenedApp,
+    );
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
@@ -140,5 +151,13 @@ class NotificationService {
       'Unsubscribed from topic: $topic',
       category: LogCategory.notification,
     );
+  }
+
+  /// Cancel all stream subscriptions.
+  @disposeMethod
+  void dispose() {
+    _tokenRefreshSub?.cancel();
+    _foregroundSub?.cancel();
+    _messageOpenedSub?.cancel();
   }
 }

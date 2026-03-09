@@ -92,12 +92,17 @@ class DspService {
     );
     if (_currentState != newState) {
       _currentState = newState;
-      _stateController.add(newState);
+      if (!_stateController.isClosed) {
+        _stateController.add(newState);
+      }
     }
   }
 
   /// Update binaural config without reinitializing the engine.
-  void updateBinauralConfig({
+  ///
+  /// Returns `true` if the engine config was updated, `false` if only local
+  /// state was updated (engine not yet initialized).
+  bool updateBinauralConfig({
     double? carrierFrequency,
     bool? binauralEnabled,
     List<CycleStep>? cycleSteps,
@@ -143,6 +148,7 @@ class DspService {
       );
     }
     _emitState();
+    return _isInitialized && _engine != null && _engine != nullptr;
   }
 
   /// Ensure the DSP engine is initialized (lazy init).
@@ -192,6 +198,15 @@ class DspService {
         'Engine init failed: ${error.description} (code: $errorCode)',
         category: LogCategory.dsp,
       );
+      // Free allocated memory on init failure
+      if (_config != null) {
+        calloc.free(_config!);
+        _config = null;
+      }
+      if (_cycleItems != null) {
+        calloc.free(_cycleItems!);
+        _cycleItems = null;
+      }
       _emitState();
       return 'Engine init failed: ${error.description} (code: $errorCode)';
     }
@@ -211,22 +226,32 @@ class DspService {
 
   /// Load a base layer from an asset path. Initializes engine if needed.
   Future<int> loadBase(String assetPath) async {
+    if (assetPath.isEmpty) return HtdError.invalidConfig.code;
     final initErr = await ensureInitialized();
     if (initErr != null) return HtdError.initFailed.code;
 
     _logService.devLog('Loading base: $assetPath', category: LogCategory.dsp);
-    final rc = await _channel.invokeMethod<int>('loadBase', {
-      'assetPath': assetPath,
-      'enginePtr': _engine!.address,
-    });
-    _logService.devLog('loadBase -> $rc', category: LogCategory.dsp);
-    if (rc == 0) _baseLoaded = true;
-    _emitState();
-    return rc ?? HtdError.loadFailed.code;
+    try {
+      final rc = await _channel.invokeMethod<int>('loadBase', {
+        'assetPath': assetPath,
+        'enginePtr': _engine!.address,
+      });
+      _logService.devLog('loadBase -> $rc', category: LogCategory.dsp);
+      if (rc == 0) _baseLoaded = true;
+      _emitState();
+      return rc ?? HtdError.loadFailed.code;
+    } on PlatformException catch (e) {
+      _logService.error(
+        'loadBase platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+      return HtdError.loadFailed.code;
+    }
   }
 
   /// Load a texture layer at [index] (0–2). Requires base loaded.
   Future<int> loadTexture(int index, String assetPath) async {
+    if (assetPath.isEmpty) return HtdError.invalidConfig.code;
     if (!_baseLoaded) return HtdError.baseRequired.code;
     final initErr = await ensureInitialized();
     if (initErr != null) return HtdError.initFailed.code;
@@ -235,13 +260,24 @@ class DspService {
       'Loading texture[$index]: $assetPath',
       category: LogCategory.dsp,
     );
-    final rc = await _channel.invokeMethod<int>('loadTexture', {
-      'assetPath': assetPath,
-      'enginePtr': _engine!.address,
-      'index': index,
-    });
-    _logService.devLog('loadTexture[$index] -> $rc', category: LogCategory.dsp);
-    return rc ?? HtdError.loadFailed.code;
+    try {
+      final rc = await _channel.invokeMethod<int>('loadTexture', {
+        'assetPath': assetPath,
+        'enginePtr': _engine!.address,
+        'index': index,
+      });
+      _logService.devLog(
+        'loadTexture[$index] -> $rc',
+        category: LogCategory.dsp,
+      );
+      return rc ?? HtdError.loadFailed.code;
+    } on PlatformException catch (e) {
+      _logService.error(
+        'loadTexture[$index] platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+      return HtdError.loadFailed.code;
+    }
   }
 
   /// Load an event at [index] (0–4). Requires base loaded.
@@ -255,6 +291,7 @@ class DspService {
     double panMin = DspConstants.defaultEventPanMin,
     double panMax = DspConstants.defaultEventPanMax,
   }) async {
+    if (assetPath.isEmpty) return HtdError.invalidConfig.code;
     if (!_baseLoaded) return HtdError.baseRequired.code;
     final initErr = await ensureInitialized();
     if (initErr != null) return HtdError.initFailed.code;
@@ -263,19 +300,27 @@ class DspService {
       'Loading event[$index]: $assetPath',
       category: LogCategory.dsp,
     );
-    final rc = await _channel.invokeMethod<int>('loadEvent', {
-      'assetPath': assetPath,
-      'enginePtr': _engine!.address,
-      'index': index,
-      'minIntervalMs': minIntervalMs,
-      'maxIntervalMs': maxIntervalMs,
-      'volumeMin': volumeMin,
-      'volumeMax': volumeMax,
-      'panMin': panMin,
-      'panMax': panMax,
-    });
-    _logService.devLog('loadEvent[$index] -> $rc', category: LogCategory.dsp);
-    return rc ?? HtdError.loadFailed.code;
+    try {
+      final rc = await _channel.invokeMethod<int>('loadEvent', {
+        'assetPath': assetPath,
+        'enginePtr': _engine!.address,
+        'index': index,
+        'minIntervalMs': minIntervalMs,
+        'maxIntervalMs': maxIntervalMs,
+        'volumeMin': volumeMin,
+        'volumeMax': volumeMax,
+        'panMin': panMin,
+        'panMax': panMax,
+      });
+      _logService.devLog('loadEvent[$index] -> $rc', category: LogCategory.dsp);
+      return rc ?? HtdError.loadFailed.code;
+    } on PlatformException catch (e) {
+      _logService.error(
+        'loadEvent[$index] platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+      return HtdError.loadFailed.code;
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -285,9 +330,16 @@ class DspService {
   /// Clear the base layer. DSP engine cascades to clear all textures/events.
   Future<bool> clearBase() async {
     final hadBase = _baseLoaded;
-    _baseLoaded = false;
     if (!_isInitialized || _engine == null || _engine == nullptr) return false;
-    await _channel.invokeMethod('clearBase', {'enginePtr': _engine!.address});
+    _baseLoaded = false;
+    try {
+      await _channel.invokeMethod('clearBase', {'enginePtr': _engine!.address});
+    } on PlatformException catch (e) {
+      _logService.error(
+        'clearBase platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+    }
     _logService.devLog(
       'Base cleared${hadBase ? ' (cascade: textures+events)' : ''}',
       category: LogCategory.dsp,
@@ -299,45 +351,77 @@ class DspService {
   /// Clear a texture layer at [index].
   Future<void> clearTexture(int index) async {
     if (!_isInitialized || _engine == null || _engine == nullptr) return;
-    await _channel.invokeMethod('clearTexture', {
-      'enginePtr': _engine!.address,
-      'index': index,
-    });
+    try {
+      await _channel.invokeMethod('clearTexture', {
+        'enginePtr': _engine!.address,
+        'index': index,
+      });
+    } on PlatformException catch (e) {
+      _logService.error(
+        'clearTexture[$index] platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+    }
     _logService.devLog('Texture[$index] cleared', category: LogCategory.dsp);
   }
 
   /// Clear an event at [index].
   Future<void> clearEvent(int index) async {
     if (!_isInitialized || _engine == null || _engine == nullptr) return;
-    await _channel.invokeMethod('clearEvent', {
-      'enginePtr': _engine!.address,
-      'index': index,
-    });
+    try {
+      await _channel.invokeMethod('clearEvent', {
+        'enginePtr': _engine!.address,
+        'index': index,
+      });
+    } on PlatformException catch (e) {
+      _logService.error(
+        'clearEvent[$index] platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+    }
     _logService.devLog('Event[$index] cleared', category: LogCategory.dsp);
   }
 
   /// Clear all layers (binaural unaffected).
   Future<void> clearAllLayers() async {
     if (!_isInitialized || _engine == null || _engine == nullptr) return;
-    await _channel.invokeMethod('clearAllLayers', {
-      'enginePtr': _engine!.address,
-    });
+    try {
+      await _channel.invokeMethod('clearAllLayers', {
+        'enginePtr': _engine!.address,
+      });
+    } on PlatformException catch (e) {
+      _logService.error(
+        'clearAllLayers platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+    }
     _logService.devLog('All layers cleared', category: LogCategory.dsp);
   }
 
   /// Clear the native decode cache to free memory.
   Future<int> clearDecodeCache() async {
-    final count = await _channel.invokeMethod<int>('clearDecodeCache');
-    _logService.devLog(
-      'Decode cache cleared ($count entries)',
-      category: LogCategory.dsp,
-    );
-    return count ?? 0;
+    try {
+      final count = await _channel.invokeMethod<int>('clearDecodeCache');
+      _logService.devLog(
+        'Decode cache cleared ($count entries)',
+        category: LogCategory.dsp,
+      );
+      return count ?? 0;
+    } on PlatformException catch (e) {
+      _logService.error(
+        'clearDecodeCache platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+      return 0;
+    }
   }
 
   // ---------------------------------------------------------------------------
   // Start / Stop
   // ---------------------------------------------------------------------------
+
+  // --- Concurrency guard for stop ---
+  bool _stopping = false;
 
   /// Start audio playback. Engine must be initialized and layers pre-loaded.
   Future<String?> start() async {
@@ -351,10 +435,22 @@ class DspService {
       return 'Engine start failed: ${error.description} (code: $result)';
     }
 
-    await _channel.invokeMethod('startAudio', {
-      'sampleRate': DspConstants.sampleRate.toInt(),
-      'enginePtr': _engine!.address,
-    });
+    try {
+      await _channel.invokeMethod('startAudio', {
+        'sampleRate': DspConstants.sampleRate.toInt(),
+        'enginePtr': _engine!.address,
+      });
+    } on PlatformException catch (e) {
+      // Rollback: native engine started but platform layer failed
+      if (_engine != null && _engine != nullptr) {
+        _bindings.htdEngineStop(_engine!);
+      }
+      _logService.error(
+        'startAudio platform error: ${e.message}',
+        category: LogCategory.dsp,
+      );
+      return 'startAudio platform error: ${e.message}';
+    }
 
     _isPlaying = true;
     _startTime = DateTime.now();
@@ -366,57 +462,90 @@ class DspService {
 
   /// Stop audio playback immediately.
   Future<void> stop() async {
-    if (!_isPlaying) return;
+    if (!_isPlaying || _stopping) return;
+    _stopping = true;
+    try {
+      _logTimer?.cancel();
+      _logTimer = null;
 
-    _logTimer?.cancel();
-    _logTimer = null;
+      final elapsed = _startTime != null
+          ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
+          : 0.0;
+      _logService.info(
+        'Stopping DSP (played ${elapsed.toStringAsFixed(1)}s)',
+        category: LogCategory.dsp,
+      );
 
-    final elapsed = _startTime != null
-        ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
-        : 0.0;
-    _logService.info(
-      'Stopping DSP (played ${elapsed.toStringAsFixed(1)}s)',
-      category: LogCategory.dsp,
-    );
+      try {
+        await _channel.invokeMethod('stopAudio');
+      } on PlatformException catch (e) {
+        _logService.error(
+          'stopAudio platform error: ${e.message}',
+          category: LogCategory.dsp,
+        );
+      }
+      if (_engine != null && _engine != nullptr) {
+        _bindings.htdEngineStop(_engine!);
+      }
 
-    await _channel.invokeMethod('stopAudio');
-    if (_engine != null && _engine != nullptr) {
-      _bindings.htdEngineStop(_engine!);
+      _isPlaying = false;
+      _startTime = null;
+      _emitState();
+    } finally {
+      _stopping = false;
     }
-
-    _isPlaying = false;
-    _startTime = null;
-    _emitState();
   }
 
   /// Graceful stop: finish current cycle iteration, then stop automatically.
   Future<void> stopGraceful() async {
-    if (!_isPlaying) return;
+    if (!_isPlaying || _stopping) return;
     if (_engine == null || _engine == nullptr) return;
+    _stopping = true;
+    try {
+      _logService.info('Graceful stop requested', category: LogCategory.dsp);
+      _bindings.htdEngineStopGraceful(_engine!);
 
-    _logService.info('Graceful stop requested', category: LogCategory.dsp);
-    _bindings.htdEngineStopGraceful(_engine!);
+      const maxAttempts = 300; // 30 seconds max
+      var attempts = 0;
+      while (_bindings.htdEngineIsRunning(_engine!) == 1 &&
+          attempts < maxAttempts) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        attempts++;
+      }
+      if (attempts >= maxAttempts) {
+        _logService.warning(
+          'Graceful stop timed out after 30s, forcing stop',
+          category: LogCategory.dsp,
+        );
+        _bindings.htdEngineStop(_engine!);
+      }
 
-    while (_bindings.htdEngineIsRunning(_engine!) == 1) {
-      await Future.delayed(const Duration(milliseconds: 100));
+      _logTimer?.cancel();
+      _logTimer = null;
+
+      final elapsed = _startTime != null
+          ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
+          : 0.0;
+      _logService.info(
+        'Graceful stop complete (played ${elapsed.toStringAsFixed(1)}s)',
+        category: LogCategory.dsp,
+      );
+
+      try {
+        await _channel.invokeMethod('stopAudio');
+      } on PlatformException catch (e) {
+        _logService.error(
+          'stopAudio platform error: ${e.message}',
+          category: LogCategory.dsp,
+        );
+      }
+
+      _isPlaying = false;
+      _startTime = null;
+      _emitState();
+    } finally {
+      _stopping = false;
     }
-
-    _logTimer?.cancel();
-    _logTimer = null;
-
-    final elapsed = _startTime != null
-        ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
-        : 0.0;
-    _logService.info(
-      'Graceful stop complete (played ${elapsed.toStringAsFixed(1)}s)',
-      category: LogCategory.dsp,
-    );
-
-    await _channel.invokeMethod('stopAudio');
-
-    _isPlaying = false;
-    _startTime = null;
-    _emitState();
   }
 
   // ---------------------------------------------------------------------------
@@ -424,42 +553,47 @@ class DspService {
   // ---------------------------------------------------------------------------
 
   void setBaseGain(double gain) {
+    final clamped = gain.clamp(0.0, 1.0);
     if (_isInitialized && _engine != null && _engine != nullptr) {
-      _bindings.htdEngineSetBaseGain(_engine!, gain);
+      _bindings.htdEngineSetBaseGain(_engine!, clamped);
     }
-    _baseGain = gain;
+    _baseGain = clamped;
     _emitState();
   }
 
   void setTextureGain(double gain) {
+    final clamped = gain.clamp(0.0, 1.0);
     if (_isInitialized && _engine != null && _engine != nullptr) {
-      _bindings.htdEngineSetTextureGain(_engine!, gain);
+      _bindings.htdEngineSetTextureGain(_engine!, clamped);
     }
-    _textureGain = gain;
+    _textureGain = clamped;
     _emitState();
   }
 
   void setEventGain(double gain) {
+    final clamped = gain.clamp(0.0, 1.0);
     if (_isInitialized && _engine != null && _engine != nullptr) {
-      _bindings.htdEngineSetEventGain(_engine!, gain);
+      _bindings.htdEngineSetEventGain(_engine!, clamped);
     }
-    _eventGain = gain;
+    _eventGain = clamped;
     _emitState();
   }
 
   void setBinauralGain(double gain) {
+    final clamped = gain.clamp(0.0, 1.0);
     if (_isInitialized && _engine != null && _engine != nullptr) {
-      _bindings.htdEngineSetBinauralGain(_engine!, gain);
+      _bindings.htdEngineSetBinauralGain(_engine!, clamped);
     }
-    _binauralGain = gain;
+    _binauralGain = clamped;
     _emitState();
   }
 
   void setMasterGain(double gain) {
+    final clamped = gain.clamp(0.0, 1.0);
     if (_isInitialized && _engine != null && _engine != nullptr) {
-      _bindings.htdEngineSetMasterGain(_engine!, gain);
+      _bindings.htdEngineSetMasterGain(_engine!, clamped);
     }
-    _masterGain = gain;
+    _masterGain = clamped;
     _emitState();
   }
 
@@ -526,7 +660,7 @@ class DspService {
 
   /// Returns `(stepIndex, delta, remainingSeconds)` for the current cycle.
   (int, double, double) _computeCycleState(double elapsedSec) {
-    if (_steps.isEmpty) return (0, 0.0, 0.0);
+    if (_steps.isEmpty) return (-1, 0.0, 0.0);
 
     var totalCycleDur = 0.0;
     for (final s in _steps) {

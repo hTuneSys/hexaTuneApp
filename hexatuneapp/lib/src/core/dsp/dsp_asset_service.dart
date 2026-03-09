@@ -35,7 +35,9 @@ class DspAssetService {
       _assets.where((a) => a.layerType == layerType).toList();
 
   /// Load the sounds catalog from the bundled JSON file.
-  Future<void> discover() async {
+  ///
+  /// Returns `true` on success, `false` if the catalog could not be loaded.
+  Future<bool> discover() async {
     _assets = [];
 
     try {
@@ -79,6 +81,7 @@ class DspAssetService {
           category: LogCategory.dsp,
         );
       }
+      return true;
     } catch (e, st) {
       _logService.error(
         'Sound catalog load failed: $e',
@@ -86,6 +89,7 @@ class DspAssetService {
         exception: e,
         stackTrace: st,
       );
+      return false;
     }
   }
 

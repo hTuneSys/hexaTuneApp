@@ -126,10 +126,10 @@ class TokenManager {
 
   /// Whether the access token's PASETO `exp` claim has passed.
   ///
-  /// Returns `false` if the expiry could not be parsed (falls back to
-  /// server-side 401 detection).
+  /// Returns `true` if the expiry could not be parsed — assumes expired
+  /// for safety (server will confirm via 401 if still valid).
   bool get isAccessTokenExpired {
-    if (_accessExpiresAt == null) return false;
+    if (_accessExpiresAt == null) return true;
     return DateTime.now().toUtc().isAfter(_accessExpiresAt!);
   }
 

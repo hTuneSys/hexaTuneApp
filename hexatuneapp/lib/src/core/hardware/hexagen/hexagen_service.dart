@@ -110,7 +110,7 @@ class HexagenService {
     if (_deviceManagerInitialized) {
       _deviceManager.dispose();
     }
-    for (final timer in _commandTimers.values) {
+    for (final timer in _commandTimers.values.toList()) {
       timer.cancel();
     }
     _commandTimers.clear();
@@ -260,7 +260,8 @@ class HexagenService {
 
   /// Send an AT command to the connected device.
   Future<void> sendATCommand(ATCommand command) async {
-    if (_deviceManager.connectedId == null) {
+    final deviceId = _deviceManager.connectedId;
+    if (deviceId == null) {
       _logService.warning(
         'Cannot send ${command.type.name}: no device connected',
         category: LogCategory.hardware,
@@ -276,11 +277,15 @@ class HexagenService {
       category: LogCategory.hardware,
     );
 
-    _deviceManager.sendData(sysex, _deviceManager.connectedId!);
+    _deviceManager.sendData(sysex, deviceId);
   }
 
   /// Send AT+FREQ and return a future that completes on response.
   Future<CommandStatus> sendFreqCommandAndWait(int freq, int timeMs) async {
+    final deviceId = _deviceManager.connectedId;
+    if (deviceId == null) {
+      return CommandStatus.error;
+    }
     final completer = Completer<CommandStatus>();
     final id = generateId();
     final command = ATCommand.freq(id, freq, timeMs);
@@ -294,16 +299,17 @@ class HexagenService {
       'Sending FREQ and waiting: $compiled',
       category: LogCategory.hardware,
     );
-    _deviceManager.sendData(
-      command.buildSysEx(_protoService),
-      _deviceManager.connectedId!,
-    );
+    _deviceManager.sendData(command.buildSysEx(_protoService), deviceId);
 
     return completer.future;
   }
 
   /// Send AT+OPERATION=id#PREPARE and wait for response.
   Future<CommandStatus> sendOperationPrepare(int operationId) async {
+    final deviceId = _deviceManager.connectedId;
+    if (deviceId == null) {
+      return CommandStatus.error;
+    }
     final completer = Completer<CommandStatus>();
     final command = ATCommand.operationPrepare(operationId);
 
@@ -317,16 +323,15 @@ class HexagenService {
       timeout: const Duration(seconds: 5),
     );
 
-    _deviceManager.sendData(
-      command.buildSysEx(_protoService),
-      _deviceManager.connectedId!,
-    );
+    _deviceManager.sendData(command.buildSysEx(_protoService), deviceId);
 
     return completer.future;
   }
 
   /// Send AT+OPERATION=id#GENERATE (polling, no wait).
   Future<void> sendOperationGenerate(int operationId) async {
+    final deviceId = _deviceManager.connectedId;
+    if (deviceId == null) return;
     final command = ATCommand.operationGenerate(operationId);
     _currentOperationStatus = 'GENERATE';
 
@@ -334,20 +339,15 @@ class HexagenService {
       'Sending OPERATION GENERATE: ${command.compile()}',
       category: LogCategory.hardware,
     );
-    _deviceManager.sendData(
-      command.buildSysEx(_protoService),
-      _deviceManager.connectedId!,
-    );
+    _deviceManager.sendData(command.buildSysEx(_protoService), deviceId);
   }
 
   /// Query current operation status (AT+OPERATION?).
   Future<void> queryOperationStatus() async {
-    if (_deviceManager.connectedId == null) return;
+    final deviceId = _deviceManager.connectedId;
+    if (deviceId == null) return;
     final command = ATCommand.operationQuery();
-    _deviceManager.sendData(
-      command.buildSysEx(_protoService),
-      _deviceManager.connectedId!,
-    );
+    _deviceManager.sendData(command.buildSysEx(_protoService), deviceId);
   }
 
   /// Send raw data to the device.
@@ -404,7 +404,9 @@ class HexagenService {
   void _updateState(HexagenState newState) {
     final previous = _currentState;
     _currentState = newState;
-    _stateController.add(newState);
+    if (!_stateController.isClosed) {
+      _stateController.add(newState);
+    }
 
     if (previous != newState) {
       _logService.info(

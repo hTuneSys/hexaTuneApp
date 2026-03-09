@@ -47,6 +47,7 @@ class HexagenDeviceManager {
   bool _waitingForResponse = false;
   Timer? _responseTimeout;
   final List<int> _sysexBuffer = [];
+  static const int _maxSysexBufferSize = 65536; // 64 KB safety limit
 
   DeviceResponseCallback? _responseCallback;
 
@@ -201,6 +202,17 @@ class HexagenDeviceManager {
     );
 
     _sysexBuffer.addAll(bytes);
+
+    // Safety limit to prevent unbounded buffer growth.
+    if (_sysexBuffer.length > _maxSysexBufferSize) {
+      _logService.warning(
+        'SysEx buffer exceeded ${_maxSysexBufferSize}B, clearing',
+        category: LogCategory.hardware,
+      );
+      _sysexBuffer.clear();
+      _waitingForResponse = false;
+      return;
+    }
 
     if (!_sysexBuffer.contains(0xF7)) return;
 

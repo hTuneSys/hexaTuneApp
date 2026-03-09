@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
@@ -204,7 +206,15 @@ class AppRouter {
 /// Bridges [AuthService.authState] stream to [Listenable] for GoRouter.
 class _AuthNotifier extends ChangeNotifier {
   _AuthNotifier(AuthService authService) {
-    authService.authState.listen((_) => notifyListeners());
+    _sub = authService.authState.listen((_) => notifyListeners());
+  }
+
+  late final StreamSubscription<AuthState> _sub;
+
+  @override
+  void dispose() {
+    _sub.cancel();
+    super.dispose();
   }
 }
 

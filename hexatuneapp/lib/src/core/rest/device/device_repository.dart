@@ -48,7 +48,15 @@ class DeviceRepository {
       ApiEndpoints.deviceApprovalRequest,
       data: request.toJson(),
     );
-    return ApprovalRequestResponseDto.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Device approval request response body is null',
+      );
+    }
+    return ApprovalRequestResponseDto.fromJson(data);
   }
 
   /// POST /api/v1/device-approvals/{id}/approve
@@ -64,7 +72,15 @@ class DeviceRepository {
       ApiEndpoints.deviceApprovalApprove(id),
       data: request.toJson(),
     );
-    return ApprovalRequestResponseDto.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Device approval approve response body is null',
+      );
+    }
+    return ApprovalRequestResponseDto.fromJson(data);
   }
 
   /// POST /api/v1/device-approvals/{id}/reject
@@ -80,7 +96,15 @@ class DeviceRepository {
       ApiEndpoints.deviceApprovalReject(id),
       data: request.toJson(),
     );
-    return ApprovalRequestResponseDto.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Device approval reject response body is null',
+      );
+    }
+    return ApprovalRequestResponseDto.fromJson(data);
   }
 
   /// GET /api/v1/device-approvals/{id}/status
@@ -92,6 +116,14 @@ class DeviceRepository {
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.deviceApprovalStatus(id),
     );
-    return ApprovalRequestResponseDto.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Device approval status response body is null',
+      );
+    }
+    return ApprovalRequestResponseDto.fromJson(data);
   }
 }

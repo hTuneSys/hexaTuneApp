@@ -521,7 +521,11 @@ class HexaTuneProto {
   ///
   /// [packets] must be a flat byte list of length `packetCount * 4`.
   Uint8List usbDepacketize(Uint8List packets) {
-    assert(packets.length % 4 == 0, 'packets length must be multiple of 4');
+    if (packets.length % 4 != 0) {
+      throw ArgumentError(
+        'packets length must be multiple of 4, got ${packets.length}',
+      );
+    }
     final packetCount = packets.length ~/ 4;
     final inPtr = calloc<Uint8>(packets.length);
     final outPtr = calloc<Uint8>(packetCount * 3 + 2);

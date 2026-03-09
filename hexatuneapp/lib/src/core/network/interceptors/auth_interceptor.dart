@@ -123,12 +123,16 @@ class AuthInterceptor extends QueuedInterceptor {
           );
 
           final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
-          final response = await dio.fetch(retryOptions);
-          _logService.devLog(
-            '✓ Retry succeeded: ${response.statusCode}',
-            category: LogCategory.auth,
-          );
-          return handler.resolve(response);
+          try {
+            final response = await dio.fetch(retryOptions);
+            _logService.devLog(
+              '✓ Retry succeeded: ${response.statusCode}',
+              category: LogCategory.auth,
+            );
+            return handler.resolve(response);
+          } finally {
+            dio.close();
+          }
         } on DioException catch (retryErr) {
           _logService.devLog(
             '✗ Retry failed: ${retryErr.response?.statusCode} ${retryErr.message}',
@@ -176,61 +180,73 @@ class AuthInterceptor extends QueuedInterceptor {
 
     try {
       final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
-      final refreshData = {'refreshToken': _tokenManager.refreshToken};
-      final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
-      final headers = {
-        'Authorization': 'Bearer ${_tokenManager.accessToken}',
-        'Content-Type': 'application/json',
-      };
-
-      _logService.devLog(
-        '→ [AUTH REFRESH] POST $fullUrl\n'
-        '  Headers: {\n'
-        '    Authorization: Bearer ${LogService.maskToken(_tokenManager.accessToken)}\n'
-        '    Content-Type: application/json\n'
-        '  }\n'
-        '  Body: {refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
-        category: LogCategory.auth,
-      );
-      final response = await dio.post(
-        ApiEndpoints.refresh,
-        data: refreshData,
-        options: Options(headers: headers),
-      );
-
-      _logService.devLog(
-        '← [AUTH REFRESH] Status: ${response.statusCode}\n'
-        '  Body: ${response.data}',
-        category: LogCategory.auth,
-      );
-
-      if (response.statusCode == 200 && response.data is Map) {
-        final data = response.data as Map<String, dynamic>;
-        final newAccessToken = data['accessToken'] as String?;
-        final newRefreshToken = data['refreshToken'] as String?;
-        final sessionId = data['sessionId'] as String?;
-        final expiresAt = data['expiresAt'] as String?;
+      try {
+        final refreshData = {'refreshToken': _tokenManager.refreshToken};
+        final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
+        final headers = {
+          'Authorization': 'Bearer ${_tokenManager.accessToken}',
+          'Content-Type': 'application/json',
+        };
 
         _logService.devLog(
-          '← Refresh response: accessToken=${LogService.maskToken(newAccessToken)}, '
-          'refreshToken=${LogService.maskToken(newRefreshToken)}, '
-          'sessionId=$sessionId, expiresAt=$expiresAt',
+          '→ [AUTH REFRESH] POST $fullUrl\n'
+          '  Headers: {\n'
+          '    Authorization: Bearer ${LogService.maskToken(_tokenManager.accessToken)}\n'
+          '    Content-Type: application/json\n'
+          '  }\n'
+          '  Body: {refreshToken: ${LogService.maskToken(_tokenManager.refreshToken)}}',
+          category: LogCategory.auth,
+        );
+        final response = await dio.post(
+          ApiEndpoints.refresh,
+          data: refreshData,
+          options: Options(headers: headers),
+        );
+
+        _logService.devLog(
+          '← [AUTH REFRESH] Status: ${response.statusCode}\n'
+          '  Body: ${response.data}',
           category: LogCategory.auth,
         );
 
-        if (newAccessToken != null && newRefreshToken != null) {
-          await _tokenManager.saveTokens(
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-            sessionId: sessionId,
-            expiresAt: expiresAt,
-          );
-          _logService.info(
-            'Token refresh successful',
+        if (response.statusCode == 200 && response.data is Map) {
+          final data = response.data as Map<String, dynamic>;
+          final newAccessToken = data['accessToken'] as String?;
+          final newRefreshToken = data['refreshToken'] as String?;
+          final sessionId = data['sessionId'] as String?;
+          final expiresAt = data['expiresAt'] as String?;
+
+          if (sessionId == null || expiresAt == null) {
+            _logService.warning(
+              'Token refresh response missing fields: '
+              'sessionId=${sessionId != null}, expiresAt=${expiresAt != null}',
+              category: LogCategory.auth,
+            );
+          }
+
+          _logService.devLog(
+            '← Refresh response: accessToken=${LogService.maskToken(newAccessToken)}, '
+            'refreshToken=${LogService.maskToken(newRefreshToken)}, '
+            'sessionId=$sessionId, expiresAt=$expiresAt',
             category: LogCategory.auth,
           );
-          return true;
+
+          if (newAccessToken != null && newRefreshToken != null) {
+            await _tokenManager.saveTokens(
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+              sessionId: sessionId,
+              expiresAt: expiresAt,
+            );
+            _logService.info(
+              'Token refresh successful',
+              category: LogCategory.auth,
+            );
+            return true;
+          }
         }
+      } finally {
+        dio.close();
       }
     } catch (e) {
       if (Env.isDev && e is DioException) {

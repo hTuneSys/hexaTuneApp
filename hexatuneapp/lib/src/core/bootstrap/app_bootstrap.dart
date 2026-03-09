@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -26,6 +27,8 @@ import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 class AppBootstrap {
   AppBootstrap._();
 
+  static StreamSubscription<AuthEvent>? _authEventSub;
+
   /// Run the full bootstrap sequence.
   ///
   /// Services that are registered with `@PostConstruct` are already
@@ -42,13 +45,22 @@ class AppBootstrap {
       log.info('PreferencesService ready', category: LogCategory.bootstrap);
 
       // Device identification.
-      final deviceService = getIt<DeviceService>();
-      await deviceService.init();
-      log.info('DeviceService ready', category: LogCategory.bootstrap);
-      log.devLog(
-        'Device ID: ${deviceService.deviceId}',
-        category: LogCategory.bootstrap,
-      );
+      try {
+        final deviceService = getIt<DeviceService>();
+        await deviceService.init();
+        log.info('DeviceService ready', category: LogCategory.bootstrap);
+        log.devLog(
+          'Device ID: ${deviceService.deviceId}',
+          category: LogCategory.bootstrap,
+        );
+      } catch (e, st) {
+        log.warning(
+          'DeviceService init failed (non-critical)',
+          category: LogCategory.bootstrap,
+          exception: e,
+          stackTrace: st,
+        );
+      }
 
       // Headset connection monitoring.
       final headsetService = getIt<HeadsetService>();
@@ -143,7 +155,7 @@ class AppBootstrap {
         category: LogCategory.bootstrap,
       );
 
-      // Register push token with backend if authenticated.
+      // Register push token with backend if authenticated (single path).
       if (authService.currentState == AuthState.authenticated &&
           fcmToken != null) {
         try {
@@ -165,7 +177,9 @@ class AppBootstrap {
       }
 
       // Listen to auth events from the interceptor (force logout, re-auth).
-      authService.authEvents.listen((event) {
+      // Cancel any previous subscription to prevent accumulation.
+      await _authEventSub?.cancel();
+      _authEventSub = authService.authEvents.listen((event) {
         if (event == AuthEvent.forceLogout) {
           log.warning(
             'Force logout triggered by interceptor',
@@ -210,71 +224,75 @@ class AppBootstrap {
     try {
       // Use a fresh Dio to bypass the auth interceptor chain.
       final dio = Dio(BaseOptions(baseUrl: Env.apiBaseUrl));
-      final refreshData = {'refreshToken': tokenManager.refreshToken};
+      try {
+        final refreshData = {'refreshToken': tokenManager.refreshToken};
 
-      final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
-      final headers = {
-        'Authorization': 'Bearer ${tokenManager.accessToken}',
-        'Content-Type': 'application/json',
-      };
+        final fullUrl = '${Env.apiBaseUrl}${ApiEndpoints.refresh}';
+        final headers = {
+          'Authorization': 'Bearer ${tokenManager.accessToken}',
+          'Content-Type': 'application/json',
+        };
 
-      log.devLog(
-        '→ [BOOTSTRAP REFRESH] POST $fullUrl\n'
-        '  Headers: {\n'
-        '    Authorization: Bearer ${LogService.maskToken(tokenManager.accessToken)}\n'
-        '    Content-Type: application/json\n'
-        '  }\n'
-        '  Body: {refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}}',
-        category: LogCategory.bootstrap,
-      );
+        log.devLog(
+          '→ [BOOTSTRAP REFRESH] POST $fullUrl\n'
+          '  Headers: {\n'
+          '    Authorization: Bearer ${LogService.maskToken(tokenManager.accessToken)}\n'
+          '    Content-Type: application/json\n'
+          '  }\n'
+          '  Body: {refreshToken: ${LogService.maskToken(tokenManager.refreshToken)}}',
+          category: LogCategory.bootstrap,
+        );
 
-      final response = await dio.post(
-        ApiEndpoints.refresh,
-        data: refreshData,
-        options: Options(headers: headers),
-      );
+        final response = await dio.post(
+          ApiEndpoints.refresh,
+          data: refreshData,
+          options: Options(headers: headers),
+        );
 
-      log.devLog(
-        '← [BOOTSTRAP REFRESH] Status: ${response.statusCode}\n'
-        '  Headers: ${response.headers.map}\n'
-        '  Body: ${response.data}',
-        category: LogCategory.bootstrap,
-      );
+        log.devLog(
+          '← [BOOTSTRAP REFRESH] Status: ${response.statusCode}\n'
+          '  Headers: ${response.headers.map}\n'
+          '  Body: ${response.data}',
+          category: LogCategory.bootstrap,
+        );
 
-      if (response.statusCode == 200 && response.data is Map) {
-        final data = response.data as Map<String, dynamic>;
-        final newAccessToken = data['accessToken'] as String?;
-        final newRefreshToken = data['refreshToken'] as String?;
-        final sessionId = data['sessionId'] as String?;
-        final expiresAt = data['expiresAt'] as String?;
+        if (response.statusCode == 200 && response.data is Map) {
+          final data = response.data as Map<String, dynamic>;
+          final newAccessToken = data['accessToken'] as String?;
+          final newRefreshToken = data['refreshToken'] as String?;
+          final sessionId = data['sessionId'] as String?;
+          final expiresAt = data['expiresAt'] as String?;
 
-        if (newAccessToken != null && newRefreshToken != null) {
-          await tokenManager.saveTokens(
-            accessToken: newAccessToken,
-            refreshToken: newRefreshToken,
-            sessionId: sessionId,
-            expiresAt: expiresAt,
-          );
-          log.info(
-            'Access token refreshed during bootstrap',
-            category: LogCategory.bootstrap,
-          );
-          log.devLog(
-            '✓ Bootstrap refresh succeeded — '
-            'newAccessExp: ${tokenManager.accessExpiresAt}, '
-            'newRefreshExp: ${tokenManager.refreshExpiresAt}',
-            category: LogCategory.bootstrap,
-          );
-          return;
+          if (newAccessToken != null && newRefreshToken != null) {
+            await tokenManager.saveTokens(
+              accessToken: newAccessToken,
+              refreshToken: newRefreshToken,
+              sessionId: sessionId,
+              expiresAt: expiresAt,
+            );
+            log.info(
+              'Access token refreshed during bootstrap',
+              category: LogCategory.bootstrap,
+            );
+            log.devLog(
+              '✓ Bootstrap refresh succeeded — '
+              'newAccessExp: ${tokenManager.accessExpiresAt}, '
+              'newRefreshExp: ${tokenManager.refreshExpiresAt}',
+              category: LogCategory.bootstrap,
+            );
+            return;
+          }
         }
-      }
 
-      // Unexpected response — clear tokens.
-      log.warning(
-        'Bootstrap refresh returned unexpected response — clearing tokens',
-        category: LogCategory.bootstrap,
-      );
-      await tokenManager.clearTokens();
+        // Unexpected response — clear tokens.
+        log.warning(
+          'Bootstrap refresh returned unexpected response — clearing tokens',
+          category: LogCategory.bootstrap,
+        );
+        await tokenManager.clearTokens();
+      } finally {
+        dio.close();
+      }
     } catch (e) {
       if (Env.isDev && e is DioException) {
         log.devLog(

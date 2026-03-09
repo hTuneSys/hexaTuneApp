@@ -16,6 +16,8 @@ class LocalNotificationService {
   LocalNotificationService(this._logService);
 
   final LogService _logService;
+  static const String _channelId = 'hexatune_default';
+  static const String _channelName = 'Default';
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -52,8 +54,8 @@ class LocalNotificationService {
 
   Future<void> _createAndroidChannel() async {
     const channel = AndroidNotificationChannel(
-      'hexatune_default',
-      'Default',
+      _channelId,
+      _channelName,
       description: 'Default notification channel',
       importance: Importance.high,
     );
@@ -73,8 +75,8 @@ class LocalNotificationService {
     String? payload,
   }) async {
     const androidDetails = AndroidNotificationDetails(
-      'hexatune_default',
-      'Default',
+      _channelId,
+      _channelName,
       importance: Importance.high,
       priority: Priority.high,
     );

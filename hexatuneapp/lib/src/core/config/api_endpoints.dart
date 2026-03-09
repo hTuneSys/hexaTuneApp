@@ -29,8 +29,10 @@ class ApiEndpoints {
   static const String linkGoogleProvider = '$_v1/auth/providers/google/link';
   static const String linkAppleProvider = '$_v1/auth/providers/apple/link';
 
-  static String unlinkProvider(String providerType) =>
-      '$_v1/auth/providers/$providerType';
+  static String unlinkProvider(String providerType) {
+    assert(providerType.isNotEmpty, 'providerType must not be empty');
+    return '$_v1/auth/providers/$providerType';
+  }
 
   // --- Tenants (2 endpoints) ---
   static const String tenants = '$_v1/accounts/me/tenants';
@@ -55,48 +57,79 @@ class ApiEndpoints {
   // --- Device Approval (4 endpoints) ---
   static const String deviceApprovalRequest = '$_v1/device-approvals/request';
 
-  static String deviceApprovalApprove(String id) =>
-      '$_v1/device-approvals/$id/approve';
+  static String deviceApprovalApprove(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/device-approvals/$id/approve';
+  }
 
-  static String deviceApprovalReject(String id) =>
-      '$_v1/device-approvals/$id/reject';
+  static String deviceApprovalReject(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/device-approvals/$id/reject';
+  }
 
-  static String deviceApprovalStatus(String id) =>
-      '$_v1/device-approvals/$id/status';
+  static String deviceApprovalStatus(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/device-approvals/$id/status';
+  }
 
   // --- Categories (5 endpoints) ---
   static const String categories = '$_v1/categories';
 
-  static String category(String id) => '$_v1/categories/$id';
+  static String category(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/categories/$id';
+  }
 
   // --- Inventories (6 endpoints) ---
   static const String inventories = '$_v1/inventories';
 
-  static String inventory(String id) => '$_v1/inventories/$id';
+  static String inventory(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/inventories/$id';
+  }
 
-  static String inventoryImage(String id) => '$_v1/inventories/$id/image';
+  static String inventoryImage(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/inventories/$id/image';
+  }
 
   // --- Formulas (5 endpoints) ---
   static const String formulas = '$_v1/formulas';
 
-  static String formula(String id) => '$_v1/formulas/$id';
+  static String formula(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/formulas/$id';
+  }
 
   // --- Formula Items (4 endpoints) ---
-  static String formulaItems(String formulaId) =>
-      '$_v1/formulas/$formulaId/items';
+  static String formulaItems(String formulaId) {
+    assert(formulaId.isNotEmpty, 'formulaId must not be empty');
+    return '$_v1/formulas/$formulaId/items';
+  }
 
-  static String formulaItemsReorder(String formulaId) =>
-      '$_v1/formulas/$formulaId/items/reorder';
+  static String formulaItemsReorder(String formulaId) {
+    assert(formulaId.isNotEmpty, 'formulaId must not be empty');
+    return '$_v1/formulas/$formulaId/items/reorder';
+  }
 
-  static String formulaItem(String formulaId, String itemId) =>
-      '$_v1/formulas/$formulaId/items/$itemId';
+  static String formulaItem(String formulaId, String itemId) {
+    assert(formulaId.isNotEmpty, 'formulaId must not be empty');
+    assert(itemId.isNotEmpty, 'itemId must not be empty');
+    return '$_v1/formulas/$formulaId/items/$itemId';
+  }
 
   // --- Tasks (4 endpoints) ---
   static const String tasks = '$_v1/tasks';
 
-  static String task(String id) => '$_v1/tasks/$id';
+  static String task(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/tasks/$id';
+  }
 
-  static String taskCancel(String id) => '$_v1/tasks/$id/cancel';
+  static String taskCancel(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/tasks/$id/cancel';
+  }
 
   // --- Harmonics (1 endpoint) ---
   static const String harmonicsGenerate = '$_v1/harmonics/generate';

@@ -34,10 +34,14 @@ class ImageUtils {
       targetHeight = (targetWidth / targetRatio).round();
     }
 
-    // Clamp to max dimensions.
-    if (targetWidth > AppConstants.imageMaxWidth) {
-      targetWidth = AppConstants.imageMaxWidth;
-      targetHeight = AppConstants.imageMaxHeight;
+    // Clamp to max dimensions while preserving aspect ratio.
+    if (targetWidth > AppConstants.imageMaxWidth ||
+        targetHeight > AppConstants.imageMaxHeight) {
+      final widthScale = AppConstants.imageMaxWidth / targetWidth;
+      final heightScale = AppConstants.imageMaxHeight / targetHeight;
+      final scale = widthScale < heightScale ? widthScale : heightScale;
+      targetWidth = (targetWidth * scale).round();
+      targetHeight = (targetWidth / targetRatio).round();
     }
 
     return (width: targetWidth, height: targetHeight);

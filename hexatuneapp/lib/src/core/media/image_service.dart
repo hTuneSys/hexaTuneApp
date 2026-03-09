@@ -86,14 +86,13 @@ class ImageService {
   }
 
   Future<({int width, int height})?> _getImageDimensions(File file) async {
+    ui.ImmutableBuffer? buffer;
+    ui.ImageDescriptor? descriptor;
     try {
       final bytes = await file.readAsBytes();
-      final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-      final descriptor = await ui.ImageDescriptor.encoded(buffer);
-      final result = (width: descriptor.width, height: descriptor.height);
-      descriptor.dispose();
-      buffer.dispose();
-      return result;
+      buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
+      descriptor = await ui.ImageDescriptor.encoded(buffer);
+      return (width: descriptor.width, height: descriptor.height);
     } catch (e) {
       _logService.error(
         'Failed to decode image dimensions',
@@ -101,6 +100,9 @@ class ImageService {
         exception: e,
       );
       return null;
+    } finally {
+      descriptor?.dispose();
+      buffer?.dispose();
     }
   }
 }

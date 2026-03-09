@@ -27,7 +27,7 @@ class PreferencesService {
 
   // --- Bool ---
 
-  Future<bool> setBool(String key, {required bool value}) {
+  Future<bool> setBool(String key, bool value) {
     return _prefs.setBool(key, value);
   }
 

@@ -42,7 +42,15 @@ class AuthRepository {
       ApiEndpoints.login,
       data: request.toJson(),
     );
-    return LoginResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Login response body is null',
+      );
+    }
+    return LoginResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/register
@@ -52,7 +60,15 @@ class AuthRepository {
       ApiEndpoints.register,
       data: request.toJson(),
     );
-    return AccountResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Register response body is null',
+      );
+    }
+    return AccountResponse.fromJson(data);
   }
 
   /// DELETE /api/v1/auth/logout
@@ -68,7 +84,15 @@ class AuthRepository {
       ApiEndpoints.refresh,
       data: request.toJson(),
     );
-    return RefreshResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Refresh response body is null',
+      );
+    }
+    return RefreshResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/reauth
@@ -78,7 +102,15 @@ class AuthRepository {
       ApiEndpoints.reAuth,
       data: request.toJson(),
     );
-    return ReAuthResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'ReAuth response body is null',
+      );
+    }
+    return ReAuthResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/forgot-password
@@ -124,7 +156,15 @@ class AuthRepository {
       ApiEndpoints.authGoogle,
       data: request.toJson(),
     );
-    return OAuthLoginResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Google auth response body is null',
+      );
+    }
+    return OAuthLoginResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/apple
@@ -134,6 +174,14 @@ class AuthRepository {
       ApiEndpoints.authApple,
       data: request.toJson(),
     );
-    return OAuthLoginResponse.fromJson(response.data!);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Apple auth response body is null',
+      );
+    }
+    return OAuthLoginResponse.fromJson(data);
   }
 }

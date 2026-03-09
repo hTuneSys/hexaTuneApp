@@ -27,11 +27,23 @@ class PaginatedResponse<T> {
     Map<String, dynamic> json,
     T Function(Object? json) fromJsonT,
   ) {
+    final rawData = json['data'];
+    final rawPagination = json['pagination'];
+    if (rawData is! List) {
+      throw FormatException(
+        'PaginatedResponse: expected "data" to be a List, '
+        'got ${rawData.runtimeType}',
+      );
+    }
+    if (rawPagination is! Map<String, dynamic>) {
+      throw FormatException(
+        'PaginatedResponse: expected "pagination" to be a Map, '
+        'got ${rawPagination.runtimeType}',
+      );
+    }
     return PaginatedResponse(
-      data: (json['data'] as List<dynamic>).map(fromJsonT).toList(),
-      pagination: PaginationMeta.fromJson(
-        json['pagination'] as Map<String, dynamic>,
-      ),
+      data: rawData.map(fromJsonT).toList(),
+      pagination: PaginationMeta.fromJson(rawPagination),
     );
   }
 
