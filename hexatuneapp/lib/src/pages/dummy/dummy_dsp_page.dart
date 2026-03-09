@@ -69,6 +69,8 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   @override
   void dispose() {
+    // Free decoded audio memory when leaving the page
+    _dspService.clearDecodeCache();
     _carrierFreqCtrl.dispose();
     for (final s in _cycleSteps) {
       s.deltaCtrl.dispose();
@@ -91,8 +93,9 @@ class _DummyDspPageState extends State<DummyDspPage> {
     });
 
     try {
-      // Clear previous layers
+      // Clear previous layers and free decoded audio from memory
       await _dspService.clearBase();
+      await _dspService.clearDecodeCache();
 
       // Apply gains from the ambience config
       _dspService.setBaseGain(config.baseGain);
