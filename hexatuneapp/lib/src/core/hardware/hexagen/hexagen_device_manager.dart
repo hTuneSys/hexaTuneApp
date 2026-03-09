@@ -56,6 +56,8 @@ class HexagenDeviceManager {
     required void Function() onDeviceChanged,
     required DeviceResponseCallback onResponse,
   }) {
+    _setupSub?.cancel();
+    _dataSub?.cancel();
     _responseCallback = onResponse;
 
     _setupSub = _midi.onMidiSetupChanged?.listen((_) {

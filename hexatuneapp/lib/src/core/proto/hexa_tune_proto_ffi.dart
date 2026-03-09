@@ -336,6 +336,9 @@ class HexaTuneProto {
     List<String> params = const [],
   }) {
     final nameBytes = name.codeUnits;
+    if (nameBytes.isEmpty) {
+      throw ArgumentError.value(name, 'name', 'must not be empty');
+    }
     final namePtr = calloc<Uint8>(nameBytes.length);
     final outPtr = calloc<Uint8>(512);
     final outLen = calloc<IntPtr>(1);
@@ -408,10 +411,12 @@ class HexaTuneProto {
       final r = resultPtr.ref;
 
       // Validate bounds from native result before accessing input.
-      if (r.nameOffset + r.nameLen > input.length) {
-        throw HexaTuneProtoError(0, 'htp_at_parse: name bounds exceed input');
+      if (r.nameOffset < 0 ||
+          r.nameLen < 0 ||
+          r.nameOffset + r.nameLen > input.length) {
+        throw HexaTuneProtoError(0, 'htp_at_parse: name bounds invalid');
       }
-      if (r.paramCount > 8) {
+      if (r.paramCount < 0 || r.paramCount > 8) {
         throw HexaTuneProtoError(
           0,
           'htp_at_parse: paramCount ${r.paramCount} exceeds max 8',
@@ -425,7 +430,7 @@ class HexaTuneProto {
       for (var i = 0; i < r.paramCount; i++) {
         final off = r.paramOffsets[i];
         final len = r.paramLens[i];
-        if (off + len > input.length) {
+        if (off < 0 || len < 0 || off + len > input.length) {
           throw HexaTuneProtoError(
             0,
             'htp_at_parse: param[$i] bounds exceed input',
@@ -584,6 +589,9 @@ class HexaTuneProto {
     List<String> params = const [],
   }) {
     final nameBytes = name.codeUnits;
+    if (nameBytes.isEmpty) {
+      throw ArgumentError.value(name, 'name', 'must not be empty');
+    }
     final namePtr = calloc<Uint8>(nameBytes.length);
     final atBuf = calloc<Uint8>(512);
     final sysexBuf = calloc<Uint8>(514);

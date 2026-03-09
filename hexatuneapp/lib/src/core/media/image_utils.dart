@@ -17,6 +17,12 @@ class ImageUtils {
     required int sourceWidth,
     required int sourceHeight,
   }) {
+    if (sourceWidth <= 0 || sourceHeight <= 0) {
+      throw ArgumentError(
+        'Image dimensions must be positive: '
+        '${sourceWidth}x$sourceHeight',
+      );
+    }
     const targetRatio = AppConstants.imageAspectRatio; // 16/9
 
     int targetWidth;
