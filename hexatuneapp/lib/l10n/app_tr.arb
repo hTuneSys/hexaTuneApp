@@ -213,11 +213,9 @@
     }
   },
   "hexagenFreqListDone": "Frekans listesi tamamlandı",
-  "hexagenOperation": "Operasyon",
   "hexagenOpId": "Operasyon ID",
   "hexagenOpCurrentStatus": "Durum",
   "hexagenOpStep": "Adım",
-  "hexagenOpStart": "Operasyonu Başlat",
   "hexagenOpRunning": "Çalışıyor...",
   "hexagenOpPreparing": "Operasyon hazırlanıyor...",
   "hexagenOpPrepareFailed": "Hazırlık başarısız: {status}",
@@ -231,6 +229,5 @@
       "status": { "type": "String" },
       "step": { "type": "int" }
     }
-  },
-  "hexagenOpDone": "Operasyon tamamlandı"
+  }
 }

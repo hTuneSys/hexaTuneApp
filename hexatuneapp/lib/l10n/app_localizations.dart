@@ -938,12 +938,6 @@ abstract class AppLocalizations {
   /// **'Frequency list completed'**
   String get hexagenFreqListDone;
 
-  /// No description provided for @hexagenOperation.
-  ///
-  /// In en, this message translates to:
-  /// **'Operation'**
-  String get hexagenOperation;
-
   /// No description provided for @hexagenOpId.
   ///
   /// In en, this message translates to:
@@ -961,12 +955,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Step'**
   String get hexagenOpStep;
-
-  /// No description provided for @hexagenOpStart.
-  ///
-  /// In en, this message translates to:
-  /// **'Start Operation'**
-  String get hexagenOpStart;
 
   /// No description provided for @hexagenOpRunning.
   ///
@@ -997,12 +985,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Operation: {status} (step {step})'**
   String hexagenOpStatus(String status, int step);
-
-  /// No description provided for @hexagenOpDone.
-  ///
-  /// In en, this message translates to:
-  /// **'Operation completed'**
-  String get hexagenOpDone;
 }
 
 class _AppLocalizationsDelegate

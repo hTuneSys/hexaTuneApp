@@ -34,8 +34,8 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
   HexagenState _state = const HexagenState();
 
   bool _isInitializing = false;
-  bool _isFreqRunning = false;
-  bool _isOperationRunning = false;
+  bool _isRunning = false;
+  String? _runPhase;
 
   // RGB controllers
   final _redCtrl = TextEditingController(text: '0');
@@ -44,13 +44,13 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
 
   // Frequency list — each entry is [freq Hz, duration ms]
   final List<_FreqEntry> _freqList = [
-    _FreqEntry(freq: 440, durationMs: 1000),
-    _FreqEntry(freq: 528, durationMs: 1500),
-    _FreqEntry(freq: 639, durationMs: 1000),
+    _FreqEntry(freq: 2210000, durationMs: 10000),
+    _FreqEntry(freq: 2300000, durationMs: 10000),
+    _FreqEntry(freq: 2450000, durationMs: 10000),
   ];
 
-  final _newFreqCtrl = TextEditingController(text: '432');
-  final _newDurationCtrl = TextEditingController(text: '1000');
+  final _newFreqCtrl = TextEditingController(text: '2210000');
+  final _newDurationCtrl = TextEditingController(text: '10000');
 
   @override
   void initState() {
@@ -139,13 +139,40 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
     }
   }
 
+  /// Correct firmware flow: PREPARE → FREQ×N → GENERATE → poll progress.
   Future<void> _runFreqList() async {
     if (_freqList.isEmpty) return;
-    setState(() => _isFreqRunning = true);
+    setState(() {
+      _isRunning = true;
+      _runPhase = null;
+    });
     final l10n = AppLocalizations.of(context)!;
+    final opId = _hexagenService.generateId();
 
+    // Phase 1: PREPARE — reset device operation state
+    setState(() => _runPhase = 'PREPARE');
+    _logService.devLog(
+      '→ OPERATION PREPARE id=$opId',
+      category: LogCategory.ui,
+    );
+    if (mounted) _showToast(l10n.hexagenOpPreparing);
+
+    final prepStatus = await _hexagenService.sendOperationPrepare(opId);
+    if (!mounted || !_isRunning) return;
+
+    if (prepStatus != CommandStatus.success) {
+      _showToast(l10n.hexagenOpPrepareFailed(prepStatus.name), isError: true);
+      setState(() {
+        _isRunning = false;
+        _runPhase = null;
+      });
+      return;
+    }
+
+    // Phase 2: Send all FREQ steps — each is stored in firmware steps vector
+    setState(() => _runPhase = 'FREQ');
     for (int i = 0; i < _freqList.length; i++) {
-      if (!mounted || !_isFreqRunning) break;
+      if (!mounted || !_isRunning) break;
       final entry = _freqList[i];
       _logService.devLog(
         '→ FREQ [${i + 1}/${_freqList.length}] '
@@ -163,46 +190,25 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
         entry.durationMs,
       );
 
-      if (!mounted) break;
+      if (!mounted || !_isRunning) break;
       if (status != CommandStatus.success) {
         _showToast(
           l10n.hexagenFreqFailed(entry.freq, status.name),
           isError: true,
         );
-        break;
+        _hexagenService.resetOperationState();
+        setState(() {
+          _isRunning = false;
+          _runPhase = null;
+        });
+        return;
       }
     }
 
-    if (mounted) {
-      setState(() => _isFreqRunning = false);
-      _showToast(l10n.hexagenFreqListDone);
-    }
-  }
+    if (!mounted || !_isRunning) return;
 
-  void _stopFreqList() {
-    setState(() => _isFreqRunning = false);
-  }
-
-  Future<void> _runOperation() async {
-    setState(() => _isOperationRunning = true);
-    final l10n = AppLocalizations.of(context)!;
-    final opId = _hexagenService.generateId();
-
-    _logService.devLog(
-      '→ OPERATION PREPARE id=$opId',
-      category: LogCategory.ui,
-    );
-    if (mounted) _showToast(l10n.hexagenOpPreparing);
-
-    final prepStatus = await _hexagenService.sendOperationPrepare(opId);
-    if (!mounted) return;
-
-    if (prepStatus != CommandStatus.success) {
-      _showToast(l10n.hexagenOpPrepareFailed(prepStatus.name), isError: true);
-      setState(() => _isOperationRunning = false);
-      return;
-    }
-
+    // Phase 3: GENERATE — device processes all stored steps autonomously
+    setState(() => _runPhase = 'GENERATE');
     _logService.devLog(
       '→ OPERATION GENERATE id=$opId',
       category: LogCategory.ui,
@@ -211,17 +217,20 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
 
     await _hexagenService.sendOperationGenerate(opId);
 
-    // Poll status periodically
-    for (int i = 0; i < 60; i++) {
-      if (!mounted || !_isOperationRunning) break;
+    // Phase 4: Poll — device sends step-complete notifications automatically
+    for (int i = 0; i < 120; i++) {
+      if (!mounted || !_isRunning) break;
       await Future.delayed(const Duration(seconds: 1));
       await _hexagenService.queryOperationStatus();
 
       final status = _hexagenService.currentOperationStatus;
       final step = _hexagenService.currentGeneratingStepId;
 
-      if (mounted && status != null) {
-        _showToast(l10n.hexagenOpStatus(status, step ?? 0));
+      if (mounted) {
+        setState(() {});
+        if (status != null) {
+          _showToast(l10n.hexagenOpStatus(status, step ?? 0));
+        }
       }
 
       if (status == 'COMPLETED' || status == 'ERROR') break;
@@ -229,9 +238,20 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
 
     _hexagenService.resetOperationState();
     if (mounted) {
-      setState(() => _isOperationRunning = false);
-      _showToast(l10n.hexagenOpDone);
+      setState(() {
+        _isRunning = false;
+        _runPhase = null;
+      });
+      _showToast(l10n.hexagenFreqListDone);
     }
+  }
+
+  void _stopFreqList() {
+    _hexagenService.resetOperationState();
+    setState(() {
+      _isRunning = false;
+      _runPhase = null;
+    });
   }
 
   void _addFreqEntry() {
@@ -291,8 +311,6 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
           _buildRgbCard(theme, colorScheme, l10n),
           const SizedBox(height: 12),
           _buildFreqCard(theme, colorScheme, l10n),
-          const SizedBox(height: 12),
-          _buildOperationCard(theme, colorScheme, l10n),
         ],
       ),
     );
@@ -505,6 +523,9 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
     ColorScheme colorScheme,
     AppLocalizations l10n,
   ) {
+    final opStatus = _hexagenService.currentOperationStatus;
+    final opStep = _hexagenService.currentGeneratingStepId;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -516,6 +537,13 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                 Icon(Icons.graphic_eq, color: colorScheme.tertiary),
                 const SizedBox(width: 8),
                 Text(l10n.hexagenFreqSweep, style: theme.textTheme.titleMedium),
+                const Spacer(),
+                if (_runPhase != null)
+                  _buildStatusChip(
+                    _runPhase!,
+                    colorScheme.tertiary,
+                    colorScheme,
+                  ),
               ],
             ),
             const SizedBox(height: 12),
@@ -551,9 +579,7 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                   trailing: IconButton(
                     icon: Icon(Icons.close, color: colorScheme.error),
                     iconSize: 18,
-                    onPressed: _isFreqRunning
-                        ? null
-                        : () => _removeFreqEntry(i),
+                    onPressed: _isRunning ? null : () => _removeFreqEntry(i),
                   ),
                 );
               }),
@@ -587,25 +613,54 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                 ),
                 const SizedBox(width: 8),
                 IconButton.filled(
-                  onPressed: _isFreqRunning ? null : _addFreqEntry,
+                  onPressed: _isRunning ? null : _addFreqEntry,
                   icon: const Icon(Icons.add),
                 ),
               ],
             ),
             const SizedBox(height: 12),
+
+            // Operation status (visible during run)
+            if (_isRunning) ...[
+              _buildInfoRow(
+                l10n.hexagenOpId,
+                _hexagenService.currentOperationId?.toString() ??
+                    l10n.hexagenNone,
+                theme,
+              ),
+              _buildInfoRow(
+                l10n.hexagenOpCurrentStatus,
+                opStatus ?? l10n.hexagenNone,
+                theme,
+              ),
+              if (opStep != null)
+                _buildInfoRow(l10n.hexagenOpStep, opStep.toString(), theme),
+              const SizedBox(height: 12),
+            ],
+
             Row(
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: _state.isConnected && !_isFreqRunning
+                    onPressed: _state.isConnected && !_isRunning
                         ? _runFreqList
                         : null,
-                    icon: const Icon(Icons.play_arrow),
-                    label: Text(l10n.hexagenFreqRun(_freqList.length)),
+                    icon: _isRunning
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.play_arrow),
+                    label: Text(
+                      _isRunning
+                          ? l10n.hexagenOpRunning
+                          : l10n.hexagenFreqRun(_freqList.length),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (_isFreqRunning)
+                if (_isRunning)
                   Expanded(
                     child: OutlinedButton.icon(
                       onPressed: _stopFreqList,
@@ -614,72 +669,6 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                     ),
                   ),
               ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Operation Card
-  // ---------------------------------------------------------------------------
-
-  Widget _buildOperationCard(
-    ThemeData theme,
-    ColorScheme colorScheme,
-    AppLocalizations l10n,
-  ) {
-    final opStatus = _hexagenService.currentOperationStatus;
-    final opStep = _hexagenService.currentGeneratingStepId;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.settings_suggest, color: colorScheme.primary),
-                const SizedBox(width: 8),
-                Text(l10n.hexagenOperation, style: theme.textTheme.titleMedium),
-              ],
-            ),
-            const SizedBox(height: 12),
-            _buildInfoRow(
-              l10n.hexagenOpId,
-              _hexagenService.currentOperationId?.toString() ??
-                  l10n.hexagenNone,
-              theme,
-            ),
-            _buildInfoRow(
-              l10n.hexagenOpCurrentStatus,
-              opStatus ?? l10n.hexagenNone,
-              theme,
-            ),
-            if (opStep != null)
-              _buildInfoRow(l10n.hexagenOpStep, opStep.toString(), theme),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: _state.isConnected && !_isOperationRunning
-                    ? _runOperation
-                    : null,
-                icon: _isOperationRunning
-                    ? const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : const Icon(Icons.play_circle),
-                label: Text(
-                  _isOperationRunning
-                      ? l10n.hexagenOpRunning
-                      : l10n.hexagenOpStart,
-                ),
-              ),
             ),
           ],
         ),

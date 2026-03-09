@@ -213,11 +213,9 @@
     }
   },
   "hexagenFreqListDone": "Frequency list completed",
-  "hexagenOperation": "Operation",
   "hexagenOpId": "Operation ID",
   "hexagenOpCurrentStatus": "Status",
   "hexagenOpStep": "Step",
-  "hexagenOpStart": "Start Operation",
   "hexagenOpRunning": "Running...",
   "hexagenOpPreparing": "Preparing operation...",
   "hexagenOpPrepareFailed": "Prepare failed: {status}",
@@ -231,6 +229,5 @@
       "status": { "type": "String" },
       "step": { "type": "int" }
     }
-  },
-  "hexagenOpDone": "Operation completed"
+  }
 }

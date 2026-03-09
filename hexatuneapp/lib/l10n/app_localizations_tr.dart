@@ -458,9 +458,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get hexagenFreqListDone => 'Frekans listesi tamamlandı';
 
   @override
-  String get hexagenOperation => 'Operasyon';
-
-  @override
   String get hexagenOpId => 'Operasyon ID';
 
   @override
@@ -468,9 +465,6 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get hexagenOpStep => 'Adım';
-
-  @override
-  String get hexagenOpStart => 'Operasyonu Başlat';
 
   @override
   String get hexagenOpRunning => 'Çalışıyor...';
@@ -490,7 +484,4 @@ class AppLocalizationsTr extends AppLocalizations {
   String hexagenOpStatus(String status, int step) {
     return 'Operasyon: $status (adım $step)';
   }
-
-  @override
-  String get hexagenOpDone => 'Operasyon tamamlandı';
 }
