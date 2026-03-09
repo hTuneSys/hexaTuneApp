@@ -329,6 +329,8 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
     if (_isPlaying) {
       widget.dspService.stop();
     }
+    widget.dspService.clearAllLayers();
+    widget.dspService.clearDecodeCache();
     _nameCtrl.dispose();
     super.dispose();
   }
@@ -410,8 +412,9 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
       // Stop if already playing from a previous preview
       if (dsp.isPlaying) await dsp.stop();
 
-      // Clear previous layers
+      // Clear previous layers and decode cache to free memory
       await dsp.clearAllLayers();
+      await dsp.clearDecodeCache();
 
       // Load base layer
       if (_selectedBase != null) {
@@ -477,6 +480,8 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
   Future<void> _stop() async {
     if (!_isPlaying) return;
     await widget.dspService.stop();
+    await widget.dspService.clearAllLayers();
+    await widget.dspService.clearDecodeCache();
     if (mounted) setState(() => _isPlaying = false);
   }
 
