@@ -10,6 +10,8 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:get_it/get_it.dart' as _i174;
+import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart'
+    as _i925;
 import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart' as _i845;
 import 'package:hexatuneapp/src/core/dsp/dsp_bindings.dart' as _i1000;
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart' as _i716;
@@ -76,6 +78,12 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.singleton<_i925.AmbienceService>(
+      () => _i925.AmbienceService(
+        gh<_i148.PreferencesService>(),
+        gh<_i571.LogService>(),
+      ),
+    );
     gh.singleton<_i845.DspAssetService>(
       () => _i845.DspAssetService(gh<_i571.LogService>()),
     );

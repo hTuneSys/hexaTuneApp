@@ -292,4 +292,62 @@ class AppLocalizationsEn extends AppLocalizations {
   String dspLoadFailed(int code) {
     return 'Load failed (rc=$code)';
   }
+
+  @override
+  String get dspAmbienceTitle => 'Ambience Presets';
+
+  @override
+  String get dspAmbienceCreate => 'Create Ambience';
+
+  @override
+  String get dspAmbienceEdit => 'Edit Ambience';
+
+  @override
+  String get dspAmbienceSave => 'Save';
+
+  @override
+  String get dspAmbienceUpdate => 'Update';
+
+  @override
+  String get dspAmbienceName => 'Ambience Name';
+
+  @override
+  String get dspAmbienceEmpty => 'No ambiences yet';
+
+  @override
+  String get dspAmbienceEmptyHint => 'Tap + to create your first ambience';
+
+  @override
+  String get dspAmbienceDeleteTitle => 'Delete Ambience';
+
+  @override
+  String dspAmbienceDeleteConfirm(String name) {
+    return 'Delete \"$name\"? This cannot be undone.';
+  }
+
+  @override
+  String get dspAmbienceDelete => 'Delete';
+
+  @override
+  String get dspAmbienceCancel => 'Cancel';
+
+  @override
+  String get dspAmbienceNoBase => 'None';
+
+  @override
+  String get dspAmbienceSummary => 'Summary';
+
+  @override
+  String get dspAmbienceSelectAmbience => 'Select Ambience';
+
+  @override
+  String get dspAmbienceNoneSelected => 'No ambience selected';
+
+  @override
+  String dspAmbienceLoaded(String name) {
+    return 'Ambience loaded: $name';
+  }
+
+  @override
+  String get dspAmbienceManage => 'Manage';
 }

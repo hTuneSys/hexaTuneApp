@@ -137,5 +137,30 @@
   "dspLoadFailed": "Load failed (rc={code})",
   "@dspLoadFailed": {
     "placeholders": { "code": { "type": "int" } }
-  }
+  },
+
+  "dspAmbienceTitle": "Ambience Presets",
+  "dspAmbienceCreate": "Create Ambience",
+  "dspAmbienceEdit": "Edit Ambience",
+  "dspAmbienceSave": "Save",
+  "dspAmbienceUpdate": "Update",
+  "dspAmbienceName": "Ambience Name",
+  "dspAmbienceEmpty": "No ambiences yet",
+  "dspAmbienceEmptyHint": "Tap + to create your first ambience",
+  "dspAmbienceDeleteTitle": "Delete Ambience",
+  "dspAmbienceDeleteConfirm": "Delete \"{name}\"? This cannot be undone.",
+  "@dspAmbienceDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceDelete": "Delete",
+  "dspAmbienceCancel": "Cancel",
+  "dspAmbienceNoBase": "None",
+  "dspAmbienceSummary": "Summary",
+  "dspAmbienceSelectAmbience": "Select Ambience",
+  "dspAmbienceNoneSelected": "No ambience selected",
+  "dspAmbienceLoaded": "Ambience loaded: {name}",
+  "@dspAmbienceLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceManage": "Manage"
 }

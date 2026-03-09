@@ -292,4 +292,63 @@ class AppLocalizationsTr extends AppLocalizations {
   String dspLoadFailed(int code) {
     return 'Yükleme başarısız (rc=$code)';
   }
+
+  @override
+  String get dspAmbienceTitle => 'Ambiyans Ön Ayarları';
+
+  @override
+  String get dspAmbienceCreate => 'Ambiyans Oluştur';
+
+  @override
+  String get dspAmbienceEdit => 'Ambiyansı Düzenle';
+
+  @override
+  String get dspAmbienceSave => 'Kaydet';
+
+  @override
+  String get dspAmbienceUpdate => 'Güncelle';
+
+  @override
+  String get dspAmbienceName => 'Ambiyans Adı';
+
+  @override
+  String get dspAmbienceEmpty => 'Henüz ambiyans yok';
+
+  @override
+  String get dspAmbienceEmptyHint =>
+      'İlk ambiyansınızı oluşturmak için + düğmesine dokunun';
+
+  @override
+  String get dspAmbienceDeleteTitle => 'Ambiyansı Sil';
+
+  @override
+  String dspAmbienceDeleteConfirm(String name) {
+    return '\"$name\" silinsin mi? Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get dspAmbienceDelete => 'Sil';
+
+  @override
+  String get dspAmbienceCancel => 'İptal';
+
+  @override
+  String get dspAmbienceNoBase => 'Yok';
+
+  @override
+  String get dspAmbienceSummary => 'Özet';
+
+  @override
+  String get dspAmbienceSelectAmbience => 'Ambiyans Seç';
+
+  @override
+  String get dspAmbienceNoneSelected => 'Ambiyans seçilmedi';
+
+  @override
+  String dspAmbienceLoaded(String name) {
+    return 'Ambiyans yüklendi: $name';
+  }
+
+  @override
+  String get dspAmbienceManage => 'Yönet';
 }

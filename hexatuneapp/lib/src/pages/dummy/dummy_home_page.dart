@@ -93,6 +93,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Multi-layer audio with binaural beats',
       route: RouteNames.dsp,
     ),
+    _NavItem(
+      icon: Icons.landscape,
+      title: 'Ambience Presets',
+      subtitle: 'Create and manage sound ambiences',
+      route: RouteNames.ambience,
+    ),
   ];
 
   @override

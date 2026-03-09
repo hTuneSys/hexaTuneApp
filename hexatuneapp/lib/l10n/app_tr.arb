@@ -137,5 +137,30 @@
   "dspLoadFailed": "Yükleme başarısız (rc={code})",
   "@dspLoadFailed": {
     "placeholders": { "code": { "type": "int" } }
-  }
+  },
+
+  "dspAmbienceTitle": "Ambiyans Ön Ayarları",
+  "dspAmbienceCreate": "Ambiyans Oluştur",
+  "dspAmbienceEdit": "Ambiyansı Düzenle",
+  "dspAmbienceSave": "Kaydet",
+  "dspAmbienceUpdate": "Güncelle",
+  "dspAmbienceName": "Ambiyans Adı",
+  "dspAmbienceEmpty": "Henüz ambiyans yok",
+  "dspAmbienceEmptyHint": "İlk ambiyansınızı oluşturmak için + düğmesine dokunun",
+  "dspAmbienceDeleteTitle": "Ambiyansı Sil",
+  "dspAmbienceDeleteConfirm": "\"{name}\" silinsin mi? Bu işlem geri alınamaz.",
+  "@dspAmbienceDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceDelete": "Sil",
+  "dspAmbienceCancel": "İptal",
+  "dspAmbienceNoBase": "Yok",
+  "dspAmbienceSummary": "Özet",
+  "dspAmbienceSelectAmbience": "Ambiyans Seç",
+  "dspAmbienceNoneSelected": "Ambiyans seçilmedi",
+  "dspAmbienceLoaded": "Ambiyans yüklendi: {name}",
+  "@dspAmbienceLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceManage": "Yönet"
 }

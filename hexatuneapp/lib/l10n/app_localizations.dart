@@ -631,6 +631,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Load failed (rc={code})'**
   String dspLoadFailed(int code);
+
+  /// No description provided for @dspAmbienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience Presets'**
+  String get dspAmbienceTitle;
+
+  /// No description provided for @dspAmbienceCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Ambience'**
+  String get dspAmbienceCreate;
+
+  /// No description provided for @dspAmbienceEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Ambience'**
+  String get dspAmbienceEdit;
+
+  /// No description provided for @dspAmbienceSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get dspAmbienceSave;
+
+  /// No description provided for @dspAmbienceUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get dspAmbienceUpdate;
+
+  /// No description provided for @dspAmbienceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience Name'**
+  String get dspAmbienceName;
+
+  /// No description provided for @dspAmbienceEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambiences yet'**
+  String get dspAmbienceEmpty;
+
+  /// No description provided for @dspAmbienceEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to create your first ambience'**
+  String get dspAmbienceEmptyHint;
+
+  /// No description provided for @dspAmbienceDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Ambience'**
+  String get dspAmbienceDeleteTitle;
+
+  /// No description provided for @dspAmbienceDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This cannot be undone.'**
+  String dspAmbienceDeleteConfirm(String name);
+
+  /// No description provided for @dspAmbienceDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dspAmbienceDelete;
+
+  /// No description provided for @dspAmbienceCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get dspAmbienceCancel;
+
+  /// No description provided for @dspAmbienceNoBase.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get dspAmbienceNoBase;
+
+  /// No description provided for @dspAmbienceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get dspAmbienceSummary;
+
+  /// No description provided for @dspAmbienceSelectAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Ambience'**
+  String get dspAmbienceSelectAmbience;
+
+  /// No description provided for @dspAmbienceNoneSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambience selected'**
+  String get dspAmbienceNoneSelected;
+
+  /// No description provided for @dspAmbienceLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience loaded: {name}'**
+  String dspAmbienceLoaded(String name);
+
+  /// No description provided for @dspAmbienceManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get dspAmbienceManage;
 }
 
 class _AppLocalizationsDelegate

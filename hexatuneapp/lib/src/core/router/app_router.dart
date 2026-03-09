@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_categories_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_devices_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_dsp_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_ambience_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_formula_items_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_formulas_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_harmonics_page.dart';
@@ -146,6 +147,10 @@ class AppRouter {
       GoRoute(
         path: RouteNames.dsp,
         builder: (context, state) => const DummyDspPage(),
+      ),
+      GoRoute(
+        path: RouteNames.ambience,
+        builder: (context, state) => const DummyAmbiencePage(),
       ),
     ],
   );
