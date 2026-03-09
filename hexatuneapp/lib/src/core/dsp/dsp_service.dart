@@ -349,6 +349,7 @@ class DspService {
   // ---------------------------------------------------------------------------
 
   /// Clear the base layer. DSP engine cascades to clear all textures/events.
+  /// Also frees the decode cache since all layers become invalid.
   Future<bool> clearBase() async {
     final hadBase = _baseLoaded;
     if (!_isInitialized || _engine == null || _engine == nullptr) return false;
@@ -361,6 +362,7 @@ class DspService {
         category: LogCategory.dsp,
       );
     }
+    await clearDecodeCache();
     _logService.devLog(
       'Base cleared${hadBase ? ' (cascade: textures+events)' : ''}',
       category: LogCategory.dsp,
@@ -403,7 +405,7 @@ class DspService {
     _logService.devLog('Event[$index] cleared', category: LogCategory.dsp);
   }
 
-  /// Clear all layers (binaural unaffected).
+  /// Clear all layers (binaural unaffected). Also frees the decode cache.
   Future<void> clearAllLayers() async {
     if (!_isInitialized || _engine == null || _engine == nullptr) return;
     try {
@@ -416,6 +418,8 @@ class DspService {
         category: LogCategory.dsp,
       );
     }
+    _baseLoaded = false;
+    await clearDecodeCache();
     _logService.devLog('All layers cleared', category: LogCategory.dsp);
   }
 
@@ -649,6 +653,10 @@ class DspService {
   @disposeMethod
   void dispose() {
     _disposeEngine();
+    // Fire-and-forget: clear decode cache to free Java-side memory.
+    // Cannot await in synchronous dispose, but the platform channel
+    // will still process the call.
+    clearDecodeCache();
     _stateController.close();
     _logService.devLog('DspService disposed', category: LogCategory.dsp);
   }
