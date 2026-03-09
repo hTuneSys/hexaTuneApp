@@ -449,10 +449,14 @@ class _AmbienceEditorPageState extends State<_AmbienceEditorPage> {
         }
       }
 
+      // Disable binaural — ambience preview has no frequency component
+      dsp.updateBinauralConfig(binauralEnabled: false);
+
       // Apply gains
       dsp.setBaseGain(_baseGain);
       dsp.setTextureGain(_textureGain);
       dsp.setEventGain(_eventGain);
+      dsp.setBinauralGain(0.0);
       dsp.setMasterGain(_masterGain);
 
       // Start playback
