@@ -25,8 +25,9 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_re
 
 /// Dummy page for testing the Harmonizer player.
 ///
-/// Provides formula selection, generation type selection, ambience selection,
-/// play/stop controls, and real-time hardware status monitoring.
+/// Formula selection sits above the [HarmonizerPlayerWidget] which contains
+/// the tabbed type selector, ambience/warning area, and play/stop controls
+/// inside a single bordered container.
 class DummyHarmonizerPage extends StatefulWidget {
   const DummyHarmonizerPage({super.key});
 
@@ -92,6 +93,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     _harmonizerSub?.cancel();
     _headsetSub?.cancel();
     _hexagenSub?.cancel();
+    _immediateTimer?.cancel();
     super.dispose();
   }
 
@@ -162,6 +164,24 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     await _harmonizer.stopImmediate();
   }
 
+  Timer? _immediateTimer;
+
+  void _startImmediateTimer() {
+    _immediateTimer?.cancel();
+    _immediateTimer = Timer(const Duration(seconds: 3), () {
+      _stopImmediate();
+    });
+  }
+
+  void _cancelImmediateTimer() {
+    _immediateTimer?.cancel();
+    _immediateTimer = null;
+  }
+
+  void _navigateToAmbience() {
+    Navigator.of(context).pushNamed('/dev/ambience');
+  }
+
   // ---------------------------------------------------------------------------
   // Build
   // ---------------------------------------------------------------------------
@@ -170,32 +190,32 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final colorScheme = theme.colorScheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.harmonizerTitle)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Formula selector
           _buildFormulaSelector(theme, l10n),
           const SizedBox(height: 16),
-
-          // Generation type chips
-          _buildTypeChips(theme, l10n),
-          const SizedBox(height: 16),
-
-          // Hardware warning / ambience container
-          _buildMiddleContainer(theme, l10n, colorScheme),
-          const SizedBox(height: 16),
-
-          // Player controls
-          _buildPlayerControls(theme, l10n, colorScheme),
-          const SizedBox(height: 16),
-
-          // Sequence display
-          if (_harmonizerState.sequence.isNotEmpty)
-            _buildSequenceList(theme, l10n),
+          HarmonizerPlayerWidget(
+            selectedType: _selectedType,
+            harmonizerState: _harmonizerState,
+            headsetConnected: _headsetConnected,
+            hexagenConnected: _hexagenConnected,
+            selectedAmbience: _selectedAmbience,
+            ambienceConfigs: _ambienceService.configs,
+            isActive: _isActive,
+            generating: _generating,
+            canPlay: _canPlay,
+            onTypeChanged: (type) => setState(() => _selectedType = type),
+            onAmbienceChanged: (c) => setState(() => _selectedAmbience = c),
+            onAddAmbience: _navigateToAmbience,
+            onPlay: _play,
+            onStopGraceful: _stopGraceful,
+            onImmediateStart: _startImmediateTimer,
+            onImmediateEnd: _cancelImmediateTimer,
+          ),
         ],
       ),
     );
@@ -244,362 +264,6 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Type Chips
-  // ---------------------------------------------------------------------------
-
-  Widget _buildTypeChips(ThemeData theme, AppLocalizations l10n) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: GenerationType.values.map((type) {
-        final label = _typeLabel(type, l10n);
-        final isSelected = _selectedType == type;
-        final isActive = type.isActive;
-
-        return ChoiceChip(
-          label: Text(label),
-          selected: isSelected,
-          onSelected: _isActive
-              ? null
-              : isActive
-              ? (_) => setState(() => _selectedType = type)
-              : null,
-          avatar: isActive ? null : const Icon(Icons.lock_outline, size: 18),
-        );
-      }).toList(),
-    );
-  }
-
-  String _typeLabel(GenerationType type, AppLocalizations l10n) {
-    return switch (type) {
-      GenerationType.monaural => l10n.harmonizerTypeMonaural,
-      GenerationType.binaural => l10n.harmonizerTypeBinaural,
-      GenerationType.magnetic => l10n.harmonizerTypeMagnetic,
-      GenerationType.photonic => l10n.harmonizerTypePhotonic,
-      GenerationType.quantal => l10n.harmonizerTypeQuantal,
-    };
-  }
-
-  // ---------------------------------------------------------------------------
-  // Middle Container (Warnings + Ambience)
-  // ---------------------------------------------------------------------------
-
-  Widget _buildMiddleContainer(
-    ThemeData theme,
-    AppLocalizations l10n,
-    ColorScheme colorScheme,
-  ) {
-    // Photonic / Quantal — coming soon
-    if (!_selectedType.isActive) {
-      return _buildWarningCard(
-        theme,
-        colorScheme,
-        Icons.schedule,
-        l10n.harmonizerComingSoon,
-      );
-    }
-
-    // Magnetic — check HexaGen
-    if (_selectedType == GenerationType.magnetic) {
-      if (!_hexagenConnected) {
-        return _buildWarningCard(
-          theme,
-          colorScheme,
-          Icons.cable_outlined,
-          l10n.harmonizerHexagenRequired,
-        );
-      }
-      // No ambience for magnetic
-      return const SizedBox.shrink();
-    }
-
-    // Binaural — check headset
-    if (_selectedType == GenerationType.binaural && !_headsetConnected) {
-      return Column(
-        children: [
-          _buildWarningCard(
-            theme,
-            colorScheme,
-            Icons.headphones_outlined,
-            l10n.harmonizerHeadsetRequired,
-          ),
-          const SizedBox(height: 8),
-          _buildAmbienceSelector(theme, l10n),
-        ],
-      );
-    }
-
-    // Monaural or Binaural (headset connected) — ambience only
-    return _buildAmbienceSelector(theme, l10n);
-  }
-
-  Widget _buildWarningCard(
-    ThemeData theme,
-    ColorScheme colorScheme,
-    IconData icon,
-    String message,
-  ) {
-    return Card(
-      color: colorScheme.errorContainer,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            Icon(icon, color: colorScheme.onErrorContainer),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                message,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onErrorContainer,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Ambience Selector
-  // ---------------------------------------------------------------------------
-
-  Widget _buildAmbienceSelector(ThemeData theme, AppLocalizations l10n) {
-    final configs = _ambienceService.configs;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: Row(
-          children: [
-            Expanded(
-              child: DropdownButtonFormField<AmbienceConfig?>(
-                decoration: InputDecoration(
-                  labelText: l10n.harmonizerSelectAmbience,
-                  border: InputBorder.none,
-                ),
-                initialValue: _selectedAmbience,
-                items: [
-                  DropdownMenuItem<AmbienceConfig?>(
-                    value: null,
-                    child: Text(l10n.harmonizerNoAmbience),
-                  ),
-                  ...configs.map(
-                    (c) => DropdownMenuItem(value: c, child: Text(c.name)),
-                  ),
-                ],
-                onChanged: _isActive
-                    ? null
-                    : (c) => setState(() => _selectedAmbience = c),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add),
-              tooltip: l10n.harmonizerAddAmbience,
-              onPressed: _isActive ? null : _navigateToAmbience,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _navigateToAmbience() {
-    Navigator.of(context).pushNamed('/dev/ambience');
-  }
-
-  // ---------------------------------------------------------------------------
-  // Player Controls
-  // ---------------------------------------------------------------------------
-
-  Widget _buildPlayerControls(
-    ThemeData theme,
-    AppLocalizations l10n,
-    ColorScheme colorScheme,
-  ) {
-    final isPlaying =
-        _harmonizerState.status == HarmonizerStatus.playing ||
-        _harmonizerState.status == HarmonizerStatus.stopping;
-    final canPlay = _canPlay;
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            // Duration row
-            if (isPlaying) ...[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.harmonizerTotalDuration,
-                        style: theme.textTheme.labelSmall,
-                      ),
-                      Text(
-                        _formatDuration(
-                          _harmonizerState.isFirstCycle
-                              ? _harmonizerState.firstCycleDuration
-                              : _harmonizerState.totalCycleDuration,
-                        ),
-                        style: theme.textTheme.headlineSmall,
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        l10n.harmonizerRemaining,
-                        style: theme.textTheme.labelSmall,
-                      ),
-                      Text(
-                        _formatDuration(_harmonizerState.remainingInCycle),
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                l10n.harmonizerCycle(_harmonizerState.currentCycle + 1),
-                style: theme.textTheme.labelMedium,
-              ),
-              const SizedBox(height: 16),
-            ],
-
-            // Play / Stop button
-            _buildActionButton(theme, l10n, colorScheme, isPlaying, canPlay),
-
-            // Status text
-            if (_harmonizerState.status == HarmonizerStatus.error &&
-                _harmonizerState.errorMessage != null)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  l10n.harmonizerError(_harmonizerState.errorMessage!),
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: colorScheme.error,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildActionButton(
-    ThemeData theme,
-    AppLocalizations l10n,
-    ColorScheme colorScheme,
-    bool isPlaying,
-    bool canPlay,
-  ) {
-    if (_generating) {
-      return const Padding(
-        padding: EdgeInsets.all(12),
-        child: CircularProgressIndicator(),
-      );
-    }
-
-    if (isPlaying) {
-      return GestureDetector(
-        onLongPressStart: (_) => _startImmediateTimer(),
-        onLongPressEnd: (_) => _cancelImmediateTimer(),
-        child: FilledButton.tonalIcon(
-          icon: const Icon(Icons.stop),
-          label: Text(
-            _harmonizerState.status == HarmonizerStatus.stopping
-                ? l10n.harmonizerStopping
-                : l10n.harmonizerStop,
-          ),
-          onPressed: _stopGraceful,
-        ),
-      );
-    }
-
-    return FilledButton.icon(
-      icon: const Icon(Icons.play_arrow),
-      label: Text(l10n.harmonizerPlay),
-      onPressed: canPlay ? _play : null,
-    );
-  }
-
-  // ---------------------------------------------------------------------------
-  // 3-second long-press for immediate stop
-  // ---------------------------------------------------------------------------
-
-  Timer? _immediateTimer;
-
-  void _startImmediateTimer() {
-    _immediateTimer?.cancel();
-    _immediateTimer = Timer(const Duration(seconds: 3), () {
-      _stopImmediate();
-    });
-  }
-
-  void _cancelImmediateTimer() {
-    _immediateTimer?.cancel();
-    _immediateTimer = null;
-  }
-
-  // ---------------------------------------------------------------------------
-  // Sequence Display
-  // ---------------------------------------------------------------------------
-
-  Widget _buildSequenceList(ThemeData theme, AppLocalizations l10n) {
-    final steps = _harmonizerState.sequence;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          '${l10n.harmonizerFormulaLabel} — ${steps.length} steps',
-          style: theme.textTheme.titleSmall,
-        ),
-        const SizedBox(height: 8),
-        ...steps.asMap().entries.map((e) {
-          final i = e.key;
-          final step = e.value;
-          final isCurrent =
-              _harmonizerState.status == HarmonizerStatus.playing &&
-              i == _harmonizerState.currentStepIndex;
-          return Card(
-            color: isCurrent ? theme.colorScheme.primaryContainer : null,
-            child: ListTile(
-              dense: true,
-              leading: Text('${i + 1}', style: theme.textTheme.titleMedium),
-              title: Text(
-                l10n.harmonizerStep(
-                  i + 1,
-                  step.value,
-                  (step.durationMs / 1000.0).toStringAsFixed(1),
-                ),
-              ),
-              trailing: step.isOneShot
-                  ? Chip(
-                      label: Text(
-                        l10n.harmonizerStepOneshot,
-                        style: theme.textTheme.labelSmall,
-                      ),
-                      visualDensity: VisualDensity.compact,
-                    )
-                  : null,
-            ),
-          );
-        }),
-      ],
-    );
-  }
-
-  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
 
@@ -616,11 +280,541 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     final validation = _harmonizer.validatePrerequisites(_selectedType);
     return validation == HarmonizerValidation.valid;
   }
+}
+
+// =============================================================================
+// HarmonizerPlayerWidget — single bordered container with tabs + controls
+// =============================================================================
+
+/// A standalone player widget with tabbed type selection, ambience/warning
+/// area, and play/stop controls inside a single rounded container.
+class HarmonizerPlayerWidget extends StatelessWidget {
+  const HarmonizerPlayerWidget({
+    required this.selectedType,
+    required this.harmonizerState,
+    required this.headsetConnected,
+    required this.hexagenConnected,
+    required this.selectedAmbience,
+    required this.ambienceConfigs,
+    required this.isActive,
+    required this.generating,
+    required this.canPlay,
+    required this.onTypeChanged,
+    required this.onAmbienceChanged,
+    required this.onAddAmbience,
+    required this.onPlay,
+    required this.onStopGraceful,
+    required this.onImmediateStart,
+    required this.onImmediateEnd,
+    super.key,
+  });
+
+  final GenerationType selectedType;
+  final HarmonizerState harmonizerState;
+  final bool headsetConnected;
+  final bool hexagenConnected;
+  final AmbienceConfig? selectedAmbience;
+  final List<AmbienceConfig> ambienceConfigs;
+  final bool isActive;
+  final bool generating;
+  final bool canPlay;
+  final ValueChanged<GenerationType> onTypeChanged;
+  final ValueChanged<AmbienceConfig?> onAmbienceChanged;
+  final VoidCallback onAddAmbience;
+  final VoidCallback onPlay;
+  final VoidCallback onStopGraceful;
+  final VoidCallback onImmediateStart;
+  final VoidCallback onImmediateEnd;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = theme.colorScheme;
+
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: colorScheme.outlineVariant),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // --- Type tabs ---
+          _TypeTabBar(
+            selectedType: selectedType,
+            isActive: isActive,
+            onTypeChanged: onTypeChanged,
+          ),
+
+          // --- Top half: type-specific content ---
+          _buildTypeContent(theme, l10n, colorScheme),
+
+          Divider(height: 1, color: colorScheme.outlineVariant),
+
+          // --- Bottom half: timer + play/stop ---
+          _buildControls(theme, l10n, colorScheme),
+        ],
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Top-half: type-specific content (ambience / warnings / coming soon)
+  // ---------------------------------------------------------------------------
+
+  Widget _buildTypeContent(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: _typeContentBody(theme, l10n, colorScheme),
+    );
+  }
+
+  Widget _typeContentBody(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    // Photonic / Quantal — coming soon
+    if (!selectedType.isActive) {
+      return _buildInfoRow(
+        theme,
+        colorScheme,
+        Icons.schedule,
+        _typeLabel(selectedType, l10n),
+        l10n.harmonizerComingSoon,
+        isWarning: false,
+      );
+    }
+
+    // Magnetic
+    if (selectedType == GenerationType.magnetic) {
+      if (!hexagenConnected) {
+        return _buildInfoRow(
+          theme,
+          colorScheme,
+          Icons.cable_outlined,
+          l10n.harmonizerTypeMagnetic,
+          l10n.harmonizerHexagenRequired,
+          isWarning: true,
+        );
+      }
+      return _buildTypeLabel(theme, l10n.harmonizerTypeMagnetic);
+    }
+
+    // Binaural — headset check
+    if (selectedType == GenerationType.binaural && !headsetConnected) {
+      return _buildInfoRow(
+        theme,
+        colorScheme,
+        Icons.headphones_outlined,
+        l10n.harmonizerTypeBinaural,
+        l10n.harmonizerHeadsetRequired,
+        isWarning: true,
+      );
+    }
+
+    // Monaural or Binaural (headset connected) — show ambience selector
+    final typeText = selectedType == GenerationType.binaural
+        ? l10n.harmonizerTypeBinaural
+        : l10n.harmonizerTypeMonaural;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(typeText, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        _buildAmbienceRow(theme, l10n, colorScheme),
+      ],
+    );
+  }
+
+  Widget _buildInfoRow(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    IconData icon,
+    String title,
+    String subtitle, {
+    required bool isWarning,
+  }) {
+    final contentColor = isWarning
+        ? colorScheme.error
+        : colorScheme.onSurfaceVariant;
+
+    return Row(
+      children: [
+        Icon(icon, color: contentColor, size: 28),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title, style: theme.textTheme.titleMedium),
+              const SizedBox(height: 2),
+              Text(
+                subtitle,
+                style: theme.textTheme.bodySmall?.copyWith(color: contentColor),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTypeLabel(ThemeData theme, String label) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(label, style: theme.textTheme.titleMedium),
+    );
+  }
+
+  Widget _buildAmbienceRow(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    return Row(
+      children: [
+        Expanded(
+          child: DropdownButtonFormField<AmbienceConfig?>(
+            decoration: InputDecoration(
+              labelText: l10n.harmonizerSelectAmbience,
+              border: const OutlineInputBorder(),
+              isDense: true,
+            ),
+            initialValue: selectedAmbience,
+            items: [
+              DropdownMenuItem<AmbienceConfig?>(
+                value: null,
+                child: Text(l10n.harmonizerNoAmbience),
+              ),
+              ...ambienceConfigs.map(
+                (c) => DropdownMenuItem(value: c, child: Text(c.name)),
+              ),
+            ],
+            onChanged: isActive ? null : onAmbienceChanged,
+          ),
+        ),
+        const SizedBox(width: 8),
+        IconButton.filled(
+          icon: const Icon(Icons.add),
+          tooltip: l10n.harmonizerAddAmbience,
+          onPressed: isActive ? null : onAddAmbience,
+          style: IconButton.styleFrom(
+            backgroundColor: colorScheme.primaryContainer,
+            foregroundColor: colorScheme.onPrimaryContainer,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Bottom-half: Total Time | Play/Stop | Remaining
+  // ---------------------------------------------------------------------------
+
+  Widget _buildControls(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    final isPlaying =
+        harmonizerState.status == HarmonizerStatus.playing ||
+        harmonizerState.status == HarmonizerStatus.stopping;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              // Left: Total Time
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.harmonizerTotalDuration,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: colorScheme.outlineVariant,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isPlaying
+                          ? _formatDuration(
+                              harmonizerState.isFirstCycle
+                                  ? harmonizerState.firstCycleDuration
+                                  : harmonizerState.totalCycleDuration,
+                            )
+                          : '--:--',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Center: Play / Stop button
+              _buildCenterButton(theme, l10n, colorScheme, isPlaying),
+
+              // Right: Remaining
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      l10n.harmonizerRemaining,
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Divider(
+                      height: 1,
+                      thickness: 1,
+                      color: colorScheme.outlineVariant,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      isPlaying
+                          ? _formatDuration(harmonizerState.remainingInCycle)
+                          : '--:--',
+                      style: theme.textTheme.headlineMedium?.copyWith(
+                        color: colorScheme.primary,
+                        fontFeatures: const [FontFeature.tabularFigures()],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // Error text
+          if (harmonizerState.status == HarmonizerStatus.error &&
+              harmonizerState.errorMessage != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                l10n.harmonizerError(harmonizerState.errorMessage!),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: colorScheme.error,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCenterButton(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+    bool isPlaying,
+  ) {
+    const double size = 64;
+
+    if (generating) {
+      return const SizedBox(
+        width: size,
+        height: size,
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (isPlaying) {
+      return GestureDetector(
+        onLongPressStart: (_) => onImmediateStart(),
+        onLongPressEnd: (_) => onImmediateEnd(),
+        child: Container(
+          width: size,
+          height: size,
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: colorScheme.error,
+          ),
+          child: IconButton(
+            icon: Icon(
+              Icons.stop_rounded,
+              color: colorScheme.onError,
+              size: 36,
+            ),
+            onPressed: onStopGraceful,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      width: size,
+      height: size,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: canPlay ? colorScheme.primary : colorScheme.surfaceContainerHigh,
+      ),
+      child: IconButton(
+        icon: Icon(
+          Icons.play_arrow_rounded,
+          color: canPlay
+              ? colorScheme.onPrimary
+              : colorScheme.onSurface.withAlpha(97),
+          size: 36,
+        ),
+        onPressed: canPlay ? onPlay : null,
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
+  String _typeLabel(GenerationType type, AppLocalizations l10n) {
+    return switch (type) {
+      GenerationType.monaural => l10n.harmonizerTypeMonaural,
+      GenerationType.binaural => l10n.harmonizerTypeBinaural,
+      GenerationType.magnetic => l10n.harmonizerTypeMagnetic,
+      GenerationType.photonic => l10n.harmonizerTypePhotonic,
+      GenerationType.quantal => l10n.harmonizerTypeQuantal,
+    };
+  }
 
   String _formatDuration(Duration d) {
     final minutes = d.inMinutes;
     final seconds = d.inSeconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:'
         '${seconds.toString().padLeft(2, '0')}';
+  }
+}
+
+// =============================================================================
+// _TypeTabBar — five tabs at the top of the container
+// =============================================================================
+
+class _TypeTabBar extends StatelessWidget {
+  const _TypeTabBar({
+    required this.selectedType,
+    required this.isActive,
+    required this.onTypeChanged,
+  });
+
+  final GenerationType selectedType;
+  final bool isActive;
+  final ValueChanged<GenerationType> onTypeChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerHigh,
+        border: Border(bottom: BorderSide(color: colorScheme.outlineVariant)),
+      ),
+      child: Row(
+        children: GenerationType.values.map((type) {
+          final isSelected = selectedType == type;
+          return _buildTab(theme, colorScheme, l10n, type, isSelected);
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _buildTab(
+    ThemeData theme,
+    ColorScheme colorScheme,
+    AppLocalizations l10n,
+    GenerationType type,
+    bool isSelected,
+  ) {
+    final label = _shortLabel(type, l10n);
+    final icon = _typeIcon(type);
+    final canTap = !isActive && type.isActive;
+
+    return Expanded(
+      child: GestureDetector(
+        onTap: canTap || (!isActive && !type.isActive)
+            ? () => onTypeChanged(type)
+            : null,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          decoration: BoxDecoration(
+            color: isSelected ? colorScheme.surface : null,
+            border: isSelected
+                ? Border(
+                    bottom: BorderSide(color: colorScheme.primary, width: 2),
+                  )
+                : null,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                size: 20,
+                color: isSelected
+                    ? colorScheme.primary
+                    : !type.isActive
+                    ? colorScheme.onSurface.withAlpha(97)
+                    : colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: isSelected
+                      ? colorScheme.primary
+                      : !type.isActive
+                      ? colorScheme.onSurface.withAlpha(97)
+                      : colorScheme.onSurfaceVariant,
+                  fontWeight: isSelected ? FontWeight.bold : null,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  IconData _typeIcon(GenerationType type) {
+    return switch (type) {
+      GenerationType.monaural => Icons.speaker_outlined,
+      GenerationType.binaural => Icons.headphones_outlined,
+      GenerationType.magnetic => Icons.waves_outlined,
+      GenerationType.photonic => Icons.lock_outline,
+      GenerationType.quantal => Icons.lock_outline,
+    };
+  }
+
+  String _shortLabel(GenerationType type, AppLocalizations l10n) {
+    return switch (type) {
+      GenerationType.monaural => l10n.harmonizerTypeMonaural,
+      GenerationType.binaural => l10n.harmonizerTypeBinaural,
+      GenerationType.magnetic => l10n.harmonizerTypeMagnetic,
+      GenerationType.photonic => l10n.harmonizerTypePhotonic,
+      GenerationType.quantal => l10n.harmonizerTypeQuantal,
+    };
   }
 }
