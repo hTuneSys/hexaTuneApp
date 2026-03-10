@@ -2689,8 +2689,8 @@
         "tags": [
           "Harmonics"
         ],
-        "summary": "`POST /api/v1/harmonics/generate` — Generate harmonic numbers",
-        "description": "Assigns unique harmonic numbers (1–100) to the given inventory items.\nEach tenant can use each harmonic number only once within a sliding\n1-hour window. Duplicate inventory IDs in the request receive the same\nharmonic number.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — List of inventory item UUIDs.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] |\n| `400`  | Invalid input (empty list, too many IDs) | [`ProblemDetails`] |\n| `403`  | Insufficient permissions | [`ProblemDetails`] |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] |\n| `500`  | Internal server error | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule violations.",
+        "summary": "`POST /api/v1/harmonics/generate` — Generate harmonic packet sequence",
+        "description": "Generates a structured packet sequence based on the generation type,\nsource type, and source identifier. For Photonic/Quantal generation types\nor Flow source type, returns an empty sequence.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — Generation type, source type, and source ID.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] |\n| `400`  | Invalid input | [`ProblemDetails`] |\n| `403`  | Insufficient permissions | [`ProblemDetails`] |\n| `404`  | Formula not found | [`ProblemDetails`] |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] |\n| `500`  | Internal server error | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule violations.",
         "operationId": "generate_harmonics",
         "requestBody": {
           "content": {
@@ -2725,6 +2725,16 @@
           },
           "403": {
             "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Formula not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3504,6 +3514,14 @@
             ],
             "format": "int32",
             "description": "Sort order (defaults to 0 if not provided)."
+          },
+          "timeMs": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int64",
+            "description": "Duration in milliseconds (defaults to 1000 if not provided)."
           }
         }
       },
@@ -4154,7 +4172,8 @@
           "id",
           "inventoryId",
           "sortOrder",
-          "quantity"
+          "quantity",
+          "timeMs"
         ],
         "properties": {
           "id": {
@@ -4174,6 +4193,11 @@
             "type": "integer",
             "format": "int32",
             "description": "Display sort order."
+          },
+          "timeMs": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Duration in milliseconds."
           }
         }
       },
@@ -4215,18 +4239,25 @@
       },
       "GenerateHarmonicsRequest": {
         "type": "object",
-        "description": "Request DTO for generating harmonic numbers.\n\nValidated at the presentation layer for shape/format.\nDomain invariants (max count, exhaustion) are enforced by the application layer.",
+        "description": "Request DTO for generating harmonic numbers.\n\nValidated at the presentation layer for shape/format.\nDomain invariants are enforced by the application layer.",
         "required": [
-          "inventoryIds"
+          "generationType",
+          "sourceType",
+          "sourceId"
         ],
         "properties": {
-          "inventoryIds": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "description": "List of inventory item UUIDs. Minimum 1, maximum determined by config.\nDuplicates are allowed — they receive the same harmonic number."
+          "generationType": {
+            "type": "string",
+            "description": "The generation type (Monaural, Binaural, Magnetic, Photonic, Quantal)."
+          },
+          "sourceId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The source identifier (formula ID when `sourceType` is Formula)."
+          },
+          "sourceType": {
+            "type": "string",
+            "description": "The source type (Flow, Formula)."
           }
         }
       },
@@ -4235,24 +4266,39 @@
         "description": "Response DTO for a successful harmonic generation.",
         "required": [
           "requestId",
-          "assignments",
-          "totalAssigned"
+          "generationType",
+          "sourceType",
+          "sourceId",
+          "sequence",
+          "totalItems"
         ],
         "properties": {
-          "assignments": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HarmonicAssignmentDto"
-            },
-            "description": "The list of harmonic assignments made."
+          "generationType": {
+            "type": "string",
+            "description": "The generation type used."
           },
           "requestId": {
             "type": "string",
             "description": "The unique request identifier for this generation."
           },
-          "totalAssigned": {
+          "sequence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HarmonicPacketDto"
+            },
+            "description": "The generated harmonic packet sequence."
+          },
+          "sourceId": {
+            "type": "string",
+            "description": "The source identifier."
+          },
+          "sourceType": {
+            "type": "string",
+            "description": "The source type used."
+          },
+          "totalItems": {
             "type": "integer",
-            "description": "Total number of unique assignments made.",
+            "description": "Total number of packets in the sequence.",
             "minimum": 0
           }
         }
@@ -4279,27 +4325,28 @@
           }
         }
       },
-      "HarmonicAssignmentDto": {
+      "HarmonicPacketDto": {
         "type": "object",
-        "description": "A single harmonic assignment in the response.",
+        "description": "A single packet in the harmonic sequence response.",
         "required": [
-          "inventoryId",
-          "harmonicNumber",
-          "assignedAt"
+          "value",
+          "durationMs",
+          "isOneShot"
         ],
         "properties": {
-          "assignedAt": {
-            "type": "string",
-            "description": "ISO 8601 timestamp when the assignment was made."
-          },
-          "harmonicNumber": {
+          "durationMs": {
             "type": "integer",
-            "format": "int32",
-            "description": "The assigned harmonic number (1–100)."
+            "format": "int64",
+            "description": "Duration in milliseconds."
           },
-          "inventoryId": {
-            "type": "string",
-            "description": "The inventory item identifier."
+          "isOneShot": {
+            "type": "boolean",
+            "description": "Whether this packet plays only once."
+          },
+          "value": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The harmonic value for this packet."
           }
         }
       },

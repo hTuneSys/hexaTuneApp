@@ -1,9 +1,11 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/rest/formula/formula_constants.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/add_formula_item_entry.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/add_formula_items_request.dart';
@@ -86,7 +88,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     }
     if (!mounted) return;
 
-    // Filter out inventories already present in formula items
+    // Filter out inventories already present in formula items (unique rule)
     final existingInvIds = _items.map((i) => i.inventoryId).toSet();
     final availableInventories = inventories
         .where((inv) => !existingInvIds.contains(inv.id))
@@ -95,6 +97,16 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     if (availableInventories.isEmpty) {
       _showMessage(
         'All inventory items are already added to this formula',
+        isError: true,
+      );
+      return;
+    }
+
+    final remaining = FormulaValidation.remainingCapacity(_items);
+    if (remaining <= 0) {
+      _showMessage(
+        'Total quantity limit reached '
+        '(${FormulaConstants.maxTotalQuantity})',
         isError: true,
       );
       return;
@@ -133,9 +145,10 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
               const SizedBox(height: 8),
               TextField(
                 controller: quantityCtrl,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Quantity',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  helperText: 'Remaining capacity: $remaining',
                 ),
                 keyboardType: TextInputType.number,
               ),
@@ -166,6 +179,17 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     );
     if (result != true || selectedInventoryId == null) return;
 
+    final qty = int.tryParse(quantityCtrl.text.trim()) ?? 1;
+    if (!FormulaValidation.canAddQuantity(_items, qty)) {
+      _showMessage(
+        'Cannot add: total quantity would exceed '
+        '${FormulaConstants.maxTotalQuantity} '
+        '(remaining: $remaining)',
+        isError: true,
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final repo = getIt<FormulaRepository>();
@@ -176,7 +200,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
           items: [
             AddFormulaItemEntry(
               inventoryId: selectedInventoryId!,
-              quantity: int.tryParse(quantityCtrl.text.trim()),
+              quantity: qty,
               timeMs: timeMsValue,
             ),
           ],
@@ -187,13 +211,15 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) _showMessage(_formatError(e), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
   Future<void> _updateQuantity(FormulaItemResponse item) async {
+    final maxForItem =
+        FormulaValidation.remainingCapacity(_items) + item.quantity;
     final qtyCtrl = TextEditingController(text: '${item.quantity}');
     final result = await showDialog<bool>(
       context: context,
@@ -201,9 +227,10 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
         title: const Text('Update Quantity'),
         content: TextField(
           controller: qtyCtrl,
-          decoration: const InputDecoration(
+          decoration: InputDecoration(
             labelText: 'Quantity',
-            border: OutlineInputBorder(),
+            border: const OutlineInputBorder(),
+            helperText: 'Max allowed for this item: $maxForItem',
           ),
           keyboardType: TextInputType.number,
           autofocus: true,
@@ -222,10 +249,25 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     );
     if (result != true) return;
 
+    final qty = int.tryParse(qtyCtrl.text.trim());
+    if (qty == null || qty < 1) {
+      _showMessage('Quantity must be at least 1', isError: true);
+      return;
+    }
+
+    if (!FormulaValidation.canUpdateQuantity(_items, item.id, qty)) {
+      _showMessage(
+        'Cannot update: total quantity would exceed '
+        '${FormulaConstants.maxTotalQuantity} '
+        '(max for this item: $maxForItem)',
+        isError: true,
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final repo = getIt<FormulaRepository>();
-      final qty = int.parse(qtyCtrl.text.trim());
       await repo.updateItemQuantity(
         widget.formulaId,
         item.id,
@@ -236,7 +278,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) _showMessage(_formatError(e), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -271,7 +313,7 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) _showMessage(_formatError(e), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -314,6 +356,20 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
     );
   }
 
+  String _formatError(Object error) {
+    if (error is DioException) {
+      final statusCode = error.response?.statusCode;
+      if (statusCode == 409) {
+        return 'Item already exists in this formula (duplicate)';
+      }
+      if (statusCode == 400) {
+        return 'Invalid input or total quantity exceeds '
+            '${FormulaConstants.maxTotalQuantity}';
+      }
+    }
+    return error.toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -344,17 +400,36 @@ class _DummyFormulaItemsPageState extends State<DummyFormulaItemsPage> {
                 if (_detail != null)
                   Padding(
                     padding: const EdgeInsets.all(16),
-                    child: Row(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            'Formula: ${_detail!.name}',
-                            style: theme.textTheme.titleMedium,
-                          ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                'Formula: ${_detail!.name}',
+                                style: theme.textTheme.titleMedium,
+                              ),
+                            ),
+                            Text(
+                              '${_items.length} items',
+                              style: theme.textTheme.bodySmall,
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 4),
                         Text(
-                          '${_items.length} items',
-                          style: theme.textTheme.bodySmall,
+                          'Total qty: '
+                          '${FormulaValidation.totalQuantity(_items)}'
+                          ' / ${FormulaConstants.maxTotalQuantity}'
+                          '  (remaining: '
+                          '${FormulaValidation.remainingCapacity(_items)})',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color:
+                                FormulaValidation.remainingCapacity(_items) <= 0
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
                         ),
                       ],
                     ),
