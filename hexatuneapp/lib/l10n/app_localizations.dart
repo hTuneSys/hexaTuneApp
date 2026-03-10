@@ -1178,12 +1178,6 @@ abstract class AppLocalizations {
   /// **'No ambience'**
   String get harmonizerNoAmbience;
 
-  /// No description provided for @harmonizerAddAmbience.
-  ///
-  /// In en, this message translates to:
-  /// **'Add ambience'**
-  String get harmonizerAddAmbience;
-
   /// No description provided for @harmonizerPlay.
   ///
   /// In en, this message translates to:

@@ -442,7 +442,6 @@ void main() {
                   canPlay: false,
                   onTypeChanged: (_) {},
                   onAmbienceChanged: (_) {},
-                  onAddAmbience: () {},
                   onPlay: () {},
                   onStopGraceful: () {},
                   onImmediateStart: () {},
@@ -479,7 +478,6 @@ void main() {
                   canPlay: false,
                   onTypeChanged: (_) {},
                   onAmbienceChanged: (_) {},
-                  onAddAmbience: () {},
                   onPlay: () {},
                   onStopGraceful: () {},
                   onImmediateStart: () {},
@@ -528,7 +526,6 @@ void main() {
                   canPlay: false,
                   onTypeChanged: (_) {},
                   onAmbienceChanged: (_) {},
-                  onAddAmbience: () {},
                   onPlay: () {},
                   onStopGraceful: () {},
                   onImmediateStart: () {},
@@ -572,7 +569,6 @@ void main() {
                   canPlay: true,
                   onTypeChanged: (_) {},
                   onAmbienceChanged: (_) {},
-                  onAddAmbience: () {},
                   onPlay: () => playCalled = true,
                   onStopGraceful: () {},
                   onImmediateStart: () {},
@@ -613,7 +609,6 @@ void main() {
                   canPlay: false,
                   onTypeChanged: (_) {},
                   onAmbienceChanged: (_) {},
-                  onAddAmbience: () {},
                   onPlay: () {},
                   onStopGraceful: () => stopCalled = true,
                   onImmediateStart: () {},
@@ -630,6 +625,84 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(stopCalled, isTrue);
+    });
+
+    testWidgets('shows loading spinner when stopping', (tester) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(
+            body: ListView(
+              children: [
+                HarmonizerPlayerWidget(
+                  selectedType: GenerationType.monaural,
+                  harmonizerState: const HarmonizerState(
+                    status: HarmonizerStatus.stopping,
+                    remainingInCycle: Duration(minutes: 1),
+                  ),
+                  headsetConnected: false,
+                  hexagenConnected: false,
+                  selectedAmbience: null,
+                  ambienceConfigs: const [],
+                  isActive: true,
+                  generating: false,
+                  canPlay: false,
+                  onTypeChanged: (_) {},
+                  onAmbienceChanged: (_) {},
+                  onPlay: () {},
+                  onStopGraceful: () {},
+                  onImmediateStart: () {},
+                  onImmediateEnd: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // Stopping shows a loading spinner, not the stop icon.
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.byIcon(Icons.stop_rounded), findsNothing);
+    });
+
+    testWidgets('shows remaining time during stopping', (tester) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(
+            body: ListView(
+              children: [
+                HarmonizerPlayerWidget(
+                  selectedType: GenerationType.monaural,
+                  harmonizerState: const HarmonizerState(
+                    status: HarmonizerStatus.stopping,
+                    isFirstCycle: false,
+                    totalCycleDuration: Duration(minutes: 5),
+                    remainingInCycle: Duration(minutes: 2, seconds: 30),
+                  ),
+                  headsetConnected: false,
+                  hexagenConnected: false,
+                  selectedAmbience: null,
+                  ambienceConfigs: const [],
+                  isActive: true,
+                  generating: false,
+                  canPlay: false,
+                  onTypeChanged: (_) {},
+                  onAmbienceChanged: (_) {},
+                  onPlay: () {},
+                  onStopGraceful: () {},
+                  onImmediateStart: () {},
+                  onImmediateEnd: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pump();
+
+      // During stopping, times are still displayed.
+      expect(find.text('05:00'), findsOneWidget);
+      expect(find.text('02:30'), findsOneWidget);
     });
   });
 }

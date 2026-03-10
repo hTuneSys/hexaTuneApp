@@ -583,9 +583,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerNoAmbience => 'No ambience';
 
   @override
-  String get harmonizerAddAmbience => 'Add ambience';
-
-  @override
   String get harmonizerPlay => 'Play';
 
   @override

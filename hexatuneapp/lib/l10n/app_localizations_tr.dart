@@ -584,9 +584,6 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerNoAmbience => 'Ambiyans yok';
 
   @override
-  String get harmonizerAddAmbience => 'Ambiyans ekle';
-
-  @override
   String get harmonizerPlay => 'Oynat';
 
   @override

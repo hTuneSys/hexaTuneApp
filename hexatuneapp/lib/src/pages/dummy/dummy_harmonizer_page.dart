@@ -178,8 +178,12 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     _immediateTimer = null;
   }
 
-  void _navigateToAmbience() {
-    Navigator.of(context).pushNamed('/dev/ambience');
+  void _onAmbienceChanged(AmbienceConfig? config) {
+    setState(() => _selectedAmbience = config);
+    // If playing, immediately switch ambience in the harmonizer.
+    if (_harmonizerState.status == HarmonizerStatus.playing) {
+      _harmonizer.changeAmbience(config?.id);
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -209,8 +213,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
             generating: _generating,
             canPlay: _canPlay,
             onTypeChanged: (type) => setState(() => _selectedType = type),
-            onAmbienceChanged: (c) => setState(() => _selectedAmbience = c),
-            onAddAmbience: _navigateToAmbience,
+            onAmbienceChanged: _onAmbienceChanged,
             onPlay: _play,
             onStopGraceful: _stopGraceful,
             onImmediateStart: _startImmediateTimer,
@@ -301,7 +304,6 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     required this.canPlay,
     required this.onTypeChanged,
     required this.onAmbienceChanged,
-    required this.onAddAmbience,
     required this.onPlay,
     required this.onStopGraceful,
     required this.onImmediateStart,
@@ -320,7 +322,6 @@ class HarmonizerPlayerWidget extends StatelessWidget {
   final bool canPlay;
   final ValueChanged<GenerationType> onTypeChanged;
   final ValueChanged<AmbienceConfig?> onAmbienceChanged;
-  final VoidCallback onAddAmbience;
   final VoidCallback onPlay;
   final VoidCallback onStopGraceful;
   final VoidCallback onImmediateStart;
@@ -479,39 +480,23 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     AppLocalizations l10n,
     ColorScheme colorScheme,
   ) {
-    return Row(
-      children: [
-        Expanded(
-          child: DropdownButtonFormField<AmbienceConfig?>(
-            decoration: InputDecoration(
-              labelText: l10n.harmonizerSelectAmbience,
-              border: const OutlineInputBorder(),
-              isDense: true,
-            ),
-            initialValue: selectedAmbience,
-            items: [
-              DropdownMenuItem<AmbienceConfig?>(
-                value: null,
-                child: Text(l10n.harmonizerNoAmbience),
-              ),
-              ...ambienceConfigs.map(
-                (c) => DropdownMenuItem(value: c, child: Text(c.name)),
-              ),
-            ],
-            onChanged: isActive ? null : onAmbienceChanged,
-          ),
+    return DropdownButtonFormField<AmbienceConfig?>(
+      decoration: InputDecoration(
+        labelText: l10n.harmonizerSelectAmbience,
+        border: const OutlineInputBorder(),
+        isDense: true,
+      ),
+      initialValue: selectedAmbience,
+      items: [
+        DropdownMenuItem<AmbienceConfig?>(
+          value: null,
+          child: Text(l10n.harmonizerNoAmbience),
         ),
-        const SizedBox(width: 8),
-        IconButton.filled(
-          icon: const Icon(Icons.add),
-          tooltip: l10n.harmonizerAddAmbience,
-          onPressed: isActive ? null : onAddAmbience,
-          style: IconButton.styleFrom(
-            backgroundColor: colorScheme.primaryContainer,
-            foregroundColor: colorScheme.onPrimaryContainer,
-          ),
+        ...ambienceConfigs.map(
+          (c) => DropdownMenuItem(value: c, child: Text(c.name)),
         ),
       ],
+      onChanged: onAmbienceChanged,
     );
   }
 
@@ -628,12 +613,22 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     bool isPlaying,
   ) {
     const double size = 64;
+    final isStopping = harmonizerState.status == HarmonizerStatus.stopping;
 
-    if (generating) {
-      return const SizedBox(
+    if (generating || isStopping) {
+      return SizedBox(
         width: size,
         height: size,
-        child: Center(child: CircularProgressIndicator()),
+        child: Center(
+          child: SizedBox(
+            width: size * 0.5,
+            height: size * 0.5,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              color: isStopping ? colorScheme.error : null,
+            ),
+          ),
+        ),
       );
     }
 

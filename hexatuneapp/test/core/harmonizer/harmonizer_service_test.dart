@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
+import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_command.dart';
 import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/generation_type.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_config.dart';
@@ -52,6 +53,11 @@ void main() {
     mockAmbience = MockAmbienceService();
     mockAsset = MockDspAssetService();
     mockLog = MockLogService();
+
+    // Default stubs for ambience clearing (called when ambienceId is null).
+    when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
+    when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
+    when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
 
     service = HarmonizerService(
       mockDsp,
@@ -306,8 +312,14 @@ void main() {
       await service.play(config);
       await service.stopGraceful();
 
+      // Backend stop fires asynchronously — give microtasks time to complete.
+      await Future<void>.delayed(Duration.zero);
+      await Future<void>.delayed(Duration.zero);
+
       verify(() => mockDsp.stopGraceful()).called(1);
-      expect(service.currentState.status, HarmonizerStatus.idle);
+      // State is 'stopping' (timer counts remaining to zero before idle).
+      expect(service.currentState.status, HarmonizerStatus.stopping);
+      expect(service.currentState.gracefulStopRequested, isTrue);
     });
 
     test('immediate stop calls DSP stop for binaural', () async {
@@ -379,6 +391,117 @@ void main() {
       service.state.listen((_) {}, onDone: () => gotDone = true);
       await Future<void>.delayed(Duration.zero);
       expect(gotDone, isTrue);
+    });
+  });
+
+  group('changeAmbience', () {
+    test('does nothing when idle', () async {
+      await service.changeAmbience('some-id');
+      verifyNever(() => mockDsp.clearBase());
+    });
+
+    test('clears all layers when null during play', () async {
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+      );
+
+      await service.play(config);
+
+      // Reset invocations from play to isolate changeAmbience calls.
+      clearInteractions(mockDsp);
+      when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
+      when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
+      when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
+
+      await service.changeAmbience(null);
+
+      verify(() => mockDsp.clearBase()).called(1);
+      verify(() => mockDsp.clearTexture(any())).called(4);
+      verify(() => mockDsp.clearEvent(any())).called(4);
+    });
+
+    test('is ignored for magnetic type', () async {
+      when(() => mockHexagen.isConnected).thenReturn(true);
+      when(() => mockHexagen.generateId()).thenReturn(1);
+      when(
+        () => mockHexagen.sendOperationPrepare(any()),
+      ).thenAnswer((_) async => CommandStatus.success);
+      when(
+        () => mockHexagen.sendFreqCommandAndWait(any(), any()),
+      ).thenAnswer((_) async => CommandStatus.success);
+      when(
+        () => mockHexagen.sendOperationGenerate(any()),
+      ).thenAnswer((_) async => CommandStatus.success);
+
+      const config = HarmonizerConfig(
+        type: GenerationType.magnetic,
+        steps: testPackets,
+      );
+
+      await service.play(config);
+
+      clearInteractions(mockDsp);
+      await service.changeAmbience(null);
+
+      // Magnetic does not support DSP ambience.
+      verifyNever(() => mockDsp.clearBase());
+    });
+  });
+
+  group('immediate stop', () {
+    test('cleans up to idle immediately', () async {
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.stop()).thenAnswer((_) async {});
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+      );
+
+      await service.play(config);
+      await service.stopImmediate();
+
+      verify(() => mockDsp.stop()).called(1);
+      expect(service.currentState.status, HarmonizerStatus.idle);
+    });
+
+    test('works from stopping state', () async {
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.stopGraceful()).thenAnswer((_) async {});
+      when(() => mockDsp.stop()).thenAnswer((_) async {});
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+      );
+
+      await service.play(config);
+      await service.stopGraceful();
+      expect(service.currentState.status, HarmonizerStatus.stopping);
+
+      await service.stopImmediate();
+      expect(service.currentState.status, HarmonizerStatus.idle);
     });
   });
 }

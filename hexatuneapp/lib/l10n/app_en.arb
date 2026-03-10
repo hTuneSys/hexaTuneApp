@@ -263,7 +263,6 @@
   "harmonizerHexagenRequired": "Please connect a hexaGen device for magnetic mode",
   "harmonizerSelectAmbience": "Select ambience (optional)",
   "harmonizerNoAmbience": "No ambience",
-  "harmonizerAddAmbience": "Add ambience",
   "harmonizerPlay": "Play",
   "harmonizerStop": "Stop",
   "harmonizerPreparing": "Preparing...",

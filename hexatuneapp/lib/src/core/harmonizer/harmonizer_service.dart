@@ -51,6 +51,8 @@ class HarmonizerService {
   DateTime? _playStartTime;
   int? _magneticOperationId;
   bool _magneticLooping = false;
+  bool _backendStopped = false;
+  DateTime? _stopCountdownTarget;
 
   // ---------------------------------------------------------------------------
   // Public API
@@ -157,7 +159,8 @@ class HarmonizerService {
     }
   }
 
-  /// Requests a graceful stop — the current cycle completes before stopping.
+  /// Requests a graceful stop — the remaining countdown continues to zero,
+  /// then the harmonizer transitions to idle.
   Future<void> stopGraceful() async {
     if (_currentState.status != HarmonizerStatus.playing) return;
 
@@ -166,6 +169,11 @@ class HarmonizerService {
       category: LogCategory.dsp,
     );
 
+    // Capture the countdown target so the timer can count to zero.
+    final remaining = _currentState.remainingInCycle;
+    _stopCountdownTarget = DateTime.now().add(remaining);
+    _backendStopped = false;
+
     _updateState(
       _currentState.copyWith(
         status: HarmonizerStatus.stopping,
@@ -173,6 +181,15 @@ class HarmonizerService {
       ),
     );
 
+    // Fire back-end stop without blocking the timer.
+    unawaited(_performBackendStop());
+  }
+
+  /// Stops the back-end (DSP / HexaGen) asynchronously.
+  ///
+  /// Sets [_backendStopped] to `true` once done so the time-tracker knows
+  /// it is safe to finalize cleanup.
+  Future<void> _performBackendStop() async {
     try {
       final type = _currentState.activeType;
       if (type != null && type.usesDsp) {
@@ -180,7 +197,19 @@ class HarmonizerService {
       } else if (type == GenerationType.magnetic) {
         await _stopMagnetic();
       }
-    } finally {
+    } catch (e, st) {
+      _logService.error(
+        'Backend stop error: $e',
+        category: LogCategory.dsp,
+        exception: e,
+        stackTrace: st,
+      );
+    }
+    _backendStopped = true;
+
+    // If the timer already reached zero while we were stopping, clean up now.
+    if (_currentState.status == HarmonizerStatus.stopping &&
+        _currentState.remainingInCycle <= Duration.zero) {
       _cleanup();
     }
   }
@@ -211,6 +240,8 @@ class HarmonizerService {
   void dispose() {
     _timeTracker?.cancel();
     _magneticLooping = false;
+    _backendStopped = false;
+    _stopCountdownTarget = null;
     _stateController.close();
     _logService.devLog('HarmonizerService disposed', category: LogCategory.dsp);
   }
@@ -220,9 +251,11 @@ class HarmonizerService {
   // ---------------------------------------------------------------------------
 
   Future<void> _startDspPlayback(HarmonizerConfig config) async {
-    // Load ambience if specified.
+    // Load or clear ambience.
     if (config.ambienceId != null) {
       await _loadAmbience(config.ambienceId!);
+    } else {
+      await _clearAllAmbienceLayers();
     }
 
     // Configure binaural mode: carrier fixed at 220 Hz via DspConstants.
@@ -263,8 +296,8 @@ class HarmonizerService {
       return;
     }
 
-    // Clear previous layers.
-    await _dspService.clearBase();
+    // Clear ALL previous layers.
+    await _clearAllAmbienceLayers();
 
     // Apply gains.
     _dspService.setBaseGain(config.baseGain);
@@ -310,6 +343,40 @@ class HarmonizerService {
       if (a.id == id) return a;
     }
     return null;
+  }
+
+  /// Clears all ambience layers from DSP memory.
+  Future<void> _clearAllAmbienceLayers() async {
+    await _dspService.clearBase();
+    for (var i = 0; i < 4; i++) {
+      await _dspService.clearTexture(i);
+      await _dspService.clearEvent(i);
+    }
+  }
+
+  /// Changes ambience while playing. Pass `null` to remove ambience.
+  ///
+  /// If the harmonizer is not in a DSP-playback state (monaural/binaural),
+  /// or is not currently playing, this method does nothing.
+  Future<void> changeAmbience(String? ambienceId) async {
+    final status = _currentState.status;
+    if (status != HarmonizerStatus.playing &&
+        status != HarmonizerStatus.preparing) {
+      return;
+    }
+
+    final type = _currentState.activeType;
+    if (type == null || !type.supportsDspAmbience) return;
+
+    if (ambienceId == null) {
+      await _clearAllAmbienceLayers();
+      _logService.info(
+        'Ambience cleared during playback',
+        category: LogCategory.dsp,
+      );
+    } else {
+      await _loadAmbience(ambienceId);
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -367,13 +434,26 @@ class HarmonizerService {
   // ---------------------------------------------------------------------------
 
   void _startTimeTracker() {
+    _backendStopped = false;
+    _stopCountdownTarget = null;
     _timeTracker?.cancel();
     _timeTracker = Timer.periodic(const Duration(seconds: 1), (_) {
-      if (_currentState.status != HarmonizerStatus.playing) {
+      final status = _currentState.status;
+
+      // Only run while playing or stopping (countdown to zero).
+      if (status != HarmonizerStatus.playing &&
+          status != HarmonizerStatus.stopping) {
         _timeTracker?.cancel();
         return;
       }
 
+      // --- Stopping: dedicated countdown to zero ---
+      if (status == HarmonizerStatus.stopping) {
+        _handleStoppingTick();
+        return;
+      }
+
+      // --- Playing ---
       final elapsed = _playStartTime != null
           ? DateTime.now().difference(_playStartTime!)
           : Duration.zero;
@@ -387,24 +467,45 @@ class HarmonizerService {
       final cycleMs = cycleDur.inMilliseconds;
       final elapsedMs = elapsed.inMilliseconds;
 
+      final isMagnetic = _currentState.activeType == GenerationType.magnetic;
+
+      // Magnetic mode: single pass — auto-stop after first cycle.
+      if (isMagnetic) {
+        final remaining = Duration(
+          milliseconds: (cycleMs - elapsedMs).clamp(0, cycleMs),
+        );
+        final stepIndex = _computeStepIndex(elapsedMs.clamp(0, cycleMs));
+
+        if (remaining <= Duration.zero) {
+          _updateState(
+            _currentState.copyWith(
+              remainingInCycle: Duration.zero,
+              currentStepIndex: _currentState.sequence.length - 1,
+            ),
+          );
+          // Auto-stop magnetic after single pass.
+          _timeTracker?.cancel();
+          _timeTracker = null;
+          unawaited(_autoStopMagnetic());
+          return;
+        }
+
+        _updateState(
+          _currentState.copyWith(
+            currentCycle: 0,
+            currentStepIndex: stepIndex,
+            remainingInCycle: remaining,
+            isFirstCycle: true,
+          ),
+        );
+        return;
+      }
+
+      // DSP modes: infinite loop.
       final currentCycle = cycleMs > 0 ? elapsedMs ~/ cycleMs : 0;
       final positionInCycle = cycleMs > 0 ? elapsedMs % cycleMs : 0;
       final remaining = Duration(milliseconds: cycleMs - positionInCycle);
-
-      // Determine current step index.
-      var stepIndex = 0;
-      var accumulated = 0;
-      final steps = _currentState.sequence;
-      for (var i = 0; i < steps.length; i++) {
-        final stepMs = steps[i].durationMs;
-        if (accumulated + stepMs > positionInCycle) {
-          stepIndex = i;
-          break;
-        }
-        accumulated += stepMs;
-        if (i == steps.length - 1) stepIndex = i;
-      }
-
+      final stepIndex = _computeStepIndex(positionInCycle);
       final isFirst = currentCycle == 0;
 
       _updateState(
@@ -416,6 +517,56 @@ class HarmonizerService {
         ),
       );
     });
+  }
+
+  /// Handles a single timer tick while the status is [HarmonizerStatus.stopping].
+  ///
+  /// Counts down from the captured [_stopCountdownTarget] to zero.
+  void _handleStoppingTick() {
+    if (_stopCountdownTarget == null) {
+      // No target — clean up immediately when the backend is done.
+      if (_backendStopped) _cleanup();
+      return;
+    }
+
+    final remaining = _stopCountdownTarget!.difference(DateTime.now());
+    if (remaining <= Duration.zero) {
+      _updateState(_currentState.copyWith(remainingInCycle: Duration.zero));
+      if (_backendStopped) {
+        _cleanup();
+      }
+      // If backend hasn't stopped yet, keep the timer alive;
+      // _performBackendStop will call _cleanup when it finishes.
+      return;
+    }
+
+    _updateState(_currentState.copyWith(remainingInCycle: remaining));
+  }
+
+  /// Auto-stop for magnetic mode after the single pass completes.
+  Future<void> _autoStopMagnetic() async {
+    _logService.info(
+      'Magnetic single-pass complete, auto-stopping',
+      category: LogCategory.hardware,
+    );
+    await _stopMagnetic();
+    _cleanup();
+  }
+
+  int _computeStepIndex(int positionMs) {
+    var stepIndex = 0;
+    var accumulated = 0;
+    final steps = _currentState.sequence;
+    for (var i = 0; i < steps.length; i++) {
+      final stepMs = steps[i].durationMs;
+      if (accumulated + stepMs > positionMs) {
+        stepIndex = i;
+        break;
+      }
+      accumulated += stepMs;
+      if (i == steps.length - 1) stepIndex = i;
+    }
+    return stepIndex;
   }
 
   // ---------------------------------------------------------------------------
@@ -439,6 +590,8 @@ class HarmonizerService {
     _timeTracker = null;
     _playStartTime = null;
     _magneticLooping = false;
+    _backendStopped = false;
+    _stopCountdownTarget = null;
 
     _updateState(const HarmonizerState());
 

@@ -263,7 +263,6 @@
   "harmonizerHexagenRequired": "Manyetik mod için lütfen bir hexaGen cihazı bağlayınız",
   "harmonizerSelectAmbience": "Ambiyans seçin (opsiyonel)",
   "harmonizerNoAmbience": "Ambiyans yok",
-  "harmonizerAddAmbience": "Ambiyans ekle",
   "harmonizerPlay": "Oynat",
   "harmonizerStop": "Durdur",
   "harmonizerPreparing": "Hazırlanıyor...",
