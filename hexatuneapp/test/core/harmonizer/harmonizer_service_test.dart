@@ -187,7 +187,6 @@ void main() {
     test('emits preparing then playing on successful monaural play', () async {
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -217,7 +216,6 @@ void main() {
       // Verify DSP was configured with 220 Hz carrier and AM mode.
       verify(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: 220.0,
           binauralEnabled: false,
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -228,7 +226,6 @@ void main() {
       when(() => mockHeadset.isConnected).thenReturn(true);
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -245,7 +242,6 @@ void main() {
 
       verify(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: 220.0,
           binauralEnabled: true,
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -255,7 +251,6 @@ void main() {
     test('rejects play when already playing', () async {
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -275,7 +270,6 @@ void main() {
     test('DSP start failure sets error state', () async {
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -297,7 +291,6 @@ void main() {
     test('graceful stop calls DSP stopGraceful for monaural', () async {
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -321,7 +314,6 @@ void main() {
       when(() => mockHeadset.isConnected).thenReturn(true);
       when(
         () => mockDsp.updateBinauralConfig(
-          carrierFrequency: any(named: 'carrierFrequency'),
           binauralEnabled: any(named: 'binauralEnabled'),
           cycleSteps: any(named: 'cycleSteps'),
         ),
@@ -358,7 +350,6 @@ void main() {
       () async {
         when(
           () => mockDsp.updateBinauralConfig(
-            carrierFrequency: any(named: 'carrierFrequency'),
             binauralEnabled: any(named: 'binauralEnabled'),
             cycleSteps: any(named: 'cycleSteps'),
           ),

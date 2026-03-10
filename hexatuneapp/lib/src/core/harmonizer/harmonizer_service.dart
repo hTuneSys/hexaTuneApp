@@ -7,7 +7,6 @@ import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
-import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/cycle_step.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
@@ -226,12 +225,11 @@ class HarmonizerService {
       await _loadAmbience(config.ambienceId!);
     }
 
-    // Configure binaural mode: carrier fixed at 220 Hz.
+    // Configure binaural mode: carrier fixed at 220 Hz via DspConstants.
     final isBinaural = config.type == GenerationType.binaural;
     final cycleSteps = config.steps.map(_packetToCycleStep).toList();
 
     _dspService.updateBinauralConfig(
-      carrierFrequency: DspConstants.harmonizerCarrierFrequency,
       binauralEnabled: isBinaural,
       cycleSteps: cycleSteps,
     );

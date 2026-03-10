@@ -13,7 +13,7 @@ void main() {
       expect(state.isInitialized, isFalse);
       expect(state.isPlaying, isFalse);
       expect(state.isBaseLoaded, isFalse);
-      expect(state.carrierFrequency, 400.0);
+      expect(state.carrierFrequency, DspConstants.carrierFrequency);
       expect(state.binauralEnabled, isTrue);
       expect(state.baseGain, DspConstants.defaultBaseGain);
       expect(state.textureGain, DspConstants.defaultTextureGain);

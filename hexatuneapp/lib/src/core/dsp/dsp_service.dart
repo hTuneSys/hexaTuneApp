@@ -39,7 +39,7 @@ class DspService {
   DateTime? _startTime;
 
   // Current configuration state
-  double _carrierFreq = DspConstants.defaultCarrierFrequency;
+  final double _carrierFreq = DspConstants.carrierFrequency;
   bool _binaural = true;
   List<CycleStep> _steps = [
     const CycleStep(
@@ -101,14 +101,15 @@ class DspService {
 
   /// Update binaural config without reinitializing the engine.
   ///
+  /// The carrier frequency is fixed at [DspConstants.carrierFrequency] (220 Hz)
+  /// and cannot be changed.
+  ///
   /// Returns `true` if the engine config was updated, `false` if only local
   /// state was updated (engine not yet initialized).
   bool updateBinauralConfig({
-    double? carrierFrequency,
     bool? binauralEnabled,
     List<CycleStep>? cycleSteps,
   }) {
-    if (carrierFrequency != null) _carrierFreq = carrierFrequency;
     if (binauralEnabled != null) _binaural = binauralEnabled;
     if (cycleSteps != null) _steps = List.from(cycleSteps);
 

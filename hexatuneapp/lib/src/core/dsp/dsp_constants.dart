@@ -48,14 +48,11 @@ class DspConstants {
 
   // --- Default binaural configuration ---
 
-  /// Default carrier frequency in Hz (legacy, used by DspService default).
-  static const double defaultCarrierFrequency = 400.0;
-
-  /// Harmonizer fixed carrier / LO frequency in Hz.
+  /// Fixed carrier / LO frequency in Hz for all DSP modes.
   ///
-  /// Monaural: left channel plays at this frequency.
-  /// Binaural: left ear = this frequency, right ear = this + packet value.
-  static const double harmonizerCarrierFrequency = 220.0;
+  /// Monaural: single channel plays at this frequency + delta.
+  /// Binaural: left ear = this frequency, right ear = this + delta.
+  static const double carrierFrequency = 220.0;
 
   /// Default frequency delta per cycle step in Hz.
   static const double defaultFrequencyDelta = 5.0;

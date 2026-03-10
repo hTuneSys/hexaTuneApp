@@ -17,7 +17,7 @@ mixin _$DspState {
 /// Whether the DSP engine has been initialized.
  bool get isInitialized;/// Whether audio is currently playing.
  bool get isPlaying;/// Whether a base layer has been loaded.
- bool get isBaseLoaded;/// Current carrier frequency in Hz.
+ bool get isBaseLoaded;/// Fixed carrier frequency in Hz (220 Hz, not configurable).
  double get carrierFrequency;/// Whether binaural mode is enabled (vs AM mono).
  bool get binauralEnabled;/// Current base gain (0.0–1.0).
  double get baseGain;/// Current texture gain (0.0–1.0).
@@ -227,7 +227,7 @@ return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.car
 
 
 class _DspState extends DspState {
-  const _DspState({this.isInitialized = false, this.isPlaying = false, this.isBaseLoaded = false, this.carrierFrequency = 400.0, this.binauralEnabled = true, this.baseGain = 0.6, this.textureGain = 0.3, this.eventGain = 0.4, this.binauralGain = 0.15, this.masterGain = 1.0, this.error}): super._();
+  const _DspState({this.isInitialized = false, this.isPlaying = false, this.isBaseLoaded = false, this.carrierFrequency = 220.0, this.binauralEnabled = true, this.baseGain = 0.6, this.textureGain = 0.3, this.eventGain = 0.4, this.binauralGain = 0.15, this.masterGain = 1.0, this.error}): super._();
   
 
 /// Whether the DSP engine has been initialized.
@@ -236,7 +236,7 @@ class _DspState extends DspState {
 @override@JsonKey() final  bool isPlaying;
 /// Whether a base layer has been loaded.
 @override@JsonKey() final  bool isBaseLoaded;
-/// Current carrier frequency in Hz.
+/// Fixed carrier frequency in Hz (220 Hz, not configurable).
 @override@JsonKey() final  double carrierFrequency;
 /// Whether binaural mode is enabled (vs AM mono).
 @override@JsonKey() final  bool binauralEnabled;

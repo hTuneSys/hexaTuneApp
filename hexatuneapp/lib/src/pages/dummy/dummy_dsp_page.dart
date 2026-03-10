@@ -33,7 +33,6 @@ class _DummyDspPageState extends State<DummyDspPage> {
   late final DspAssetService _assetService;
   late final AmbienceService _ambienceService;
 
-  final _carrierFreqCtrl = TextEditingController(text: '220.0');
   bool _binauralEnabled = true;
   final List<_CycleStepEntry> _cycleSteps = [
     _CycleStepEntry(
@@ -69,7 +68,6 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   @override
   void dispose() {
-    _carrierFreqCtrl.dispose();
     for (final s in _cycleSteps) {
       s.deltaCtrl.dispose();
       s.durationCtrl.dispose();
@@ -169,7 +167,6 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   Future<void> _play() async {
     _dspService.updateBinauralConfig(
-      carrierFrequency: double.tryParse(_carrierFreqCtrl.text) ?? 400.0,
       binauralEnabled: _binauralEnabled,
       cycleSteps: _cycleSteps
           .map(
@@ -281,12 +278,6 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
                   // Binaural Configuration
                   _buildSectionTitle(theme, l10n.dspBinauralConfig),
-                  _buildNumberField(
-                    _carrierFreqCtrl,
-                    l10n.dspCarrierFrequency,
-                    enabled: !_isPlaying,
-                  ),
-                  const SizedBox(height: 8),
                   SwitchListTile(
                     title: Text(
                       l10n.dspBinauralMode,

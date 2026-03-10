@@ -18,8 +18,8 @@ abstract class DspState with _$DspState {
     /// Whether a base layer has been loaded.
     @Default(false) bool isBaseLoaded,
 
-    /// Current carrier frequency in Hz.
-    @Default(400.0) double carrierFrequency,
+    /// Fixed carrier frequency in Hz (220 Hz, not configurable).
+    @Default(220.0) double carrierFrequency,
 
     /// Whether binaural mode is enabled (vs AM mono).
     @Default(true) bool binauralEnabled,

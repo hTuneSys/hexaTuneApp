@@ -23,7 +23,7 @@ void main() {
 
       test('default carrier frequency matches', () {
         const state = DspState();
-        expect(state.carrierFrequency, DspConstants.defaultCarrierFrequency);
+        expect(state.carrierFrequency, DspConstants.carrierFrequency);
       });
 
       test('default binaural enabled matches', () {

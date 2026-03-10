@@ -85,8 +85,8 @@ void main() {
     });
 
     group('binaural configuration', () {
-      test('defaultCarrierFrequency is 400 Hz', () {
-        expect(DspConstants.defaultCarrierFrequency, 400.0);
+      test('carrierFrequency is 220 Hz', () {
+        expect(DspConstants.carrierFrequency, 220.0);
       });
 
       test('defaultFrequencyDelta is 5 Hz', () {
