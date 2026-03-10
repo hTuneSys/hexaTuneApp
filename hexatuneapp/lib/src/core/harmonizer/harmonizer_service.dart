@@ -159,8 +159,13 @@ class HarmonizerService {
     }
   }
 
-  /// Requests a graceful stop — the remaining countdown continues to zero,
-  /// then the harmonizer transitions to idle.
+  /// Requests a graceful stop.
+  ///
+  /// For DSP modes (monaural / binaural) the remaining countdown continues to
+  /// zero before the harmonizer transitions to idle.
+  /// For magnetic mode the timer stops immediately, the button enters loading
+  /// state, and the device is sent a RESET.  The play button stays disabled
+  /// until the HexaGen device reconnects.
   Future<void> stopGraceful() async {
     if (_currentState.status != HarmonizerStatus.playing) return;
 
@@ -169,7 +174,27 @@ class HarmonizerService {
       category: LogCategory.dsp,
     );
 
-    // Capture the countdown target so the timer can count to zero.
+    final isMagnetic = _currentState.activeType == GenerationType.magnetic;
+
+    if (isMagnetic) {
+      // Magnetic: stop timer immediately, show loading, fire RESET.
+      _timeTracker?.cancel();
+      _timeTracker = null;
+      _backendStopped = false;
+
+      _updateState(
+        _currentState.copyWith(
+          status: HarmonizerStatus.stopping,
+          gracefulStopRequested: true,
+          remainingInCycle: Duration.zero,
+        ),
+      );
+
+      unawaited(_performBackendStop());
+      return;
+    }
+
+    // DSP modes: let the countdown continue to zero.
     final remaining = _currentState.remainingInCycle;
     _stopCountdownTarget = DateTime.now().add(remaining);
     _backendStopped = false;
@@ -544,12 +569,34 @@ class HarmonizerService {
   }
 
   /// Auto-stop for magnetic mode after the single pass completes.
+  ///
+  /// Transitions to [HarmonizerStatus.stopping] (loading spinner), sends
+  /// RESET to the device, then cleans up to idle. The play button remains
+  /// disabled until the HexaGen device reconnects.
   Future<void> _autoStopMagnetic() async {
     _logService.info(
       'Magnetic single-pass complete, auto-stopping',
       category: LogCategory.hardware,
     );
-    await _stopMagnetic();
+
+    _updateState(
+      _currentState.copyWith(
+        status: HarmonizerStatus.stopping,
+        gracefulStopRequested: true,
+        remainingInCycle: Duration.zero,
+      ),
+    );
+
+    try {
+      await _stopMagnetic();
+    } catch (e, st) {
+      _logService.error(
+        'Magnetic auto-stop error: $e',
+        category: LogCategory.hardware,
+        exception: e,
+        stackTrace: st,
+      );
+    }
     _cleanup();
   }
 
