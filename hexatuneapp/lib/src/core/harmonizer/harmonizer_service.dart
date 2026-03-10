@@ -313,6 +313,11 @@ class HarmonizerService {
   }
 
   Future<void> _loadAmbience(String ambienceId) async {
+    // Ensure the audio asset catalog is available for lookups.
+    if (_assetService.allAssets.isEmpty) {
+      await _assetService.discover();
+    }
+
     final config = _ambienceService.findById(ambienceId);
     if (config == null) {
       _logService.warning(

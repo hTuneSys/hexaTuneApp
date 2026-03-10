@@ -5,8 +5,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
+import 'package:hexatuneapp/src/core/dsp/ambience/models/ambience_config.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
+import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_command.dart';
@@ -58,6 +60,10 @@ void main() {
     when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
     when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
     when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
+
+    // Default stubs for asset catalog (empty until discover is called).
+    when(() => mockAsset.allAssets).thenReturn([]);
+    when(() => mockAsset.discover()).thenAnswer((_) async => true);
 
     service = HarmonizerService(
       mockDsp,
@@ -532,6 +538,156 @@ void main() {
 
       await service.stopImmediate();
       expect(service.currentState.status, HarmonizerStatus.idle);
+    });
+  });
+
+  group('ambience loading', () {
+    test('calls discover when allAssets is empty', () async {
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.setBaseGain(any())).thenReturn(null);
+      when(() => mockDsp.setTextureGain(any())).thenReturn(null);
+      when(() => mockDsp.setEventGain(any())).thenReturn(null);
+      when(() => mockDsp.setMasterGain(any())).thenReturn(null);
+
+      // findById returns a config with a base asset.
+      when(() => mockAmbience.findById('amb-1')).thenReturn(
+        AmbienceConfig(
+          id: 'amb-1',
+          name: 'Test',
+          baseAssetId: 'forest',
+          createdAt: '2025-01-01T00:00:00Z',
+          updatedAt: '2025-01-01T00:00:00Z',
+        ),
+      );
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+        ambienceId: 'amb-1',
+      );
+
+      await service.play(config);
+
+      verify(() => mockAsset.discover()).called(1);
+    });
+
+    test('skips discover when allAssets is not empty', () async {
+      // Pre-populate assets so discover is not needed.
+      when(() => mockAsset.allAssets).thenReturn(const [
+        AudioAsset(
+          id: 'forest',
+          layerType: 'base',
+          name: 'Forest',
+          assetPath: 'assets/audio/ambience/base/forest.ogg',
+        ),
+      ]);
+
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.setBaseGain(any())).thenReturn(null);
+      when(() => mockDsp.setTextureGain(any())).thenReturn(null);
+      when(() => mockDsp.setEventGain(any())).thenReturn(null);
+      when(() => mockDsp.setMasterGain(any())).thenReturn(null);
+      when(() => mockDsp.loadBase(any())).thenAnswer((_) async => 0);
+
+      when(() => mockAmbience.findById('amb-1')).thenReturn(
+        AmbienceConfig(
+          id: 'amb-1',
+          name: 'Test',
+          baseAssetId: 'forest',
+          createdAt: '2025-01-01T00:00:00Z',
+          updatedAt: '2025-01-01T00:00:00Z',
+        ),
+      );
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+        ambienceId: 'amb-1',
+      );
+
+      await service.play(config);
+
+      verifyNever(() => mockAsset.discover());
+    });
+
+    test('loads base, texture and event layers from asset catalog', () async {
+      when(() => mockAsset.allAssets).thenReturn(const [
+        AudioAsset(
+          id: 'forest',
+          layerType: 'base',
+          name: 'Forest',
+          assetPath: 'assets/audio/ambience/base/forest.ogg',
+        ),
+        AudioAsset(
+          id: 'wind',
+          layerType: 'texture',
+          name: 'Wind',
+          assetPath: 'assets/audio/ambience/texture/wind.ogg',
+        ),
+        AudioAsset(
+          id: 'bird',
+          layerType: 'events',
+          name: 'Bird',
+          assetPath: 'assets/audio/ambience/events/bird.ogg',
+        ),
+      ]);
+
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.setBaseGain(any())).thenReturn(null);
+      when(() => mockDsp.setTextureGain(any())).thenReturn(null);
+      when(() => mockDsp.setEventGain(any())).thenReturn(null);
+      when(() => mockDsp.setMasterGain(any())).thenReturn(null);
+      when(() => mockDsp.loadBase(any())).thenAnswer((_) async => 0);
+      when(() => mockDsp.loadTexture(any(), any())).thenAnswer((_) async => 0);
+      when(() => mockDsp.loadEvent(any(), any())).thenAnswer((_) async => 0);
+
+      when(() => mockAmbience.findById('amb-1')).thenReturn(
+        AmbienceConfig(
+          id: 'amb-1',
+          name: 'Full',
+          baseAssetId: 'forest',
+          textureAssetIds: const ['wind'],
+          eventAssetIds: const ['bird'],
+          createdAt: '2025-01-01T00:00:00Z',
+          updatedAt: '2025-01-01T00:00:00Z',
+        ),
+      );
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+        ambienceId: 'amb-1',
+      );
+
+      await service.play(config);
+
+      verify(
+        () => mockDsp.loadBase('assets/audio/ambience/base/forest.ogg'),
+      ).called(1);
+      verify(
+        () => mockDsp.loadTexture(0, 'assets/audio/ambience/texture/wind.ogg'),
+      ).called(1);
+      verify(
+        () => mockDsp.loadEvent(0, 'assets/audio/ambience/events/bird.ogg'),
+      ).called(1);
     });
   });
 }
