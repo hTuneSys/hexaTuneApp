@@ -884,20 +884,17 @@ class _SoundChip extends StatelessWidget {
                           asset.iconAsset.endsWith('.svg')
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
-                          child: Container(
-                            color: const Color(0xFFF5F5F5),
-                            child: SvgPicture.asset(
-                              asset.iconAsset,
-                              width: 48,
-                              height: 48,
-                              fit: BoxFit.contain,
-                              placeholderBuilder: (_) => Icon(
-                                Icons.music_note,
-                                size: 32,
-                                color: selected
-                                    ? colorScheme.onPrimaryContainer
-                                    : colorScheme.onSurfaceVariant,
-                              ),
+                          child: SvgPicture.asset(
+                            asset.iconAsset,
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.contain,
+                            placeholderBuilder: (_) => Icon(
+                              Icons.music_note,
+                              size: 32,
+                              color: selected
+                                  ? colorScheme.onPrimaryContainer
+                                  : colorScheme.onSurfaceVariant,
                             ),
                           ),
                         )
