@@ -889,12 +889,6 @@ class _SoundChip extends StatelessWidget {
                             width: 48,
                             height: 48,
                             fit: BoxFit.cover,
-                            colorFilter: ColorFilter.mode(
-                              selected
-                                  ? colorScheme.onPrimaryContainer
-                                  : colorScheme.onSurfaceVariant,
-                              BlendMode.srcIn,
-                            ),
                             placeholderBuilder: (_) => Icon(
                               Icons.music_note,
                               size: 32,
