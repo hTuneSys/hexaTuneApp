@@ -17,7 +17,8 @@ mixin _$HarmonizerConfig {
 /// The generation type to use.
  GenerationType get type;/// Optional ambience config ID (monaural / binaural only).
  String? get ambienceId;/// The harmonic packet sequence to play (from API response).
- List<HarmonicPacketDto> get steps;
+ List<HarmonicPacketDto> get steps;/// The formula ID that generated this sequence (for UI state restoration).
+ String? get formulaId;
 /// Create a copy of HarmonizerConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +29,16 @@ $HarmonizerConfigCopyWith<HarmonizerConfig> get copyWith => _$HarmonizerConfigCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizerConfig&&(identical(other.type, type) || other.type == type)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other.steps, steps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizerConfig&&(identical(other.type, type) || other.type == type)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other.steps, steps)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,ambienceId,const DeepCollectionEquality().hash(steps));
+int get hashCode => Object.hash(runtimeType,type,ambienceId,const DeepCollectionEquality().hash(steps),formulaId);
 
 @override
 String toString() {
-  return 'HarmonizerConfig(type: $type, ambienceId: $ambienceId, steps: $steps)';
+  return 'HarmonizerConfig(type: $type, ambienceId: $ambienceId, steps: $steps, formulaId: $formulaId)';
 }
 
 
@@ -48,7 +49,7 @@ abstract mixin class $HarmonizerConfigCopyWith<$Res>  {
   factory $HarmonizerConfigCopyWith(HarmonizerConfig value, $Res Function(HarmonizerConfig) _then) = _$HarmonizerConfigCopyWithImpl;
 @useResult
 $Res call({
- GenerationType type, String? ambienceId, List<HarmonicPacketDto> steps
+ GenerationType type, String? ambienceId, List<HarmonicPacketDto> steps, String? formulaId
 });
 
 
@@ -65,12 +66,13 @@ class _$HarmonizerConfigCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizerConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? ambienceId = freezed,Object? steps = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? ambienceId = freezed,Object? steps = null,Object? formulaId = freezed,}) {
   return _then(_self.copyWith(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as GenerationType,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
 as String?,steps: null == steps ? _self.steps : steps // ignore: cast_nullable_to_non_nullable
-as List<HarmonicPacketDto>,
+as List<HarmonicPacketDto>,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps,  String? formulaId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HarmonizerConfig() when $default != null:
-return $default(_that.type,_that.ambienceId,_that.steps);case _:
+return $default(_that.type,_that.ambienceId,_that.steps,_that.formulaId);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.type,_that.ambienceId,_that.steps);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps,  String? formulaId)  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizerConfig():
-return $default(_that.type,_that.ambienceId,_that.steps);case _:
+return $default(_that.type,_that.ambienceId,_that.steps,_that.formulaId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.type,_that.ambienceId,_that.steps);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( GenerationType type,  String? ambienceId,  List<HarmonicPacketDto> steps,  String? formulaId)?  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizerConfig() when $default != null:
-return $default(_that.type,_that.ambienceId,_that.steps);case _:
+return $default(_that.type,_that.ambienceId,_that.steps,_that.formulaId);case _:
   return null;
 
 }
@@ -211,7 +213,7 @@ return $default(_that.type,_that.ambienceId,_that.steps);case _:
 
 
 class _HarmonizerConfig implements HarmonizerConfig {
-  const _HarmonizerConfig({required this.type, this.ambienceId, required final  List<HarmonicPacketDto> steps}): _steps = steps;
+  const _HarmonizerConfig({required this.type, this.ambienceId, required final  List<HarmonicPacketDto> steps, this.formulaId}): _steps = steps;
   
 
 /// The generation type to use.
@@ -227,6 +229,8 @@ class _HarmonizerConfig implements HarmonizerConfig {
   return EqualUnmodifiableListView(_steps);
 }
 
+/// The formula ID that generated this sequence (for UI state restoration).
+@override final  String? formulaId;
 
 /// Create a copy of HarmonizerConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -238,16 +242,16 @@ _$HarmonizerConfigCopyWith<_HarmonizerConfig> get copyWith => __$HarmonizerConfi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizerConfig&&(identical(other.type, type) || other.type == type)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other._steps, _steps));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizerConfig&&(identical(other.type, type) || other.type == type)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other._steps, _steps)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,ambienceId,const DeepCollectionEquality().hash(_steps));
+int get hashCode => Object.hash(runtimeType,type,ambienceId,const DeepCollectionEquality().hash(_steps),formulaId);
 
 @override
 String toString() {
-  return 'HarmonizerConfig(type: $type, ambienceId: $ambienceId, steps: $steps)';
+  return 'HarmonizerConfig(type: $type, ambienceId: $ambienceId, steps: $steps, formulaId: $formulaId)';
 }
 
 
@@ -258,7 +262,7 @@ abstract mixin class _$HarmonizerConfigCopyWith<$Res> implements $HarmonizerConf
   factory _$HarmonizerConfigCopyWith(_HarmonizerConfig value, $Res Function(_HarmonizerConfig) _then) = __$HarmonizerConfigCopyWithImpl;
 @override @useResult
 $Res call({
- GenerationType type, String? ambienceId, List<HarmonicPacketDto> steps
+ GenerationType type, String? ambienceId, List<HarmonicPacketDto> steps, String? formulaId
 });
 
 
@@ -275,12 +279,13 @@ class __$HarmonizerConfigCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizerConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? ambienceId = freezed,Object? steps = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? type = null,Object? ambienceId = freezed,Object? steps = null,Object? formulaId = freezed,}) {
   return _then(_HarmonizerConfig(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as GenerationType,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
 as String?,steps: null == steps ? _self._steps : steps // ignore: cast_nullable_to_non_nullable
-as List<HarmonicPacketDto>,
+as List<HarmonicPacketDto>,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

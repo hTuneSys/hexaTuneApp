@@ -17,7 +17,8 @@ mixin _$HarmonizerState {
 /// The generation type currently active (null when idle).
  GenerationType? get activeType;/// Current status of the harmonizer.
  HarmonizerStatus get status;/// The ambience config ID loaded for this session (monaural/binaural).
- String? get ambienceId;/// The frequency step sequence from the API.
+ String? get ambienceId;/// The formula ID that produced the current sequence (for UI restoration).
+ String? get formulaId;/// The frequency step sequence from the API.
  List<HarmonicPacketDto> get sequence;/// Current infinite-loop cycle number (0-based).
  int get currentCycle;/// Index of the step currently playing within the cycle.
  int get currentStepIndex;/// Total duration of one full cycle (excluding one-shot after first).
@@ -37,16 +38,16 @@ $HarmonizerStateCopyWith<HarmonizerState> get copyWith => _$HarmonizerStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizerState&&(identical(other.activeType, activeType) || other.activeType == activeType)&&(identical(other.status, status) || other.status == status)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other.sequence, sequence)&&(identical(other.currentCycle, currentCycle) || other.currentCycle == currentCycle)&&(identical(other.currentStepIndex, currentStepIndex) || other.currentStepIndex == currentStepIndex)&&(identical(other.totalCycleDuration, totalCycleDuration) || other.totalCycleDuration == totalCycleDuration)&&(identical(other.firstCycleDuration, firstCycleDuration) || other.firstCycleDuration == firstCycleDuration)&&(identical(other.remainingInCycle, remainingInCycle) || other.remainingInCycle == remainingInCycle)&&(identical(other.isFirstCycle, isFirstCycle) || other.isFirstCycle == isFirstCycle)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.gracefulStopRequested, gracefulStopRequested) || other.gracefulStopRequested == gracefulStopRequested));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizerState&&(identical(other.activeType, activeType) || other.activeType == activeType)&&(identical(other.status, status) || other.status == status)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&const DeepCollectionEquality().equals(other.sequence, sequence)&&(identical(other.currentCycle, currentCycle) || other.currentCycle == currentCycle)&&(identical(other.currentStepIndex, currentStepIndex) || other.currentStepIndex == currentStepIndex)&&(identical(other.totalCycleDuration, totalCycleDuration) || other.totalCycleDuration == totalCycleDuration)&&(identical(other.firstCycleDuration, firstCycleDuration) || other.firstCycleDuration == firstCycleDuration)&&(identical(other.remainingInCycle, remainingInCycle) || other.remainingInCycle == remainingInCycle)&&(identical(other.isFirstCycle, isFirstCycle) || other.isFirstCycle == isFirstCycle)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.gracefulStopRequested, gracefulStopRequested) || other.gracefulStopRequested == gracefulStopRequested));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,activeType,status,ambienceId,const DeepCollectionEquality().hash(sequence),currentCycle,currentStepIndex,totalCycleDuration,firstCycleDuration,remainingInCycle,isFirstCycle,errorMessage,gracefulStopRequested);
+int get hashCode => Object.hash(runtimeType,activeType,status,ambienceId,formulaId,const DeepCollectionEquality().hash(sequence),currentCycle,currentStepIndex,totalCycleDuration,firstCycleDuration,remainingInCycle,isFirstCycle,errorMessage,gracefulStopRequested);
 
 @override
 String toString() {
-  return 'HarmonizerState(activeType: $activeType, status: $status, ambienceId: $ambienceId, sequence: $sequence, currentCycle: $currentCycle, currentStepIndex: $currentStepIndex, totalCycleDuration: $totalCycleDuration, firstCycleDuration: $firstCycleDuration, remainingInCycle: $remainingInCycle, isFirstCycle: $isFirstCycle, errorMessage: $errorMessage, gracefulStopRequested: $gracefulStopRequested)';
+  return 'HarmonizerState(activeType: $activeType, status: $status, ambienceId: $ambienceId, formulaId: $formulaId, sequence: $sequence, currentCycle: $currentCycle, currentStepIndex: $currentStepIndex, totalCycleDuration: $totalCycleDuration, firstCycleDuration: $firstCycleDuration, remainingInCycle: $remainingInCycle, isFirstCycle: $isFirstCycle, errorMessage: $errorMessage, gracefulStopRequested: $gracefulStopRequested)';
 }
 
 
@@ -57,7 +58,7 @@ abstract mixin class $HarmonizerStateCopyWith<$Res>  {
   factory $HarmonizerStateCopyWith(HarmonizerState value, $Res Function(HarmonizerState) _then) = _$HarmonizerStateCopyWithImpl;
 @useResult
 $Res call({
- GenerationType? activeType, HarmonizerStatus status, String? ambienceId, List<HarmonicPacketDto> sequence, int currentCycle, int currentStepIndex, Duration totalCycleDuration, Duration firstCycleDuration, Duration remainingInCycle, bool isFirstCycle, String? errorMessage, bool gracefulStopRequested
+ GenerationType? activeType, HarmonizerStatus status, String? ambienceId, String? formulaId, List<HarmonicPacketDto> sequence, int currentCycle, int currentStepIndex, Duration totalCycleDuration, Duration firstCycleDuration, Duration remainingInCycle, bool isFirstCycle, String? errorMessage, bool gracefulStopRequested
 });
 
 
@@ -74,11 +75,12 @@ class _$HarmonizerStateCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizerState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? activeType = freezed,Object? status = null,Object? ambienceId = freezed,Object? sequence = null,Object? currentCycle = null,Object? currentStepIndex = null,Object? totalCycleDuration = null,Object? firstCycleDuration = null,Object? remainingInCycle = null,Object? isFirstCycle = null,Object? errorMessage = freezed,Object? gracefulStopRequested = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? activeType = freezed,Object? status = null,Object? ambienceId = freezed,Object? formulaId = freezed,Object? sequence = null,Object? currentCycle = null,Object? currentStepIndex = null,Object? totalCycleDuration = null,Object? firstCycleDuration = null,Object? remainingInCycle = null,Object? isFirstCycle = null,Object? errorMessage = freezed,Object? gracefulStopRequested = null,}) {
   return _then(_self.copyWith(
 activeType: freezed == activeType ? _self.activeType : activeType // ignore: cast_nullable_to_non_nullable
 as GenerationType?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as HarmonizerStatus,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
+as String?,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
 as String?,sequence: null == sequence ? _self.sequence : sequence // ignore: cast_nullable_to_non_nullable
 as List<HarmonicPacketDto>,currentCycle: null == currentCycle ? _self.currentCycle : currentCycle // ignore: cast_nullable_to_non_nullable
 as int,currentStepIndex: null == currentStepIndex ? _self.currentStepIndex : currentStepIndex // ignore: cast_nullable_to_non_nullable
@@ -173,10 +175,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  String? formulaId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HarmonizerState() when $default != null:
-return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
+return $default(_that.activeType,_that.status,_that.ambienceId,_that.formulaId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
   return orElse();
 
 }
@@ -194,10 +196,10 @@ return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  String? formulaId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizerState():
-return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
+return $default(_that.activeType,_that.status,_that.ambienceId,_that.formulaId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -214,10 +216,10 @@ return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( GenerationType? activeType,  HarmonizerStatus status,  String? ambienceId,  String? formulaId,  List<HarmonicPacketDto> sequence,  int currentCycle,  int currentStepIndex,  Duration totalCycleDuration,  Duration firstCycleDuration,  Duration remainingInCycle,  bool isFirstCycle,  String? errorMessage,  bool gracefulStopRequested)?  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizerState() when $default != null:
-return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
+return $default(_that.activeType,_that.status,_that.ambienceId,_that.formulaId,_that.sequence,_that.currentCycle,_that.currentStepIndex,_that.totalCycleDuration,_that.firstCycleDuration,_that.remainingInCycle,_that.isFirstCycle,_that.errorMessage,_that.gracefulStopRequested);case _:
   return null;
 
 }
@@ -229,7 +231,7 @@ return $default(_that.activeType,_that.status,_that.ambienceId,_that.sequence,_t
 
 
 class _HarmonizerState implements HarmonizerState {
-  const _HarmonizerState({this.activeType, this.status = HarmonizerStatus.idle, this.ambienceId, final  List<HarmonicPacketDto> sequence = const [], this.currentCycle = 0, this.currentStepIndex = 0, this.totalCycleDuration = Duration.zero, this.firstCycleDuration = Duration.zero, this.remainingInCycle = Duration.zero, this.isFirstCycle = true, this.errorMessage, this.gracefulStopRequested = false}): _sequence = sequence;
+  const _HarmonizerState({this.activeType, this.status = HarmonizerStatus.idle, this.ambienceId, this.formulaId, final  List<HarmonicPacketDto> sequence = const [], this.currentCycle = 0, this.currentStepIndex = 0, this.totalCycleDuration = Duration.zero, this.firstCycleDuration = Duration.zero, this.remainingInCycle = Duration.zero, this.isFirstCycle = true, this.errorMessage, this.gracefulStopRequested = false}): _sequence = sequence;
   
 
 /// The generation type currently active (null when idle).
@@ -238,6 +240,8 @@ class _HarmonizerState implements HarmonizerState {
 @override@JsonKey() final  HarmonizerStatus status;
 /// The ambience config ID loaded for this session (monaural/binaural).
 @override final  String? ambienceId;
+/// The formula ID that produced the current sequence (for UI restoration).
+@override final  String? formulaId;
 /// The frequency step sequence from the API.
  final  List<HarmonicPacketDto> _sequence;
 /// The frequency step sequence from the API.
@@ -274,16 +278,16 @@ _$HarmonizerStateCopyWith<_HarmonizerState> get copyWith => __$HarmonizerStateCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizerState&&(identical(other.activeType, activeType) || other.activeType == activeType)&&(identical(other.status, status) || other.status == status)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&const DeepCollectionEquality().equals(other._sequence, _sequence)&&(identical(other.currentCycle, currentCycle) || other.currentCycle == currentCycle)&&(identical(other.currentStepIndex, currentStepIndex) || other.currentStepIndex == currentStepIndex)&&(identical(other.totalCycleDuration, totalCycleDuration) || other.totalCycleDuration == totalCycleDuration)&&(identical(other.firstCycleDuration, firstCycleDuration) || other.firstCycleDuration == firstCycleDuration)&&(identical(other.remainingInCycle, remainingInCycle) || other.remainingInCycle == remainingInCycle)&&(identical(other.isFirstCycle, isFirstCycle) || other.isFirstCycle == isFirstCycle)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.gracefulStopRequested, gracefulStopRequested) || other.gracefulStopRequested == gracefulStopRequested));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizerState&&(identical(other.activeType, activeType) || other.activeType == activeType)&&(identical(other.status, status) || other.status == status)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&const DeepCollectionEquality().equals(other._sequence, _sequence)&&(identical(other.currentCycle, currentCycle) || other.currentCycle == currentCycle)&&(identical(other.currentStepIndex, currentStepIndex) || other.currentStepIndex == currentStepIndex)&&(identical(other.totalCycleDuration, totalCycleDuration) || other.totalCycleDuration == totalCycleDuration)&&(identical(other.firstCycleDuration, firstCycleDuration) || other.firstCycleDuration == firstCycleDuration)&&(identical(other.remainingInCycle, remainingInCycle) || other.remainingInCycle == remainingInCycle)&&(identical(other.isFirstCycle, isFirstCycle) || other.isFirstCycle == isFirstCycle)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.gracefulStopRequested, gracefulStopRequested) || other.gracefulStopRequested == gracefulStopRequested));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,activeType,status,ambienceId,const DeepCollectionEquality().hash(_sequence),currentCycle,currentStepIndex,totalCycleDuration,firstCycleDuration,remainingInCycle,isFirstCycle,errorMessage,gracefulStopRequested);
+int get hashCode => Object.hash(runtimeType,activeType,status,ambienceId,formulaId,const DeepCollectionEquality().hash(_sequence),currentCycle,currentStepIndex,totalCycleDuration,firstCycleDuration,remainingInCycle,isFirstCycle,errorMessage,gracefulStopRequested);
 
 @override
 String toString() {
-  return 'HarmonizerState(activeType: $activeType, status: $status, ambienceId: $ambienceId, sequence: $sequence, currentCycle: $currentCycle, currentStepIndex: $currentStepIndex, totalCycleDuration: $totalCycleDuration, firstCycleDuration: $firstCycleDuration, remainingInCycle: $remainingInCycle, isFirstCycle: $isFirstCycle, errorMessage: $errorMessage, gracefulStopRequested: $gracefulStopRequested)';
+  return 'HarmonizerState(activeType: $activeType, status: $status, ambienceId: $ambienceId, formulaId: $formulaId, sequence: $sequence, currentCycle: $currentCycle, currentStepIndex: $currentStepIndex, totalCycleDuration: $totalCycleDuration, firstCycleDuration: $firstCycleDuration, remainingInCycle: $remainingInCycle, isFirstCycle: $isFirstCycle, errorMessage: $errorMessage, gracefulStopRequested: $gracefulStopRequested)';
 }
 
 
@@ -294,7 +298,7 @@ abstract mixin class _$HarmonizerStateCopyWith<$Res> implements $HarmonizerState
   factory _$HarmonizerStateCopyWith(_HarmonizerState value, $Res Function(_HarmonizerState) _then) = __$HarmonizerStateCopyWithImpl;
 @override @useResult
 $Res call({
- GenerationType? activeType, HarmonizerStatus status, String? ambienceId, List<HarmonicPacketDto> sequence, int currentCycle, int currentStepIndex, Duration totalCycleDuration, Duration firstCycleDuration, Duration remainingInCycle, bool isFirstCycle, String? errorMessage, bool gracefulStopRequested
+ GenerationType? activeType, HarmonizerStatus status, String? ambienceId, String? formulaId, List<HarmonicPacketDto> sequence, int currentCycle, int currentStepIndex, Duration totalCycleDuration, Duration firstCycleDuration, Duration remainingInCycle, bool isFirstCycle, String? errorMessage, bool gracefulStopRequested
 });
 
 
@@ -311,11 +315,12 @@ class __$HarmonizerStateCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizerState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? activeType = freezed,Object? status = null,Object? ambienceId = freezed,Object? sequence = null,Object? currentCycle = null,Object? currentStepIndex = null,Object? totalCycleDuration = null,Object? firstCycleDuration = null,Object? remainingInCycle = null,Object? isFirstCycle = null,Object? errorMessage = freezed,Object? gracefulStopRequested = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? activeType = freezed,Object? status = null,Object? ambienceId = freezed,Object? formulaId = freezed,Object? sequence = null,Object? currentCycle = null,Object? currentStepIndex = null,Object? totalCycleDuration = null,Object? firstCycleDuration = null,Object? remainingInCycle = null,Object? isFirstCycle = null,Object? errorMessage = freezed,Object? gracefulStopRequested = null,}) {
   return _then(_HarmonizerState(
 activeType: freezed == activeType ? _self.activeType : activeType // ignore: cast_nullable_to_non_nullable
 as GenerationType?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as HarmonizerStatus,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
+as String?,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
 as String?,sequence: null == sequence ? _self._sequence : sequence // ignore: cast_nullable_to_non_nullable
 as List<HarmonicPacketDto>,currentCycle: null == currentCycle ? _self.currentCycle : currentCycle // ignore: cast_nullable_to_non_nullable
 as int,currentStepIndex: null == currentStepIndex ? _self.currentStepIndex : currentStepIndex // ignore: cast_nullable_to_non_nullable

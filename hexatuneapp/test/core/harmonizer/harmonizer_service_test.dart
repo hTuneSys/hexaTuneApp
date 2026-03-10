@@ -206,6 +206,7 @@ void main() {
       const config = HarmonizerConfig(
         type: GenerationType.monaural,
         steps: testPackets,
+        formulaId: 'formula-abc',
       );
 
       final error = await service.play(config);
@@ -218,6 +219,7 @@ void main() {
       expect(states.last.status, HarmonizerStatus.playing);
       expect(states.last.activeType, GenerationType.monaural);
       expect(states.last.sequence, testPackets);
+      expect(states.last.formulaId, 'formula-abc');
 
       // Verify DSP was configured with 220 Hz carrier and AM mode.
       verify(
@@ -427,6 +429,34 @@ void main() {
       verify(() => mockDsp.clearBase()).called(1);
       verify(() => mockDsp.clearTexture(any())).called(4);
       verify(() => mockDsp.clearEvent(any())).called(4);
+    });
+
+    test('updates ambienceId in state when changed during playback', () async {
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+        ambienceId: 'original',
+      );
+
+      await service.play(config);
+      expect(service.currentState.ambienceId, 'original');
+
+      // Clear invocations; we only care about state update.
+      clearInteractions(mockDsp);
+      when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
+      when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
+      when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
+
+      await service.changeAmbience(null);
+      expect(service.currentState.ambienceId, isNull);
     });
 
     test('is ignored for magnetic type', () async {

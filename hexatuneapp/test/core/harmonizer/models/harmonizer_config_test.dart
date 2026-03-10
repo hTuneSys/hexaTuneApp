@@ -37,6 +37,20 @@ void main() {
       expect(config.steps.length, 2);
     });
 
+    test('creates config with formulaId', () {
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        ambienceId: 'rain-ambient',
+        formulaId: 'formula-123',
+        steps: [
+          HarmonicPacketDto(value: 5, durationMs: 30000, isOneShot: false),
+        ],
+      );
+
+      expect(config.formulaId, 'formula-123');
+      expect(config.ambienceId, 'rain-ambient');
+    });
+
     test('creates magnetic config', () {
       const config = HarmonizerConfig(
         type: GenerationType.magnetic,

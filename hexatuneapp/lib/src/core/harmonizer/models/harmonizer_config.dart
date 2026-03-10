@@ -20,5 +20,8 @@ abstract class HarmonizerConfig with _$HarmonizerConfig {
 
     /// The harmonic packet sequence to play (from API response).
     required List<HarmonicPacketDto> steps,
+
+    /// The formula ID that generated this sequence (for UI state restoration).
+    String? formulaId,
   }) = _HarmonizerConfig;
 }

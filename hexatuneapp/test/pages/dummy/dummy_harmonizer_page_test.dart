@@ -109,6 +109,7 @@ void main() {
     hexagenCtrl = StreamController<HexagenState>.broadcast();
 
     when(() => mockHarmonizer.state).thenAnswer((_) => harmonizerCtrl.stream);
+    when(() => mockHarmonizer.currentState).thenReturn(const HarmonizerState());
     when(
       () => mockHarmonizer.validatePrerequisites(any()),
     ).thenReturn(HarmonizerValidation.valid);
@@ -538,8 +539,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Tap the dropdown to open it
-      await tester.tap(find.text('Select ambience (optional)'));
+      // Tap the displayed dropdown value to open it.
+      await tester.tap(find.text('No ambience'));
       await tester.pumpAndSettle();
 
       expect(find.text('No ambience'), findsWidgets);

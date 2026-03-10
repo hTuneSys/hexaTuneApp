@@ -14,6 +14,7 @@ void main() {
       expect(state.status, HarmonizerStatus.idle);
       expect(state.activeType, isNull);
       expect(state.ambienceId, isNull);
+      expect(state.formulaId, isNull);
       expect(state.sequence, isEmpty);
       expect(state.currentCycle, 0);
       expect(state.currentStepIndex, 0);
@@ -44,6 +45,7 @@ void main() {
         activeType: GenerationType.binaural,
         status: HarmonizerStatus.playing,
         ambienceId: 'test-ambience',
+        formulaId: 'formula-42',
         sequence: packets,
         currentCycle: 2,
         currentStepIndex: 1,
@@ -57,6 +59,7 @@ void main() {
       expect(state.activeType, GenerationType.binaural);
       expect(state.status, HarmonizerStatus.playing);
       expect(state.ambienceId, 'test-ambience');
+      expect(state.formulaId, 'formula-42');
       expect(state.sequence.length, 2);
       expect(state.currentCycle, 2);
       expect(state.currentStepIndex, 1);

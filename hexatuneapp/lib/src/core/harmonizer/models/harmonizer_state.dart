@@ -24,6 +24,9 @@ abstract class HarmonizerState with _$HarmonizerState {
     /// The ambience config ID loaded for this session (monaural/binaural).
     String? ambienceId,
 
+    /// The formula ID that produced the current sequence (for UI restoration).
+    String? formulaId,
+
     /// The frequency step sequence from the API.
     @Default([]) List<HarmonicPacketDto> sequence,
 

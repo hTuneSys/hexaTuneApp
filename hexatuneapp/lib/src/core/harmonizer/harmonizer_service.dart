@@ -109,6 +109,7 @@ class HarmonizerService {
         status: HarmonizerStatus.preparing,
         sequence: config.steps,
         ambienceId: config.ambienceId,
+        formulaId: config.formulaId,
         currentCycle: 0,
         currentStepIndex: 0,
         errorMessage: null,
@@ -392,6 +393,9 @@ class HarmonizerService {
 
     final type = _currentState.activeType;
     if (type == null || !type.supportsDspAmbience) return;
+
+    // Update the state so UI can restore the selection on re-navigation.
+    _updateState(_currentState.copyWith(ambienceId: ambienceId));
 
     if (ambienceId == null) {
       await _clearAllAmbienceLayers();

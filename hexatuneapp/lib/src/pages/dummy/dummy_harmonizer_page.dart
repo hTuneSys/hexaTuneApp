@@ -72,6 +72,12 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     _headsetConnected = _headsetService.isConnected;
     _hexagenConnected = _hexagenService.isConnected;
 
+    // Restore generation type from active session immediately.
+    _harmonizerState = _harmonizer.currentState;
+    if (_harmonizerState.status != HarmonizerStatus.idle) {
+      _selectedType = _harmonizerState.activeType ?? GenerationType.monaural;
+    }
+
     _harmonizerSub = _harmonizer.state.listen((s) {
       if (mounted) setState(() => _harmonizerState = s);
     });
@@ -85,7 +91,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     });
 
     _loadFormulas();
-    _ambienceService.load();
+    _loadAmbiences();
   }
 
   @override
@@ -104,11 +110,44 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
         setState(() {
           _formulas = result.data;
           _formulasLoading = false;
+          _restoreFormulaFromState();
         });
       }
     } catch (e) {
       if (mounted) setState(() => _formulasLoading = false);
     }
+  }
+
+  Future<void> _loadAmbiences() async {
+    await _ambienceService.load();
+    if (mounted) {
+      setState(() {
+        _restoreAmbienceFromState();
+      });
+    }
+  }
+
+  /// Restores [_selectedFormula] from the active harmonizer session.
+  void _restoreFormulaFromState() {
+    final formulaId = _harmonizerState.formulaId;
+    if (formulaId == null) return;
+    if (_harmonizerState.status == HarmonizerStatus.idle) return;
+
+    for (final f in _formulas) {
+      if (f.id == formulaId) {
+        _selectedFormula = f;
+        return;
+      }
+    }
+  }
+
+  /// Restores [_selectedAmbience] from the active harmonizer session.
+  void _restoreAmbienceFromState() {
+    final ambienceId = _harmonizerState.ambienceId;
+    if (ambienceId == null) return;
+    if (_harmonizerState.status == HarmonizerStatus.idle) return;
+
+    _selectedAmbience = _ambienceService.findById(ambienceId);
   }
 
   // ---------------------------------------------------------------------------
@@ -138,6 +177,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
         type: _selectedType,
         ambienceId: _selectedAmbience?.id,
         steps: response.sequence,
+        formulaId: _selectedFormula!.id,
       );
 
       final error = await _harmonizer.play(config);
@@ -248,19 +288,29 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        child: DropdownButtonFormField<FormulaResponse>(
+        child: InputDecorator(
           decoration: InputDecoration(
             labelText: l10n.harmonizerFormulaLabel,
             border: InputBorder.none,
           ),
-          initialValue: _selectedFormula,
-          hint: Text(l10n.harmonizerSelectFormula),
-          items: _formulas
-              .map((f) => DropdownMenuItem(value: f, child: Text(f.name)))
-              .toList(),
-          onChanged: _isActive
-              ? null
-              : (f) => setState(() => _selectedFormula = f),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<FormulaResponse?>(
+              value: _selectedFormula,
+              hint: Text(l10n.harmonizerSelectFormula),
+              isExpanded: true,
+              items: _formulas
+                  .map(
+                    (f) => DropdownMenuItem<FormulaResponse?>(
+                      value: f,
+                      child: Text(f.name),
+                    ),
+                  )
+                  .toList(),
+              onChanged: _isActive
+                  ? null
+                  : (f) => setState(() => _selectedFormula = f),
+            ),
+          ),
         ),
       ),
     );
@@ -480,23 +530,32 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     AppLocalizations l10n,
     ColorScheme colorScheme,
   ) {
-    return DropdownButtonFormField<AmbienceConfig?>(
+    // Use DropdownButton with explicit value for reliable state tracking
+    // instead of DropdownButtonFormField whose initialValue is only honoured
+    // on first build.
+    return InputDecorator(
       decoration: InputDecoration(
         labelText: l10n.harmonizerSelectAmbience,
         border: const OutlineInputBorder(),
         isDense: true,
       ),
-      initialValue: selectedAmbience,
-      items: [
-        DropdownMenuItem<AmbienceConfig?>(
-          value: null,
-          child: Text(l10n.harmonizerNoAmbience),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<AmbienceConfig?>(
+          value: selectedAmbience,
+          isExpanded: true,
+          isDense: true,
+          items: [
+            DropdownMenuItem<AmbienceConfig?>(
+              value: null,
+              child: Text(l10n.harmonizerNoAmbience),
+            ),
+            ...ambienceConfigs.map(
+              (c) => DropdownMenuItem(value: c, child: Text(c.name)),
+            ),
+          ],
+          onChanged: onAmbienceChanged,
         ),
-        ...ambienceConfigs.map(
-          (c) => DropdownMenuItem(value: c, child: Text(c.name)),
-        ),
-      ],
-      onChanged: onAmbienceChanged,
+      ),
     );
   }
 
