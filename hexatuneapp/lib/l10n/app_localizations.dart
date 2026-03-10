@@ -1093,6 +1093,186 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Operation: {status} (step {step})'**
   String hexagenOpStatus(String status, int step);
+
+  /// No description provided for @harmonizerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonizer Player'**
+  String get harmonizerTitle;
+
+  /// No description provided for @harmonizerSelectFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a formula'**
+  String get harmonizerSelectFormula;
+
+  /// No description provided for @harmonizerNoFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'No formulas available'**
+  String get harmonizerNoFormulas;
+
+  /// No description provided for @harmonizerFormulaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get harmonizerFormulaLabel;
+
+  /// No description provided for @harmonizerTypeMonaural.
+  ///
+  /// In en, this message translates to:
+  /// **'Monaural'**
+  String get harmonizerTypeMonaural;
+
+  /// No description provided for @harmonizerTypeBinaural.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural'**
+  String get harmonizerTypeBinaural;
+
+  /// No description provided for @harmonizerTypeMagnetic.
+  ///
+  /// In en, this message translates to:
+  /// **'Magnetic'**
+  String get harmonizerTypeMagnetic;
+
+  /// No description provided for @harmonizerTypePhotonic.
+  ///
+  /// In en, this message translates to:
+  /// **'Photonic'**
+  String get harmonizerTypePhotonic;
+
+  /// No description provided for @harmonizerTypeQuantal.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantal'**
+  String get harmonizerTypeQuantal;
+
+  /// No description provided for @harmonizerComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is coming soon'**
+  String get harmonizerComingSoon;
+
+  /// No description provided for @harmonizerHeadsetRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect headphones for binaural mode'**
+  String get harmonizerHeadsetRequired;
+
+  /// No description provided for @harmonizerHexagenRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect a hexaGen device for magnetic mode'**
+  String get harmonizerHexagenRequired;
+
+  /// No description provided for @harmonizerSelectAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Select ambience (optional)'**
+  String get harmonizerSelectAmbience;
+
+  /// No description provided for @harmonizerNoAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambience'**
+  String get harmonizerNoAmbience;
+
+  /// No description provided for @harmonizerAddAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Add ambience'**
+  String get harmonizerAddAmbience;
+
+  /// No description provided for @harmonizerPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get harmonizerPlay;
+
+  /// No description provided for @harmonizerStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get harmonizerStop;
+
+  /// No description provided for @harmonizerPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing...'**
+  String get harmonizerPreparing;
+
+  /// No description provided for @harmonizerPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get harmonizerPlaying;
+
+  /// No description provided for @harmonizerStopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping...'**
+  String get harmonizerStopping;
+
+  /// No description provided for @harmonizerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String harmonizerError(String message);
+
+  /// No description provided for @harmonizerCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {cycle}'**
+  String harmonizerCycle(int cycle);
+
+  /// No description provided for @harmonizerTotalDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get harmonizerTotalDuration;
+
+  /// No description provided for @harmonizerRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get harmonizerRemaining;
+
+  /// No description provided for @harmonizerStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {index}: {value} Hz — {duration}s'**
+  String harmonizerStep(int index, int value, String duration);
+
+  /// No description provided for @harmonizerStepOneshot.
+  ///
+  /// In en, this message translates to:
+  /// **'one-shot'**
+  String get harmonizerStepOneshot;
+
+  /// No description provided for @harmonizerGracefulStopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to stop after current cycle'**
+  String get harmonizerGracefulStopHint;
+
+  /// No description provided for @harmonizerImmediateStopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold 3s to stop immediately'**
+  String get harmonizerImmediateStopHint;
+
+  /// No description provided for @harmonizerGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating sequence...'**
+  String get harmonizerGenerating;
+
+  /// No description provided for @harmonizerNoSequence.
+  ///
+  /// In en, this message translates to:
+  /// **'No formula selected'**
+  String get harmonizerNoSequence;
 }
 
 class _AppLocalizationsDelegate

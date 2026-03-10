@@ -538,4 +538,104 @@ class AppLocalizationsTr extends AppLocalizations {
   String hexagenOpStatus(String status, int step) {
     return 'Operasyon: $status (adım $step)';
   }
+
+  @override
+  String get harmonizerTitle => 'Harmonizer Oynatıcı';
+
+  @override
+  String get harmonizerSelectFormula => 'Bir formül seçin';
+
+  @override
+  String get harmonizerNoFormulas => 'Formül bulunamadı';
+
+  @override
+  String get harmonizerFormulaLabel => 'Formül';
+
+  @override
+  String get harmonizerTypeMonaural => 'Monaural';
+
+  @override
+  String get harmonizerTypeBinaural => 'Binaural';
+
+  @override
+  String get harmonizerTypeMagnetic => 'Manyetik';
+
+  @override
+  String get harmonizerTypePhotonic => 'Fotonik';
+
+  @override
+  String get harmonizerTypeQuantal => 'Kuantal';
+
+  @override
+  String get harmonizerComingSoon => 'Bu özellik yakında gelecek';
+
+  @override
+  String get harmonizerHeadsetRequired =>
+      'Binaural mod için lütfen kulaklık takınız';
+
+  @override
+  String get harmonizerHexagenRequired =>
+      'Manyetik mod için lütfen bir hexaGen cihazı bağlayınız';
+
+  @override
+  String get harmonizerSelectAmbience => 'Ambiyans seçin (opsiyonel)';
+
+  @override
+  String get harmonizerNoAmbience => 'Ambiyans yok';
+
+  @override
+  String get harmonizerAddAmbience => 'Ambiyans ekle';
+
+  @override
+  String get harmonizerPlay => 'Oynat';
+
+  @override
+  String get harmonizerStop => 'Durdur';
+
+  @override
+  String get harmonizerPreparing => 'Hazırlanıyor...';
+
+  @override
+  String get harmonizerPlaying => 'Oynuyor';
+
+  @override
+  String get harmonizerStopping => 'Durduruluyor...';
+
+  @override
+  String harmonizerError(String message) {
+    return 'Hata: $message';
+  }
+
+  @override
+  String harmonizerCycle(int cycle) {
+    return 'Döngü $cycle';
+  }
+
+  @override
+  String get harmonizerTotalDuration => 'Toplam';
+
+  @override
+  String get harmonizerRemaining => 'Kalan';
+
+  @override
+  String harmonizerStep(int index, int value, String duration) {
+    return 'Adım $index: $value Hz — ${duration}s';
+  }
+
+  @override
+  String get harmonizerStepOneshot => 'tek seferlik';
+
+  @override
+  String get harmonizerGracefulStopHint =>
+      'Mevcut döngü bitince durdurmak için dokunun';
+
+  @override
+  String get harmonizerImmediateStopHint =>
+      'Anında durdurmak için 3 saniye basılı tutun';
+
+  @override
+  String get harmonizerGenerating => 'Sekans üretiliyor...';
+
+  @override
+  String get harmonizerNoSequence => 'Formül seçilmedi';
 }

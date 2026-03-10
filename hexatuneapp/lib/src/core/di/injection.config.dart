@@ -19,6 +19,8 @@ import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart'
     as _i494;
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart'
     as _i475;
+import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart'
+    as _i468;
 import 'package:hexatuneapp/src/core/log/log_service.dart' as _i571;
 import 'package:hexatuneapp/src/core/media/image_service.dart' as _i207;
 import 'package:hexatuneapp/src/core/network/api_client.dart' as _i761;
@@ -155,6 +157,17 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i716.DspService>(
       () => _i716.DspService(gh<_i1000.DspBindings>(), gh<_i571.LogService>()),
+      dispose: (i) => i.dispose(),
+    );
+    gh.singleton<_i468.HarmonizerService>(
+      () => _i468.HarmonizerService(
+        gh<_i716.DspService>(),
+        gh<_i475.HexagenService>(),
+        gh<_i494.HeadsetService>(),
+        gh<_i925.AmbienceService>(),
+        gh<_i845.DspAssetService>(),
+        gh<_i571.LogService>(),
+      ),
       dispose: (i) => i.dispose(),
     );
     gh.singleton<_i87.AccountRepository>(

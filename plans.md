@@ -24,46 +24,40 @@ The **Harmonizer** is an orchestration service that manages frequency generation
 ```
 
 ### Key Decisions (Confirmed with User)
-- **API format**: Single endpoint, type sent in request, response returns `List<FreqStepDto>` with `freq`, `durationMs`, `oneshot`
+- **API format**: Single endpoint, type sent in request, response returns `List<HarmonicPacketDto>` with `value` (int), `durationMs` (int), `isOneShot` (bool)
 - **State management**: `Stream<HarmonizerState>` (consistent with existing DspService/HexagenService pattern)
 - **Mini player**: ShellRoute wrapper + Positioned overlay at bottom
-- **Graceful stop**: DSP's existing `stopGraceful()` for Monaural/Binaural; Magnetic falls back to immediate stop until firmware support is added
+- **Graceful stop (DSP)**: DSP's existing `stopGraceful()` for Monaural/Binaural
+- **Graceful stop (Magnetic)**: Both graceful and immediate send `ATCommand.reset(id)` temporarily (firmware graceful stop will be added later)
 - **Service location**: `lib/src/core/harmonizer/` (flat structure)
 - **Dummy pages**: Single `DummyHarmonizerPage` with all type selection, ambience, play/stop
 - **Infinite loop**: Fixed infinite loop initially; cycle count configuration deferred to future iteration
+
+### Actual API Model (from openapi.json — committed)
+```
+Request:  GenerateHarmonicsRequest { generationType, sourceType, sourceId }
+Response: GenerateHarmonicsResponse { requestId, generationType, sourceType, sourceId, totalItems, sequence: List<HarmonicPacketDto> }
+Packet:   HarmonicPacketDto { value (int), durationMs (int), isOneShot (bool) }
+```
 
 ---
 
 ## Phase 1 — External Dependencies (User's Manual Work)
 
-These items must be completed by the user before Phase 3 implementation can begin.
+### 1.1 Backend API Update — ✅ DONE
+- [x] `POST /api/v1/harmonics/generate` redesigned: `generationType`, `sourceType`, `sourceId`
+- [x] Response returns `sequence: List<HarmonicPacketDto>` with `value`, `durationMs`, `isOneShot`
+- [x] Updated `openapi.json` committed to repo root
 
-### 1.1 Backend API Update
-- [ ] **Update `POST /api/v1/harmonics/generate` request** — Add `generationType` field (enum: `monaural`, `binaural`, `magnetic`, `photonic`, `quantal`)
-- [ ] **Update response model** — Replace/extend `HarmonicAssignmentDto` with `FreqStepDto`:
-  ```json
-  {
-    "requestId": "uuid",
-    "generationType": "binaural",
-    "steps": [
-      { "freq": 440, "durationMs": 30000, "oneshot": false },
-      { "freq": 528, "durationMs": 15000, "oneshot": true }
-    ]
-  }
-  ```
-- [ ] **Provide updated `openapi.json`** to the project
+### 1.2 Proto FFI — Graceful Stop for HexaGen — 🔒 DEFERRED (NOT A BLOCKER)
+- [ ] **Future**: Add `AT+OPERATION=id#STOP` command to hexaTuneProto firmware protocol
+- [ ] **Future**: Implement graceful stop in firmware — Current step completes, then DDS stops
+- **Current workaround**: Both graceful and immediate stop send `ATCommand.reset(id)` (already exists in proto)
+- This phase is no longer blocking Phase 3 implementation
 
-### 1.2 Proto FFI — Graceful Stop for HexaGen
-- [ ] **Add `AT+OPERATION=id#STOP` command** to hexaTuneProto firmware protocol
-- [ ] **Implement graceful stop in firmware** — Current step completes, then DDS stops
-- [ ] **Add `AT+OPERATION=id#STOP#COMPLETED` response** for acknowledgement
-- [ ] **Release new hexaTuneProto version** with graceful stop support
-- [ ] **Update `hexaTuneDsp` FFI bindings** if any proto changes affect the Rust library
-
-### 1.3 Deliverables from User
-- [ ] Updated `openapi.json` placed at repo root
-- [ ] New hexaTuneProto release tag/version
-- [ ] Confirmation that backend graceful stop is ready for integration
+### 1.3 Deliverables from User — ✅ DONE
+- [x] Updated `openapi.json` placed at repo root
+- [x] Proto graceful stop deferred — Magnetic uses `ATCommand.reset(id)` temporarily
 
 ---
 
@@ -71,14 +65,14 @@ These items must be completed by the user before Phase 3 implementation can begi
 
 Fix existing issues that would affect Harmonizer integration.
 
-### 2.1 HexaGen Service — Missing Graceful Stop Method
+### 2.1 HexaGen Service — Stop Methods — SIMPLIFIED
 - [ ] **Add `stopOperationGraceful(int operationId)` method** to `HexagenService`
-  - Sends `AT+OPERATION=id#STOP` command
-  - Waits for `STOP#COMPLETED` response (with timeout)
-  - Falls back to immediate reset if firmware doesn't support it yet
-- [ ] **Add `stopOperationImmediate()` method** to `HexagenService`
-  - Resets operation state without waiting
-  - Clears command trackers
+  - Sends `ATCommand.reset(operationId)` via `sendATCommand()`
+  - Calls `resetOperationState()` to clear tracking
+  - Temporary: same as immediate until firmware supports proper graceful stop
+- [ ] **Add `stopOperationImmediate(int operationId)` method** to `HexagenService`
+  - Sends `ATCommand.reset(operationId)` via `sendATCommand()`
+  - Calls `resetOperationState()`
 - [ ] **Add unit tests** for both stop methods
 
 ### 2.2 HexaGen Service — Operation Flow Completion Tracking
@@ -86,21 +80,22 @@ Fix existing issues that would affect Harmonizer integration.
   - Emits progress for each step during GENERATE phase
   - Includes: `operationId`, `completedStepId`, `totalSteps`, `isComplete`
   - Harmonizer will subscribe to track progress and calculate remaining time
+  - Note: HexagenService already tracks `_currentGeneratingStepId` internally; needs to be exposed as stream
 - [ ] **Create `OperationProgress` model** in `models/`
 - [ ] **Add unit tests** for operation progress streaming
 
-### 2.3 REST API Models Update
-- [ ] **Update `GenerateHarmonicsRequest`** — Add `generationType` field
-- [ ] **Create `FreqStepDto` model** — `freq` (int), `durationMs` (int), `oneshot` (bool)
-- [ ] **Update `GenerateHarmonicsResponse`** — Replace `assignments` with `steps: List<FreqStepDto>`, add `generationType`
-- [ ] **Run `build_runner`** to regenerate freezed/json_serializable code
-- [ ] **Update existing harmonics tests** to reflect new model structure
-- [ ] **Update `DummyHarmonicsPage`** to work with new response format
+### 2.3 REST API Models Update — ✅ DONE (commit 4891f04)
+- [x] `GenerateHarmonicsRequest`: `inventoryIds` → `generationType`, `sourceType`, `sourceId`
+- [x] `HarmonicAssignmentDto` → `HarmonicPacketDto` (value, durationMs, isOneShot)
+- [x] `GenerateHarmonicsResponse`: updated with `sequence`, `totalItems`, new fields
+- [x] `FormulaItemResponse`: added required `timeMs`
+- [x] `AddFormulaItemEntry`: added optional `timeMs`
+- [x] All tests updated and passing (1040 tests)
+- [x] Dummy pages updated
 
-### 2.4 AT Command Extension
-- [ ] **Add `ATCommand.operationStop(int operationId)`** factory constructor
-- [ ] **Add response parsing** for `STOP#COMPLETED` response type
-- [ ] **Add unit tests** for new AT command
+### 2.4 AT Command Extension — ✅ ELIMINATED
+- [x] `ATCommand.reset(id)` already exists in proto — no new commands needed
+- [x] No `STOP#COMPLETED` response parsing needed for temporary implementation
 
 ---
 
@@ -123,7 +118,7 @@ Fix existing issues that would affect Harmonizer integration.
     GenerationType? activeType;
     HarmonizerStatus status;           // idle, preparing, playing, stopping, error
     String? ambienceId;
-    List<FreqStepDto> freqSteps;
+    List<HarmonicPacketDto> sequence;
     int currentCycle;                  // Current loop iteration (0-based)
     int currentStepIndex;
     Duration totalCycleDuration;       // Total duration of one full cycle
@@ -143,7 +138,7 @@ Fix existing issues that would affect Harmonizer integration.
   class HarmonizerConfig {
     required GenerationType type;
     String? ambienceId;
-    required List<FreqStepDto> steps;
+    required List<HarmonicPacketDto> steps;
   }
   ```
 
@@ -169,14 +164,16 @@ Fix existing issues that would affect Harmonizer integration.
   - Returns null on success, error string on failure
 - [ ] **`Future<void> stopGraceful()`**
   - DSP types: `DspService.stopGraceful()`
-  - Magnetic: immediate stop fallback (until firmware ready)
+  - Magnetic: sends `ATCommand.reset(id)` + `resetOperationState()` (temporary, same as immediate)
 - [ ] **`Future<void> stopImmediate()`**
-  - All types: immediate stop + full cleanup
+  - DSP types: `DspService.stop()` + cleanup
+  - Magnetic: sends `ATCommand.reset(id)` + `resetOperationState()`
 - [ ] **`@disposeMethod void dispose()`**
 
 #### Internal DSP Playback
 - [ ] **`_startDspPlayback(HarmonizerConfig config)`**
-  - Load ambience → configure binaural mode → convert FreqStepDto → CycleStep → start engine
+  - Load ambience → configure binaural mode → convert HarmonicPacketDto → CycleStep → start engine
+  - Mapping: `HarmonicPacketDto.value` → `CycleStep.frequencyDelta`, `durationMs/1000` → `durationSeconds`, `isOneShot` → `oneshot`
 - [ ] **`_startMagneticPlayback(HarmonizerConfig config)`**
   - PREPARE → FREQ×N → GENERATE → on complete restart (infinite loop)
 
@@ -255,17 +252,18 @@ Fix existing issues that would affect Harmonizer integration.
 ## Dependency Graph
 
 ```
-Phase 1 (User: Backend + Proto)
-    │
-    ├──→ Phase 2.3 (REST model update — needs openapi.json)
-    ├──→ Phase 2.1 (HexaGen graceful stop — needs proto)
-    └──→ Phase 2.4 (AT command extension — needs proto)
+✅ Phase 1.1 (Backend API) — DONE
+🔒 Phase 1.2 (Proto graceful) — DEFERRED, not blocking
+✅ Phase 2.3 (REST models) — DONE (commit 4891f04)
+✅ Phase 2.4 (AT command) — ELIMINATED
 
-Independent (can start now):
-    Phase 2.2 (operation progress — existing code improvement)
-    Phase 3.1 (model definitions — no external dependency)
-    Phase 4.1 (route registration)
-    Phase 4.5 (l10n strings)
+Can start NOW (no blockers):
+    Phase 2.1 (HexaGen stop methods — simplified, uses existing AT+RESET)
+    Phase 2.2 (Operation progress stream)
+    Phase 3.1 (Harmonizer models)
+    Phase 3.2 (Harmonizer service — after 2.1, 2.2, 3.1)
+    Phase 4.x (UI, routes, l10n)
+    Phase 5   (Documentation)
 ```
 
 ## Notes
@@ -275,3 +273,5 @@ Independent (can start now):
 - **Mini player disappear**: Fades out ~2s after stop.
 - **Concurrent playback**: Only one session at a time. New play stops current.
 - **Memory**: DSP decode cache auto-cleared by service layer (previous fix).
+- **HarmonicPacketDto.value → CycleStep.frequencyDelta mapping**: `value` is treated as frequency delta (Hz offset from carrier). `durationMs` is converted to `durationSeconds` (÷1000). `isOneShot` maps directly to `oneshot`.
+- **Magnetic stop (temporary)**: Both graceful and immediate stop send `ATCommand.reset(id)`. Will be differentiated when firmware adds proper `AT+OPERATION=id#STOP` command.

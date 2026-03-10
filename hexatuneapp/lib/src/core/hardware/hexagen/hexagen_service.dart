@@ -371,6 +371,33 @@ class HexagenService {
     _currentGeneratingStepId = null;
   }
 
+  /// Graceful stop for an operation.
+  ///
+  /// Temporary implementation: sends `ATCommand.reset` and clears state.
+  /// Will be replaced with proper `AT+OPERATION=id#STOP` when firmware
+  /// supports graceful stop.
+  Future<void> stopOperationGraceful(int operationId) async {
+    _logService.info(
+      'Graceful stop (temp reset) for operation $operationId',
+      category: LogCategory.hardware,
+    );
+    await sendATCommand(ATCommand.reset(operationId));
+    resetOperationState();
+  }
+
+  /// Immediate stop for an operation.
+  ///
+  /// Sends `ATCommand.reset` and clears state. Currently identical to
+  /// [stopOperationGraceful] until firmware supports differentiated stop.
+  Future<void> stopOperationImmediate(int operationId) async {
+    _logService.info(
+      'Immediate stop (temp reset) for operation $operationId',
+      category: LogCategory.hardware,
+    );
+    await sendATCommand(ATCommand.reset(operationId));
+    resetOperationState();
+  }
+
   // -----------------------------------------------------------------------
   // Command tracking
   // -----------------------------------------------------------------------

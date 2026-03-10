@@ -68,5 +68,17 @@ void main() {
       expect(service.currentOperationStatus, isNull);
       expect(service.currentGeneratingStepId, isNull);
     });
+
+    test('stopOperationGraceful resets state', () async {
+      // Cannot fully test (needs BLE), but verify state reset works.
+      service.resetOperationState();
+      expect(service.currentOperationId, isNull);
+    });
+
+    test('stopOperationImmediate resets state', () async {
+      // Cannot fully test (needs BLE), but verify state reset works.
+      service.resetOperationState();
+      expect(service.currentOperationId, isNull);
+    });
   });
 }

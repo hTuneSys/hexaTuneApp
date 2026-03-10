@@ -537,4 +537,102 @@ class AppLocalizationsEn extends AppLocalizations {
   String hexagenOpStatus(String status, int step) {
     return 'Operation: $status (step $step)';
   }
+
+  @override
+  String get harmonizerTitle => 'Harmonizer Player';
+
+  @override
+  String get harmonizerSelectFormula => 'Select a formula';
+
+  @override
+  String get harmonizerNoFormulas => 'No formulas available';
+
+  @override
+  String get harmonizerFormulaLabel => 'Formula';
+
+  @override
+  String get harmonizerTypeMonaural => 'Monaural';
+
+  @override
+  String get harmonizerTypeBinaural => 'Binaural';
+
+  @override
+  String get harmonizerTypeMagnetic => 'Magnetic';
+
+  @override
+  String get harmonizerTypePhotonic => 'Photonic';
+
+  @override
+  String get harmonizerTypeQuantal => 'Quantal';
+
+  @override
+  String get harmonizerComingSoon => 'This feature is coming soon';
+
+  @override
+  String get harmonizerHeadsetRequired =>
+      'Please connect headphones for binaural mode';
+
+  @override
+  String get harmonizerHexagenRequired =>
+      'Please connect a hexaGen device for magnetic mode';
+
+  @override
+  String get harmonizerSelectAmbience => 'Select ambience (optional)';
+
+  @override
+  String get harmonizerNoAmbience => 'No ambience';
+
+  @override
+  String get harmonizerAddAmbience => 'Add ambience';
+
+  @override
+  String get harmonizerPlay => 'Play';
+
+  @override
+  String get harmonizerStop => 'Stop';
+
+  @override
+  String get harmonizerPreparing => 'Preparing...';
+
+  @override
+  String get harmonizerPlaying => 'Playing';
+
+  @override
+  String get harmonizerStopping => 'Stopping...';
+
+  @override
+  String harmonizerError(String message) {
+    return 'Error: $message';
+  }
+
+  @override
+  String harmonizerCycle(int cycle) {
+    return 'Cycle $cycle';
+  }
+
+  @override
+  String get harmonizerTotalDuration => 'Total';
+
+  @override
+  String get harmonizerRemaining => 'Remaining';
+
+  @override
+  String harmonizerStep(int index, int value, String duration) {
+    return 'Step $index: $value Hz — ${duration}s';
+  }
+
+  @override
+  String get harmonizerStepOneshot => 'one-shot';
+
+  @override
+  String get harmonizerGracefulStopHint => 'Tap to stop after current cycle';
+
+  @override
+  String get harmonizerImmediateStopHint => 'Hold 3s to stop immediately';
+
+  @override
+  String get harmonizerGenerating => 'Generating sequence...';
+
+  @override
+  String get harmonizerNoSequence => 'No formula selected';
 }

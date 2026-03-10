@@ -247,5 +247,49 @@
       "status": { "type": "String" },
       "step": { "type": "int" }
     }
-  }
+  },
+
+  "harmonizerTitle": "Harmonizer Oynatıcı",
+  "harmonizerSelectFormula": "Bir formül seçin",
+  "harmonizerNoFormulas": "Formül bulunamadı",
+  "harmonizerFormulaLabel": "Formül",
+  "harmonizerTypeMonaural": "Monaural",
+  "harmonizerTypeBinaural": "Binaural",
+  "harmonizerTypeMagnetic": "Manyetik",
+  "harmonizerTypePhotonic": "Fotonik",
+  "harmonizerTypeQuantal": "Kuantal",
+  "harmonizerComingSoon": "Bu özellik yakında gelecek",
+  "harmonizerHeadsetRequired": "Binaural mod için lütfen kulaklık takınız",
+  "harmonizerHexagenRequired": "Manyetik mod için lütfen bir hexaGen cihazı bağlayınız",
+  "harmonizerSelectAmbience": "Ambiyans seçin (opsiyonel)",
+  "harmonizerNoAmbience": "Ambiyans yok",
+  "harmonizerAddAmbience": "Ambiyans ekle",
+  "harmonizerPlay": "Oynat",
+  "harmonizerStop": "Durdur",
+  "harmonizerPreparing": "Hazırlanıyor...",
+  "harmonizerPlaying": "Oynuyor",
+  "harmonizerStopping": "Durduruluyor...",
+  "harmonizerError": "Hata: {message}",
+  "@harmonizerError": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "harmonizerCycle": "Döngü {cycle}",
+  "@harmonizerCycle": {
+    "placeholders": { "cycle": { "type": "int" } }
+  },
+  "harmonizerTotalDuration": "Toplam",
+  "harmonizerRemaining": "Kalan",
+  "harmonizerStep": "Adım {index}: {value} Hz — {duration}s",
+  "@harmonizerStep": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "value": { "type": "int" },
+      "duration": { "type": "String" }
+    }
+  },
+  "harmonizerStepOneshot": "tek seferlik",
+  "harmonizerGracefulStopHint": "Mevcut döngü bitince durdurmak için dokunun",
+  "harmonizerImmediateStopHint": "Anında durdurmak için 3 saniye basılı tutun",
+  "harmonizerGenerating": "Sekans üretiliyor...",
+  "harmonizerNoSequence": "Formül seçilmedi"
 }

@@ -33,7 +33,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
   late final DspAssetService _assetService;
   late final AmbienceService _ambienceService;
 
-  final _carrierFreqCtrl = TextEditingController(text: '400.0');
+  final _carrierFreqCtrl = TextEditingController(text: '220.0');
   bool _binauralEnabled = true;
   final List<_CycleStepEntry> _cycleSteps = [
     _CycleStepEntry(

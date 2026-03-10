@@ -32,4 +32,5 @@ class RouteNames {
   static const String dsp = '/dev/dsp';
   static const String ambience = '/dev/ambience';
   static const String hexagen = '/dev/hexagen';
+  static const String harmonizer = '/dev/harmonizer';
 }

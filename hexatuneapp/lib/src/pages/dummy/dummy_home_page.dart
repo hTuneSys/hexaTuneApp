@@ -105,6 +105,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Hardware connection, RGB, freq sweep, operations',
       route: RouteNames.hexagen,
     ),
+    _NavItem(
+      icon: Icons.play_circle_outline,
+      title: 'Harmonizer Player',
+      subtitle: 'Multi-mode frequency generation player',
+      route: RouteNames.harmonizer,
+    ),
   ];
 
   @override

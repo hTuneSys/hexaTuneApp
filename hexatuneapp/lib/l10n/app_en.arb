@@ -247,5 +247,49 @@
       "status": { "type": "String" },
       "step": { "type": "int" }
     }
-  }
+  },
+
+  "harmonizerTitle": "Harmonizer Player",
+  "harmonizerSelectFormula": "Select a formula",
+  "harmonizerNoFormulas": "No formulas available",
+  "harmonizerFormulaLabel": "Formula",
+  "harmonizerTypeMonaural": "Monaural",
+  "harmonizerTypeBinaural": "Binaural",
+  "harmonizerTypeMagnetic": "Magnetic",
+  "harmonizerTypePhotonic": "Photonic",
+  "harmonizerTypeQuantal": "Quantal",
+  "harmonizerComingSoon": "This feature is coming soon",
+  "harmonizerHeadsetRequired": "Please connect headphones for binaural mode",
+  "harmonizerHexagenRequired": "Please connect a hexaGen device for magnetic mode",
+  "harmonizerSelectAmbience": "Select ambience (optional)",
+  "harmonizerNoAmbience": "No ambience",
+  "harmonizerAddAmbience": "Add ambience",
+  "harmonizerPlay": "Play",
+  "harmonizerStop": "Stop",
+  "harmonizerPreparing": "Preparing...",
+  "harmonizerPlaying": "Playing",
+  "harmonizerStopping": "Stopping...",
+  "harmonizerError": "Error: {message}",
+  "@harmonizerError": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "harmonizerCycle": "Cycle {cycle}",
+  "@harmonizerCycle": {
+    "placeholders": { "cycle": { "type": "int" } }
+  },
+  "harmonizerTotalDuration": "Total",
+  "harmonizerRemaining": "Remaining",
+  "harmonizerStep": "Step {index}: {value} Hz — {duration}s",
+  "@harmonizerStep": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "value": { "type": "int" },
+      "duration": { "type": "String" }
+    }
+  },
+  "harmonizerStepOneshot": "one-shot",
+  "harmonizerGracefulStopHint": "Tap to stop after current cycle",
+  "harmonizerImmediateStopHint": "Hold 3s to stop immediately",
+  "harmonizerGenerating": "Generating sequence...",
+  "harmonizerNoSequence": "No formula selected"
 }
