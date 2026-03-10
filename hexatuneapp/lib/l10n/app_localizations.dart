@@ -464,17 +464,17 @@ abstract class AppLocalizations {
   /// **'Wave'**
   String get ambienceTextureWave;
 
-  /// No description provided for @ambienceEventBirdChirping1.
+  /// No description provided for @ambienceEventSeaGull.
   ///
   /// In en, this message translates to:
-  /// **'Bird Chirping 1'**
-  String get ambienceEventBirdChirping1;
+  /// **'Sea Gull'**
+  String get ambienceEventSeaGull;
 
-  /// No description provided for @ambienceEventBirdChirping2.
+  /// No description provided for @ambienceEventBird.
   ///
   /// In en, this message translates to:
-  /// **'Bird Chirping 2'**
-  String get ambienceEventBirdChirping2;
+  /// **'Bird'**
+  String get ambienceEventBird;
 
   /// No description provided for @ambienceEventBirdWing.
   ///

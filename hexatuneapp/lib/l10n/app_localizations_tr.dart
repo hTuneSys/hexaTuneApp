@@ -200,10 +200,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ambienceTextureWave => 'Dalga';
 
   @override
-  String get ambienceEventBirdChirping1 => 'Kuş Cıvıltısı 1';
+  String get ambienceEventSeaGull => 'Martı';
 
   @override
-  String get ambienceEventBirdChirping2 => 'Kuş Cıvıltısı 2';
+  String get ambienceEventBird => 'Kuş';
 
   @override
   String get ambienceEventBirdWing => 'Kuş Kanadı';

@@ -85,18 +85,18 @@
       "nameKey": "ambienceTextureWave"
     },
     {
-      "id": "bird_chirping_1",
+      "id": "sea_gull",
       "type": "events",
-      "audioAsset": "assets/audio/ambience/events/bird_chirping_1.wav",
-      "iconAsset": "assets/icon/ambience/events/bird_chirping_1.svg",
-      "nameKey": "ambienceEventBirdChirping1"
+      "audioAsset": "assets/audio/ambience/events/sea_gull.wav",
+      "iconAsset": "assets/icon/ambience/events/sea_gull.svg",
+      "nameKey": "ambienceEventSeaGull"
     },
     {
-      "id": "bird_chirping_2",
+      "id": "bird",
       "type": "events",
-      "audioAsset": "assets/audio/ambience/events/bird_chirping_2.wav",
-      "iconAsset": "assets/icon/ambience/events/bird_chirping_2.svg",
-      "nameKey": "ambienceEventBirdChirping2"
+      "audioAsset": "assets/audio/ambience/events/bird.wav",
+      "iconAsset": "assets/icon/ambience/events/bird.svg",
+      "nameKey": "ambienceEventBird"
     },
     {
       "id": "bird_wing",
