@@ -29,6 +29,7 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/widgets/mini_harmonizer_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/forgot_password_page.dart';
 import 'package:hexatuneapp/src/pages/shared/login_page.dart';
 import 'package:hexatuneapp/src/pages/shared/register_page.dart';
@@ -79,90 +80,105 @@ class AppRouter {
           return ResetPasswordPage(email: email);
         },
       ),
-      GoRoute(
-        path: RouteNames.home,
-        builder: (context, state) => const DummyHomePage(),
-      ),
-      GoRoute(
-        path: RouteNames.reAuth,
-        builder: (context, state) => const _PlaceholderPage(title: 'Re-Auth'),
-      ),
-      GoRoute(
-        path: RouteNames.deviceApproval,
-        builder: (context, state) =>
-            const _PlaceholderPage(title: 'Device Approval'),
-      ),
-      // Dummy test pages for all API endpoints.
-      GoRoute(
-        path: RouteNames.authExtras,
-        builder: (context, state) => const DummyAuthExtrasPage(),
-      ),
-      GoRoute(
-        path: RouteNames.account,
-        builder: (context, state) => const DummyAccountPage(),
-      ),
-      GoRoute(
-        path: RouteNames.sessions,
-        builder: (context, state) => const DummySessionsPage(),
-      ),
-      GoRoute(
-        path: RouteNames.devices,
-        builder: (context, state) => const DummyDevicesPage(),
-      ),
-      GoRoute(
-        path: RouteNames.providers,
-        builder: (context, state) => const DummyProvidersPage(),
-      ),
-      GoRoute(
-        path: RouteNames.tenants,
-        builder: (context, state) => const DummyTenantsPage(),
-      ),
-      GoRoute(
-        path: RouteNames.categories,
-        builder: (context, state) => const DummyCategoriesPage(),
-      ),
-      GoRoute(
-        path: RouteNames.inventories,
-        builder: (context, state) => const DummyInventoriesPage(),
-      ),
-      GoRoute(
-        path: RouteNames.formulas,
-        builder: (context, state) => const DummyFormulasPage(),
-      ),
-      GoRoute(
-        path: RouteNames.formulaItems,
-        builder: (context, state) {
-          final formulaId = state.pathParameters['formulaId'] ?? '';
-          return DummyFormulaItemsPage(formulaId: formulaId);
+      // --- Dummy / dev pages share a shell with a persistent mini-player ---
+      ShellRoute(
+        builder: (context, state, child) {
+          final isHarmonizerPage = state.uri.path == RouteNames.harmonizer;
+          return Column(
+            children: [
+              Expanded(child: child),
+              if (!isHarmonizerPage) const MiniHarmonizerBar(),
+            ],
+          );
         },
-      ),
-      GoRoute(
-        path: RouteNames.tasks,
-        builder: (context, state) => const DummyTasksPage(),
-      ),
-      GoRoute(
-        path: RouteNames.audit,
-        builder: (context, state) => const DummyAuditPage(),
-      ),
-      GoRoute(
-        path: RouteNames.harmonics,
-        builder: (context, state) => const DummyHarmonicsPage(),
-      ),
-      GoRoute(
-        path: RouteNames.dsp,
-        builder: (context, state) => const DummyDspPage(),
-      ),
-      GoRoute(
-        path: RouteNames.ambience,
-        builder: (context, state) => const DummyAmbiencePage(),
-      ),
-      GoRoute(
-        path: RouteNames.hexagen,
-        builder: (context, state) => const DummyHexagenPage(),
-      ),
-      GoRoute(
-        path: RouteNames.harmonizer,
-        builder: (context, state) => const DummyHarmonizerPage(),
+        routes: [
+          GoRoute(
+            path: RouteNames.home,
+            builder: (context, state) => const DummyHomePage(),
+          ),
+          GoRoute(
+            path: RouteNames.reAuth,
+            builder: (context, state) =>
+                const _PlaceholderPage(title: 'Re-Auth'),
+          ),
+          GoRoute(
+            path: RouteNames.deviceApproval,
+            builder: (context, state) =>
+                const _PlaceholderPage(title: 'Device Approval'),
+          ),
+          // Dummy test pages for all API endpoints.
+          GoRoute(
+            path: RouteNames.authExtras,
+            builder: (context, state) => const DummyAuthExtrasPage(),
+          ),
+          GoRoute(
+            path: RouteNames.account,
+            builder: (context, state) => const DummyAccountPage(),
+          ),
+          GoRoute(
+            path: RouteNames.sessions,
+            builder: (context, state) => const DummySessionsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.devices,
+            builder: (context, state) => const DummyDevicesPage(),
+          ),
+          GoRoute(
+            path: RouteNames.providers,
+            builder: (context, state) => const DummyProvidersPage(),
+          ),
+          GoRoute(
+            path: RouteNames.tenants,
+            builder: (context, state) => const DummyTenantsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.categories,
+            builder: (context, state) => const DummyCategoriesPage(),
+          ),
+          GoRoute(
+            path: RouteNames.inventories,
+            builder: (context, state) => const DummyInventoriesPage(),
+          ),
+          GoRoute(
+            path: RouteNames.formulas,
+            builder: (context, state) => const DummyFormulasPage(),
+          ),
+          GoRoute(
+            path: RouteNames.formulaItems,
+            builder: (context, state) {
+              final formulaId = state.pathParameters['formulaId'] ?? '';
+              return DummyFormulaItemsPage(formulaId: formulaId);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.tasks,
+            builder: (context, state) => const DummyTasksPage(),
+          ),
+          GoRoute(
+            path: RouteNames.audit,
+            builder: (context, state) => const DummyAuditPage(),
+          ),
+          GoRoute(
+            path: RouteNames.harmonics,
+            builder: (context, state) => const DummyHarmonicsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.dsp,
+            builder: (context, state) => const DummyDspPage(),
+          ),
+          GoRoute(
+            path: RouteNames.ambience,
+            builder: (context, state) => const DummyAmbiencePage(),
+          ),
+          GoRoute(
+            path: RouteNames.hexagen,
+            builder: (context, state) => const DummyHexagenPage(),
+          ),
+          GoRoute(
+            path: RouteNames.harmonizer,
+            builder: (context, state) => const DummyHarmonizerPage(),
+          ),
+        ],
       ),
     ],
   );

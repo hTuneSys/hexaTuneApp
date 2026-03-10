@@ -107,17 +107,27 @@ class _MiniHarmonizerBarState extends State<MiniHarmonizerBar>
           ),
           const Spacer(),
 
-          // Stop button
-          GestureDetector(
-            onLongPressStart: (_) => _startImmediateTimer(),
-            onLongPressEnd: (_) => _cancelImmediateTimer(),
-            child: IconButton(
-              icon: const Icon(Icons.stop),
-              tooltip: l10n.harmonizerGracefulStopHint,
-              onPressed: _harmonizer.stopGraceful,
-              color: colorScheme.error,
+          // Stop / Loading button
+          if (_state.status == HarmonizerStatus.stopping)
+            SizedBox(
+              width: 32,
+              height: 32,
+              child: CircularProgressIndicator(
+                strokeWidth: 2.5,
+                color: colorScheme.error,
+              ),
+            )
+          else
+            GestureDetector(
+              onLongPressStart: (_) => _startImmediateTimer(),
+              onLongPressEnd: (_) => _cancelImmediateTimer(),
+              child: IconButton(
+                icon: const Icon(Icons.stop),
+                tooltip: l10n.harmonizerGracefulStopHint,
+                onPressed: _harmonizer.stopGraceful,
+                color: colorScheme.error,
+              ),
             ),
-          ),
 
           const Spacer(),
 
