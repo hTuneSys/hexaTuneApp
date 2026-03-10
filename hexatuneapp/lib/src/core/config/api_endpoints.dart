@@ -72,16 +72,18 @@ class ApiEndpoints {
     return '$_v1/device-approvals/$id/status';
   }
 
-  // --- Categories (5 endpoints) ---
+  // --- Categories (5 endpoints + labels) ---
   static const String categories = '$_v1/categories';
+  static const String categoryLabels = '$_v1/categories/labels';
 
   static String category(String id) {
     assert(id.isNotEmpty, 'id must not be empty');
     return '$_v1/categories/$id';
   }
 
-  // --- Inventories (6 endpoints) ---
+  // --- Inventories (6 endpoints + labels) ---
   static const String inventories = '$_v1/inventories';
+  static const String inventoryLabels = '$_v1/inventories/labels';
 
   static String inventory(String id) {
     assert(id.isNotEmpty, 'id must not be empty');
@@ -93,8 +95,9 @@ class ApiEndpoints {
     return '$_v1/inventories/$id/image';
   }
 
-  // --- Formulas (5 endpoints) ---
+  // --- Formulas (5 endpoints + labels) ---
   static const String formulas = '$_v1/formulas';
+  static const String formulaLabels = '$_v1/formulas/labels';
 
   static String formula(String id) {
     assert(id.isNotEmpty, 'id must not be empty');

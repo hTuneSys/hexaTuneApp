@@ -108,4 +108,19 @@ class CategoryRepository {
     _logService.debug('DELETE category $id', category: LogCategory.network);
     await _dio.delete(ApiEndpoints.category(id));
   }
+
+  /// GET /api/v1/categories/labels
+  Future<List<String>> listLabels() async {
+    _logService.debug('GET category labels', category: LogCategory.network);
+    final response = await _dio.get<List<dynamic>>(ApiEndpoints.categoryLabels);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Category labels response body is null',
+      );
+    }
+    return data.cast<String>();
+  }
 }

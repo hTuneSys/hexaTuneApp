@@ -1488,7 +1488,7 @@
           "Categories"
         ],
         "summary": "`GET /api/v1/categories` — List categories with cursor-based pagination",
-        "description": "Returns a paginated list of categories for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on category name |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<CategoryResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "description": "Returns a paginated list of categories for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on category name |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<CategoryResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
         "operationId": "list_categories",
         "parameters": [
           {
@@ -1529,6 +1529,18 @@
             "name": "q",
             "in": "query",
             "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
             "required": false,
             "schema": {
               "type": [
@@ -1600,6 +1612,36 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/categories/labels": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "summary": "`GET /api/v1/categories/labels` — List distinct category labels",
+        "description": "Returns a deduplicated, alphabetically sorted list of all labels\ncurrently assigned to categories within the tenant.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Distinct labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_category_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -2160,7 +2202,7 @@
           "Formulas"
         ],
         "summary": "`GET /api/v1/formulas` — List formulas with cursor-based pagination",
-        "description": "Returns a paginated list of formulas for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on formula name |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<FormulaResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "description": "Returns a paginated list of formulas for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on formula name |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<FormulaResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
         "operationId": "list_formulas",
         "parameters": [
           {
@@ -2201,6 +2243,18 @@
             "name": "q",
             "in": "query",
             "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
             "required": false,
             "schema": {
               "type": [
@@ -2262,6 +2316,36 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/formulas/labels": {
+      "get": {
+        "tags": [
+          "Formulas"
+        ],
+        "summary": "`GET /api/v1/formulas/labels` — List distinct formula labels",
+        "description": "Returns a deduplicated, alphabetically sorted list of all labels\ncurrently assigned to formulas within the tenant.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Distinct labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_formula_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -2777,7 +2861,7 @@
           "Inventories"
         ],
         "summary": "`GET /api/v1/inventories` — List inventory items with cursor-based pagination",
-        "description": "Returns a paginated list of inventory items for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on item name |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<InventoryResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "description": "Returns a paginated list of inventory items for the tenant.\nSupports sorting via `sort` query parameter (`name`, `-name`, `created_at`, `-created_at`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on item name |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<InventoryResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
         "operationId": "list_inventories",
         "parameters": [
           {
@@ -2818,6 +2902,18 @@
             "name": "q",
             "in": "query",
             "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
             "required": false,
             "schema": {
               "type": [
@@ -2869,6 +2965,36 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/inventories/labels": {
+      "get": {
+        "tags": [
+          "Inventories"
+        ],
+        "summary": "`GET /api/v1/inventories/labels` — List distinct inventory labels",
+        "description": "Returns a deduplicated, alphabetically sorted list of all labels\ncurrently assigned to inventory items within the tenant.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Distinct labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_inventory_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }

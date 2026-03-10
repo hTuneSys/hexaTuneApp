@@ -81,6 +81,12 @@ void main() {
         expect(ApiEndpoints.formulas, '/api/v1/formulas');
         expect(ApiEndpoints.tasks, '/api/v1/tasks');
       });
+
+      test('label endpoints have correct paths', () {
+        expect(ApiEndpoints.categoryLabels, '/api/v1/categories/labels');
+        expect(ApiEndpoints.formulaLabels, '/api/v1/formulas/labels');
+        expect(ApiEndpoints.inventoryLabels, '/api/v1/inventories/labels');
+      });
     });
 
     group('dynamic endpoint methods', () {

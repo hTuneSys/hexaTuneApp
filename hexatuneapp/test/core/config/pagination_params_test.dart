@@ -13,12 +13,14 @@ void main() {
         limit: 20,
         sort: 'created_at:desc',
         query: 'search term',
+        labels: 'rock,jazz',
       );
       final map = params.toQueryParameters();
       expect(map['cursor'], 'abc123');
       expect(map['limit'], 20);
       expect(map['sort'], 'created_at:desc');
       expect(map['q'], 'search term');
+      expect(map['labels'], 'rock,jazz');
     });
 
     test('toQueryParameters omits null fields', () {
@@ -28,6 +30,7 @@ void main() {
       expect(map.containsKey('cursor'), false);
       expect(map.containsKey('sort'), false);
       expect(map.containsKey('q'), false);
+      expect(map.containsKey('labels'), false);
     });
 
     test('toQueryParameters returns empty map when all null', () {

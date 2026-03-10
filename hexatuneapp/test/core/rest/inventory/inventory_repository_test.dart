@@ -83,6 +83,22 @@ void main() {
 
         expect(result.data, isEmpty);
       });
+
+      test('passes labels filter param', () async {
+        const params = PaginationParams(labels: 'oil');
+        dioAdapter.onGet(
+          ApiEndpoints.inventories,
+          (server) => server.reply(200, {
+            'data': [inventoryJson],
+            'pagination': {'has_more': false, 'limit': 20},
+          }),
+          queryParameters: params.toQueryParameters(),
+        );
+
+        final result = await repository.list(params: params);
+
+        expect(result.data, hasLength(1));
+      });
     });
 
     group('getById', () {
@@ -123,6 +139,30 @@ void main() {
 
         expect(result, isA<ImageUrlResponse>());
         expect(result.url, 'https://cdn.example.com/image.png');
+      });
+    });
+
+    group('listLabels', () {
+      test('sends GET and returns label list', () async {
+        dioAdapter.onGet(
+          ApiEndpoints.inventoryLabels,
+          (server) => server.reply(200, ['oil', 'acrylic', 'watercolor']),
+        );
+
+        final result = await repository.listLabels();
+
+        expect(result, ['oil', 'acrylic', 'watercolor']);
+      });
+
+      test('returns empty list when no labels exist', () async {
+        dioAdapter.onGet(
+          ApiEndpoints.inventoryLabels,
+          (server) => server.reply(200, <String>[]),
+        );
+
+        final result = await repository.listLabels();
+
+        expect(result, isEmpty);
       });
     });
   });

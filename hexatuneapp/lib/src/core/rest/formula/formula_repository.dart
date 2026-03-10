@@ -114,6 +114,21 @@ class FormulaRepository {
     await _dio.delete(ApiEndpoints.formula(id));
   }
 
+  /// GET /api/v1/formulas/labels
+  Future<List<String>> listLabels() async {
+    _logService.debug('GET formula labels', category: LogCategory.network);
+    final response = await _dio.get<List<dynamic>>(ApiEndpoints.formulaLabels);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Formula labels response body is null',
+      );
+    }
+    return data.cast<String>();
+  }
+
   /// POST /api/v1/formulas/{formulaId}/items
   Future<List<FormulaItemResponse>> addItems(
     String formulaId,

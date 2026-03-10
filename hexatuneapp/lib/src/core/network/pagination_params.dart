@@ -5,7 +5,13 @@
 ///
 /// Used by all paginated list endpoints.
 class PaginationParams {
-  const PaginationParams({this.cursor, this.limit, this.sort, this.query});
+  const PaginationParams({
+    this.cursor,
+    this.limit,
+    this.sort,
+    this.query,
+    this.labels,
+  });
 
   /// Cursor for the next page (from [PaginationMeta.nextCursor]).
   final String? cursor;
@@ -19,6 +25,9 @@ class PaginationParams {
   /// Search query string.
   final String? query;
 
+  /// Comma-separated label filter (AND logic).
+  final String? labels;
+
   /// Converts to a query parameter map for Dio requests.
   Map<String, dynamic> toQueryParameters() {
     return <String, dynamic>{
@@ -26,6 +35,7 @@ class PaginationParams {
       if (limit != null) 'limit': limit,
       if (sort != null) 'sort': sort,
       if (query != null) 'q': query,
+      if (labels != null) 'labels': labels,
     };
   }
 }

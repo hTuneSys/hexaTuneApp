@@ -95,6 +95,22 @@ void main() {
 
         expect(result.data, isEmpty);
       });
+
+      test('passes labels filter param', () async {
+        const params = PaginationParams(labels: 'rock,jazz');
+        dioAdapter.onGet(
+          ApiEndpoints.formulas,
+          (server) => server.reply(200, {
+            'data': [formulaJson],
+            'pagination': {'has_more': false, 'limit': 20},
+          }),
+          queryParameters: params.toQueryParameters(),
+        );
+
+        final result = await repository.list(params: params);
+
+        expect(result.data, hasLength(1));
+      });
     });
 
     group('create', () {
@@ -232,6 +248,30 @@ void main() {
           repository.reorderItems('frm-001', request),
           completes,
         );
+      });
+    });
+
+    group('listLabels', () {
+      test('sends GET and returns label list', () async {
+        dioAdapter.onGet(
+          ApiEndpoints.formulaLabels,
+          (server) => server.reply(200, ['jazz', 'rock', 'classical']),
+        );
+
+        final result = await repository.listLabels();
+
+        expect(result, ['jazz', 'rock', 'classical']);
+      });
+
+      test('returns empty list when no labels exist', () async {
+        dioAdapter.onGet(
+          ApiEndpoints.formulaLabels,
+          (server) => server.reply(200, <String>[]),
+        );
+
+        final result = await repository.listLabels();
+
+        expect(result, isEmpty);
       });
     });
   });

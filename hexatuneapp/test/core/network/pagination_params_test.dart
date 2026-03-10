@@ -13,6 +13,7 @@ void main() {
         limit: 25,
         sort: 'created_at:desc',
         query: 'search term',
+        labels: 'rock,jazz',
       );
 
       expect(params.toQueryParameters(), {
@@ -20,6 +21,7 @@ void main() {
         'limit': 25,
         'sort': 'created_at:desc',
         'q': 'search term',
+        'labels': 'rock,jazz',
       });
     });
 
@@ -42,6 +44,19 @@ void main() {
       expect(result.containsKey('q'), isTrue);
       expect(result.containsKey('query'), isFalse);
       expect(result['q'], 'my search');
+    });
+
+    test('toQueryParameters includes labels when set', () {
+      const params = PaginationParams(labels: 'oil,acrylic');
+
+      final result = params.toQueryParameters();
+      expect(result['labels'], 'oil,acrylic');
+    });
+
+    test('toQueryParameters omits labels when null', () {
+      const params = PaginationParams(limit: 10);
+
+      expect(params.toQueryParameters().containsKey('labels'), isFalse);
     });
   });
 }

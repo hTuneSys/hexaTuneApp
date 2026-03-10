@@ -137,6 +137,23 @@ class InventoryRepository {
     await _dio.delete(ApiEndpoints.inventory(id));
   }
 
+  /// GET /api/v1/inventories/labels
+  Future<List<String>> listLabels() async {
+    _logService.debug('GET inventory labels', category: LogCategory.network);
+    final response = await _dio.get<List<dynamic>>(
+      ApiEndpoints.inventoryLabels,
+    );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Inventory labels response body is null',
+      );
+    }
+    return data.cast<String>();
+  }
+
   /// GET /api/v1/inventories/{id}/image
   Future<ImageUrlResponse> getImageUrl(String id) async {
     _logService.debug('GET inventory image $id', category: LogCategory.network);
