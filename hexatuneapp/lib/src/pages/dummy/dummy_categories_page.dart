@@ -23,6 +23,8 @@ class DummyCategoriesPage extends StatefulWidget {
 class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
   final _searchCtrl = TextEditingController();
   final List<CategoryResponse> _categories = [];
+  final List<String> _availableLabels = [];
+  final Set<String> _selectedLabels = {};
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
@@ -30,6 +32,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
   @override
   void initState() {
     super.initState();
+    _loadLabels();
     _load();
   }
 
@@ -37,6 +40,25 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
   void dispose() {
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadLabels() async {
+    try {
+      final repo = getIt<CategoryRepository>();
+      final labels = await repo.listLabels();
+      if (mounted) {
+        setState(
+          () => _availableLabels
+            ..clear()
+            ..addAll(labels),
+        );
+      }
+    } catch (e) {
+      getIt<LogService>().devLog(
+        'Failed to load category labels: $e',
+        category: LogCategory.ui,
+      );
+    }
   }
 
   Future<void> _load({bool loadMore = false}) async {
@@ -51,6 +73,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
           query: _searchCtrl.text.trim().isEmpty
               ? null
               : _searchCtrl.text.trim(),
+          labels: _selectedLabels.isEmpty ? null : _selectedLabels.join(','),
         ),
       );
       if (mounted) {
@@ -128,6 +151,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
       );
       if (mounted) {
         _showMessage('Category created');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -221,6 +245,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
       );
       if (mounted) {
         _showMessage('Category updated');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -237,6 +262,7 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
       await repo.delete(id);
       if (mounted) {
         _showMessage('Category deleted');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -270,21 +296,54 @@ class _DummyCategoriesPageState extends State<DummyCategoriesPage> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
+          preferredSize: Size.fromHeight(_availableLabels.isEmpty ? 56 : 100),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              controller: _searchCtrl,
-              decoration: InputDecoration(
-                hintText: 'Search categories…',
-                border: const OutlineInputBorder(),
-                isDense: true,
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () => _load(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _searchCtrl,
+                  decoration: InputDecoration(
+                    hintText: 'Search categories…',
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () => _load(),
+                    ),
+                  ),
+                  onSubmitted: (_) => _load(),
                 ),
-              ),
-              onSubmitted: (_) => _load(),
+                if (_availableLabels.isNotEmpty)
+                  SizedBox(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: _availableLabels
+                          .map(
+                            (label) => Padding(
+                              padding: const EdgeInsets.only(right: 6, top: 4),
+                              child: FilterChip(
+                                label: Text(label),
+                                selected: _selectedLabels.contains(label),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      _selectedLabels.add(label);
+                                    } else {
+                                      _selectedLabels.remove(label);
+                                    }
+                                  });
+                                  _load();
+                                },
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),

@@ -27,6 +27,8 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
   final _searchCtrl = TextEditingController();
   final _picker = ImagePicker();
   final List<InventoryResponse> _items = [];
+  final List<String> _availableLabels = [];
+  final Set<String> _selectedLabels = {};
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
@@ -34,6 +36,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
   @override
   void initState() {
     super.initState();
+    _loadLabels();
     _load();
   }
 
@@ -41,6 +44,25 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
   void dispose() {
     _searchCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadLabels() async {
+    try {
+      final repo = getIt<InventoryRepository>();
+      final labels = await repo.listLabels();
+      if (mounted) {
+        setState(
+          () => _availableLabels
+            ..clear()
+            ..addAll(labels),
+        );
+      }
+    } catch (e) {
+      getIt<LogService>().devLog(
+        'Failed to load inventory labels: $e',
+        category: LogCategory.ui,
+      );
+    }
   }
 
   Future<void> _load({bool loadMore = false}) async {
@@ -55,6 +77,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
           query: _searchCtrl.text.trim().isEmpty
               ? null
               : _searchCtrl.text.trim(),
+          labels: _selectedLabels.isEmpty ? null : _selectedLabels.join(','),
         ),
       );
       if (mounted) {
@@ -218,6 +241,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
       );
       if (mounted) {
         _showMessage('Inventory created');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -448,6 +472,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
       );
       if (mounted) {
         _showMessage('Inventory updated');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -464,6 +489,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
       await repo.delete(id);
       if (mounted) {
         _showMessage('Inventory deleted');
+        _loadLabels();
         _load();
       }
     } catch (e) {
@@ -497,21 +523,54 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(56),
+          preferredSize: Size.fromHeight(_availableLabels.isEmpty ? 56 : 100),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: TextField(
-              controller: _searchCtrl,
-              decoration: InputDecoration(
-                hintText: 'Search inventories…',
-                border: const OutlineInputBorder(),
-                isDense: true,
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () => _load(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: _searchCtrl,
+                  decoration: InputDecoration(
+                    hintText: 'Search inventories…',
+                    border: const OutlineInputBorder(),
+                    isDense: true,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () => _load(),
+                    ),
+                  ),
+                  onSubmitted: (_) => _load(),
                 ),
-              ),
-              onSubmitted: (_) => _load(),
+                if (_availableLabels.isNotEmpty)
+                  SizedBox(
+                    height: 40,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: _availableLabels
+                          .map(
+                            (label) => Padding(
+                              padding: const EdgeInsets.only(right: 6, top: 4),
+                              child: FilterChip(
+                                label: Text(label),
+                                selected: _selectedLabels.contains(label),
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      _selectedLabels.add(label);
+                                    } else {
+                                      _selectedLabels.remove(label);
+                                    }
+                                  });
+                                  _load();
+                                },
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+              ],
             ),
           ),
         ),
