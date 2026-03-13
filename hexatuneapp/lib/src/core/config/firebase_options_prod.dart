@@ -29,22 +29,22 @@ class DefaultFirebaseOptions {
     }
   }
 
-  // TODO: Replace with actual values from `flutterfire configure`.
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'PLACEHOLDER',
-    appId: 'PLACEHOLDER',
-    messagingSenderId: 'PLACEHOLDER',
+    apiKey: 'AIzaSyCFpQiGzvyOqurab0Z481EIsYmL9ovsIpw',
+    appId: '1:54713508717:android:3881315f1dca6599027064',
+    messagingSenderId: '54713508717',
     projectId: 'hexatune-prod',
     storageBucket: 'hexatune-prod.firebasestorage.app',
   );
 
-  // TODO: Replace with actual values from `flutterfire configure`.
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'PLACEHOLDER',
-    appId: 'PLACEHOLDER',
-    messagingSenderId: 'PLACEHOLDER',
+    apiKey: 'AIzaSyAaQ03BQU0ADMhnAs3_d4kdmmkBfyPvseA',
+    appId: '1:54713508717:ios:4237e031b72c1c7b027064',
+    messagingSenderId: '54713508717',
     projectId: 'hexatune-prod',
     storageBucket: 'hexatune-prod.firebasestorage.app',
+    iosClientId:
+        '54713508717-urf6k0crhqff4k2p00d49smvo4n1jr0q.apps.googleusercontent.com',
     iosBundleId: 'com.hexatune.hexatuneapp',
   );
 }

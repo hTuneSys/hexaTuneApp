@@ -776,7 +776,7 @@
           "Authentication"
         ],
         "summary": "`POST /api/v1/auth/login` — Authenticate user and create session",
-        "description": "Validates credentials and creates a new session with access/refresh tokens.\nIf `device_id` is not provided, a new one is generated. If `tenant_id` is\nprovided, login is scoped to that tenant; otherwise the user's default tenant\nis used.\n\n# Authentication\n\n**Policy:** Public (no authentication required)\n\n# Request Body\n\n[`LoginRequest`] — email, password, optional `deviceId` and `tenantId`.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Login successful | [`LoginResponse`] |\n| `401`  | Invalid credentials | [`ProblemDetails`] |\n| `422`  | Validation error (invalid email/password format) | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the credentials are invalid or the service call fails.",
+        "description": "Validates credentials and creates a new session with access/refresh tokens.\nIf `device_id` is not provided, a new one is generated. Tenant is resolved\nautomatically by looking up the owner membership.\n\n# Authentication\n\n**Policy:** Public (no authentication required)\n\n# Request Body\n\n[`LoginRequest`] — email, password, optional `deviceId`.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Login successful | [`LoginResponse`] |\n| `401`  | Invalid credentials | [`ProblemDetails`] |\n| `422`  | Validation error (invalid email/password format) | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the credentials are invalid or the service call fails.",
         "operationId": "login",
         "requestBody": {
           "content": {
@@ -2098,6 +2098,46 @@
         ]
       }
     },
+    "/api/v1/devices": {
+      "get": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "`GET /api/v1/devices` — List all devices for the authenticated user",
+        "description": "Returns all active (non-deleted) devices associated with the caller's\naccount. Push token details are excluded for security — manage tokens\nvia dedicated push-token endpoints.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Device list | `Vec<DeviceResponse>` |\n| `401`  | Not authenticated | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] when the user is not authenticated.",
+        "operationId": "list_devices",
+        "responses": {
+          "200": {
+            "description": "Device list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DeviceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/api/v1/devices/me/push-token": {
       "put": {
         "tags": [
@@ -2162,11 +2202,63 @@
           "Devices"
         ],
         "summary": "`DELETE /api/v1/devices/me/push-token` — Remove push notification token",
-        "description": "Removes the FCM push notification token from the device bound to the\ncaller's active session. Idempotent — returns 204 even if no token was\nregistered.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Token removed | — |\n| `401`  | Not authenticated | [`ProblemDetails`] |\n| `404`  | Device not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] when no device is bound to the session (404).",
+        "description": "Removes the FCM push notification token for the specified app from the\ndevice bound to the caller's active session. Idempotent — returns 204\neven if no token was registered.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n`UnregisterPushTokenRequest` — application bundle identifier.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Token removed | — |\n| `401`  | Not authenticated | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] when the session is invalid.",
         "operationId": "unregister_push_token",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnregisterPushTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
         "responses": {
           "204": {
             "description": "Push token removed"
+          },
+          "401": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/devices/{id}": {
+      "delete": {
+        "tags": [
+          "Devices"
+        ],
+        "summary": "`DELETE /api/v1/devices/{id}` — Remove a device and clean up its push tokens",
+        "description": "Soft-deletes the specified device and hard-deletes all push notification\ntokens registered for it. Also revokes any active sessions on the device.\nOnly devices belonging to the authenticated user's account can be removed.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Device identifier |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Device removed | — |\n| `401`  | Not authenticated | [`ProblemDetails`] |\n| `404`  | Device not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] when:\n- The device does not exist or belongs to another account (404)\n- The user is not authenticated (401)",
+        "operationId": "remove_device",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Device identifier",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Device removed"
           },
           "401": {
             "description": "Not authenticated",
@@ -4265,6 +4357,398 @@
           }
         ]
       }
+    },
+    "/api/v1/wallet/balance": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`GET /api/v1/wallet/balance` — Get wallet balance",
+        "description": "Returns the tenant's wallet balance information. Creates a wallet\nautomatically if one does not exist yet.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Wallet balance | [`WalletBalanceResponse`] |\n| `401`  | Not authenticated | [`ProblemDetails`] |\n| `403`  | Insufficient permissions | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "get_balance",
+        "responses": {
+          "200": {
+            "description": "Wallet balance",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WalletBalanceResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/packages": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`GET /api/v1/wallet/packages` — List active coin packages",
+        "description": "Returns all active coin packages ordered by display sort order.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Package list | `Vec<`[`CoinPackageResponse`]`>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_packages",
+        "responses": {
+          "200": {
+            "description": "Active coin packages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CoinPackageResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/purchase/apple": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/purchase/apple` — Record Apple In-App Purchase",
+        "description": "Records an Apple In-App Purchase receipt for server-side verification.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`MobilePurchaseRequest`] — Package ID and Apple receipt data.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Purchase recorded | — |\n| `400`  | Invalid input | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Apple is not configured.",
+        "operationId": "initiate_apple_purchase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobilePurchaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Purchase recorded"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Package not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/purchase/google": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/purchase/google` — Record Google Play purchase",
+        "description": "Records a Google Play purchase token for server-side verification.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`MobilePurchaseRequest`] — Package ID and Google purchase token.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Purchase recorded | — |\n| `400`  | Invalid input | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Google is not configured.",
+        "operationId": "initiate_google_purchase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MobilePurchaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Purchase recorded"
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Package not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/purchase/stripe": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/purchase/stripe` — Initiate Stripe checkout",
+        "description": "Creates a Stripe Checkout session for a coin package purchase.\nReturns a session ID and checkout URL for redirect.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`InitiatePurchaseRequest`] — Package ID to purchase.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Checkout session created | [`CheckoutResponse`] |\n| `400`  | Invalid input or provider not enabled | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Stripe is not configured.",
+        "operationId": "initiate_stripe_purchase",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiatePurchaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Package not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/transactions": {
+      "get": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`GET /api/v1/wallet/transactions` — List transactions with cursor-based pagination",
+        "description": "Returns a paginated list of wallet transactions for the tenant.\nSupports sorting via `sort` query parameter (`created_at`, `amount_coins`).\nDefault sort: `created_at DESC`.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<TransactionResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_transactions",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor token from previous page response.\nPass the `next_cursor` value from a prior paginated response to fetch the next page.\nOmit for the first page.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": null
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return per page (default: 20, max: 100).\nValues above 100 are automatically clamped.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort fields. Prefix with `-` for descending order.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-created_at,name"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated transaction list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_TransactionResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/wallet/webhook/apple": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/webhook/apple` — Apple webhook endpoint",
+        "description": "Receives Apple App Store Server Notifications v2 for purchase events.\n\n# Authentication\n\n**Policy:** Public (no auth required — verified via JWS signature)\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Webhook processed | — |\n| `400`  | Invalid payload | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if payload verification fails.",
+        "operationId": "apple_webhook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook processed"
+          },
+          "400": {
+            "description": "Invalid payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet/webhook/google": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/webhook/google` — Google webhook endpoint",
+        "description": "Receives Google Play Real-time Developer Notifications via Pub/Sub.\n\n# Authentication\n\n**Policy:** Public (no auth required — verified via Pub/Sub message)\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Webhook processed | — |\n| `400`  | Invalid payload | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if payload verification fails.",
+        "operationId": "google_webhook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook processed"
+          },
+          "400": {
+            "description": "Invalid payload",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/wallet/webhook/stripe": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/webhook/stripe` — Stripe webhook endpoint",
+        "description": "Receives Stripe webhook events for payment completion, failure, and refunds.\nVerifies the `Stripe-Signature` header using HMAC-SHA256.\n\n# Authentication\n\n**Policy:** Public (no auth required — verified via webhook signature)\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Webhook processed | — |\n| `400`  | Invalid signature or payload | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if signature verification fails.",
+        "operationId": "stripe_webhook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook processed"
+          },
+          "400": {
+            "description": "Invalid signature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -4728,6 +5212,88 @@
           }
         }
       },
+      "CheckoutResponse": {
+        "type": "object",
+        "description": "Response DTO for a checkout session.",
+        "required": [
+          "sessionId"
+        ],
+        "properties": {
+          "checkoutUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Checkout URL (Stripe only)."
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Provider-specific session/transaction identifier."
+          }
+        }
+      },
+      "CoinPackageResponse": {
+        "type": "object",
+        "description": "Response DTO for a coin package.",
+        "required": [
+          "id",
+          "name",
+          "coins",
+          "priceCents",
+          "currency",
+          "sortOrder"
+        ],
+        "properties": {
+          "appleProductId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Apple product identifier."
+          },
+          "coins": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Number of coins in this package."
+          },
+          "currency": {
+            "type": "string",
+            "description": "Currency code."
+          },
+          "googleProductId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Google product identifier."
+          },
+          "id": {
+            "type": "string",
+            "description": "Package identifier."
+          },
+          "name": {
+            "type": "string",
+            "description": "Package display name."
+          },
+          "priceCents": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Price in cents."
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Display sort order."
+          },
+          "stripePriceId": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Stripe price identifier."
+          }
+        }
+      },
       "CreateAccountRequest": {
         "type": "object",
         "description": "Request to create a new account\n\n# Example JSON",
@@ -4884,6 +5450,44 @@
             "type": "string",
             "format": "uuid",
             "description": "UUID of the newly created task."
+          }
+        }
+      },
+      "DeviceResponse": {
+        "type": "object",
+        "description": "Response containing device information.\n\nPush token details are intentionally excluded for security —\ntokens are managed via dedicated push-token endpoints.",
+        "required": [
+          "id",
+          "isTrusted",
+          "userAgent",
+          "ipAddress",
+          "firstSeenAt",
+          "lastSeenAt"
+        ],
+        "properties": {
+          "firstSeenAt": {
+            "type": "string",
+            "description": "When the device was first seen (RFC 3339 format)"
+          },
+          "id": {
+            "type": "string",
+            "description": "Device ID (UUID format)"
+          },
+          "ipAddress": {
+            "type": "string",
+            "description": "IP address from the device's most recent request"
+          },
+          "isTrusted": {
+            "type": "boolean",
+            "description": "Whether the device is trusted for sensitive operations"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "description": "When the device was last seen (RFC 3339 format)"
+          },
+          "userAgent": {
+            "type": "string",
+            "description": "User agent string from the device's most recent request"
           }
         }
       },
@@ -5382,6 +5986,19 @@
           }
         }
       },
+      "InitiatePurchaseRequest": {
+        "type": "object",
+        "description": "Request DTO for initiating a Stripe purchase.",
+        "required": [
+          "packageId"
+        ],
+        "properties": {
+          "packageId": {
+            "type": "string",
+            "description": "Coin package identifier."
+          }
+        }
+      },
       "InventoryResponse": {
         "type": "object",
         "description": "Response DTO for an inventory item.",
@@ -5508,14 +6125,6 @@
             "type": "string",
             "description": "Password (plain text, will be hashed)",
             "example": "Password123!"
-          },
-          "tenantId": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "description": "Optional tenant identifier for multi-tenant login.\nWhen provided, authenticates within the specified tenant.\nWhen omitted, resolves tenant by finding the owner account for the email.",
-            "example": "019c9646-e0ec-7e28-9fce-95a20324e7fb"
           }
         }
       },
@@ -5554,6 +6163,24 @@
             "type": "string",
             "description": "Session ID",
             "example": "550e8400-e29b-41d4-a716-446655440000"
+          }
+        }
+      },
+      "MobilePurchaseRequest": {
+        "type": "object",
+        "description": "Request DTO for mobile (Apple/Google) purchase verification.",
+        "required": [
+          "packageId",
+          "receiptData"
+        ],
+        "properties": {
+          "packageId": {
+            "type": "string",
+            "description": "Coin package identifier."
+          },
+          "receiptData": {
+            "type": "string",
+            "description": "Provider-specific receipt/token data."
           }
         }
       },
@@ -6260,6 +6887,86 @@
           }
         }
       },
+      "PaginatedResponse_TransactionResponse": {
+        "type": "object",
+        "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Response DTO for a wallet transaction.",
+              "required": [
+                "id",
+                "tenantId",
+                "walletId",
+                "transactionType",
+                "amountCoins",
+                "balanceAfter",
+                "description",
+                "status",
+                "createdAt"
+              ],
+              "properties": {
+                "amountCoins": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Coin amount."
+                },
+                "balanceAfter": {
+                  "type": "integer",
+                  "format": "int64",
+                  "description": "Balance after this transaction."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Transaction description."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Transaction identifier."
+                },
+                "provider": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Payment provider (if applicable)."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Transaction status."
+                },
+                "tenantId": {
+                  "type": "string",
+                  "description": "Tenant identifier."
+                },
+                "transactionType": {
+                  "type": "string",
+                  "description": "Transaction type (credit or debit)."
+                },
+                "walletId": {
+                  "type": "string",
+                  "description": "Wallet identifier."
+                }
+              }
+            },
+            "description": "The actual data items for this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata."
+          }
+        }
+      },
       "PaginationMeta": {
         "type": "object",
         "description": "Pagination metadata included in responses.",
@@ -6473,9 +7180,15 @@
         "description": "Request to register or update a push notification token.\n\nThe device is resolved automatically from the caller's active session.\n\nUsed by `PUT /api/v1/devices/me/push-token`",
         "required": [
           "token",
-          "platform"
+          "platform",
+          "appId"
         ],
         "properties": {
+          "appId": {
+            "type": "string",
+            "description": "Application bundle identifier (e.g., `com.example.app`)",
+            "example": "com.example.app"
+          },
           "platform": {
             "type": "string",
             "description": "Target platform for push notification delivery",
@@ -7005,6 +7718,82 @@
           }
         }
       },
+      "TransactionResponse": {
+        "type": "object",
+        "description": "Response DTO for a wallet transaction.",
+        "required": [
+          "id",
+          "tenantId",
+          "walletId",
+          "transactionType",
+          "amountCoins",
+          "balanceAfter",
+          "description",
+          "status",
+          "createdAt"
+        ],
+        "properties": {
+          "amountCoins": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Coin amount."
+          },
+          "balanceAfter": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Balance after this transaction."
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "ISO 8601 creation timestamp."
+          },
+          "description": {
+            "type": "string",
+            "description": "Transaction description."
+          },
+          "id": {
+            "type": "string",
+            "description": "Transaction identifier."
+          },
+          "provider": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Payment provider (if applicable)."
+          },
+          "status": {
+            "type": "string",
+            "description": "Transaction status."
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant identifier."
+          },
+          "transactionType": {
+            "type": "string",
+            "description": "Transaction type (credit or debit)."
+          },
+          "walletId": {
+            "type": "string",
+            "description": "Wallet identifier."
+          }
+        }
+      },
+      "UnregisterPushTokenRequest": {
+        "type": "object",
+        "description": "Request body for unregistering a push token.\n\nUsed by `DELETE /api/v1/devices/me/push-token` to identify\nwhich application's token should be removed.",
+        "required": [
+          "appId"
+        ],
+        "properties": {
+          "appId": {
+            "type": "string",
+            "description": "Application bundle identifier whose token should be removed",
+            "example": "com.hexatune.main"
+          }
+        }
+      },
       "UpdateCategoryRequest": {
         "type": "object",
         "description": "Request DTO for updating an existing category.\n\nAll fields are optional — only provided fields are updated.",
@@ -7111,6 +7900,37 @@
             "example": "user@example.com"
           }
         }
+      },
+      "WalletBalanceResponse": {
+        "type": "object",
+        "description": "Response DTO for wallet balance information.",
+        "required": [
+          "tenantId",
+          "balanceCoins",
+          "totalPurchased",
+          "totalSpent"
+        ],
+        "properties": {
+          "balanceCoins": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Current coin balance."
+          },
+          "tenantId": {
+            "type": "string",
+            "description": "Tenant identifier."
+          },
+          "totalPurchased": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total coins ever purchased."
+          },
+          "totalSpent": {
+            "type": "integer",
+            "format": "int64",
+            "description": "Total coins ever spent."
+          }
+        }
       }
     },
     "securitySchemes": {
@@ -7194,6 +8014,10 @@
     {
       "name": "Steps",
       "description": "Step entity management (read-only)"
+    },
+    {
+      "name": "Wallet",
+      "description": "Wallet and coin operations"
     }
   ]
 }
