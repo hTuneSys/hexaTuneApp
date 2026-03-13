@@ -43,3 +43,13 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Environment files (contain secrets — use .env.example as template)
+.env.dev
+.env.test
+.env.stage
+.env.prod
+
+# Firebase native config files (managed per environment, not committed)
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist

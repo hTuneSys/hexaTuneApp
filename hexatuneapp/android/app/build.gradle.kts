@@ -87,8 +87,6 @@ dependencies {
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }
 
-// Apply Google Services plugin only when google-services.json exists.
-// Run `flutterfire configure` to generate this file from your Firebase project.
-if (file("google-services.json").exists()) {
-    apply(plugin = "com.google.gms.google-services")
-}
+// Google Services Gradle plugin removed — Firebase is initialized via
+// explicit FirebaseOptions in main.dart (per-environment configuration).
+// Static google-services.json / GoogleService-Info.plist are no longer needed.
