@@ -32,12 +32,16 @@ class TaskRepository {
     PaginationParams? params,
     String? status,
     String? taskType,
+    String? createdAfter,
+    String? createdBefore,
   }) async {
     _logService.debug('GET tasks', category: LogCategory.network);
     final queryParameters = <String, dynamic>{
       ...?params?.toQueryParameters(),
       if (status != null) 'status': status,
       if (taskType != null) 'taskType': taskType,
+      if (createdAfter != null) 'createdAfter': createdAfter,
+      if (createdBefore != null) 'createdBefore': createdBefore,
     };
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.tasks,

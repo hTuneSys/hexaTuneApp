@@ -12,20 +12,27 @@ import 'package:hexatuneapp/src/core/rest/device/models/reject_request_dto.dart'
 void main() {
   group('RegisterPushTokenRequest', () {
     test('fromJson creates instance', () {
-      final json = {'token': 'fcm-123', 'platform': 'android'};
+      final json = {
+        'token': 'fcm-123',
+        'platform': 'android',
+        'appId': 'com.hexatune.app',
+      };
       final request = RegisterPushTokenRequest.fromJson(json);
       expect(request.token, 'fcm-123');
       expect(request.platform, 'android');
+      expect(request.appId, 'com.hexatune.app');
     });
 
     test('toJson produces correct keys', () {
       const request = RegisterPushTokenRequest(
         token: 'fcm-123',
         platform: 'ios',
+        appId: 'com.hexatune.app',
       );
       final json = request.toJson();
       expect(json['token'], 'fcm-123');
       expect(json['platform'], 'ios');
+      expect(json['appId'], 'com.hexatune.app');
     });
   });
 

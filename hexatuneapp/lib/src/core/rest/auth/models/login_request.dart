@@ -13,7 +13,6 @@ abstract class LoginRequest with _$LoginRequest {
     required String email,
     required String password,
     String? deviceId,
-    String? tenantId,
   }) = _LoginRequest;
 
   factory LoginRequest.fromJson(Map<String, dynamic> json) =>

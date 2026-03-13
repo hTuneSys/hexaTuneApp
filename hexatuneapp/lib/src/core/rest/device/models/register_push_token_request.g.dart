@@ -11,8 +11,13 @@ _RegisterPushTokenRequest _$RegisterPushTokenRequestFromJson(
 ) => _RegisterPushTokenRequest(
   token: json['token'] as String,
   platform: json['platform'] as String,
+  appId: json['appId'] as String,
 );
 
 Map<String, dynamic> _$RegisterPushTokenRequestToJson(
   _RegisterPushTokenRequest instance,
-) => <String, dynamic>{'token': instance.token, 'platform': instance.platform};
+) => <String, dynamic>{
+  'token': instance.token,
+  'platform': instance.platform,
+  'appId': instance.appId,
+};

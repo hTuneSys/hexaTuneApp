@@ -12,24 +12,35 @@ import 'package:hexatuneapp/src/core/rest/device/models/approval_request_respons
 void main() {
   group('RegisterPushTokenRequest', () {
     test('fromJson creates instance', () {
-      final json = {'token': 'push-tok-abc', 'platform': 'ios'};
+      final json = {
+        'token': 'push-tok-abc',
+        'platform': 'ios',
+        'appId': 'com.hexatune.app',
+      };
       final request = RegisterPushTokenRequest.fromJson(json);
       expect(request.token, 'push-tok-abc');
       expect(request.platform, 'ios');
+      expect(request.appId, 'com.hexatune.app');
     });
 
     test('toJson produces correct keys', () {
       const request = RegisterPushTokenRequest(
         token: 'push-tok-abc',
         platform: 'android',
+        appId: 'com.hexatune.app',
       );
       final json = request.toJson();
       expect(json['token'], 'push-tok-abc');
       expect(json['platform'], 'android');
+      expect(json['appId'], 'com.hexatune.app');
     });
 
     test('round-trip preserves values', () {
-      const original = RegisterPushTokenRequest(token: 't', platform: 'p');
+      const original = RegisterPushTokenRequest(
+        token: 't',
+        platform: 'p',
+        appId: 'a',
+      );
       final restored = RegisterPushTokenRequest.fromJson(original.toJson());
       expect(restored, original);
     });

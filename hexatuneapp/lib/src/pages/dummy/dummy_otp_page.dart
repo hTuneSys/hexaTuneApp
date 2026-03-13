@@ -14,9 +14,9 @@ import 'package:hexatuneapp/src/core/router/route_names.dart';
 
 /// Dummy OTP verification page for testing — will be replaced with production UI.
 class DummyOtpPage extends StatefulWidget {
-  const DummyOtpPage({required this.email, super.key});
+  const DummyOtpPage({this.email, super.key});
 
-  final String email;
+  final String? email;
 
   @override
   State<DummyOtpPage> createState() => _DummyOtpPageState();
@@ -24,17 +24,25 @@ class DummyOtpPage extends StatefulWidget {
 
 class _DummyOtpPageState extends State<DummyOtpPage> {
   final _codeController = TextEditingController();
+  final _emailController = TextEditingController();
   bool _isLoading = false;
   bool _isResending = false;
+
+  String get _email => widget.email ?? _emailController.text.trim();
 
   @override
   void dispose() {
     _codeController.dispose();
+    _emailController.dispose();
     super.dispose();
   }
 
   Future<void> _verify() async {
     final code = _codeController.text.trim();
+    if (_email.isEmpty) {
+      _showMessage('Please enter an email address', isError: true);
+      return;
+    }
     if (code.isEmpty) {
       _showMessage('Please enter the OTP code', isError: true);
       return;
@@ -45,14 +53,12 @@ class _DummyOtpPageState extends State<DummyOtpPage> {
 
     try {
       log.devLog(
-        '→ Verify email: email=${widget.email}, code=$code',
+        '→ Verify email: email=$_email, code=$code',
         category: LogCategory.ui,
       );
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.verifyEmail(
-        VerifyEmailRequest(email: widget.email, code: code),
-      );
+      await authRepo.verifyEmail(VerifyEmailRequest(email: _email, code: code));
 
       log.devLog('✓ Email verified successfully', category: LogCategory.ui);
 
@@ -68,23 +74,24 @@ class _DummyOtpPageState extends State<DummyOtpPage> {
   }
 
   Future<void> _resendOtp() async {
+    if (_email.isEmpty) {
+      _showMessage('Please enter an email address', isError: true);
+      return;
+    }
     setState(() => _isResending = true);
     final log = getIt<LogService>();
 
     try {
-      log.devLog(
-        '→ Resend OTP: email=${widget.email}',
-        category: LogCategory.ui,
-      );
+      log.devLog('→ Resend OTP: email=$_email', category: LogCategory.ui);
 
       final authRepo = getIt<AuthRepository>();
       await authRepo.resendVerification(
-        ResendVerificationRequest(email: widget.email),
+        ResendVerificationRequest(email: _email),
       );
 
       log.devLog('✓ Verification email resent', category: LogCategory.ui);
 
-      if (mounted) _showMessage('Verification code resent to ${widget.email}');
+      if (mounted) _showMessage('Verification code resent to $_email');
     } catch (e) {
       log.devLog('✗ Resend failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
@@ -120,11 +127,24 @@ class _DummyOtpPageState extends State<DummyOtpPage> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Enter the 8-digit code sent to\n${widget.email}',
+                'Enter the 8-digit code sent to\n${widget.email ?? 'your email'}',
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               const SizedBox(height: 48),
+              if (widget.email == null) ...[
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    hintText: 'user@example.com',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 16),
+              ],
               TextField(
                 controller: _codeController,
                 decoration: const InputDecoration(

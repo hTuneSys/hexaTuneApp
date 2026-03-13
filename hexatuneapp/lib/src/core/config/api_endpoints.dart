@@ -51,8 +51,14 @@ class ApiEndpoints {
   // --- Audit (1 endpoint) ---
   static const String auditLogs = '$_v1/audit/logs';
 
-  // --- Devices / Push Token (2 endpoints) ---
+  // --- Devices / Push Token (4 endpoints) ---
+  static const String devices = '$_v1/devices';
   static const String pushToken = '$_v1/devices/me/push-token';
+
+  static String device(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/devices/$id';
+  }
 
   // --- Device Approval (4 endpoints) ---
   static const String deviceApprovalRequest = '$_v1/device-approvals/request';
@@ -136,4 +142,57 @@ class ApiEndpoints {
 
   // --- Harmonics (1 endpoint) ---
   static const String harmonicsGenerate = '$_v1/harmonics/generate';
+
+  // --- Packages (4 endpoints) ---
+  static const String packages = '$_v1/packages';
+  static const String packageLabels = '$_v1/packages/labels';
+
+  static String package(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/packages/$id';
+  }
+
+  static String packageImage(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/packages/$id/image';
+  }
+
+  // --- Flows (4 endpoints) ---
+  static const String flows = '$_v1/flows';
+  static const String flowLabels = '$_v1/flows/labels';
+
+  static String flow(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/flows/$id';
+  }
+
+  static String flowImage(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/flows/$id/image';
+  }
+
+  // --- Steps (4 endpoints) ---
+  static const String steps = '$_v1/steps';
+  static const String stepLabels = '$_v1/steps/labels';
+
+  static String step(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/steps/$id';
+  }
+
+  static String stepImage(String id) {
+    assert(id.isNotEmpty, 'id must not be empty');
+    return '$_v1/steps/$id/image';
+  }
+
+  // --- Wallet (7 endpoints) ---
+  static const String walletBalance = '$_v1/wallet/balance';
+  static const String walletPackages = '$_v1/wallet/packages';
+  static const String walletTransactions = '$_v1/wallet/transactions';
+  static const String walletPurchaseApple = '$_v1/wallet/purchase/apple';
+  static const String walletPurchaseGoogle = '$_v1/wallet/purchase/google';
+  static const String walletPurchaseStripe = '$_v1/wallet/purchase/stripe';
+  static const String walletWebhookApple = '$_v1/wallet/webhook/apple';
+  static const String walletWebhookGoogle = '$_v1/wallet/webhook/google';
+  static const String walletWebhookStripe = '$_v1/wallet/webhook/stripe';
 }

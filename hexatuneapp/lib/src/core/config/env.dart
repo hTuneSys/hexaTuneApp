@@ -37,6 +37,12 @@ class Env {
     defaultValue: '',
   );
 
+  // Application bundle identifier used for push-token registration.
+  static const String appBundleId = String.fromEnvironment(
+    'APP_BUNDLE_ID',
+    defaultValue: 'com.hexatune.app',
+  );
+
   static bool get isDev => environment == 'dev';
   static bool get isTest => environment == 'test';
   static bool get isStage => environment == 'stage';

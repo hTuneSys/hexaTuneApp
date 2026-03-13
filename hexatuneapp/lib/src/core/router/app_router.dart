@@ -25,6 +25,11 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_harmonizer_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_inventories_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_packages_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_flows_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_steps_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_wallet_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
@@ -177,6 +182,31 @@ class AppRouter {
           GoRoute(
             path: RouteNames.harmonizer,
             builder: (context, state) => const DummyHarmonizerPage(),
+          ),
+          GoRoute(
+            path: RouteNames.packages,
+            builder: (context, state) => const DummyPackagesPage(),
+          ),
+          GoRoute(
+            path: RouteNames.flows,
+            builder: (context, state) => const DummyFlowsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.steps,
+            builder: (context, state) => const DummyStepsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.otp,
+            builder: (context, state) {
+              final email = state.uri.queryParameters['email'];
+              return DummyOtpPage(
+                email: (email != null && email.isNotEmpty) ? email : null,
+              );
+            },
+          ),
+          GoRoute(
+            path: RouteNames.wallet,
+            builder: (context, state) => const DummyWalletPage(),
           ),
         ],
       ),

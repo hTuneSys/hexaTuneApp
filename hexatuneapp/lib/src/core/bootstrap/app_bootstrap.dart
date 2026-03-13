@@ -129,6 +129,7 @@ class AppBootstrap {
               RegisterPushTokenRequest(
                 token: newToken,
                 platform: Platform.isIOS ? 'ios' : 'android',
+                appId: Env.appBundleId,
               ),
             );
             log.info(
@@ -164,6 +165,7 @@ class AppBootstrap {
             RegisterPushTokenRequest(
               token: fcmToken,
               platform: Platform.isIOS ? 'ios' : 'android',
+              appId: Env.appBundleId,
             ),
           );
           log.info('Push token registered', category: LogCategory.bootstrap);

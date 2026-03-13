@@ -8,8 +8,10 @@ import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approve_request_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approval_request_response_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/create_approval_request_dto.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/device_response.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/reject_request_dto.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/unregister_push_token_request.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_client.dart';
@@ -31,9 +33,32 @@ class DeviceRepository {
   }
 
   /// DELETE /api/v1/devices/me/push-token
-  Future<void> removePushToken() async {
+  Future<void> removePushToken(UnregisterPushTokenRequest request) async {
     _logService.debug('DELETE push-token', category: LogCategory.network);
-    await _dio.delete(ApiEndpoints.pushToken);
+    await _dio.delete(ApiEndpoints.pushToken, data: request.toJson());
+  }
+
+  /// GET /api/v1/devices
+  Future<List<DeviceResponse>> listDevices() async {
+    _logService.debug('GET devices', category: LogCategory.network);
+    final response = await _dio.get<List<dynamic>>(ApiEndpoints.devices);
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Device list response body is null',
+      );
+    }
+    return data
+        .map((e) => DeviceResponse.fromJson(e as Map<String, dynamic>))
+        .toList();
+  }
+
+  /// DELETE /api/v1/devices/{id}
+  Future<void> deleteDevice(String id) async {
+    _logService.debug('DELETE device $id', category: LogCategory.network);
+    await _dio.delete(ApiEndpoints.device(id));
   }
 
   /// POST /api/v1/device-approvals/request

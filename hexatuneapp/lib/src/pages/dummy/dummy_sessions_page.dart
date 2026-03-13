@@ -19,16 +19,24 @@ class DummySessionsPage extends StatefulWidget {
 }
 
 class _DummySessionsPageState extends State<DummySessionsPage> {
+  final _searchController = TextEditingController();
   final List<SessionResponse> _sessions = [];
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
   String? _error;
+  String _sortValue = '';
 
   @override
   void initState() {
     super.initState();
     _load();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _load({bool loadMore = false}) async {
@@ -39,10 +47,13 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
     final log = getIt<LogService>();
     try {
       final repo = getIt<SessionRepository>();
+      final searchText = _searchController.text.trim();
       final resp = await repo.listSessions(
         params: PaginationParams(
           cursor: loadMore ? _nextCursor : null,
           limit: 20,
+          query: searchText.isEmpty ? null : searchText,
+          sort: _sortValue.isEmpty ? null : _sortValue,
         ),
       );
       if (mounted) {
@@ -169,6 +180,56 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
             ],
           ),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(56),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onSubmitted: (_) => _load(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                DropdownButton<String>(
+                  value: _sortValue,
+                  hint: const Text('Sort'),
+                  items: const [
+                    DropdownMenuItem(value: '', child: Text('Default')),
+                    DropdownMenuItem(
+                      value: '-last_activity_at',
+                      child: Text('Recent activity'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'last_activity_at',
+                      child: Text('Oldest activity'),
+                    ),
+                    DropdownMenuItem(
+                      value: '-created_at',
+                      child: Text('Newest'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'created_at',
+                      child: Text('Oldest'),
+                    ),
+                  ],
+                  onChanged: (v) {
+                    setState(() => _sortValue = v ?? '');
+                    _load();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       body: _isLoading && _sessions.isEmpty
           ? const Center(child: CircularProgressIndicator())

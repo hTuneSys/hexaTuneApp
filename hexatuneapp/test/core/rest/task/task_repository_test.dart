@@ -95,6 +95,32 @@ void main() {
 
         expect(result.data, isEmpty);
       });
+      test('passes createdAfter and createdBefore filters', () async {
+        const params = PaginationParams(limit: 10);
+        dioAdapter.onGet(
+          ApiEndpoints.tasks,
+          (server) => server.reply(200, {
+            'data': [taskSummaryJson],
+            'pagination': {'has_more': false, 'limit': 10},
+          }),
+          queryParameters: {
+            ...params.toQueryParameters(),
+            'status': 'pending',
+            'createdAfter': '2025-01-01T00:00:00Z',
+            'createdBefore': '2025-06-01T00:00:00Z',
+          },
+        );
+
+        final result = await repository.list(
+          params: params,
+          status: 'pending',
+          createdAfter: '2025-01-01T00:00:00Z',
+          createdBefore: '2025-06-01T00:00:00Z',
+        );
+
+        expect(result.data, hasLength(1));
+        expect(result.data.first.taskId, 'task-001');
+      });
     });
 
     group('create', () {

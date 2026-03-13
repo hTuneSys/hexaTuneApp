@@ -10,8 +10,10 @@ import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approval_request_response_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approve_request_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/create_approval_request_dto.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/device_response.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/reject_request_dto.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/unregister_push_token_request.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_client.dart';
@@ -58,6 +60,7 @@ void main() {
         const request = RegisterPushTokenRequest(
           token: 'fcm-token-123',
           platform: 'android',
+          appId: 'com.hexatune.app',
         );
 
         dioAdapter.onPut(
@@ -71,13 +74,52 @@ void main() {
     });
 
     group('removePushToken', () {
-      test('sends DELETE to push-token endpoint', () async {
+      test('sends DELETE with body to push-token endpoint', () async {
+        const request = UnregisterPushTokenRequest(appId: 'com.hexatune.app');
+
         dioAdapter.onDelete(
           ApiEndpoints.pushToken,
           (server) => server.reply(204, null),
+          data: request.toJson(),
         );
 
-        await expectLater(repository.removePushToken(), completes);
+        await expectLater(repository.removePushToken(request), completes);
+      });
+    });
+
+    group('listDevices', () {
+      test('sends GET and returns device list', () async {
+        dioAdapter.onGet(
+          ApiEndpoints.devices,
+          (server) => server.reply(200, [
+            {
+              'id': 'dev-001',
+              'isTrusted': true,
+              'userAgent': 'Flutter/3.0',
+              'ipAddress': '192.168.1.1',
+              'firstSeenAt': '2025-01-01T00:00:00Z',
+              'lastSeenAt': '2025-01-02T00:00:00Z',
+            },
+          ]),
+        );
+
+        final result = await repository.listDevices();
+
+        expect(result, hasLength(1));
+        expect(result.first, isA<DeviceResponse>());
+        expect(result.first.id, 'dev-001');
+        expect(result.first.isTrusted, true);
+      });
+    });
+
+    group('deleteDevice', () {
+      test('sends DELETE to device endpoint', () async {
+        dioAdapter.onDelete(
+          ApiEndpoints.device('dev-001'),
+          (server) => server.reply(204, null),
+        );
+
+        await expectLater(repository.deleteDevice('dev-001'), completes);
       });
     });
 

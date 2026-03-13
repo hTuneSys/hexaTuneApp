@@ -12,6 +12,7 @@ abstract class RegisterPushTokenRequest with _$RegisterPushTokenRequest {
   const factory RegisterPushTokenRequest({
     required String token,
     required String platform,
+    required String appId,
   }) = _RegisterPushTokenRequest;
 
   factory RegisterPushTokenRequest.fromJson(Map<String, dynamic> json) =>

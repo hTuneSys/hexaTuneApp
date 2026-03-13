@@ -23,17 +23,22 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
   final _actionCtrl = TextEditingController();
   final _resourceTypeCtrl = TextEditingController();
   final _actorTypeCtrl = TextEditingController();
+  final _searchCtrl = TextEditingController();
   final List<AuditLogDto> _logs = [];
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
   DateTimeRange? _dateRange;
+  String _sortValue = '';
+  String? _outcomeFilter;
+  String? _severityFilter;
 
   @override
   void dispose() {
     _actionCtrl.dispose();
     _resourceTypeCtrl.dispose();
     _actorTypeCtrl.dispose();
+    _searchCtrl.dispose();
     super.dispose();
   }
 
@@ -42,10 +47,13 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
     final log = getIt<LogService>();
     try {
       final repo = getIt<AuditRepository>();
+      final searchText = _searchCtrl.text.trim();
       final resp = await repo.queryLogs(
         params: PaginationParams(
           cursor: loadMore ? _nextCursor : null,
           limit: 20,
+          query: searchText.isEmpty ? null : searchText,
+          sort: _sortValue.isEmpty ? null : _sortValue,
         ),
         filters: AuditLogQueryParams(
           action: _actionCtrl.text.trim().isEmpty
@@ -57,6 +65,8 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
           actorType: _actorTypeCtrl.text.trim().isEmpty
               ? null
               : _actorTypeCtrl.text.trim(),
+          outcome: _outcomeFilter,
+          severity: _severityFilter,
           from: _dateRange?.start.toUtc().toIso8601String(),
           to: _dateRange?.end.toUtc().toIso8601String(),
         ),
@@ -98,7 +108,11 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
       _actionCtrl.clear();
       _resourceTypeCtrl.clear();
       _actorTypeCtrl.clear();
+      _searchCtrl.clear();
       _dateRange = null;
+      _sortValue = '';
+      _outcomeFilter = null;
+      _severityFilter = null;
     });
   }
 
@@ -134,6 +148,110 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                // Search and sort row
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchCtrl,
+                        decoration: const InputDecoration(
+                          labelText: 'Search',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        onSubmitted: (_) => _load(),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    DropdownButton<String>(
+                      value: _sortValue,
+                      hint: const Text('Sort'),
+                      items: const [
+                        DropdownMenuItem(value: '', child: Text('Default')),
+                        DropdownMenuItem(
+                          value: '-occurred_at',
+                          child: Text('Newest'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'occurred_at',
+                          child: Text('Oldest'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'severity',
+                          child: Text('Severity ↑'),
+                        ),
+                        DropdownMenuItem(
+                          value: '-severity',
+                          child: Text('Severity ↓'),
+                        ),
+                      ],
+                      onChanged: (v) {
+                        setState(() => _sortValue = v ?? '');
+                        _load();
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                // Outcome and severity row
+                Row(
+                  children: [
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        initialValue: _outcomeFilter,
+                        decoration: const InputDecoration(
+                          labelText: 'Outcome',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: null, child: Text('All')),
+                          DropdownMenuItem(
+                            value: 'success',
+                            child: Text('Success'),
+                          ),
+                          DropdownMenuItem(
+                            value: 'failure',
+                            child: Text('Failure'),
+                          ),
+                        ],
+                        onChanged: (v) {
+                          setState(() => _outcomeFilter = v);
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: DropdownButtonFormField<String>(
+                        initialValue: _severityFilter,
+                        decoration: const InputDecoration(
+                          labelText: 'Severity',
+                          border: OutlineInputBorder(),
+                          isDense: true,
+                        ),
+                        items: const [
+                          DropdownMenuItem(value: null, child: Text('All')),
+                          DropdownMenuItem(value: 'INFO', child: Text('INFO')),
+                          DropdownMenuItem(value: 'LOW', child: Text('LOW')),
+                          DropdownMenuItem(
+                            value: 'MEDIUM',
+                            child: Text('MEDIUM'),
+                          ),
+                          DropdownMenuItem(value: 'HIGH', child: Text('HIGH')),
+                          DropdownMenuItem(
+                            value: 'CRITICAL',
+                            child: Text('CRITICAL'),
+                          ),
+                        ],
+                        onChanged: (v) {
+                          setState(() => _severityFilter = v);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     Expanded(

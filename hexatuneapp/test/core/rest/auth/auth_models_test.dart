@@ -13,13 +13,11 @@ void main() {
         'email': 'user@test.com',
         'password': 'pass123',
         'deviceId': 'dev-001',
-        'tenantId': 'tenant-001',
       };
       final request = LoginRequest.fromJson(json);
       expect(request.email, 'user@test.com');
       expect(request.password, 'pass123');
       expect(request.deviceId, 'dev-001');
-      expect(request.tenantId, 'tenant-001');
     });
 
     test('toJson uses correct keys', () {
@@ -27,18 +25,15 @@ void main() {
         email: 'user@test.com',
         password: 'pass',
         deviceId: 'dev-001',
-        tenantId: 'tenant-001',
       );
       final json = request.toJson();
       expect(json['email'], 'user@test.com');
       expect(json['deviceId'], 'dev-001');
-      expect(json['tenantId'], 'tenant-001');
     });
 
-    test('deviceId and tenantId are optional', () {
+    test('deviceId is optional', () {
       const request = LoginRequest(email: 'user@test.com', password: 'pass');
       expect(request.deviceId, isNull);
-      expect(request.tenantId, isNull);
     });
   });
 

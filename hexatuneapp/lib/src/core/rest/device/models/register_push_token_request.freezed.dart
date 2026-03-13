@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterPushTokenRequest {
 
- String get token; String get platform;
+ String get token; String get platform; String get appId;
 /// Create a copy of RegisterPushTokenRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $RegisterPushTokenRequestCopyWith<RegisterPushTokenRequest> get copyWith => _$Re
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterPushTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.platform, platform) || other.platform == platform));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterPushTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.appId, appId) || other.appId == appId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,platform);
+int get hashCode => Object.hash(runtimeType,token,platform,appId);
 
 @override
 String toString() {
-  return 'RegisterPushTokenRequest(token: $token, platform: $platform)';
+  return 'RegisterPushTokenRequest(token: $token, platform: $platform, appId: $appId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $RegisterPushTokenRequestCopyWith<$Res>  {
   factory $RegisterPushTokenRequestCopyWith(RegisterPushTokenRequest value, $Res Function(RegisterPushTokenRequest) _then) = _$RegisterPushTokenRequestCopyWithImpl;
 @useResult
 $Res call({
- String token, String platform
+ String token, String platform, String appId
 });
 
 
@@ -65,10 +65,11 @@ class _$RegisterPushTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of RegisterPushTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? platform = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? token = null,Object? platform = null,Object? appId = null,}) {
   return _then(_self.copyWith(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
+as String,appId: null == appId ? _self.appId : appId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String platform)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String token,  String platform,  String appId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterPushTokenRequest() when $default != null:
-return $default(_that.token,_that.platform);case _:
+return $default(_that.token,_that.platform,_that.appId);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.token,_that.platform);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String platform)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String token,  String platform,  String appId)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterPushTokenRequest():
-return $default(_that.token,_that.platform);case _:
+return $default(_that.token,_that.platform,_that.appId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.token,_that.platform);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String platform)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String token,  String platform,  String appId)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterPushTokenRequest() when $default != null:
-return $default(_that.token,_that.platform);case _:
+return $default(_that.token,_that.platform,_that.appId);case _:
   return null;
 
 }
@@ -210,11 +211,12 @@ return $default(_that.token,_that.platform);case _:
 @JsonSerializable()
 
 class _RegisterPushTokenRequest implements RegisterPushTokenRequest {
-  const _RegisterPushTokenRequest({required this.token, required this.platform});
+  const _RegisterPushTokenRequest({required this.token, required this.platform, required this.appId});
   factory _RegisterPushTokenRequest.fromJson(Map<String, dynamic> json) => _$RegisterPushTokenRequestFromJson(json);
 
 @override final  String token;
 @override final  String platform;
+@override final  String appId;
 
 /// Create a copy of RegisterPushTokenRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterPushTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.platform, platform) || other.platform == platform));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterPushTokenRequest&&(identical(other.token, token) || other.token == token)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.appId, appId) || other.appId == appId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,token,platform);
+int get hashCode => Object.hash(runtimeType,token,platform,appId);
 
 @override
 String toString() {
-  return 'RegisterPushTokenRequest(token: $token, platform: $platform)';
+  return 'RegisterPushTokenRequest(token: $token, platform: $platform, appId: $appId)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$RegisterPushTokenRequestCopyWith<$Res> implements $Regist
   factory _$RegisterPushTokenRequestCopyWith(_RegisterPushTokenRequest value, $Res Function(_RegisterPushTokenRequest) _then) = __$RegisterPushTokenRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String token, String platform
+ String token, String platform, String appId
 });
 
 
@@ -266,10 +268,11 @@ class __$RegisterPushTokenRequestCopyWithImpl<$Res>
 
 /// Create a copy of RegisterPushTokenRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? platform = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? token = null,Object? platform = null,Object? appId = null,}) {
   return _then(_RegisterPushTokenRequest(
 token: null == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
 as String,platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
+as String,appId: null == appId ? _self.appId : appId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

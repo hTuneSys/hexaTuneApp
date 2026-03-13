@@ -7,6 +7,7 @@ class AuditLogQueryParams {
     this.actorType,
     this.action,
     this.resourceType,
+    this.resourceId,
     this.outcome,
     this.severity,
     this.from,
@@ -16,6 +17,7 @@ class AuditLogQueryParams {
   final String? actorType;
   final String? action;
   final String? resourceType;
+  final String? resourceId;
   final String? outcome;
   final String? severity;
   final String? from;
@@ -27,6 +29,7 @@ class AuditLogQueryParams {
       if (actorType != null) 'actorType': actorType,
       if (action != null) 'action': action,
       if (resourceType != null) 'resourceType': resourceType,
+      if (resourceId != null) 'resource_id': resourceId,
       if (outcome != null) 'outcome': outcome,
       if (severity != null) 'severity': severity,
       if (from != null) 'from': from,

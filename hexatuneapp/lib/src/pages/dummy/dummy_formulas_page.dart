@@ -26,6 +26,7 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
   final List<FormulaResponse> _formulas = [];
   final List<String> _availableLabels = [];
   final Set<String> _selectedLabels = {};
+  String _sortValue = '';
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
@@ -75,6 +76,7 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
               ? null
               : _searchCtrl.text.trim(),
           labels: _selectedLabels.isEmpty ? null : _selectedLabels.join(','),
+          sort: _sortValue.isEmpty ? null : _sortValue,
         ),
       );
       if (mounted) {
@@ -309,24 +311,61 @@ class _DummyFormulasPageState extends State<DummyFormulasPage> {
           ),
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(_availableLabels.isEmpty ? 56 : 100),
+          preferredSize: Size.fromHeight(_availableLabels.isEmpty ? 66 : 110),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
-                  controller: _searchCtrl,
-                  decoration: InputDecoration(
-                    hintText: 'Search formulas…',
-                    border: const OutlineInputBorder(),
-                    isDense: true,
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () => _load(),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _searchCtrl,
+                        decoration: InputDecoration(
+                          hintText: 'Search formulas…',
+                          border: const OutlineInputBorder(),
+                          isDense: true,
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.search),
+                            onPressed: () => _load(),
+                          ),
+                        ),
+                        onSubmitted: (_) => _load(),
+                      ),
                     ),
-                  ),
-                  onSubmitted: (_) => _load(),
+                    const SizedBox(width: 8),
+                    DropdownButton<String>(
+                      value: _sortValue,
+                      isDense: true,
+                      items: const [
+                        DropdownMenuItem(
+                          value: '',
+                          child: Text('Default sort'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'name',
+                          child: Text('Name (A→Z)'),
+                        ),
+                        DropdownMenuItem(
+                          value: '-name',
+                          child: Text('Name (Z→A)'),
+                        ),
+                        DropdownMenuItem(
+                          value: '-created_at',
+                          child: Text('Newest first'),
+                        ),
+                        DropdownMenuItem(
+                          value: 'created_at',
+                          child: Text('Oldest first'),
+                        ),
+                      ],
+                      onChanged: (v) {
+                        setState(() => _sortValue = v ?? '');
+                        _load();
+                      },
+                    ),
+                  ],
                 ),
                 if (_availableLabels.isNotEmpty)
                   SizedBox(

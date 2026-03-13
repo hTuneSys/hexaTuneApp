@@ -23,12 +23,16 @@ class DummyTasksPage extends StatefulWidget {
 }
 
 class _DummyTasksPageState extends State<DummyTasksPage> {
+  final _searchController = TextEditingController();
+  final _taskTypeController = TextEditingController();
   final List<TaskSummaryDto> _tasks = [];
   String? _nextCursor;
   bool _hasMore = false;
   bool _isLoading = false;
   String? _statusFilter;
-  String? _typeFilter;
+  String _sortValue = '';
+  DateTime? _createdAfter;
+  DateTime? _createdBefore;
 
   @override
   void initState() {
@@ -36,18 +40,31 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
     _load();
   }
 
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _taskTypeController.dispose();
+    super.dispose();
+  }
+
   Future<void> _load({bool loadMore = false}) async {
     setState(() => _isLoading = true);
     final log = getIt<LogService>();
     try {
       final repo = getIt<TaskRepository>();
+      final searchText = _searchController.text.trim();
+      final taskTypeText = _taskTypeController.text.trim();
       final resp = await repo.list(
         params: PaginationParams(
           cursor: loadMore ? _nextCursor : null,
           limit: 20,
+          query: searchText.isEmpty ? null : searchText,
+          sort: _sortValue.isEmpty ? null : _sortValue,
         ),
         status: _statusFilter,
-        taskType: _typeFilter,
+        taskType: taskTypeText.isEmpty ? null : taskTypeText,
+        createdAfter: _createdAfter?.toUtc().toIso8601String(),
+        createdBefore: _createdBefore?.toUtc().toIso8601String(),
       );
       if (mounted) {
         setState(() {
@@ -316,9 +333,151 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
       ),
       body: Column(
         children: [
-          // Filter chips
+          // Search, task type, and sort row
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onSubmitted: (_) => _load(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: TextField(
+                    controller: _taskTypeController,
+                    decoration: const InputDecoration(
+                      labelText: 'Task Type',
+                      border: OutlineInputBorder(),
+                      isDense: true,
+                    ),
+                    onSubmitted: (_) => _load(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                DropdownButton<String>(
+                  value: _sortValue,
+                  hint: const Text('Sort'),
+                  items: const [
+                    DropdownMenuItem(value: '', child: Text('Default')),
+                    DropdownMenuItem(
+                      value: 'created_at',
+                      child: Text('Oldest'),
+                    ),
+                    DropdownMenuItem(
+                      value: '-created_at',
+                      child: Text('Newest'),
+                    ),
+                    DropdownMenuItem(
+                      value: 'scheduled_at',
+                      child: Text('Scheduled ↑'),
+                    ),
+                    DropdownMenuItem(
+                      value: '-scheduled_at',
+                      child: Text('Scheduled ↓'),
+                    ),
+                    DropdownMenuItem(value: 'status', child: Text('Status ↑')),
+                    DropdownMenuItem(value: '-status', child: Text('Status ↓')),
+                  ],
+                  onChanged: (v) {
+                    setState(() => _sortValue = v ?? '');
+                    _load();
+                  },
+                ),
+              ],
+            ),
+          ),
+          // Date range row
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          icon: const Icon(Icons.calendar_today, size: 16),
+                          label: Text(
+                            _createdAfter != null
+                                ? '${_createdAfter!.month}/${_createdAfter!.day}/${_createdAfter!.year}'
+                                : 'After',
+                          ),
+                          onPressed: () async {
+                            final date = await showDatePicker(
+                              context: context,
+                              initialDate: _createdAfter ?? DateTime.now(),
+                              firstDate: DateTime(2024),
+                              lastDate: DateTime.now(),
+                            );
+                            if (date != null) {
+                              setState(() => _createdAfter = date);
+                            }
+                          },
+                        ),
+                      ),
+                      if (_createdAfter != null)
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 16),
+                          onPressed: () => setState(() => _createdAfter = null),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'Clear after date',
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          icon: const Icon(Icons.calendar_today, size: 16),
+                          label: Text(
+                            _createdBefore != null
+                                ? '${_createdBefore!.month}/${_createdBefore!.day}/${_createdBefore!.year}'
+                                : 'Before',
+                          ),
+                          onPressed: () async {
+                            final date = await showDatePicker(
+                              context: context,
+                              initialDate: _createdBefore ?? DateTime.now(),
+                              firstDate: DateTime(2024),
+                              lastDate: DateTime.now(),
+                            );
+                            if (date != null) {
+                              setState(() => _createdBefore = date);
+                            }
+                          },
+                        ),
+                      ),
+                      if (_createdBefore != null)
+                        IconButton(
+                          icon: const Icon(Icons.close, size: 16),
+                          onPressed: () =>
+                              setState(() => _createdBefore = null),
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          tooltip: 'Clear before date',
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Status filter chips
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: Wrap(
               spacing: 8,
               children: [

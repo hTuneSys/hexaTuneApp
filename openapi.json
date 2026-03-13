@@ -2196,6 +2196,255 @@
         ]
       }
     },
+    "/api/v1/flows": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "`GET /api/v1/flows` — List flows with cursor-based pagination",
+        "description": "Returns a paginated list of flows with localized name/description.\nSupports sorting, search, label filtering, and optional `package_id` filtering.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n| `package_id` | `String` | No | Filter flows belonging to a specific package |\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on name/description |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<FlowResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_flows",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor token from previous page response.\nPass the `next_cursor` value from a prior paginated response to fetch the next page.\nOmit for the first page.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": null
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return per page (default: 20, max: 100).\nValues above 100 are automatically clamped.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort fields. Prefix with `-` for descending order.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-created_at,name"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "package_id",
+            "in": "query",
+            "description": "Optional package ID to filter flows belonging to a specific package.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale for name/description (default: \"en\").",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated flow list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_FlowResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/flows/labels": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "`GET /api/v1/flows/labels` — List distinct flow labels",
+        "description": "Returns all unique labels used by active flows.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_flow_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/flows/{id}": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "`GET /api/v1/flows/{id}` — Get a flow by ID with its steps",
+        "description": "Retrieves a single flow by its unique identifier with localized name/description\nand its ordered list of steps.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Flow identifier |\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Flow found with steps | [`FlowDetailResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the flow is not found.",
+        "operationId": "get_flow",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Flow ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale code (e.g., \"en\", \"tr\", \"de\").\nDefaults to \"en\" when not provided.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Flow found with steps",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FlowDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/flows/{id}/image": {
+      "get": {
+        "tags": [
+          "Flows"
+        ],
+        "summary": "`GET /api/v1/flows/{id}/image` — Get presigned image URL for a flow",
+        "description": "Returns a time-limited presigned URL for the flow's image.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Flow identifier |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Image URL | [`ImageUrlResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the flow is not found or has no image.",
+        "operationId": "get_flow_image",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Flow ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned image URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUrlResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/api/v1/formulas": {
       "get": {
         "tags": [
@@ -3186,6 +3435,480 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/packages": {
+      "get": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "`GET /api/v1/packages` — List packages with cursor-based pagination",
+        "description": "Returns a paginated list of packages with localized name/description.\nSupports sorting, search, and label filtering.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on name/description |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<PackageResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_packages",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor token from previous page response.\nPass the `next_cursor` value from a prior paginated response to fetch the next page.\nOmit for the first page.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": null
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return per page (default: 20, max: 100).\nValues above 100 are automatically clamped.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort fields. Prefix with `-` for descending order.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-created_at,name"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale code (e.g., \"en\", \"tr\", \"de\").\nDefaults to \"en\" when not provided.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated package list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_PackageResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/packages/labels": {
+      "get": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "`GET /api/v1/packages/labels` — List distinct package labels",
+        "description": "Returns all unique labels used by active packages.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_package_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/packages/{id}": {
+      "get": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "`GET /api/v1/packages/{id}` — Get a package by ID",
+        "description": "Retrieves a single package by its unique identifier with localized name/description.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Package identifier |\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Package found | [`PackageResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found.",
+        "operationId": "get_package",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Package ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale code (e.g., \"en\", \"tr\", \"de\").\nDefaults to \"en\" when not provided.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Package found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PackageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/packages/{id}/image": {
+      "get": {
+        "tags": [
+          "Packages"
+        ],
+        "summary": "`GET /api/v1/packages/{id}/image` — Get presigned image URL for a package",
+        "description": "Returns a time-limited presigned URL for the package's image.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Package identifier |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Image URL | [`ImageUrlResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or has no image.",
+        "operationId": "get_package_image",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Package ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned image URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUrlResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/steps": {
+      "get": {
+        "tags": [
+          "Steps"
+        ],
+        "summary": "`GET /api/v1/steps` — List steps with cursor-based pagination",
+        "description": "Returns a paginated list of steps with localized name/description.\nSupports sorting, search, and label filtering.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n| `cursor`  | `String` | No | Opaque pagination cursor from previous response |\n| `limit`   | `u32` | No | Items per page (default: 20, max: 100) |\n| `sort`    | `String` | No | Sort field with optional `-` prefix for descending |\n| `q`       | `String` | No | Case-insensitive search filter on name/description |\n| `labels`  | `String` | No | Comma-separated labels for AND filtering |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Paginated list | [`PaginatedResponse<StepResponse>`] |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_steps",
+        "parameters": [
+          {
+            "name": "cursor",
+            "in": "query",
+            "description": "Opaque cursor token from previous page response.\nPass the `next_cursor` value from a prior paginated response to fetch the next page.\nOmit for the first page.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": null
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Number of items to return per page (default: 20, max: 100).\nValues above 100 are automatically clamped.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Comma-separated sort fields. Prefix with `-` for descending order.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "-created_at,name"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "description": "Free-text search term. Matches are case-insensitive.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "labels",
+            "in": "query",
+            "description": "Comma-separated list of labels to filter by (AND logic).\nExample: `?labels=rock,jazz` returns items having both labels.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale code (e.g., \"en\", \"tr\", \"de\").\nDefaults to \"en\" when not provided.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Paginated step list",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResponse_StepResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/steps/labels": {
+      "get": {
+        "tags": [
+          "Steps"
+        ],
+        "summary": "`GET /api/v1/steps/labels` — List distinct step labels",
+        "description": "Returns all unique labels used by active steps.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Labels list | `Vec<String>` |\n\n# Errors\n\nReturns [`ProblemDetails`] on service failure.",
+        "operationId": "list_step_labels",
+        "responses": {
+          "200": {
+            "description": "Distinct labels",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/steps/{id}": {
+      "get": {
+        "tags": [
+          "Steps"
+        ],
+        "summary": "`GET /api/v1/steps/{id}` — Get a step by ID",
+        "description": "Retrieves a single step by its unique identifier with localized name/description.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Step identifier |\n\n# Query Parameters\n\n| Parameter | Type | Required | Description |\n|-----------|------|----------|-------------|\n| `locale`  | `String` | No | Locale for name/description (default: \"en\") |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Step found | [`StepResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the step is not found.",
+        "operationId": "get_step",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Step ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "description": "Locale code (e.g., \"en\", \"tr\", \"de\").\nDefaults to \"en\" when not provided.",
+            "required": false,
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Step found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StepResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/steps/{id}/image": {
+      "get": {
+        "tags": [
+          "Steps"
+        ],
+        "summary": "`GET /api/v1/steps/{id}/image` — Get presigned image URL for a step",
+        "description": "Returns a time-limited presigned URL for the step's image.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `id`      | `Uuid` | Step identifier |\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Image URL | [`ImageUrlResponse`] |\n| `404`  | Not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the step is not found or has no image.",
+        "operationId": "get_step_image",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Step ID",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Presigned image URL",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUrlResponse"
                 }
               }
             }
@@ -4233,6 +4956,162 @@
           }
         }
       },
+      "FlowDetailResponse": {
+        "type": "object",
+        "description": "Response DTO for a flow detail view (with steps).",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "labels",
+          "imageUploaded",
+          "steps",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "ISO 8601 creation timestamp."
+          },
+          "description": {
+            "type": "string",
+            "description": "Localized flow description."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique flow identifier."
+          },
+          "imageUploaded": {
+            "type": "boolean",
+            "description": "Whether an image has been uploaded."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Flow labels."
+          },
+          "name": {
+            "type": "string",
+            "description": "Localized flow name."
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FlowStepResponse"
+            },
+            "description": "Ordered list of steps in this flow."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO 8601 last-updated timestamp."
+          }
+        }
+      },
+      "FlowListParams": {
+        "type": "object",
+        "description": "Additional query parameters for flow list endpoint.",
+        "properties": {
+          "locale": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Locale for name/description (default: \"en\")."
+          },
+          "package_id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional package ID to filter flows belonging to a specific package."
+          }
+        }
+      },
+      "FlowResponse": {
+        "type": "object",
+        "description": "Response DTO for a flow (list view — without steps).",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "labels",
+          "imageUploaded",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "ISO 8601 creation timestamp."
+          },
+          "description": {
+            "type": "string",
+            "description": "Localized flow description."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique flow identifier."
+          },
+          "imageUploaded": {
+            "type": "boolean",
+            "description": "Whether an image has been uploaded."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Flow labels."
+          },
+          "name": {
+            "type": "string",
+            "description": "Localized flow name."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO 8601 last-updated timestamp."
+          }
+        }
+      },
+      "FlowStepResponse": {
+        "type": "object",
+        "description": "Response DTO for a step within a flow.",
+        "required": [
+          "id",
+          "stepId",
+          "sortOrder",
+          "quantity",
+          "timeMs"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Flow-step association identifier."
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Repeat count."
+          },
+          "sortOrder": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Position within the flow."
+          },
+          "stepId": {
+            "type": "string",
+            "description": "Step identifier."
+          },
+          "timeMs": {
+            "type": "integer",
+            "format": "int32",
+            "description": "Duration in milliseconds."
+          }
+        }
+      },
       "ForgotPasswordRequest": {
         "type": "object",
         "description": "Request to initiate password reset\n\nUsed by `POST /api/v1/auth/forgot-password`\nResolves the account by email (tenant-independent).",
@@ -4722,6 +5601,52 @@
           }
         }
       },
+      "PackageResponse": {
+        "type": "object",
+        "description": "Response DTO for a package.",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "labels",
+          "imageUploaded",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "ISO 8601 creation timestamp."
+          },
+          "description": {
+            "type": "string",
+            "description": "Localized package description."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique package identifier."
+          },
+          "imageUploaded": {
+            "type": "boolean",
+            "description": "Whether an image has been uploaded."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Package labels."
+          },
+          "name": {
+            "type": "string",
+            "description": "Localized package name."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO 8601 last-updated timestamp."
+          }
+        }
+      },
       "PaginatedResponse_AuditLogDto": {
         "type": "object",
         "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
@@ -4876,6 +5801,70 @@
           }
         }
       },
+      "PaginatedResponse_FlowResponse": {
+        "type": "object",
+        "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Response DTO for a flow (list view — without steps).",
+              "required": [
+                "id",
+                "name",
+                "description",
+                "labels",
+                "imageUploaded",
+                "createdAt",
+                "updatedAt"
+              ],
+              "properties": {
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Localized flow description."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique flow identifier."
+                },
+                "imageUploaded": {
+                  "type": "boolean",
+                  "description": "Whether an image has been uploaded."
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Flow labels."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Localized flow name."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 last-updated timestamp."
+                }
+              }
+            },
+            "description": "The actual data items for this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata."
+          }
+        }
+      },
       "PaginatedResponse_FormulaResponse": {
         "type": "object",
         "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
@@ -5001,6 +5990,70 @@
           }
         }
       },
+      "PaginatedResponse_PackageResponse": {
+        "type": "object",
+        "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Response DTO for a package.",
+              "required": [
+                "id",
+                "name",
+                "description",
+                "labels",
+                "imageUploaded",
+                "createdAt",
+                "updatedAt"
+              ],
+              "properties": {
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Localized package description."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique package identifier."
+                },
+                "imageUploaded": {
+                  "type": "boolean",
+                  "description": "Whether an image has been uploaded."
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Package labels."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Localized package name."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 last-updated timestamp."
+                }
+              }
+            },
+            "description": "The actual data items for this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata."
+          }
+        }
+      },
       "PaginatedResponse_SessionResponse": {
         "type": "object",
         "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
@@ -5041,6 +6094,70 @@
                 "id": {
                   "type": "string",
                   "description": "Session ID (UUID format)"
+                }
+              }
+            },
+            "description": "The actual data items for this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PaginationMeta",
+            "description": "Pagination metadata."
+          }
+        }
+      },
+      "PaginatedResponse_StepResponse": {
+        "type": "object",
+        "description": "Wrapper for paginated API responses.\n\nProvides a consistent structure for paginated data across all endpoints.\n",
+        "required": [
+          "data",
+          "pagination"
+        ],
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "Response DTO for a step.",
+              "required": [
+                "id",
+                "name",
+                "description",
+                "labels",
+                "imageUploaded",
+                "createdAt",
+                "updatedAt"
+              ],
+              "properties": {
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Localized step description."
+                },
+                "id": {
+                  "type": "string",
+                  "description": "Unique step identifier."
+                },
+                "imageUploaded": {
+                  "type": "boolean",
+                  "description": "Whether an image has been uploaded."
+                },
+                "labels": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Step labels."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Localized step name."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 last-updated timestamp."
                 }
               }
             },
@@ -5518,6 +6635,52 @@
           "id": {
             "type": "string",
             "description": "Session ID (UUID format)"
+          }
+        }
+      },
+      "StepResponse": {
+        "type": "object",
+        "description": "Response DTO for a step.",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "labels",
+          "imageUploaded",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "description": "ISO 8601 creation timestamp."
+          },
+          "description": {
+            "type": "string",
+            "description": "Localized step description."
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique step identifier."
+          },
+          "imageUploaded": {
+            "type": "boolean",
+            "description": "Whether an image has been uploaded."
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Step labels."
+          },
+          "name": {
+            "type": "string",
+            "description": "Localized step name."
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "ISO 8601 last-updated timestamp."
           }
         }
       },
@@ -6019,6 +7182,18 @@
     {
       "name": "Harmonics",
       "description": "Harmonic number generation"
+    },
+    {
+      "name": "Packages",
+      "description": "Step package management (read-only)"
+    },
+    {
+      "name": "Flows",
+      "description": "Step flow management (read-only)"
+    },
+    {
+      "name": "Steps",
+      "description": "Step entity management (read-only)"
     }
   ]
 }

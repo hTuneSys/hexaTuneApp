@@ -5,12 +5,14 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/approve_request_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/create_approval_request_dto.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/reject_request_dto.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/unregister_push_token_request.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -28,6 +30,7 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
   final _approvalIdCtrl = TextEditingController();
   final _operationTypeCtrl = TextEditingController(text: 'device_login');
   final _rejectReasonCtrl = TextEditingController();
+  final _deviceIdCtrl = TextEditingController();
   String? _resultText;
   bool _isLoading = false;
 
@@ -36,6 +39,7 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
     _approvalIdCtrl.dispose();
     _operationTypeCtrl.dispose();
     _rejectReasonCtrl.dispose();
+    _deviceIdCtrl.dispose();
     super.dispose();
   }
 
@@ -88,9 +92,13 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                             RegisterPushTokenRequest(
                               token: token,
                               platform: Platform.isIOS ? 'ios' : 'android',
+                              appId: Env.appBundleId,
                             ),
                           );
-                          return 'Token registered: ${token.substring(0, 20)}…';
+                          final preview = token.length > 20
+                              ? '${token.substring(0, 20)}…'
+                              : token;
+                          return 'Token registered: $preview';
                         }),
                 ),
               ),
@@ -103,7 +111,9 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                       ? null
                       : () => _run('Remove Push Token', () async {
                           final repo = getIt<DeviceRepository>();
-                          await repo.removePushToken();
+                          await repo.removePushToken(
+                            UnregisterPushTokenRequest(appId: Env.appBundleId),
+                          );
                           return 'Push token removed';
                         }),
                 ),
@@ -206,6 +216,55 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                 child: const Text('Reject'),
               ),
             ],
+          ),
+          const Divider(height: 32),
+
+          // Device List / Delete
+          Text('Device Management', style: theme.textTheme.titleMedium),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.list),
+            label: const Text('List Devices'),
+            onPressed: _isLoading
+                ? null
+                : () => _run('List Devices', () async {
+                    final repo = getIt<DeviceRepository>();
+                    final devices = await repo.listDevices();
+                    if (devices.isEmpty) return 'No devices found';
+                    return devices
+                        .map(
+                          (d) =>
+                              'ID: ${d.id}\n'
+                              '  Trusted: ${d.isTrusted}\n'
+                              '  Agent: ${d.userAgent}\n'
+                              '  IP: ${d.ipAddress}\n'
+                              '  First: ${d.firstSeenAt}\n'
+                              '  Last: ${d.lastSeenAt}',
+                        )
+                        .join('\n\n');
+                  }),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _deviceIdCtrl,
+            decoration: const InputDecoration(
+              labelText: 'Device ID (UUID)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.delete),
+            label: const Text('Delete Device'),
+            onPressed: _isLoading
+                ? null
+                : () => _run('Delete Device', () async {
+                    final id = _deviceIdCtrl.text.trim();
+                    if (id.isEmpty) return 'Device ID is required';
+                    final repo = getIt<DeviceRepository>();
+                    await repo.deleteDevice(id);
+                    return 'Device $id deleted';
+                  }),
           ),
           const Divider(height: 32),
 

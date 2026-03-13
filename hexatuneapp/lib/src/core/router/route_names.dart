@@ -33,4 +33,9 @@ class RouteNames {
   static const String ambience = '/dev/ambience';
   static const String hexagen = '/dev/hexagen';
   static const String harmonizer = '/dev/harmonizer';
+  static const String packages = '/dev/packages';
+  static const String flows = '/dev/flows';
+  static const String steps = '/dev/steps';
+  static const String otp = '/dev/otp';
+  static const String wallet = '/dev/wallet';
 }

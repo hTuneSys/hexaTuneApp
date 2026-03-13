@@ -52,15 +52,21 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart'
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart'
     as _i864;
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart' as _i292;
+import 'package:hexatuneapp/src/core/rest/flow/flow_repository.dart' as _i364;
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart'
     as _i770;
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart'
     as _i53;
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart'
     as _i778;
+import 'package:hexatuneapp/src/core/rest/package/package_repository.dart'
+    as _i1069;
 import 'package:hexatuneapp/src/core/rest/session/session_repository.dart'
     as _i80;
+import 'package:hexatuneapp/src/core/rest/step/step_repository.dart' as _i1040;
 import 'package:hexatuneapp/src/core/rest/task/task_repository.dart' as _i266;
+import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart'
+    as _i957;
 import 'package:hexatuneapp/src/core/router/app_router.dart' as _i877;
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart' as _i148;
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
@@ -201,6 +207,9 @@ extension GetItInjectableX on _i174.GetIt {
       () =>
           _i864.DeviceRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
+    gh.singleton<_i364.FlowRepository>(
+      () => _i364.FlowRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    );
     gh.singleton<_i770.FormulaRepository>(
       () => _i770.FormulaRepository(
         gh<_i761.ApiClient>(),
@@ -219,12 +228,26 @@ extension GetItInjectableX on _i174.GetIt {
         gh<_i571.LogService>(),
       ),
     );
+    gh.singleton<_i1069.PackageRepository>(
+      () => _i1069.PackageRepository(
+        gh<_i761.ApiClient>(),
+        gh<_i571.LogService>(),
+      ),
+    );
     gh.singleton<_i80.SessionRepository>(
       () =>
           _i80.SessionRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
+    gh.singleton<_i1040.StepRepository>(
+      () =>
+          _i1040.StepRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    );
     gh.singleton<_i266.TaskRepository>(
       () => _i266.TaskRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
+    );
+    gh.singleton<_i957.WalletRepository>(
+      () =>
+          _i957.WalletRepository(gh<_i761.ApiClient>(), gh<_i571.LogService>()),
     );
     gh.singleton<_i907.AuthService>(
       () => _i907.AuthService(

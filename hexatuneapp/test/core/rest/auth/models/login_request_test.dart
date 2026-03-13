@@ -14,6 +14,7 @@ void main() {
       );
       expect(result.email, 'user@example.com');
       expect(result.password, 'password123');
+      expect(result.deviceId, isNull);
     });
 
     test('serializes to JSON correctly', () {
@@ -24,6 +25,7 @@ void main() {
       final json = result.toJson();
       expect(json['email'], 'user@example.com');
       expect(json['password'], 'password123');
+      expect(json.containsKey('tenantId'), isFalse);
     });
 
     test('deserializes from JSON correctly', () {
@@ -54,6 +56,7 @@ void main() {
       final original = const LoginRequest(
         email: 'user@example.com',
         password: 'password123',
+        deviceId: 'dev-123',
       );
       final roundTripped = LoginRequest.fromJson(original.toJson());
       expect(roundTripped, equals(original));

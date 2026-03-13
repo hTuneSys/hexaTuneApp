@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/rest/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
@@ -253,6 +254,7 @@ class _DummyLoginPageState extends State<DummyLoginPage> {
         RegisterPushTokenRequest(
           token: fcmToken,
           platform: Platform.isIOS ? 'ios' : 'android',
+          appId: Env.appBundleId,
         ),
       );
       getIt<LogService>().info(

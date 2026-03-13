@@ -111,6 +111,36 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Multi-mode frequency generation player',
       route: RouteNames.harmonizer,
     ),
+    _NavItem(
+      icon: Icons.inventory_2,
+      title: 'Packages',
+      subtitle: 'Browse packages (read-only)',
+      route: RouteNames.packages,
+    ),
+    _NavItem(
+      icon: Icons.account_tree,
+      title: 'Flows',
+      subtitle: 'Browse flows with steps (read-only)',
+      route: RouteNames.flows,
+    ),
+    _NavItem(
+      icon: Icons.directions_walk,
+      title: 'Steps',
+      subtitle: 'Browse steps (read-only)',
+      route: RouteNames.steps,
+    ),
+    _NavItem(
+      icon: Icons.verified_user,
+      title: 'OTP / Email Verify',
+      subtitle: 'Verify email OTP, resend verification',
+      route: RouteNames.otp,
+    ),
+    _NavItem(
+      icon: Icons.account_balance_wallet,
+      title: 'Wallet',
+      subtitle: 'Balance, packages, purchases, transactions',
+      route: RouteNames.wallet,
+    ),
   ];
 
   @override

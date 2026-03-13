@@ -109,6 +109,23 @@ void main() {
 
         expect(result.data, hasLength(1));
       });
+
+      test('passes resourceId filter param', () async {
+        const filters = AuditLogQueryParams(
+          resourceType: 'session',
+          resourceId: 'sess-001',
+        );
+        dioAdapter.onGet(
+          ApiEndpoints.auditLogs,
+          (server) => server.reply(200, paginatedResponse),
+          queryParameters: filters.toQueryParameters(),
+        );
+
+        final result = await repository.queryLogs(filters: filters);
+
+        expect(result.data, hasLength(1));
+        expect(result.data.first.resourceId, 'sess-001');
+      });
     });
   });
 }
