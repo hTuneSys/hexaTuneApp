@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.2...v1.0.3) (2026-03-14)
+
+
+### Bug Fixes
+
+* **ios:** add native Swift files to Xcode project references ([aaf4c50](https://github.com/hTuneSys/hexaTuneApp/commit/aaf4c50bff89740a69d7d85c1e606c92bb2e93c2))
+
 ## [1.0.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.1...v1.0.2) (2026-03-14)
 
 
