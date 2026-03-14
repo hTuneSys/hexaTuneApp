@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.5...v1.0.6) (2026-03-14)
+
+
+### Bug Fixes
+
+* **ios:** add Appfile and explicit app_identifier for TestFlight upload ([8e8990f](https://github.com/hTuneSys/hexaTuneApp/commit/8e8990f0f0ff34c4378f7accc98b2da3260dbf08))
+
 ## [1.0.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.4...v1.0.5) (2026-03-14)
 
 
