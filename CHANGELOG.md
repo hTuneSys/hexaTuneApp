@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.3...v1.0.4) (2026-03-14)
+
+
+### Bug Fixes
+
+* **ios:** correct Swift file paths in Xcode project references ([3595708](https://github.com/hTuneSys/hexaTuneApp/commit/359570844382351c1ff4e6e6b92abb90e7f7e821))
+
 ## [1.0.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.2...v1.0.3) (2026-03-14)
 
 
