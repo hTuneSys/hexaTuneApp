@@ -1,3 +1,15 @@
+# 1.0.0 (2026-03-14)
+
+
+### Bug Fixes
+
+* **ci:** override gradle java.home for CI compatibility ([f775714](https://github.com/hTuneSys/hexaTuneApp/commit/f7757148b4b7781c449c1dd38604205157d5f16c))
+
+
+### Features
+
+* core API infrastructure — OpenAPI v2, wallet module, multi-env Firebase, CI/CD workflows ([#1](https://github.com/hTuneSys/hexaTuneApp/issues/1)) ([5584a7e](https://github.com/hTuneSys/hexaTuneApp/commit/5584a7e0470431dba4295e040f730dcf320d18f3)), closes [#F5F5F5](https://github.com/hTuneSys/hexaTuneApp/issues/F5F5F5) [#F5F5F5](https://github.com/hTuneSys/hexaTuneApp/issues/F5F5F5)
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
