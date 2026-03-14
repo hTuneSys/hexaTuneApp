@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.0...v1.0.1) (2026-03-14)
+
+
+### Bug Fixes
+
+* **ios:** correct provisioning profile name in exportOptions.plist ([aafa05b](https://github.com/hTuneSys/hexaTuneApp/commit/aafa05bfceba074d255c85036cf13b589b8d9a9e))
+
 # 1.0.0 (2026-03-14)
 
 
