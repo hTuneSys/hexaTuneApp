@@ -9,7 +9,7 @@
     <key>provisioningProfiles</key>
       <dict>
         <key>com.hexatune.hexatuneapp</key>
-        <string>hexaTune Distribution</string>
+        <string>hexaTune AppStore</string>
       </dict>
     <key>destination</key><string>export</string>
     <key>uploadSymbols</key><true/>
