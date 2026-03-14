@@ -63,6 +63,9 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Override Gradle Java home for CI
+        run: sed -i "s|org.gradle.java.home=.*|org.gradle.java.home=$JAVA_HOME|" android/gradle.properties
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
