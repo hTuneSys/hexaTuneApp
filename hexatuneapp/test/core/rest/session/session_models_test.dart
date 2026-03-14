@@ -1,0 +1,55 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:hexatuneapp/src/core/rest/session/models/revoke_sessions_response.dart';
+import 'package:hexatuneapp/src/core/rest/session/models/session_response.dart';
+
+void main() {
+  group('SessionResponse', () {
+    test('fromJson creates instance', () {
+      final json = {
+        'id': 'sess-001',
+        'accountId': 'acc-001',
+        'deviceId': 'dev-001',
+        'createdAt': '2025-01-01T00:00:00Z',
+        'expiresAt': '2025-02-01T00:00:00Z',
+      };
+      final response = SessionResponse.fromJson(json);
+      expect(response.id, 'sess-001');
+      expect(response.accountId, 'acc-001');
+      expect(response.deviceId, 'dev-001');
+      expect(response.createdAt, '2025-01-01T00:00:00Z');
+      expect(response.expiresAt, '2025-02-01T00:00:00Z');
+    });
+
+    test('toJson produces correct keys', () {
+      const response = SessionResponse(
+        id: 'sess-001',
+        accountId: 'acc-001',
+        deviceId: 'dev-001',
+        createdAt: '2025-01-01T00:00:00Z',
+        expiresAt: '2025-02-01T00:00:00Z',
+      );
+      final json = response.toJson();
+      expect(json['id'], 'sess-001');
+      expect(json['accountId'], 'acc-001');
+      expect(json['deviceId'], 'dev-001');
+    });
+  });
+
+  group('RevokeSessionsResponse', () {
+    test('fromJson creates instance', () {
+      final json = {'revokedCount': 5};
+      final response = RevokeSessionsResponse.fromJson(json);
+      expect(response.revokedCount, 5);
+    });
+
+    test('toJson produces correct keys', () {
+      const response = RevokeSessionsResponse(revokedCount: 3);
+      final json = response.toJson();
+      expect(json['revokedCount'], 3);
+    });
+  });
+}

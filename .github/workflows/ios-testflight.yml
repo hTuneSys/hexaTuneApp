@@ -1,0 +1,130 @@
+# SPDX-FileCopyrightText: 2025 hexaTune LLC
+# SPDX-License-Identifier: MIT
+
+name: iOS → TestFlight (Manual Trigger)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-upload:
+    runs-on: macos-latest
+
+    env:
+      BUILD_NUMBER: ${{ github.run_number }} # forwarded to Fastlane/Fastfile
+      BUNDLE_ID: com.hexatune.hexagenapp
+      PROFILE_TYPE: IOS_APP_STORE # alternatives: IOS_APP_DEVELOPMENT, IOS_APP_ADHOC
+
+    steps:
+      - name: Checkout (default branch)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "16.4"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+
+      - name: Install fastlane
+        run: gem install fastlane
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: "stable"
+          # flutter-version: '3.24.3'  # (opsiyonel) sabitlemek istersen aç
+
+      # -----------------------------
+      # Speed-ups: caches (optional)
+      # -----------------------------
+      - name: Cache CocoaPods
+        uses: actions/cache@v4
+        with:
+          path: ~/.cocoapods
+          key: ${{ runner.os }}-cocoapods-${{ hashFiles('hexagenapp/ios/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cocoapods-
+
+      - name: Cache Flutter pub
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('hexagenapp/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      # --- Code signing: import Apple Distribution certificate (.p12) ---
+      - name: Import signing certificate
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.IOS_CERT_P12 }}
+          p12-password: ${{ secrets.IOS_CERT_PASSWORD }}
+
+      # --- Download & install provisioning profiles from App Store Connect ---
+      - name: Download provisioning profile(s)
+        uses: Apple-Actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: ${{ env.BUNDLE_ID }}
+          profile-type: ${{ env.PROFILE_TYPE }}
+          issuer-id: ${{ secrets.ASC_ISSUER_ID }}
+          api-key-id: ${{ secrets.ASC_KEY_ID }}
+          api-private-key: ${{ secrets.ASC_PRIVATE_KEY }}
+
+      # (Optional) quick sanity check
+      - name: Show code signing identities & profiles (debug)
+        run: |
+          security find-identity -v -p codesigning || true
+          ls -l "$HOME/Library/MobileDevice/Provisioning Profiles" || true
+
+      # --- CocoaPods (only if Podfile exists) ---
+      - name: Install CocoaPods (inside hexagenapp/ios, if Podfile exists)
+        run: |
+          if [ -f "hexagenapp/ios/Podfile" ]; then
+            sudo gem install cocoapods
+            cd hexagenapp/ios
+            pod repo update
+            pod install
+          else
+            echo "No Podfile found under hexagenapp/ios — skipping pod install. Flutter may handle Pods during build."
+          fi
+
+      # --- Configure App Store Connect API key for fastlane (json file) ---
+      - name: Configure App Store Connect API key (fastlane/api_key.json)
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          mkdir -p fastlane
+          python3 - <<'PY'
+          import os, json
+          key = os.environ["ASC_PRIVATE_KEY"].replace("\\n","\n")
+          payload = {
+            "key_id": os.environ["ASC_KEY_ID"],
+            "issuer_id": os.environ["ASC_ISSUER_ID"],
+            "key": key,
+            "in_house": False
+          }
+          with open("fastlane/api_key.json","w") as f:
+            json.dump(payload, f)
+          PY
+          echo "APP_STORE_CONNECT_API_KEY_PATH=$GITHUB_WORKSPACE/fastlane/api_key.json" >> $GITHUB_ENV
+
+      # --- Build and upload to TestFlight using Fastlane ---
+      - name: Build & Upload to TestFlight
+        run: fastlane ios beta
+
+      # Artifact (optional but handy)
+      - name: Upload IPA artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-ipa
+          path: hexagenapp/build/ios/ipa/*.ipa
+          if-no-files-found: ignore

@@ -1,0 +1,146 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+import 'package:flutter_test/flutter_test.dart';
+
+import 'package:hexatuneapp/src/core/rest/formula/formula_constants.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/formula_item_response.dart';
+
+void main() {
+  group('FormulaConstants', () {
+    test('maxTotalQuantity is 60', () {
+      expect(FormulaConstants.maxTotalQuantity, 60);
+    });
+  });
+
+  group('FormulaValidation', () {
+    FormulaItemResponse makeItem(String id, String invId, int qty) {
+      return FormulaItemResponse(
+        id: id,
+        inventoryId: invId,
+        sortOrder: 1,
+        quantity: qty,
+        timeMs: 1000,
+      );
+    }
+
+    group('totalQuantity', () {
+      test('returns 0 for empty list', () {
+        expect(FormulaValidation.totalQuantity([]), 0);
+      });
+
+      test('sums quantities of all items', () {
+        final items = [
+          makeItem('i1', 'inv1', 10),
+          makeItem('i2', 'inv2', 20),
+          makeItem('i3', 'inv3', 5),
+        ];
+        expect(FormulaValidation.totalQuantity(items), 35);
+      });
+
+      test('returns single item quantity for one item', () {
+        final items = [makeItem('i1', 'inv1', 42)];
+        expect(FormulaValidation.totalQuantity(items), 42);
+      });
+    });
+
+    group('remainingCapacity', () {
+      test('returns max for empty list', () {
+        expect(
+          FormulaValidation.remainingCapacity([]),
+          FormulaConstants.maxTotalQuantity,
+        );
+      });
+
+      test('returns correct remaining capacity', () {
+        final items = [makeItem('i1', 'inv1', 20), makeItem('i2', 'inv2', 15)];
+        expect(FormulaValidation.remainingCapacity(items), 25);
+      });
+
+      test('returns 0 when at capacity', () {
+        final items = [makeItem('i1', 'inv1', 60)];
+        expect(FormulaValidation.remainingCapacity(items), 0);
+      });
+
+      test('returns negative when over capacity', () {
+        final items = [makeItem('i1', 'inv1', 65)];
+        expect(FormulaValidation.remainingCapacity(items), -5);
+      });
+    });
+
+    group('canAddQuantity', () {
+      test('returns true when under limit', () {
+        final items = [makeItem('i1', 'inv1', 10)];
+        expect(FormulaValidation.canAddQuantity(items, 5), true);
+      });
+
+      test('returns true when exactly at limit', () {
+        final items = [makeItem('i1', 'inv1', 50)];
+        expect(FormulaValidation.canAddQuantity(items, 10), true);
+      });
+
+      test('returns false when exceeding limit', () {
+        final items = [makeItem('i1', 'inv1', 55)];
+        expect(FormulaValidation.canAddQuantity(items, 6), false);
+      });
+
+      test('returns true for empty list with quantity under limit', () {
+        expect(FormulaValidation.canAddQuantity([], 60), true);
+      });
+
+      test('returns false for empty list with quantity over limit', () {
+        expect(FormulaValidation.canAddQuantity([], 61), false);
+      });
+    });
+
+    group('canUpdateQuantity', () {
+      test('returns true when new quantity fits', () {
+        final items = [makeItem('i1', 'inv1', 30), makeItem('i2', 'inv2', 20)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 40), true);
+      });
+
+      test('returns true when new quantity exactly fills limit', () {
+        final items = [makeItem('i1', 'inv1', 10), makeItem('i2', 'inv2', 20)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 40), true);
+      });
+
+      test('returns false when new quantity exceeds limit', () {
+        final items = [makeItem('i1', 'inv1', 10), makeItem('i2', 'inv2', 20)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 41), false);
+      });
+
+      test('ignores target item current quantity in calculation', () {
+        final items = [makeItem('i1', 'inv1', 50), makeItem('i2', 'inv2', 5)];
+        // Other items total = 5, so max for i1 = 55
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 55), true);
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 56), false);
+      });
+    });
+
+    group('isDuplicateInventory', () {
+      test('returns false for empty list', () {
+        expect(FormulaValidation.isDuplicateInventory([], 'inv1'), false);
+      });
+
+      test('returns false when inventory not present', () {
+        final items = [makeItem('i1', 'inv1', 10)];
+        expect(FormulaValidation.isDuplicateInventory(items, 'inv2'), false);
+      });
+
+      test('returns true when inventory already exists', () {
+        final items = [makeItem('i1', 'inv1', 10)];
+        expect(FormulaValidation.isDuplicateInventory(items, 'inv1'), true);
+      });
+
+      test('returns true with multiple items', () {
+        final items = [
+          makeItem('i1', 'inv1', 10),
+          makeItem('i2', 'inv2', 20),
+          makeItem('i3', 'inv3', 5),
+        ];
+        expect(FormulaValidation.isDuplicateInventory(items, 'inv2'), true);
+        expect(FormulaValidation.isDuplicateInventory(items, 'inv4'), false);
+      });
+    });
+  });
+}

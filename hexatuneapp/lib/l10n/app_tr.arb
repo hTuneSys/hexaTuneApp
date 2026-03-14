@@ -1,0 +1,294 @@
+{
+  "@@locale": "tr",
+
+  "app": "hexaTune",
+  "appName": "hexaTune App",
+
+  "signInTitle": "Giriş yap",
+  "signIn": "Giriş Yap",
+  "signUp": "Kayıt Ol",
+  "emailAddress": "E-posta adresi",
+  "password": "Şifre",
+  "confirmPassword": "Şifreyi onayla",
+  "newPassword": "Yeni Şifre",
+  "orContinueWith": "veya şununla devam et",
+  "apple": "Apple",
+  "google": "Google",
+
+  "forgotPasswordQuestion": "Şifrenizi mi unuttunuz?",
+  "dontHaveAccountPrefix": "Hesabınız yok mu? ",
+  "createAccount": "Hesap oluştur",
+  "createAnAccount": "Hesap oluştur",
+  "signUpSubtitle": "Başlamak için kayıt olun!",
+  "alreadyHaveAccountPrefix": "Zaten bir hesabınız var mı? ",
+  "signInLink": "Giriş Yap",
+
+  "forgotPasswordTitle": "Şifremi Unuttum",
+  "forgotPasswordSubtitle": "Sıfırlama kodu almak için e-postanızı girin.",
+  "sendResetCode": "Sıfırlama Kodu Gönder",
+
+  "enterOtpCode": "OTP Kodunu Girin",
+  "verificationCodeSentTo": "Doğrulama kodunu gönderdik:",
+  "enterDigitCodeBelow": "Lütfen aşağıdaki 8 haneli kodu girin.",
+  "verify": "Doğrula",
+  "didntReceiveCode": "Kodu almadınız mı?",
+  "resendIn": "{time} sonra tekrar gönder",
+  "@resendIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Kodu Tekrar Gönder",
+
+  "resetYourPassword": "Şifrenizi Sıfırlayın",
+  "resetPasswordSubtitle": "Yeni bir şifre oluşturmak için kodu girin.",
+  "resetPassword": "Şifreyi Sıfırla",
+
+  "passwordStrengthWeak": "zayıf",
+  "passwordStrengthFair": "orta",
+  "passwordStrengthGood": "iyi",
+  "passwordStrengthStrong": "güçlü",
+
+  "emailRequired": "E-posta gerekli",
+  "passwordRequired": "Şifre gerekli",
+  "emailAndPasswordRequired": "E-posta ve şifre gerekli",
+  "passwordsDoNotMatch": "Şifreler eşleşmiyor",
+  "otpRequired": "Lütfen doğrulama kodunu girin",
+
+  "emailVerifiedSignIn": "E-posta doğrulandı! Lütfen giriş yapın.",
+  "passwordResetSuccess": "Şifre başarıyla sıfırlandı!",
+  "otpSentTo": "Sıfırlama kodu {email} adresine gönderildi",
+  "@otpSentTo": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeResent": "Doğrulama kodu tekrar gönderildi",
+  "accountCreatedVerifyEmail": "Hesap oluşturuldu! Lütfen e-postanızı doğrulayın.",
+  "newAccountViaGoogle": "Google ile yeni hesap oluşturuldu",
+  "newAccountViaApple": "Apple ile yeni hesap oluşturuldu",
+  "appleSignInNotAvailable": "Apple ile giriş yalnızca iOS'ta kullanılabilir",
+
+  "ambienceBaseForest": "Orman",
+  "ambienceBaseOcean": "Okyanus",
+  "ambienceBaseRain": "Yağmur",
+  "ambienceTextureFire": "Ateş",
+  "ambienceTextureGrass": "Çimen",
+  "ambienceTextureLeaf": "Yaprak",
+  "ambienceTextureNight": "Gece",
+  "ambienceTextureSnow": "Kar",
+  "ambienceTextureSoftWind": "Hafif Rüzgâr",
+  "ambienceTextureStrongWind": "Kuvvetli Rüzgâr",
+  "ambienceTextureWaterDrop": "Su Damlası",
+  "ambienceTextureWave": "Dalga",
+  "ambienceEventSeaGull": "Martı",
+  "ambienceEventBird": "Kuş",
+  "ambienceEventBirdWing": "Kuş Kanadı",
+  "ambienceEventBush": "Çalılık",
+  "ambienceEventCrumble": "Çıtırtı",
+  "ambienceEventFrog": "Kurbağa",
+  "ambienceEventInsect": "Böcek",
+  "ambienceEventOwl": "Baykuş",
+  "ambienceEventStone": "Taş",
+  "ambienceEventThunder": "Gök Gürültüsü",
+  "ambienceEventTwig": "Dal",
+  "ambienceEventWaterDrop": "Su Damlası",
+  "ambienceEventWaterSplash": "Su Sıçraması",
+  "ambienceEventWoodCrack": "Odun Çıtırtısı",
+  "ambienceEventWoodpecker": "Ağaçkakan",
+
+  "dspPageTitle": "DSP Ses Motoru",
+  "dspSoundLayers": "Ses Katmanları",
+  "dspGainControls": "Ses Ayarları",
+  "dspBinauralConfig": "Binaural Yapılandırma",
+  "dspCycleSteps": "Frekans Döngü Adımları",
+  "dspSectionBase": "Temel",
+  "dspSectionTexture": "Doku",
+  "dspSectionEvents": "Olaylar",
+  "dspSelectedCount": "{count}/{max}",
+  "@dspSelectedCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "max": { "type": "int" }
+    }
+  },
+  "dspNoSelection": "Seçmek için dokunun",
+  "dspPlay": "OYNAT",
+  "dspStop": "DURDUR",
+  "dspGraceful": "YUMUŞAK",
+  "dspLoading": "YÜKLENİYOR...",
+  "dspFinishing": "BİTİRİLİYOR...",
+  "dspPlaying": "Çalıyor...",
+  "dspStopped": "Durduruldu",
+  "dspGracefullyStopped": "Yumuşak geçişle durduruldu",
+  "dspFinishingCycle": "Döngü tamamlanıyor...",
+  "dspCarrierFrequency": "Taşıyıcı Frekans (Hz)",
+  "dspBinauralMode": "Binaural Mod",
+  "dspBinauralStereo": "Stereo binaural atışlar",
+  "dspBinauralMono": "AM mono darbeli",
+  "dspDeltaHz": "Delta Hz",
+  "dspDurationS": "Süre s",
+  "dspAddStep": "Adım Ekle",
+  "dspBaseLoaded": "Temel yüklendi: {name}",
+  "@dspBaseLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspTextureLoaded": "Doku {index} yüklendi: {name}",
+  "@dspTextureLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspEventLoaded": "Olay {index} yüklendi: {name}",
+  "@dspEventLoaded": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "name": { "type": "String" }
+    }
+  },
+  "dspSelectBaseFirst": "Önce bir Temel katman seçin",
+  "dspLoadFailed": "Yükleme başarısız (rc={code})",
+  "@dspLoadFailed": {
+    "placeholders": { "code": { "type": "int" } }
+  },
+
+  "dspAmbienceTitle": "Ambiyans Ön Ayarları",
+  "dspAmbienceCreate": "Ambiyans Oluştur",
+  "dspAmbienceEdit": "Ambiyansı Düzenle",
+  "dspAmbienceSave": "Kaydet",
+  "dspAmbienceUpdate": "Güncelle",
+  "dspAmbienceName": "Ambiyans Adı",
+  "dspAmbienceEmpty": "Henüz ambiyans yok",
+  "dspAmbienceEmptyHint": "İlk ambiyansınızı oluşturmak için + düğmesine dokunun",
+  "dspAmbienceDeleteTitle": "Ambiyansı Sil",
+  "dspAmbienceDeleteConfirm": "\"{name}\" silinsin mi? Bu işlem geri alınamaz.",
+  "@dspAmbienceDeleteConfirm": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceDelete": "Sil",
+  "dspAmbienceCancel": "İptal",
+  "dspAmbienceNoBase": "Yok",
+  "dspAmbienceSummary": "Özet",
+  "dspAmbienceSelectAmbience": "Ambiyans Seç",
+  "dspAmbienceNoneSelected": "Ambiyans seçilmedi",
+  "dspAmbienceLoaded": "Ambiyans yüklendi: {name}",
+  "@dspAmbienceLoaded": {
+    "placeholders": { "name": { "type": "String" } }
+  },
+  "dspAmbienceManage": "Yönet",
+
+  "hexagenTitle": "hexaGen Cihazı",
+  "hexagenRefresh": "Yenile",
+  "hexagenConnection": "Bağlantı",
+  "hexagenStatusReady": "Hazır",
+  "hexagenStatusConnected": "Bağlı",
+  "hexagenStatusDisconnected": "Bağlı Değil",
+  "hexagenDevice": "Cihaz",
+  "hexagenDeviceId": "Cihaz ID",
+  "hexagenFirmware": "Firmware",
+  "hexagenInitialized": "Başlatıldı",
+  "hexagenYes": "Evet",
+  "hexagenNo": "Hayır",
+  "hexagenNone": "Yok",
+  "hexagenInit": "Başlat",
+  "hexagenReset": "Sıfırla",
+  "hexagenInitSuccess": "HexaGen servisi başlatıldı",
+  "hexagenRefreshed": "Cihaz taraması tamamlandı",
+  "hexagenResetSent": "Sıfırlama komutu gönderildi",
+  "hexagenRgb": "RGB LED",
+  "hexagenRed": "K",
+  "hexagenGreen": "Y",
+  "hexagenBlue": "M",
+  "hexagenSendRgb": "RGB Gönder",
+  "hexagenRgbSent": "RGB komutu gönderildi",
+  "hexagenFreqSweep": "Frekans Taraması",
+  "hexagenFreqEmpty": "Frekans eklenmedi",
+  "hexagenFreqHz": "Frekans (Hz)",
+  "hexagenDurationMs": "Süre (ms)",
+  "hexagenFreqRun": "Çalıştır ({count})",
+  "@hexagenFreqRun": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "hexagenFreqStop": "Durdur",
+  "hexagenFreqProgress": "Frekans {current}/{total}: {freq} Hz",
+  "@hexagenFreqProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" },
+      "freq": { "type": "int" }
+    }
+  },
+  "hexagenFreqFailed": "Frekans {freq} Hz başarısız: {status}",
+  "@hexagenFreqFailed": {
+    "placeholders": {
+      "freq": { "type": "int" },
+      "status": { "type": "String" }
+    }
+  },
+  "hexagenFreqListDone": "Frekans listesi tamamlandı",
+  "hexagenOpId": "Operasyon ID",
+  "hexagenOpCurrentStatus": "Durum",
+  "hexagenOpStep": "Adım",
+  "hexagenOpRunning": "Çalışıyor...",
+  "hexagenOpPreparing": "Operasyon hazırlanıyor...",
+  "hexagenOpPrepareFailed": "Hazırlık başarısız: {status}",
+  "@hexagenOpPrepareFailed": {
+    "placeholders": { "status": { "type": "String" } }
+  },
+  "hexagenOpGenerating": "Üretiliyor...",
+  "hexagenOpStatus": "Operasyon: {status} (adım {step})",
+  "@hexagenOpStatus": {
+    "placeholders": {
+      "status": { "type": "String" },
+      "step": { "type": "int" }
+    }
+  },
+
+  "harmonizerTitle": "Harmonizer Oynatıcı",
+  "harmonizerSelectFormula": "Bir formül seçin",
+  "harmonizerNoFormulas": "Formül bulunamadı",
+  "harmonizerFormulaLabel": "Formül",
+  "harmonizerTypeMonaural": "Monaural",
+  "harmonizerTypeBinaural": "Binaural",
+  "harmonizerTypeMagnetic": "Manyetik",
+  "harmonizerTypePhotonic": "Fotonik",
+  "harmonizerTypeQuantal": "Kuantal",
+  "harmonizerComingSoon": "Bu özellik yakında gelecek",
+  "harmonizerHeadsetRequired": "Binaural mod için lütfen kulaklık takınız",
+  "harmonizerHexagenRequired": "Manyetik mod için lütfen bir hexaGen cihazı bağlayınız",
+  "harmonizerSelectAmbience": "Ambiyans seçin (opsiyonel)",
+  "harmonizerNoAmbience": "Ambiyans yok",
+  "harmonizerPlay": "Oynat",
+  "harmonizerStop": "Durdur",
+  "harmonizerPreparing": "Hazırlanıyor...",
+  "harmonizerPlaying": "Oynuyor",
+  "harmonizerStopping": "Durduruluyor...",
+  "harmonizerError": "Hata: {message}",
+  "@harmonizerError": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+  "harmonizerCycle": "Döngü {cycle}",
+  "@harmonizerCycle": {
+    "placeholders": { "cycle": { "type": "int" } }
+  },
+  "harmonizerTotalDuration": "Toplam",
+  "harmonizerRemaining": "Kalan",
+  "harmonizerStep": "Adım {index}: {value} Hz — {duration}s",
+  "@harmonizerStep": {
+    "placeholders": {
+      "index": { "type": "int" },
+      "value": { "type": "int" },
+      "duration": { "type": "String" }
+    }
+  },
+  "harmonizerStepOneshot": "tek seferlik",
+  "harmonizerGracefulStopHint": "Mevcut döngü bitince durdurmak için dokunun",
+  "harmonizerImmediateStopHint": "Anında durdurmak için 3 saniye basılı tutun",
+  "harmonizerGenerating": "Sekans üretiliyor...",
+  "harmonizerNoSequence": "Formül seçilmedi"
+}
