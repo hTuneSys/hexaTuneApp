@@ -44,9 +44,9 @@ class DefaultFirebaseOptions {
     projectId: 'hexatune-dev',
     storageBucket: 'hexatune-dev.firebasestorage.app',
     androidClientId:
-        '1028765878289-020r3djksga02lslnv81jd0kojfejmq2.apps.googleusercontent.com',
+        '1028765878289-jp352on9ptv0a5m1bc9km0v87e0fot1h.apps.googleusercontent.com',
     iosClientId:
-        '1028765878289-lavndflchdnm9tc9vtnt1e7687umlhe7.apps.googleusercontent.com',
+        '1028765878289-25ffio977as63bm4lg9m8jp0luq3n006.apps.googleusercontent.com',
     iosBundleId: 'com.hexatune.hexatuneapp',
   );
 }

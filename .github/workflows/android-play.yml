@@ -1,0 +1,148 @@
+# SPDX-FileCopyrightText: 2025 hexaTune LLC
+# SPDX-License-Identifier: MIT
+
+name: "Android → Google Play (hexaTune Core)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Build environment"
+        type: choice
+        required: true
+        options:
+          - test
+          - stage
+          - prod
+        default: "test"
+      releaseName:
+        description: "Release name (Play Console note)"
+        required: false
+        default: "hexaTune"
+      status:
+        description: "Release status"
+        type: choice
+        required: true
+        options:
+          - completed
+          - draft
+          - inProgress
+          - halted
+        default: "completed"
+
+jobs:
+  build-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    defaults:
+      run:
+        working-directory: hexatuneapp
+
+    env:
+      ENVIRONMENT: ${{ github.event.inputs.environment }}
+
+    steps:
+      - name: Resolve Play track from environment
+        run: |
+          case "$ENVIRONMENT" in
+            test)  TRACK="internal"   ;;
+            stage) TRACK="beta"       ;;
+            prod)  TRACK="production" ;;
+            *)     echo "❌ Unknown environment: $ENVIRONMENT"; exit 1 ;;
+          esac
+          echo "TRACK=$TRACK" >> $GITHUB_ENV
+          echo "📦 Environment: $ENVIRONMENT → Track: $TRACK"
+        working-directory: .
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Java (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.38.5"
+          cache: true
+
+      - name: Flutter pub get
+        run: flutter pub get
+
+      - name: Gradle cache
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Derive BUILD_NUMBER from run_number
+        run: |
+          BUILD_NUMBER=$((10000 + GITHUB_RUN_NUMBER))
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          echo "🔢 Using BUILD_NUMBER=$BUILD_NUMBER"
+
+      - name: Update pubspec.yaml version (+BUILD_NUMBER)
+        run: |
+          BN="${BUILD_NUMBER}"
+          if grep -qE '^version: [0-9]+\.[0-9]+\.[0-9]+\+[0-9]+' pubspec.yaml; then
+            sed -i -E "s/^version: ([0-9]+\.[0-9]+\.[0-9]+)\+[0-9]+$/version: \1+${BN}/" pubspec.yaml
+          else
+            echo "" >> pubspec.yaml
+            echo "version: 1.0.0+${BN}" >> pubspec.yaml
+          fi
+          echo "📋 pubspec version → $(grep '^version:' pubspec.yaml)"
+
+      - name: Prepare signing (keystore & key.properties)
+        run: |
+          mkdir -p android/app
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Create environment file
+        run: |
+          echo "${{ secrets[format('ENV_FILE_{0}', env.ENVIRONMENT)] }}" > .env.${{ env.ENVIRONMENT }}
+          echo "🔐 Created .env.${{ env.ENVIRONMENT }}"
+
+      - name: Accept Android SDK licenses
+        run: yes | sdkmanager --licenses || true
+
+      - name: Flutter analyze
+        run: flutter analyze --no-pub
+
+      - name: Flutter test
+        run: flutter test --no-pub
+
+      - name: Build AAB (release)
+        run: |
+          flutter build appbundle --release \
+            --build-number=${{ env.BUILD_NUMBER }} \
+            --dart-define-from-file=.env.${{ env.ENVIRONMENT }}
+
+      - name: Verify AAB exists
+        run: |
+          ls -lah build/app/outputs/bundle/release/ || true
+          test -f build/app/outputs/bundle/release/app-release.aab
+
+      - name: Upload to Google Play
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_STORE_SERVICE_ACCOUNT_JSON }}
+          packageName: com.hexatune.hexatuneapp
+          releaseFiles: hexatuneapp/build/app/outputs/bundle/release/app-release.aab
+          track: ${{ env.TRACK }}
+          status: ${{ github.event.inputs.status }}
+          releaseName: "${{ github.event.inputs.releaseName }} (${{ env.ENVIRONMENT }})"
+          inAppUpdatePriority: 0
+
+      - name: Upload AAB artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-aab-${{ env.ENVIRONMENT }}
+          path: hexatuneapp/build/app/outputs/bundle/release/app-release.aab
+          if-no-files-found: ignore
