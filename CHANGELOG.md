@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.4...v1.0.5) (2026-03-14)
+
+
+### Bug Fixes
+
+* **ios:** resolve Swift type mismatch in DspAudioService ([a0401a4](https://github.com/hTuneSys/hexaTuneApp/commit/a0401a4ad131c785b565154dc5059de7ea20338f))
+
 ## [1.0.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.3...v1.0.4) (2026-03-14)
 
 
