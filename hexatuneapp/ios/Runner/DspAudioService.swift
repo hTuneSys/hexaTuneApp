@@ -47,7 +47,7 @@ class DspAudioService {
             for buffer in ablPointer {
                 guard let data = buffer.mData else { continue }
                 let floatPtr = data.assumingMemoryBound(to: Float.self)
-                let frames = min(frameCount, UInt32(buffer.mDataByteSize) / (2 * MemoryLayout<Float>.stride))
+                let frames = min(frameCount, UInt32(buffer.mDataByteSize) / UInt32(2 * MemoryLayout<Float>.stride))
                 let rc = htd_engine_render(
                     OpaquePointer(bitPattern: self.enginePtr),
                     floatPtr,
