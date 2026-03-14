@@ -1,0 +1,1304 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_en.dart';
+import 'app_localizations_tr.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'l10n/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale)
+    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations? of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations);
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('tr'),
+  ];
+
+  /// No description provided for @app.
+  ///
+  /// In en, this message translates to:
+  /// **'hexaTune'**
+  String get app;
+
+  /// No description provided for @appName.
+  ///
+  /// In en, this message translates to:
+  /// **'hexaTune App'**
+  String get appName;
+
+  /// No description provided for @signInTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get signInTitle;
+
+  /// No description provided for @signIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signIn;
+
+  /// No description provided for @signUp.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
+  /// No description provided for @emailAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get emailAddress;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @orContinueWith.
+  ///
+  /// In en, this message translates to:
+  /// **'or continue with'**
+  String get orContinueWith;
+
+  /// No description provided for @apple.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get apple;
+
+  /// No description provided for @google.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get google;
+
+  /// No description provided for @forgotPasswordQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPasswordQuestion;
+
+  /// No description provided for @dontHaveAccountPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t have an account? '**
+  String get dontHaveAccountPrefix;
+
+  /// No description provided for @createAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create account'**
+  String get createAccount;
+
+  /// No description provided for @createAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get createAnAccount;
+
+  /// No description provided for @signUpSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign up to get started!'**
+  String get signUpSubtitle;
+
+  /// No description provided for @alreadyHaveAccountPrefix.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an account? '**
+  String get alreadyHaveAccountPrefix;
+
+  /// No description provided for @signInLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign In'**
+  String get signInLink;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @forgotPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your email to receive a reset code.'**
+  String get forgotPasswordSubtitle;
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Reset Code'**
+  String get sendResetCode;
+
+  /// No description provided for @enterOtpCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter OTP Code'**
+  String get enterOtpCode;
+
+  /// No description provided for @verificationCodeSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'We have sent a verification code to:'**
+  String get verificationCodeSentTo;
+
+  /// No description provided for @enterDigitCodeBelow.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the 8-digit code below.'**
+  String get enterDigitCodeBelow;
+
+  /// No description provided for @verify.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify'**
+  String get verify;
+
+  /// No description provided for @didntReceiveCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Didn\'t receive the code?'**
+  String get didntReceiveCode;
+
+  /// No description provided for @resendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend in {time}'**
+  String resendIn(String time);
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @resetYourPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Your Password'**
+  String get resetYourPassword;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code to create a new password.'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'weak'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthFair.
+  ///
+  /// In en, this message translates to:
+  /// **'fair'**
+  String get passwordStrengthFair;
+
+  /// No description provided for @passwordStrengthGood.
+  ///
+  /// In en, this message translates to:
+  /// **'good'**
+  String get passwordStrengthGood;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'strong'**
+  String get passwordStrengthStrong;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get emailRequired;
+
+  /// No description provided for @passwordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get passwordRequired;
+
+  /// No description provided for @emailAndPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email and password are required'**
+  String get emailAndPasswordRequired;
+
+  /// No description provided for @passwordsDoNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get passwordsDoNotMatch;
+
+  /// No description provided for @otpRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the verification code'**
+  String get otpRequired;
+
+  /// No description provided for @emailVerifiedSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Email verified! Please sign in.'**
+  String get emailVerifiedSignIn;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully!'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @otpSentTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset code sent to {email}'**
+  String otpSentTo(String email);
+
+  /// No description provided for @verificationCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code resent'**
+  String get verificationCodeResent;
+
+  /// No description provided for @accountCreatedVerifyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Account created! Please verify your email.'**
+  String get accountCreatedVerifyEmail;
+
+  /// No description provided for @newAccountViaGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'New account created via Google'**
+  String get newAccountViaGoogle;
+
+  /// No description provided for @newAccountViaApple.
+  ///
+  /// In en, this message translates to:
+  /// **'New account created via Apple'**
+  String get newAccountViaApple;
+
+  /// No description provided for @appleSignInNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Sign-In is only available on iOS'**
+  String get appleSignInNotAvailable;
+
+  /// No description provided for @ambienceBaseForest.
+  ///
+  /// In en, this message translates to:
+  /// **'Forest'**
+  String get ambienceBaseForest;
+
+  /// No description provided for @ambienceBaseOcean.
+  ///
+  /// In en, this message translates to:
+  /// **'Ocean'**
+  String get ambienceBaseOcean;
+
+  /// No description provided for @ambienceBaseRain.
+  ///
+  /// In en, this message translates to:
+  /// **'Rain'**
+  String get ambienceBaseRain;
+
+  /// No description provided for @ambienceTextureFire.
+  ///
+  /// In en, this message translates to:
+  /// **'Fire'**
+  String get ambienceTextureFire;
+
+  /// No description provided for @ambienceTextureGrass.
+  ///
+  /// In en, this message translates to:
+  /// **'Grass'**
+  String get ambienceTextureGrass;
+
+  /// No description provided for @ambienceTextureLeaf.
+  ///
+  /// In en, this message translates to:
+  /// **'Leaf'**
+  String get ambienceTextureLeaf;
+
+  /// No description provided for @ambienceTextureNight.
+  ///
+  /// In en, this message translates to:
+  /// **'Night'**
+  String get ambienceTextureNight;
+
+  /// No description provided for @ambienceTextureSnow.
+  ///
+  /// In en, this message translates to:
+  /// **'Snow'**
+  String get ambienceTextureSnow;
+
+  /// No description provided for @ambienceTextureSoftWind.
+  ///
+  /// In en, this message translates to:
+  /// **'Soft Wind'**
+  String get ambienceTextureSoftWind;
+
+  /// No description provided for @ambienceTextureStrongWind.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong Wind'**
+  String get ambienceTextureStrongWind;
+
+  /// No description provided for @ambienceTextureWaterDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drop'**
+  String get ambienceTextureWaterDrop;
+
+  /// No description provided for @ambienceTextureWave.
+  ///
+  /// In en, this message translates to:
+  /// **'Wave'**
+  String get ambienceTextureWave;
+
+  /// No description provided for @ambienceEventSeaGull.
+  ///
+  /// In en, this message translates to:
+  /// **'Sea Gull'**
+  String get ambienceEventSeaGull;
+
+  /// No description provided for @ambienceEventBird.
+  ///
+  /// In en, this message translates to:
+  /// **'Bird'**
+  String get ambienceEventBird;
+
+  /// No description provided for @ambienceEventBirdWing.
+  ///
+  /// In en, this message translates to:
+  /// **'Bird Wing'**
+  String get ambienceEventBirdWing;
+
+  /// No description provided for @ambienceEventBush.
+  ///
+  /// In en, this message translates to:
+  /// **'Bush'**
+  String get ambienceEventBush;
+
+  /// No description provided for @ambienceEventCrumble.
+  ///
+  /// In en, this message translates to:
+  /// **'Crumble'**
+  String get ambienceEventCrumble;
+
+  /// No description provided for @ambienceEventFrog.
+  ///
+  /// In en, this message translates to:
+  /// **'Frog'**
+  String get ambienceEventFrog;
+
+  /// No description provided for @ambienceEventInsect.
+  ///
+  /// In en, this message translates to:
+  /// **'Insect'**
+  String get ambienceEventInsect;
+
+  /// No description provided for @ambienceEventOwl.
+  ///
+  /// In en, this message translates to:
+  /// **'Owl'**
+  String get ambienceEventOwl;
+
+  /// No description provided for @ambienceEventStone.
+  ///
+  /// In en, this message translates to:
+  /// **'Stone'**
+  String get ambienceEventStone;
+
+  /// No description provided for @ambienceEventThunder.
+  ///
+  /// In en, this message translates to:
+  /// **'Thunder'**
+  String get ambienceEventThunder;
+
+  /// No description provided for @ambienceEventTwig.
+  ///
+  /// In en, this message translates to:
+  /// **'Twig'**
+  String get ambienceEventTwig;
+
+  /// No description provided for @ambienceEventWaterDrop.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Drop'**
+  String get ambienceEventWaterDrop;
+
+  /// No description provided for @ambienceEventWaterSplash.
+  ///
+  /// In en, this message translates to:
+  /// **'Water Splash'**
+  String get ambienceEventWaterSplash;
+
+  /// No description provided for @ambienceEventWoodCrack.
+  ///
+  /// In en, this message translates to:
+  /// **'Wood Crack'**
+  String get ambienceEventWoodCrack;
+
+  /// No description provided for @ambienceEventWoodpecker.
+  ///
+  /// In en, this message translates to:
+  /// **'Woodpecker'**
+  String get ambienceEventWoodpecker;
+
+  /// No description provided for @dspPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'DSP Audio Engine'**
+  String get dspPageTitle;
+
+  /// No description provided for @dspSoundLayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Layers'**
+  String get dspSoundLayers;
+
+  /// No description provided for @dspGainControls.
+  ///
+  /// In en, this message translates to:
+  /// **'Gain Controls'**
+  String get dspGainControls;
+
+  /// No description provided for @dspBinauralConfig.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural Configuration'**
+  String get dspBinauralConfig;
+
+  /// No description provided for @dspCycleSteps.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Cycle Steps'**
+  String get dspCycleSteps;
+
+  /// No description provided for @dspSectionBase.
+  ///
+  /// In en, this message translates to:
+  /// **'Base'**
+  String get dspSectionBase;
+
+  /// No description provided for @dspSectionTexture.
+  ///
+  /// In en, this message translates to:
+  /// **'Texture'**
+  String get dspSectionTexture;
+
+  /// No description provided for @dspSectionEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get dspSectionEvents;
+
+  /// No description provided for @dspSelectedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count}/{max}'**
+  String dspSelectedCount(int count, int max);
+
+  /// No description provided for @dspNoSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to select'**
+  String get dspNoSelection;
+
+  /// No description provided for @dspPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'PLAY'**
+  String get dspPlay;
+
+  /// No description provided for @dspStop.
+  ///
+  /// In en, this message translates to:
+  /// **'STOP'**
+  String get dspStop;
+
+  /// No description provided for @dspGraceful.
+  ///
+  /// In en, this message translates to:
+  /// **'GRACEFUL'**
+  String get dspGraceful;
+
+  /// No description provided for @dspLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'LOADING...'**
+  String get dspLoading;
+
+  /// No description provided for @dspFinishing.
+  ///
+  /// In en, this message translates to:
+  /// **'FINISHING...'**
+  String get dspFinishing;
+
+  /// No description provided for @dspPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing...'**
+  String get dspPlaying;
+
+  /// No description provided for @dspStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopped'**
+  String get dspStopped;
+
+  /// No description provided for @dspGracefullyStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Gracefully stopped'**
+  String get dspGracefullyStopped;
+
+  /// No description provided for @dspFinishingCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Finishing cycle...'**
+  String get dspFinishingCycle;
+
+  /// No description provided for @dspCarrierFrequency.
+  ///
+  /// In en, this message translates to:
+  /// **'Carrier Frequency (Hz)'**
+  String get dspCarrierFrequency;
+
+  /// No description provided for @dspBinauralMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural Mode'**
+  String get dspBinauralMode;
+
+  /// No description provided for @dspBinauralStereo.
+  ///
+  /// In en, this message translates to:
+  /// **'Stereo binaural beats'**
+  String get dspBinauralStereo;
+
+  /// No description provided for @dspBinauralMono.
+  ///
+  /// In en, this message translates to:
+  /// **'AM mono pulsing'**
+  String get dspBinauralMono;
+
+  /// No description provided for @dspDeltaHz.
+  ///
+  /// In en, this message translates to:
+  /// **'Delta Hz'**
+  String get dspDeltaHz;
+
+  /// No description provided for @dspDurationS.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration s'**
+  String get dspDurationS;
+
+  /// No description provided for @dspAddStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Step'**
+  String get dspAddStep;
+
+  /// No description provided for @dspBaseLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Base loaded: {name}'**
+  String dspBaseLoaded(String name);
+
+  /// No description provided for @dspTextureLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Texture {index} loaded: {name}'**
+  String dspTextureLoaded(int index, String name);
+
+  /// No description provided for @dspEventLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Event {index} loaded: {name}'**
+  String dspEventLoaded(int index, String name);
+
+  /// No description provided for @dspSelectBaseFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a Base layer first'**
+  String get dspSelectBaseFirst;
+
+  /// No description provided for @dspLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Load failed (rc={code})'**
+  String dspLoadFailed(int code);
+
+  /// No description provided for @dspAmbienceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience Presets'**
+  String get dspAmbienceTitle;
+
+  /// No description provided for @dspAmbienceCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Ambience'**
+  String get dspAmbienceCreate;
+
+  /// No description provided for @dspAmbienceEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Ambience'**
+  String get dspAmbienceEdit;
+
+  /// No description provided for @dspAmbienceSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get dspAmbienceSave;
+
+  /// No description provided for @dspAmbienceUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get dspAmbienceUpdate;
+
+  /// No description provided for @dspAmbienceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience Name'**
+  String get dspAmbienceName;
+
+  /// No description provided for @dspAmbienceEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambiences yet'**
+  String get dspAmbienceEmpty;
+
+  /// No description provided for @dspAmbienceEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap + to create your first ambience'**
+  String get dspAmbienceEmptyHint;
+
+  /// No description provided for @dspAmbienceDeleteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Ambience'**
+  String get dspAmbienceDeleteTitle;
+
+  /// No description provided for @dspAmbienceDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This cannot be undone.'**
+  String dspAmbienceDeleteConfirm(String name);
+
+  /// No description provided for @dspAmbienceDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get dspAmbienceDelete;
+
+  /// No description provided for @dspAmbienceCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get dspAmbienceCancel;
+
+  /// No description provided for @dspAmbienceNoBase.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get dspAmbienceNoBase;
+
+  /// No description provided for @dspAmbienceSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Summary'**
+  String get dspAmbienceSummary;
+
+  /// No description provided for @dspAmbienceSelectAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Ambience'**
+  String get dspAmbienceSelectAmbience;
+
+  /// No description provided for @dspAmbienceNoneSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambience selected'**
+  String get dspAmbienceNoneSelected;
+
+  /// No description provided for @dspAmbienceLoaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambience loaded: {name}'**
+  String dspAmbienceLoaded(String name);
+
+  /// No description provided for @dspAmbienceManage.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage'**
+  String get dspAmbienceManage;
+
+  /// No description provided for @hexagenTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'hexaGen Device'**
+  String get hexagenTitle;
+
+  /// No description provided for @hexagenRefresh.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh'**
+  String get hexagenRefresh;
+
+  /// No description provided for @hexagenConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection'**
+  String get hexagenConnection;
+
+  /// No description provided for @hexagenStatusReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready'**
+  String get hexagenStatusReady;
+
+  /// No description provided for @hexagenStatusConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get hexagenStatusConnected;
+
+  /// No description provided for @hexagenStatusDisconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get hexagenStatusDisconnected;
+
+  /// No description provided for @hexagenDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get hexagenDevice;
+
+  /// No description provided for @hexagenDeviceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Device ID'**
+  String get hexagenDeviceId;
+
+  /// No description provided for @hexagenFirmware.
+  ///
+  /// In en, this message translates to:
+  /// **'Firmware'**
+  String get hexagenFirmware;
+
+  /// No description provided for @hexagenInitialized.
+  ///
+  /// In en, this message translates to:
+  /// **'Initialized'**
+  String get hexagenInitialized;
+
+  /// No description provided for @hexagenYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get hexagenYes;
+
+  /// No description provided for @hexagenNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get hexagenNo;
+
+  /// No description provided for @hexagenNone.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get hexagenNone;
+
+  /// No description provided for @hexagenInit.
+  ///
+  /// In en, this message translates to:
+  /// **'Initialize'**
+  String get hexagenInit;
+
+  /// No description provided for @hexagenReset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get hexagenReset;
+
+  /// No description provided for @hexagenInitSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'HexaGen service initialized'**
+  String get hexagenInitSuccess;
+
+  /// No description provided for @hexagenRefreshed.
+  ///
+  /// In en, this message translates to:
+  /// **'Device scan completed'**
+  String get hexagenRefreshed;
+
+  /// No description provided for @hexagenResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset command sent'**
+  String get hexagenResetSent;
+
+  /// No description provided for @hexagenRgb.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB LED'**
+  String get hexagenRgb;
+
+  /// No description provided for @hexagenRed.
+  ///
+  /// In en, this message translates to:
+  /// **'R'**
+  String get hexagenRed;
+
+  /// No description provided for @hexagenGreen.
+  ///
+  /// In en, this message translates to:
+  /// **'G'**
+  String get hexagenGreen;
+
+  /// No description provided for @hexagenBlue.
+  ///
+  /// In en, this message translates to:
+  /// **'B'**
+  String get hexagenBlue;
+
+  /// No description provided for @hexagenSendRgb.
+  ///
+  /// In en, this message translates to:
+  /// **'Send RGB'**
+  String get hexagenSendRgb;
+
+  /// No description provided for @hexagenRgbSent.
+  ///
+  /// In en, this message translates to:
+  /// **'RGB command sent'**
+  String get hexagenRgbSent;
+
+  /// No description provided for @hexagenFreqSweep.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency Sweep'**
+  String get hexagenFreqSweep;
+
+  /// No description provided for @hexagenFreqEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No frequencies added'**
+  String get hexagenFreqEmpty;
+
+  /// No description provided for @hexagenFreqHz.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq (Hz)'**
+  String get hexagenFreqHz;
+
+  /// No description provided for @hexagenDurationMs.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration (ms)'**
+  String get hexagenDurationMs;
+
+  /// No description provided for @hexagenFreqRun.
+  ///
+  /// In en, this message translates to:
+  /// **'Run ({count})'**
+  String hexagenFreqRun(int count);
+
+  /// No description provided for @hexagenFreqStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get hexagenFreqStop;
+
+  /// No description provided for @hexagenFreqProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq {current}/{total}: {freq} Hz'**
+  String hexagenFreqProgress(int current, int total, int freq);
+
+  /// No description provided for @hexagenFreqFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Freq {freq} Hz failed: {status}'**
+  String hexagenFreqFailed(int freq, String status);
+
+  /// No description provided for @hexagenFreqListDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequency list completed'**
+  String get hexagenFreqListDone;
+
+  /// No description provided for @hexagenOpId.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation ID'**
+  String get hexagenOpId;
+
+  /// No description provided for @hexagenOpCurrentStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get hexagenOpCurrentStatus;
+
+  /// No description provided for @hexagenOpStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step'**
+  String get hexagenOpStep;
+
+  /// No description provided for @hexagenOpRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Running...'**
+  String get hexagenOpRunning;
+
+  /// No description provided for @hexagenOpPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing operation...'**
+  String get hexagenOpPreparing;
+
+  /// No description provided for @hexagenOpPrepareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare failed: {status}'**
+  String hexagenOpPrepareFailed(String status);
+
+  /// No description provided for @hexagenOpGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating...'**
+  String get hexagenOpGenerating;
+
+  /// No description provided for @hexagenOpStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation: {status} (step {step})'**
+  String hexagenOpStatus(String status, int step);
+
+  /// No description provided for @harmonizerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonizer Player'**
+  String get harmonizerTitle;
+
+  /// No description provided for @harmonizerSelectFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Select a formula'**
+  String get harmonizerSelectFormula;
+
+  /// No description provided for @harmonizerNoFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'No formulas available'**
+  String get harmonizerNoFormulas;
+
+  /// No description provided for @harmonizerFormulaLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get harmonizerFormulaLabel;
+
+  /// No description provided for @harmonizerTypeMonaural.
+  ///
+  /// In en, this message translates to:
+  /// **'Monaural'**
+  String get harmonizerTypeMonaural;
+
+  /// No description provided for @harmonizerTypeBinaural.
+  ///
+  /// In en, this message translates to:
+  /// **'Binaural'**
+  String get harmonizerTypeBinaural;
+
+  /// No description provided for @harmonizerTypeMagnetic.
+  ///
+  /// In en, this message translates to:
+  /// **'Magnetic'**
+  String get harmonizerTypeMagnetic;
+
+  /// No description provided for @harmonizerTypePhotonic.
+  ///
+  /// In en, this message translates to:
+  /// **'Photonic'**
+  String get harmonizerTypePhotonic;
+
+  /// No description provided for @harmonizerTypeQuantal.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantal'**
+  String get harmonizerTypeQuantal;
+
+  /// No description provided for @harmonizerComingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is coming soon'**
+  String get harmonizerComingSoon;
+
+  /// No description provided for @harmonizerHeadsetRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect headphones for binaural mode'**
+  String get harmonizerHeadsetRequired;
+
+  /// No description provided for @harmonizerHexagenRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please connect a hexaGen device for magnetic mode'**
+  String get harmonizerHexagenRequired;
+
+  /// No description provided for @harmonizerSelectAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Select ambience (optional)'**
+  String get harmonizerSelectAmbience;
+
+  /// No description provided for @harmonizerNoAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambience'**
+  String get harmonizerNoAmbience;
+
+  /// No description provided for @harmonizerPlay.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get harmonizerPlay;
+
+  /// No description provided for @harmonizerStop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get harmonizerStop;
+
+  /// No description provided for @harmonizerPreparing.
+  ///
+  /// In en, this message translates to:
+  /// **'Preparing...'**
+  String get harmonizerPreparing;
+
+  /// No description provided for @harmonizerPlaying.
+  ///
+  /// In en, this message translates to:
+  /// **'Playing'**
+  String get harmonizerPlaying;
+
+  /// No description provided for @harmonizerStopping.
+  ///
+  /// In en, this message translates to:
+  /// **'Stopping...'**
+  String get harmonizerStopping;
+
+  /// No description provided for @harmonizerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {message}'**
+  String harmonizerError(String message);
+
+  /// No description provided for @harmonizerCycle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle {cycle}'**
+  String harmonizerCycle(int cycle);
+
+  /// No description provided for @harmonizerTotalDuration.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get harmonizerTotalDuration;
+
+  /// No description provided for @harmonizerRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining'**
+  String get harmonizerRemaining;
+
+  /// No description provided for @harmonizerStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {index}: {value} Hz — {duration}s'**
+  String harmonizerStep(int index, int value, String duration);
+
+  /// No description provided for @harmonizerStepOneshot.
+  ///
+  /// In en, this message translates to:
+  /// **'one-shot'**
+  String get harmonizerStepOneshot;
+
+  /// No description provided for @harmonizerGracefulStopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to stop after current cycle'**
+  String get harmonizerGracefulStopHint;
+
+  /// No description provided for @harmonizerImmediateStopHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold 3s to stop immediately'**
+  String get harmonizerImmediateStopHint;
+
+  /// No description provided for @harmonizerGenerating.
+  ///
+  /// In en, this message translates to:
+  /// **'Generating sequence...'**
+  String get harmonizerGenerating;
+
+  /// No description provided for @harmonizerNoSequence.
+  ///
+  /// In en, this message translates to:
+  /// **'No formula selected'**
+  String get harmonizerNoSequence;
+}
+
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['en', 'tr'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'en':
+      return AppLocalizationsEn();
+    case 'tr':
+      return AppLocalizationsTr();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

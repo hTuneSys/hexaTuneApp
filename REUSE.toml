@@ -19,3 +19,111 @@ path = [".github/ISSUE_TEMPLATE/**", ".github/PULL_REQUEST_TEMPLATE.md"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 hexaTune LLC"
 SPDX-License-Identifier = "MIT"
+
+[[annotations]]
+path = [
+  "AGENTS.md",
+  "openapi.json",
+  "openapi_old.json",
+  "openapinew.json",
+  "plans.md",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Figma design reference files
+[[annotations]]
+path = [
+  "page_figma_datas/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Flutter app: generated code, config, and metadata
+[[annotations]]
+path = [
+  "hexatuneapp/**/*.freezed.dart",
+  "hexatuneapp/**/*.g.dart",
+  "hexatuneapp/lib/src/core/di/injection.config.dart",
+  "hexatuneapp/.metadata",
+  "hexatuneapp/.gitignore",
+  "hexatuneapp/.env.*",
+  "hexatuneapp/devtools_options.yaml",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Flutter app: localization files
+[[annotations]]
+path = [
+  "hexatuneapp/lib/l10n/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Android platform files
+[[annotations]]
+path = [
+  "hexatuneapp/android/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# iOS platform files
+[[annotations]]
+path = [
+  "hexatuneapp/ios/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# macOS platform files
+[[annotations]]
+path = [
+  "hexatuneapp/macos/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Linux platform files
+[[annotations]]
+path = [
+  "hexatuneapp/linux/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Windows platform files
+[[annotations]]
+path = [
+  "hexatuneapp/windows/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Web platform files
+[[annotations]]
+path = [
+  "hexatuneapp/web/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
+
+# Font and asset files
+[[annotations]]
+path = [
+  "hexatuneapp/assets/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"
