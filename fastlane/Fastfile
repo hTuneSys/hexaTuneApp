@@ -88,15 +88,42 @@ platform :ios do
     UI.user_error!("APP_STORE_CONNECT_API_KEY_PATH is missing or invalid") unless api_key_path && File.exist?(api_key_path)
     UI.message("Using App Store Connect API key at: #{api_key_path}")
 
-    upload_to_testflight(
-      ipa: ipa,
-      api_key_path: api_key_path,
-      skip_waiting_for_build_processing: true,
-      notify_external_testers: false,
-      groups: []
-    )
+    dist_target = ENV['DIST_TARGET'] || 'testflight_internal'
+    UI.message("Distribution target: #{dist_target}")
 
-    UI.success("🎉 TestFlight upload triggered successfully!")
+    case dist_target
+    when 'testflight_internal'
+      upload_to_testflight(
+        ipa: ipa,
+        api_key_path: api_key_path,
+        skip_waiting_for_build_processing: true,
+        notify_external_testers: false,
+        distribute_external: false,
+      )
+    when 'testflight_external'
+      upload_to_testflight(
+        ipa: ipa,
+        api_key_path: api_key_path,
+        skip_waiting_for_build_processing: false,
+        notify_external_testers: true,
+        distribute_external: true,
+        groups: ["External Testers"],
+      )
+    when 'app_store'
+      upload_to_app_store(
+        ipa: ipa,
+        api_key_path: api_key_path,
+        skip_metadata: true,
+        skip_screenshots: true,
+        precheck_include_in_app_purchases: false,
+        submit_for_review: false,
+        force: true,
+      )
+    else
+      UI.user_error!("Unknown DIST_TARGET: #{dist_target}")
+    end
+
+    UI.success("🎉 Upload completed for target: #{dist_target}")
   end
 end
 
