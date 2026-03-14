@@ -11,6 +11,10 @@
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3AC1B4E3B46460EA4562CB65 /* HexaTuneDspFfi.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94177B766EF525837026ABF3 /* HexaTuneDspFfi.xcframework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		40EA6E7F76DD86A451D9B2CF /* AudioDeviceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE898D9C60ED1B1D02378C6 /* AudioDeviceDetector.swift */; };
+		4AE9EFA2637C293760B1B2DB /* DspAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 993D60C9BF1A131FC36FF5C5 /* DspAudioService.swift */; };
+		510889CB47D49A10FA5D6988 /* DspAudioDecoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2EC0BED192ACD79FEF55978 /* DspAudioDecoder.swift */; };
+		5F72C7959141FE20BD45CE54 /* DspMethodChannelHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE55BFE69524D316E4969BDB /* DspMethodChannelHandler.swift */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
@@ -49,6 +53,7 @@
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		7DE898D9C60ED1B1D02378C6 /* AudioDeviceDetector.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AudioDeviceDetector.swift; path = ios/Runner/AudioDeviceDetector.swift; sourceTree = "<group>"; };
 		94177B766EF525837026ABF3 /* HexaTuneDspFfi.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; name = HexaTuneDspFfi.xcframework; path = Frameworks/HexaTuneDspFfi.xcframework; sourceTree = SOURCE_ROOT; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
@@ -57,6 +62,9 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		993D60C9BF1A131FC36FF5C5 /* DspAudioService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DspAudioService.swift; path = ios/Runner/DspAudioService.swift; sourceTree = "<group>"; };
+		AE55BFE69524D316E4969BDB /* DspMethodChannelHandler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DspMethodChannelHandler.swift; path = ios/Runner/DspMethodChannelHandler.swift; sourceTree = "<group>"; };
+		C2EC0BED192ACD79FEF55978 /* DspAudioDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DspAudioDecoder.swift; path = ios/Runner/DspAudioDecoder.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +129,10 @@
 				1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */,
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				7DE898D9C60ED1B1D02378C6 /* AudioDeviceDetector.swift */,
+				C2EC0BED192ACD79FEF55978 /* DspAudioDecoder.swift */,
+				993D60C9BF1A131FC36FF5C5 /* DspAudioService.swift */,
+				AE55BFE69524D316E4969BDB /* DspMethodChannelHandler.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -274,6 +286,10 @@
 			files = (
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				40EA6E7F76DD86A451D9B2CF /* AudioDeviceDetector.swift in Sources */,
+				510889CB47D49A10FA5D6988 /* DspAudioDecoder.swift in Sources */,
+				4AE9EFA2637C293760B1B2DB /* DspAudioService.swift in Sources */,
+				5F72C7959141FE20BD45CE54 /* DspMethodChannelHandler.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
