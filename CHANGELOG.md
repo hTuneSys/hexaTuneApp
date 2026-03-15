@@ -1,3 +1,10 @@
+## [1.2.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.3...v1.2.4) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ci:** remove explicit pod commands from Fastfile ([d0732d8](https://github.com/hTuneSys/hexaTuneApp/commit/d0732d8a2b890308cd962113207e9f74330917c5))
+
 ## [1.2.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.2...v1.2.3) (2026-03-15)
 
 
