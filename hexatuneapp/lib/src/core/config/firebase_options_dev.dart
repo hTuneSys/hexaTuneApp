@@ -12,7 +12,7 @@ import 'package:flutter/foundation.dart'
 /// To regenerate, run:
 /// ```bash
 /// flutterfire configure \
-///   --project=hexatune-dev \
+///   --project=hexatune-core \
 ///   --out=lib/src/core/config/firebase_options_dev.dart
 /// ```
 class DefaultFirebaseOptions {
@@ -30,23 +30,23 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDjXVoKTEpU9WGaaBOfK5YZHUHafHai1WY',
-    appId: '1:1028765878289:android:ffe5b0330cb2e10a93c9b0',
-    messagingSenderId: '1028765878289',
-    projectId: 'hexatune-dev',
-    storageBucket: 'hexatune-dev.firebasestorage.app',
+    apiKey: 'AIzaSyAaqb-Vbb1JMjbvY_dRzCulhE6SiXZuQz0',
+    appId: '1:1096689897838:android:43f066dd99fc98c635317f',
+    messagingSenderId: '1096689897838',
+    projectId: 'hexatune-core',
+    storageBucket: 'hexatune-core.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAqdXXcu5lgm_zQg1fV1Ku5XhuZHhwrj2w',
-    appId: '1:1028765878289:ios:34ad007d0770f71193c9b0',
-    messagingSenderId: '1028765878289',
-    projectId: 'hexatune-dev',
-    storageBucket: 'hexatune-dev.firebasestorage.app',
+    apiKey: 'AIzaSyB9ZMz2dxMj-i9hdSkGHDHchFUccW3iGAE',
+    appId: '1:1096689897838:ios:5312ecaf14709df935317f',
+    messagingSenderId: '1096689897838',
+    projectId: 'hexatune-core',
+    storageBucket: 'hexatune-core.firebasestorage.app',
     androidClientId:
-        '1028765878289-jp352on9ptv0a5m1bc9km0v87e0fot1h.apps.googleusercontent.com',
+        '1096689897838-s88sk14ee6l0k3obto3m0oklba590rq4.apps.googleusercontent.com',
     iosClientId:
-        '1028765878289-25ffio977as63bm4lg9m8jp0luq3n006.apps.googleusercontent.com',
+        '1096689897838-gu7l9ooauihl1j9oe2bjq933ij389q5j.apps.googleusercontent.com',
     iosBundleId: 'com.hexatune.hexatuneapp',
   );
 }
