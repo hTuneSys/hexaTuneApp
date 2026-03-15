@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 
+import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
@@ -24,17 +25,40 @@ import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 
 /// Orchestrates sequential initialization of all core services
 /// during application startup.
+///
+/// Step indices used with [onProgress]:
+///   0 – Device Service
+///   1 – Headset Service
+///   2 – HexaGen Service
+///   3 – Token Manager
+///   4 – API Client
+///   5 – Local Notifications
+///   6 – Push Notifications
+///   7 – Authentication
 class AppBootstrap {
   AppBootstrap._();
+
+  /// Labels for each bootstrap step (order must match step indices).
+  static const stepLabels = <String>[
+    'Device Service',
+    'Headset Service',
+    'HexaGen Service',
+    'Token Manager',
+    'API Client',
+    'Local Notifications',
+    'Push Notifications',
+    'Authentication',
+  ];
 
   static StreamSubscription<AuthEvent>? _authEventSub;
 
   /// Run the full bootstrap sequence.
   ///
-  /// Services that are registered with `@PostConstruct` are already
-  /// initialized by get_it.  This method handles the remaining
-  /// asynchronous init steps that depend on runtime context.
-  static Future<void> initialize() async {
+  /// When [onProgress] is provided, it is called at the start and end of
+  /// each step so the UI can display live progress.
+  static Future<void> initialize({
+    BootstrapProgressCallback? onProgress,
+  }) async {
     final log = getIt<LogService>();
     log.info('Bootstrap started', category: LogCategory.bootstrap);
 
@@ -44,7 +68,8 @@ class AppBootstrap {
       log.info('SecureStorageService ready', category: LogCategory.bootstrap);
       log.info('PreferencesService ready', category: LogCategory.bootstrap);
 
-      // Device identification.
+      // Step 0: Device identification.
+      onProgress?.call(0, BootstrapStepStatus.running);
       try {
         final deviceService = getIt<DeviceService>();
         await deviceService.init();
@@ -53,6 +78,7 @@ class AppBootstrap {
           'Device ID: ${deviceService.deviceId}',
           category: LogCategory.bootstrap,
         );
+        onProgress?.call(0, BootstrapStepStatus.done);
       } catch (e, st) {
         log.warning(
           'DeviceService init failed (non-critical)',
@@ -60,49 +86,79 @@ class AppBootstrap {
           exception: e,
           stackTrace: st,
         );
+        onProgress?.call(0, BootstrapStepStatus.error, e.toString());
       }
 
-      // Headset connection monitoring.
-      final headsetService = getIt<HeadsetService>();
-      await headsetService.init();
-      log.info('HeadsetService ready', category: LogCategory.bootstrap);
-
-      // hexaGen hardware device.
-      final hexagenService = getIt<HexagenService>();
-      await hexagenService.init();
-      log.info('HexagenService ready', category: LogCategory.bootstrap);
-
-      // Load stored tokens.
-      final tokenManager = getIt<TokenManager>();
-      await tokenManager.loadTokens();
-      log.info('TokenManager ready', category: LogCategory.bootstrap);
-      log.devLog(
-        'Token state — hasToken: ${tokenManager.hasToken}, '
-        'session: ${tokenManager.sessionId}, '
-        'accessExp: ${tokenManager.accessExpiresAt}, '
-        'refreshExp: ${tokenManager.refreshExpiresAt}',
-        category: LogCategory.bootstrap,
-      );
-
-      // Proactive token refresh during bootstrap.
-      // If the access token has expired, refresh it now so the user
-      // doesn't need to re-login.
-      if (tokenManager.hasToken && tokenManager.isAccessTokenExpired) {
-        await _refreshTokensAtBoot(tokenManager, log);
+      // Step 1: Headset connection monitoring.
+      onProgress?.call(1, BootstrapStepStatus.running);
+      try {
+        final headsetService = getIt<HeadsetService>();
+        await headsetService.init();
+        log.info('HeadsetService ready', category: LogCategory.bootstrap);
+        onProgress?.call(1, BootstrapStepStatus.done);
+      } catch (e) {
+        onProgress?.call(1, BootstrapStepStatus.error, e.toString());
+        rethrow;
       }
 
-      // API client (PostConstruct already ran).
+      // Step 2: hexaGen hardware device.
+      onProgress?.call(2, BootstrapStepStatus.running);
+      try {
+        final hexagenService = getIt<HexagenService>();
+        await hexagenService.init();
+        log.info('HexagenService ready', category: LogCategory.bootstrap);
+        onProgress?.call(2, BootstrapStepStatus.done);
+      } catch (e) {
+        onProgress?.call(2, BootstrapStepStatus.error, e.toString());
+        rethrow;
+      }
+
+      // Step 3: Load stored tokens.
+      onProgress?.call(3, BootstrapStepStatus.running);
+      try {
+        final tokenManager = getIt<TokenManager>();
+        await tokenManager.loadTokens();
+        log.info('TokenManager ready', category: LogCategory.bootstrap);
+        log.devLog(
+          'Token state — hasToken: ${tokenManager.hasToken}, '
+          'session: ${tokenManager.sessionId}, '
+          'accessExp: ${tokenManager.accessExpiresAt}, '
+          'refreshExp: ${tokenManager.refreshExpiresAt}',
+          category: LogCategory.bootstrap,
+        );
+
+        // Proactive token refresh during bootstrap.
+        if (tokenManager.hasToken && tokenManager.isAccessTokenExpired) {
+          await _refreshTokensAtBoot(tokenManager, log);
+        }
+        onProgress?.call(3, BootstrapStepStatus.done);
+      } catch (e) {
+        onProgress?.call(3, BootstrapStepStatus.error, e.toString());
+        rethrow;
+      }
+
+      // Step 4: API client (PostConstruct already ran).
+      onProgress?.call(4, BootstrapStepStatus.running);
       log.info('ApiClient ready', category: LogCategory.bootstrap);
+      onProgress?.call(4, BootstrapStepStatus.done);
 
-      // Local notifications.
-      final localNotification = getIt<LocalNotificationService>();
-      await localNotification.init();
-      log.info(
-        'LocalNotificationService ready',
-        category: LogCategory.bootstrap,
-      );
+      // Step 5: Local notifications.
+      onProgress?.call(5, BootstrapStepStatus.running);
+      try {
+        final localNotification = getIt<LocalNotificationService>();
+        await localNotification.init();
+        log.info(
+          'LocalNotificationService ready',
+          category: LogCategory.bootstrap,
+        );
+        onProgress?.call(5, BootstrapStepStatus.done);
+      } catch (e) {
+        onProgress?.call(5, BootstrapStepStatus.error, e.toString());
+        rethrow;
+      }
 
-      // FCM notifications (requires Firebase to be initialized first).
+      // Step 6: FCM notifications (requires Firebase to be initialized).
+      onProgress?.call(6, BootstrapStepStatus.running);
       String? fcmToken;
       try {
         final notificationService = getIt<NotificationService>();
@@ -110,6 +166,7 @@ class AppBootstrap {
         fcmToken = notificationService.fcmToken;
         log.info('NotificationService ready', category: LogCategory.bootstrap);
         log.devLog('FCM token: $fcmToken', category: LogCategory.bootstrap);
+        onProgress?.call(6, BootstrapStepStatus.done);
       } catch (e) {
         log.warning(
           'NotificationService init failed '
@@ -117,6 +174,7 @@ class AppBootstrap {
           category: LogCategory.bootstrap,
           exception: e,
         );
+        onProgress?.call(6, BootstrapStepStatus.error, e.toString());
       }
 
       // Wire FCM token refresh → backend push token re-registration.
@@ -148,48 +206,55 @@ class AppBootstrap {
         // NotificationService may not be available
       }
 
-      // Check auth state and emit initial routing decision.
-      final authService = getIt<AuthService>();
-      await authService.checkAuthStatus();
-      log.info(
-        'AuthService ready — state: ${authService.currentState.name}',
-        category: LogCategory.bootstrap,
-      );
+      // Step 7: Check auth state and emit initial routing decision.
+      onProgress?.call(7, BootstrapStepStatus.running);
+      try {
+        final authService = getIt<AuthService>();
+        await authService.checkAuthStatus();
+        log.info(
+          'AuthService ready — state: ${authService.currentState.name}',
+          category: LogCategory.bootstrap,
+        );
 
-      // Register push token with backend if authenticated (single path).
-      if (authService.currentState == AuthState.authenticated &&
-          fcmToken != null) {
-        try {
-          final deviceRepo = getIt<DeviceRepository>();
-          await deviceRepo.registerPushToken(
-            RegisterPushTokenRequest(
-              token: fcmToken,
-              platform: Platform.isIOS ? 'ios' : 'android',
-              appId: Env.appBundleId,
-            ),
-          );
-          log.info('Push token registered', category: LogCategory.bootstrap);
-        } catch (e) {
-          log.warning(
-            'Push token registration failed (non-critical)',
-            category: LogCategory.bootstrap,
-            exception: e,
-          );
+        // Register push token with backend if authenticated.
+        if (authService.currentState == AuthState.authenticated &&
+            fcmToken != null) {
+          try {
+            final deviceRepo = getIt<DeviceRepository>();
+            await deviceRepo.registerPushToken(
+              RegisterPushTokenRequest(
+                token: fcmToken,
+                platform: Platform.isIOS ? 'ios' : 'android',
+                appId: Env.appBundleId,
+              ),
+            );
+            log.info('Push token registered', category: LogCategory.bootstrap);
+          } catch (e) {
+            log.warning(
+              'Push token registration failed (non-critical)',
+              category: LogCategory.bootstrap,
+              exception: e,
+            );
+          }
         }
+
+        // Listen to auth events from the interceptor.
+        await _authEventSub?.cancel();
+        _authEventSub = authService.authEvents.listen((event) {
+          if (event == AuthEvent.forceLogout) {
+            log.warning(
+              'Force logout triggered by interceptor',
+              category: LogCategory.auth,
+            );
+            authService.forceLogout();
+          }
+        });
+
+        onProgress?.call(7, BootstrapStepStatus.done);
+      } catch (e) {
+        onProgress?.call(7, BootstrapStepStatus.error, e.toString());
+        rethrow;
       }
-
-      // Listen to auth events from the interceptor (force logout, re-auth).
-      // Cancel any previous subscription to prevent accumulation.
-      await _authEventSub?.cancel();
-      _authEventSub = authService.authEvents.listen((event) {
-        if (event == AuthEvent.forceLogout) {
-          log.warning(
-            'Force logout triggered by interceptor',
-            category: LogCategory.auth,
-          );
-          authService.forceLogout();
-        }
-      });
 
       log.info('Bootstrap complete', category: LogCategory.bootstrap);
     } catch (e, stackTrace) {
