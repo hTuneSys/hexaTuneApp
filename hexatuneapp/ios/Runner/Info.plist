@@ -44,5 +44,20 @@
     <string>This app uses Bluetooth to connect with external MIDI devices.</string>
     <key>NSLocalNetworkUsageDescription</key>
     <string>This app uses local network to communicate with MIDI devices.</string>
+    <key>GIDClientID</key>
+    <string>1096689897838-gu7l9ooauihl1j9oe2bjq933ij389q5j.apps.googleusercontent.com</string>
+    <key>GIDServerClientID</key>
+    <string>1096689897838-39kcpg364itssg1o7e1ffm9651deo32s.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>com.googleusercontent.apps.1096689897838-gu7l9ooauihl1j9oe2bjq933ij389q5j</string>
+            </array>
+        </dict>
+    </array>
 </dict>
 </plist>
