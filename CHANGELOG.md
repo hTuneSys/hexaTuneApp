@@ -1,3 +1,11 @@
+## [1.2.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.2...v1.2.3) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ci:** add Pods xcconfig includes, Gemfile, fix Fastfile chdir, update actions ([3dce8f6](https://github.com/hTuneSys/hexaTuneApp/commit/3dce8f66900f3849ee6fa79aa558e5d508cfb8c9))
+* **ios:** remove xcframeworks from link phase to fix 146 duplicate symbols ([0f210ff](https://github.com/hTuneSys/hexaTuneApp/commit/0f210ff9d88a64b28ef471905dc9b8b8e01037f9))
+
 ## [1.2.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.1...v1.2.2) (2026-03-15)
 
 
