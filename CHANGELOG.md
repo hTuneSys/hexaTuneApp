@@ -1,3 +1,10 @@
+## [1.2.8](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.7...v1.2.8) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ios:** add Google Sign-In client ID and URL scheme to Info.plist ([21f830b](https://github.com/hTuneSys/hexaTuneApp/commit/21f830b0b06aa1b0106b39d8ee1153dbbbf3e9b2))
+
 ## [1.2.7](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.6...v1.2.7) (2026-03-15)
 
 
