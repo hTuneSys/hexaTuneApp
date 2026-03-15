@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.0...v1.2.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ios:** add -all_load linker flag and link HexaTuneProto framework ([389bff0](https://github.com/hTuneSys/hexaTuneApp/commit/389bff0ca8ecd506e4b5563856d233a440eafd93))
+
 # [1.2.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.2...v1.2.0) (2026-03-15)
 
 
