@@ -61,7 +61,6 @@ platform :ios do
           sh("pod repo update")
           sh("pod install")
         end
-        Dir.chdir(app_dir) # return to project root
       end
 
       build_number = ENV['BUILD_NUMBER'] || Time.now.strftime("%Y%m%d%H%M")

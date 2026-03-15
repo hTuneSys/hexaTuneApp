@@ -64,10 +64,8 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.2"
-
-      - name: Install fastlane
-        run: gem install fastlane
-        working-directory: .
+          bundler-cache: true
+          working-directory: .
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -93,7 +91,7 @@ jobs:
           p12-password: ${{ secrets.IOS_CERT_PASSWORD }}
 
       - name: Download provisioning profile(s)
-        uses: Apple-Actions/download-provisioning-profiles@v1
+        uses: Apple-Actions/download-provisioning-profiles@v5
         with:
           bundle-id: ${{ env.BUNDLE_ID }}
           profile-type: ${{ env.PROFILE_TYPE }}
@@ -146,7 +144,7 @@ jobs:
           DIST_TARGET: ${{ env.DIST_TARGET }}
         run: |
           cd "$GITHUB_WORKSPACE"
-          fastlane ios beta
+          bundle exec fastlane ios beta
 
       - name: Upload IPA artifact
         if: always()
