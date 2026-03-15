@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.1...v1.2.2) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ios:** replace -all_load with targeted -force_load for FFI libs ([9ff2e67](https://github.com/hTuneSys/hexaTuneApp/commit/9ff2e675e36138b2b4bb0bc0e32d2c5b63385976))
+
 ## [1.2.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.0...v1.2.1) (2026-03-15)
 
 
