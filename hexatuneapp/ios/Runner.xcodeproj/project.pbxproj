@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
-		3AC1B4E3B46460EA4562CB65 /* HexaTuneDspFfi.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94177B766EF525837026ABF3 /* HexaTuneDspFfi.xcframework */; };
-		8C5A1E7D93F024B6A1D7E582 /* HexaTuneProto.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = D4E8F2A3B7C6158094ED3B70 /* HexaTuneProto.xcframework */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		4F5E7342B8F5A36615A89917 /* DspAudioService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A55414251B331C045C6F675 /* DspAudioService.swift */; };
 		6488E5F750449EC68A79749E /* AudioDeviceDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02386789C8C374F009C6E190 /* AudioDeviceDetector.swift */; };
@@ -75,8 +73,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3AC1B4E3B46460EA4562CB65 /* HexaTuneDspFfi.xcframework in Frameworks */,
-				8C5A1E7D93F024B6A1D7E582 /* HexaTuneProto.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
