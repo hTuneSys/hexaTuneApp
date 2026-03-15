@@ -40,6 +40,10 @@
     <false/>
     <key>UIApplicationSupportsIndirectInputEvents</key>
     <true/>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to capture photos of instruments.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs access to your photo library to select images for instruments.</string>
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>This app uses Bluetooth to connect with external MIDI devices.</string>
     <key>NSLocalNetworkUsageDescription</key>
