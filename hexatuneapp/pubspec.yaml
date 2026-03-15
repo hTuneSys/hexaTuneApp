@@ -92,6 +92,7 @@ dependencies:
 
   # FFI (Native Library Bindings)
   ffi: ^2.1.0
+  in_app_purchase: ^3.2.3
 
 flutter_launcher_icons:
   android: "launcher_icon"
