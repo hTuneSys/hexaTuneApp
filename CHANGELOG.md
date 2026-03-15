@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.0...v1.1.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* **config:** use debug androidClientId for dev environment ([3fb77ef](https://github.com/hTuneSys/hexaTuneApp/commit/3fb77effc7d9f8209c8da2f63c3a3035282320ef))
+
 # [1.1.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.6...v1.1.0) (2026-03-15)
 
 
