@@ -1,3 +1,10 @@
+## [1.2.7](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.6...v1.2.7) (2026-03-15)
+
+
+### Bug Fixes
+
+* **dsp:** defer FFI loading and show full error on splash ([99df3f9](https://github.com/hTuneSys/hexaTuneApp/commit/99df3f9a45da0a906e315f9cf60332377ef7ee03))
+
 ## [1.2.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.5...v1.2.6) (2026-03-15)
 
 
