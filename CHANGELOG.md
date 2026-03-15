@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.2...v1.2.0) (2026-03-15)
+
+
+### Features
+
+* **bootstrap:** show live progress on splash during initialization ([a4e787c](https://github.com/hTuneSys/hexaTuneApp/commit/a4e787c73183d37507b796d6443166d513af4f9f))
+
 ## [1.1.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.1...v1.1.2) (2026-03-15)
 
 
