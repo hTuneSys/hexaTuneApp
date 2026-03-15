@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.6...v1.1.0) (2026-03-15)
+
+
+### Features
+
+* **platform:** add billing and push permissions, remove background service ([055846b](https://github.com/hTuneSys/hexaTuneApp/commit/055846babfbcbdf91fca49e7c49d6c0ea3ba0a96))
+
 ## [1.0.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.0.5...v1.0.6) (2026-03-14)
 
 
