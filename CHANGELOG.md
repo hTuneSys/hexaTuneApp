@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.1...v1.1.2) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ios:** remove incorrect Apple Pay entitlement ([338d1b6](https://github.com/hTuneSys/hexaTuneApp/commit/338d1b611b6d159c07c039239061e29178571ee9))
+
 ## [1.1.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.1.0...v1.1.1) (2026-03-15)
 
 
