@@ -127,8 +127,6 @@ class _StepRow extends StatelessWidget {
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.error,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
               ],
             ),

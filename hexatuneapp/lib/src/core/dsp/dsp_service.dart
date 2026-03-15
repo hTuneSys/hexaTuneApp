@@ -187,6 +187,7 @@ class DspService {
       category: LogCategory.dsp,
     );
 
+    _bindings.init();
     _disposeEngine();
 
     final cycleCount = _steps.length;

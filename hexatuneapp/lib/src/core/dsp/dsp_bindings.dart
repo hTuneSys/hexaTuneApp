@@ -209,12 +209,23 @@ typedef _SampleRateD = double Function(Pointer<HtdEngine> engine);
 /// On iOS the symbols are statically linked into the app binary.
 @singleton
 class DspBindings {
-  DspBindings(this._logService) {
-    _load();
-  }
+  DspBindings(this._logService);
 
   final LogService _logService;
   late final DynamicLibrary _lib;
+  bool _loaded = false;
+
+  /// Whether the native library has been loaded successfully.
+  bool get isLoaded => _loaded;
+
+  /// Load the native FFI library for the current platform.
+  ///
+  /// Safe to call multiple times — subsequent calls are no-ops.
+  void init() {
+    if (_loaded) return;
+    _load();
+    _loaded = true;
+  }
 
   // Lifecycle
   late final _InitD _htdEngineInit;
