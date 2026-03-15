@@ -1,3 +1,10 @@
+## [1.2.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.5...v1.2.6) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ios:** remove HexaTuneProto force_load to fix duplicate Rust runtime symbols ([ed02fd0](https://github.com/hTuneSys/hexaTuneApp/commit/ed02fd0dc1bb2d1d8465c6655dce226fe297a309))
+
 ## [1.2.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.4...v1.2.5) (2026-03-15)
 
 
