@@ -1,3 +1,10 @@
+## [1.2.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.4...v1.2.5) (2026-03-15)
+
+
+### Bug Fixes
+
+* **ci:** add cocoapods to Gemfile for bundle exec compatibility ([5874698](https://github.com/hTuneSys/hexaTuneApp/commit/5874698cf69f06c2ee945f33e451058d816a7ade))
+
 ## [1.2.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.3...v1.2.4) (2026-03-15)
 
 
