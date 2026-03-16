@@ -1,3 +1,10 @@
+## [1.3.12](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.11...v1.3.12) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** remove -exported_symbols_list, keep only -export_dynamic ([7f8348a](https://github.com/hTuneSys/hexaTuneApp/commit/7f8348a46e8c40f3762ce5cf62336f07ec2574aa)), closes [#30](https://github.com/hTuneSys/hexaTuneApp/issues/30) [#31-32](https://github.com/hTuneSys/hexaTuneApp/issues/31-32)
+
 ## [1.3.11](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.10...v1.3.11) (2026-03-16)
 
 
