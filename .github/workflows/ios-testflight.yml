@@ -165,17 +165,10 @@ jobs:
           else
             echo "⚠️ -export_dynamic NOT found in build settings"
           fi
-          echo ""
-
-          echo "=== 0c. Verify ffi_exports.exp ==="
-          SRCROOT=$(echo "$SETTINGS" | grep ' SRCROOT ' | awk '{print $NF}')
-          EXP_FILE="${SRCROOT}/Runner/ffi_exports.exp"
-          if [ -f "$EXP_FILE" ]; then
-            SYMBOL_COUNT=$(grep -v '^#' "$EXP_FILE" | grep -v '^$' | wc -l | tr -d ' ')
-            echo "✅ $EXP_FILE ($SYMBOL_COUNT symbols)"
-            grep -v '^#' "$EXP_FILE" | grep -v '^$'
+          if echo "$SETTINGS" | grep -q 'exported_symbols_list'; then
+            echo "⚠️ -exported_symbols_list PRESENT — may cause dead code stripping of FFI symbols"
           else
-            echo "❌ MISSING: $EXP_FILE (SRCROOT=$SRCROOT)"
+            echo "✅ -exported_symbols_list not present (correct — it causes dead stripping)"
           fi
           echo ""
 
@@ -256,13 +249,22 @@ jobs:
           echo ""
 
           echo "=== HARD VERIFICATION ==="
+          BINARY_SIZE=$(ls -l "$APP_BINARY" | awk '{print $5}')
+          echo "📋 Binary size: $(ls -lh "$APP_BINARY" | awk '{print $5}') ($BINARY_SIZE bytes)"
+          echo "📋 Reference: Build#30 (no exported_symbols_list) was 862K/880640+"
+          echo "📋 Reference: Build#31-32 (with exported_symbols_list) were 832K/851968"
+          if [ "$BINARY_SIZE" -gt 860000 ] 2>/dev/null; then
+            echo "✅ Binary > 860K — Rust FFI code appears included"
+          else
+            echo "⚠️ Binary ≤ 860K — Rust FFI code may have been stripped"
+          fi
           if [ "$FFI_EXPORTS" -gt 0 ]; then
             echo "✅ Found $FFI_EXPORTS FFI symbols in export trie — dlsym should work"
           else
             echo "❌ FAIL: No FFI symbols in export trie — dlsym will fail at runtime"
-            echo "📋 Export trie: $EXPORT_TOTAL entries | strings: htp=$HTP_STR htd=$HTD_STR"
-            echo "📋 If strings>0 but exports=0: symbols linked but not exported (LTO issue)"
-            echo "📋 If strings=0: symbols not linked at all (inclusion issue)"
+            echo "📋 Export trie: $EXPORT_TOTAL entries | strings: htp=$HTP_STR htd=$HTD_STR force=$FORCE_STR"
+            echo "📋 If strings>0 but exports=0: symbols linked but not exported"
+            echo "📋 If strings=0: symbols not linked (check -exported_symbols_list interaction)"
             exit 1
           fi
 
