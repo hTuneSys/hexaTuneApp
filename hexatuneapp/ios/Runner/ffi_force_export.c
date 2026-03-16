@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: 2026 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
-// Force all Rust FFI symbols to survive dead-code stripping.
+// Force all Rust FFI symbols into the iOS executable and export trie.
 //
-// On iOS, the main executable is built with DEAD_CODE_STRIPPING=YES by
-// default. Even with -force_load, the linker can strip symbols that are
-// not reachable from the entry-point graph. Dart FFI uses
-// DynamicLibrary.process() → dlsym(RTLD_DEFAULT, ...) which requires
-// symbols to be present in the executable's export trie.
+// Problem: Dart FFI on iOS uses dlsym(RTLD_DEFAULT, ...) which requires
+// symbols in the Mach-O export trie. Static library symbols from Rust
+// archives (.a) may be omitted by the linker's dead-code stripper when
+// they have no code-level references from the entry-point graph.
 //
-// This file creates explicit references to every FFI symbol so the
-// dead-code stripper considers them reachable. The __attribute__((used))
-// annotation prevents the compiler from eliminating the array itself.
+// Solution: This file creates an unbreakable reference chain:
+//   _main -> AppDelegate -> hexa_force_link_symbols() -> all FFI symbols
+//
+// AppDelegate.swift MUST call hexa_force_link_symbols() during launch.
+// This ensures the linker includes all referenced Rust objects and marks
+// them as reachable, placing them in the export trie.
 
 #include "hexatune_dsp_ffi.h"
 #include "hexa_tune_proto.h"
@@ -50,3 +52,15 @@ static const void *_ffi_force_export[] = {
     (const void *)&htp_usb_depacketize,
     (const void *)&htp_encode_to_packets,
 };
+
+// Called from AppDelegate.swift to create a code-level reference chain
+// from _main to every Rust FFI symbol. Returns the number of symbols.
+int hexa_force_link_symbols(void) {
+    int count = (int)(sizeof(_ffi_force_export) / sizeof(_ffi_force_export[0]));
+    volatile const void *ref = NULL;
+    for (int i = 0; i < count; i++) {
+        ref = _ffi_force_export[i];
+    }
+    (void)ref;
+    return count;
+}

@@ -11,6 +11,9 @@ import AVFoundation
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    // Force-link all Rust FFI symbols so dlsym() can find them at runtime.
+    let _ = hexa_force_link_symbols()
+
     GeneratedPluginRegistrant.register(with: self)
 
     if let controller = window?.rootViewController as? FlutterViewController {
