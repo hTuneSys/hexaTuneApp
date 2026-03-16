@@ -150,12 +150,12 @@ jobs:
         if: always()
         run: |
           echo "=== Searching for Runner binary ==="
-          APP_BINARY=$(find hexatuneapp/build/ios/archive -path "*/Runner.app/Runner" -type f 2>/dev/null | head -1)
+          APP_BINARY=$(find build/ios/archive -path "*/Runner.app/Runner" -type f 2>/dev/null | head -1)
           if [ -z "$APP_BINARY" ]; then
             echo "❌ Runner binary not found in archive"
             echo "=== Archive contents ==="
-            find hexatuneapp/build/ios/archive -type f -name "Runner*" 2>/dev/null || true
-            find hexatuneapp/build/ios/archive -name "*.app" -type d 2>/dev/null || true
+            find build/ios/archive -type f -name "Runner*" 2>/dev/null || true
+            find build/ios/archive -name "*.app" -type d 2>/dev/null || true
             exit 1
           fi
           echo "Binary: $APP_BINARY"
