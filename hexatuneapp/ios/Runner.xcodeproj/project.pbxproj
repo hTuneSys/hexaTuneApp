@@ -172,7 +172,6 @@
 			buildPhases = (
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
-				A1B2C3D4E5F6A7B8C9D0E1F2 /* Strip Proto Duplicates */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
@@ -277,22 +276,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
-		};
-		A1B2C3D4E5F6A7B8C9D0E1F2 /* Strip Proto Duplicates */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Strip Proto Duplicates";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"${PROJECT_DIR}/Runner/strip_proto_duplicates.sh\"";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n/bin/sh \"${PROJECT_DIR}/Runner/strip_proto_duplicates.sh\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -428,13 +412,13 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -629,13 +613,13 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -673,13 +657,13 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
-					"$(TARGET_TEMP_DIR)/libhexa_tune_proto_ffi_stripped.a",
+					"$(PROJECT_DIR)/build/libhexa_tune_proto_ffi_stripped.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
