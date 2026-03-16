@@ -1,3 +1,10 @@
+## [1.3.16](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.15...v1.3.16) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** use SRCROOT for link map path so CI can find it ([e5eb00a](https://github.com/hTuneSys/hexaTuneApp/commit/e5eb00a257e36553ed0dd9e6c333d3d8122c876d))
+
 ## [1.3.15](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.14...v1.3.15) (2026-03-16)
 
 
