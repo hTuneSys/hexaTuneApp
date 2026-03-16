@@ -27,6 +27,9 @@ Flutter/flutter_export_environment.sh
 ServiceDefinitions.json
 Runner/GeneratedPluginRegistrant.*
 
+# Build artifacts (link maps from LD_GENERATE_MAP_FILE)
+build/
+
 # Exceptions to above rules.
 !default.mode1v3
 !default.mode2v3

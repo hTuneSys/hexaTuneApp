@@ -139,6 +139,9 @@ jobs:
       - name: Flutter analyze
         run: flutter analyze --no-pub
 
+      - name: Prepare link map output directory
+        run: mkdir -p ios/build
+
       - name: Build & Upload via Fastlane
         env:
           DIST_TARGET: ${{ env.DIST_TARGET }}
@@ -360,9 +363,14 @@ jobs:
         run: |
           set +e
           echo "=== Link map: FFI symbol inclusion ==="
-          LINK_MAP=$(find build/ios -name "ffi-link-map*.txt" -o -name "*-LinkMap*.txt" 2>/dev/null | head -1)
+          # Primary: LD_MAP_FILE_PATH = $(SRCROOT)/build/Runner-FFI-LinkMap-$(CURRENT_ARCH).txt
+          # SRCROOT = ios/ for the Runner target
+          LINK_MAP=$(find ios/build -name "Runner-FFI-LinkMap*" -type f 2>/dev/null | head -1)
           if [ -z "$LINK_MAP" ]; then
-            LINK_MAP=$(find ~/Library/Developer/Xcode -name "*Runner*LinkMap*" -type f 2>/dev/null | head -1)
+            # Fallback: search DerivedData and flutter build dir
+            LINK_MAP=$(find ~/Library/Developer/Xcode/DerivedData build/ios \
+              -name "Runner-FFI-LinkMap*" -o -name "*-LinkMap*.txt" -o -name "ffi-link-map*" \
+              2>/dev/null -type f | head -1)
           fi
           if [ -n "$LINK_MAP" ]; then
             echo "Link map: $LINK_MAP ($(ls -lh "$LINK_MAP" | awk '{print $5}'))"
