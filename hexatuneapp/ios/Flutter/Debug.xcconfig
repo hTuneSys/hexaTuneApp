@@ -2,8 +2,13 @@
 #include "Generated.xcconfig"
 
 // Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
-// -export_dynamic: preserves global C symbols through LTO and exports them
-// from MH_EXECUTE. Do NOT use -exported_symbols_list here — it marks all
-// unlisted symbols as __private_extern__, which causes DEAD_CODE_STRIPPING
-// to remove the Rust FFI code entirely (binary drops from 862K to 832K).
-OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic
+// Three flags work together:
+//   -export_dynamic: preserves global symbols through LTO (prevents inlining)
+//   -exported_symbols_list: places FFI symbols into the Mach-O export trie
+//   DEAD_CODE_STRIPPING=NO: prevents cascade removal of Rust internal deps
+//
+// Without DEAD_CODE_STRIPPING=NO, -exported_symbols_list marks unlisted symbols
+// as __private_extern__, and dead code stripping removes them — causing FFI
+// entry points to lose their dependencies and be stripped too (2.1M → 832K).
+OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
+DEAD_CODE_STRIPPING = NO

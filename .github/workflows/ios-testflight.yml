@@ -159,16 +159,28 @@ jobs:
             echo "(xcodebuild -showBuildSettings failed)"
           echo ""
 
-          echo "=== 0b. Verify -export_dynamic in linker flags ==="
+          echo "=== 0b. Verify triple-flag FFI export configuration ==="
+          PASS=true
           if echo "$SETTINGS" | grep -q 'export_dynamic'; then
-            echo "✅ -export_dynamic found in build settings"
+            echo "✅ -export_dynamic found (preserves globals through LTO)"
           else
-            echo "⚠️ -export_dynamic NOT found in build settings"
+            echo "❌ -export_dynamic NOT found"; PASS=false
           fi
           if echo "$SETTINGS" | grep -q 'exported_symbols_list'; then
-            echo "⚠️ -exported_symbols_list PRESENT — may cause dead code stripping of FFI symbols"
+            echo "✅ -exported_symbols_list found (places symbols in export trie)"
           else
-            echo "✅ -exported_symbols_list not present (correct — it causes dead stripping)"
+            echo "❌ -exported_symbols_list NOT found"; PASS=false
+          fi
+          DCS=$(echo "$SETTINGS" | grep 'DEAD_CODE_STRIPPING' | head -1 | awk '{print $NF}')
+          if [ "$DCS" = "NO" ]; then
+            echo "✅ DEAD_CODE_STRIPPING = NO (prevents cascade stripping of Rust deps)"
+          else
+            echo "❌ DEAD_CODE_STRIPPING = $DCS (should be NO)"; PASS=false
+          fi
+          if [ "$PASS" = true ]; then
+            echo "✅ All three FFI export flags configured correctly"
+          else
+            echo "⚠️ FFI export configuration incomplete — symbols may not appear in trie"
           fi
           echo ""
 
@@ -251,21 +263,50 @@ jobs:
           echo "=== HARD VERIFICATION ==="
           BINARY_SIZE=$(ls -l "$APP_BINARY" | awk '{print $5}')
           echo "📋 Binary size: $(ls -lh "$APP_BINARY" | awk '{print $5}') ($BINARY_SIZE bytes)"
-          echo "📋 Reference: Build#30 (no exported_symbols_list) was 862K/880640+"
-          echo "📋 Reference: Build#31-32 (with exported_symbols_list) were 832K/851968"
-          if [ "$BINARY_SIZE" -gt 860000 ] 2>/dev/null; then
-            echo "✅ Binary > 860K — Rust FFI code appears included"
+          echo "📋 Reference: Build#33 (-export_dynamic only) was 2.1M/2184144"
+          echo "📋 Reference: Build#31-32 (exported_symbols_list + DEAD_CODE) were 832K/851968"
+          if [ "$BINARY_SIZE" -gt 1500000 ] 2>/dev/null; then
+            echo "✅ Binary > 1.5M — Rust FFI code included (DEAD_CODE_STRIPPING=NO working)"
+          elif [ "$BINARY_SIZE" -gt 860000 ] 2>/dev/null; then
+            echo "⚠️ Binary 860K–1.5M — Rust code partially included"
           else
-            echo "⚠️ Binary ≤ 860K — Rust FFI code may have been stripped"
+            echo "❌ Binary ≤ 860K — Rust FFI code stripped (check DEAD_CODE_STRIPPING)"
           fi
           if [ "$FFI_EXPORTS" -gt 0 ]; then
             echo "✅ Found $FFI_EXPORTS FFI symbols in export trie — dlsym should work"
           else
             echo "❌ FAIL: No FFI symbols in export trie — dlsym will fail at runtime"
             echo "📋 Export trie: $EXPORT_TOTAL entries | strings: htp=$HTP_STR htd=$HTD_STR force=$FORCE_STR"
-            echo "📋 If strings>0 but exports=0: symbols linked but not exported"
-            echo "📋 If strings=0: symbols not linked (check -exported_symbols_list interaction)"
+            echo "📋 If binary>1.5M but exports=0: code included but not exported (check -exported_symbols_list)"
+            echo "📋 If binary<860K: code stripped (check DEAD_CODE_STRIPPING=NO)"
             exit 1
+          fi
+
+      - name: Link map analysis (FFI inclusion proof)
+        if: always()
+        run: |
+          set +e
+          echo "=== Link map: FFI symbol inclusion ==="
+          LINK_MAP=$(find build/ios -name "*-LinkMap.txt" -type f 2>/dev/null | head -1)
+          if [ -z "$LINK_MAP" ]; then
+            LINK_MAP=$(find ~/Library/Developer/Xcode -name "*Runner*LinkMap*" -type f 2>/dev/null | head -1)
+          fi
+          if [ -n "$LINK_MAP" ]; then
+            echo "Link map: $LINK_MAP ($(ls -lh "$LINK_MAP" | awk '{print $5}'))"
+            echo ""
+            echo "--- Proto objects pulled from archive ---"
+            grep -i 'proto_ffi\|htp_' "$LINK_MAP" | head -20 || echo "(none)"
+            echo ""
+            echo "--- DSP objects pulled from archive ---"
+            grep -i 'dsp_ffi\|htd_' "$LINK_MAP" | head -20 || echo "(none)"
+            echo ""
+            echo "--- ffi_force_export.o ---"
+            grep -i 'ffi_force_export' "$LINK_MAP" | head -5 || echo "(none)"
+            echo ""
+            echo "--- Dead stripped symbols (FFI related) ---"
+            grep -i 'dead.*htp_\|dead.*htd_\|htp_.*dead\|htd_.*dead' "$LINK_MAP" | head -20 || echo "(none found — good)"
+          else
+            echo "⚠️ Link map not found (WRITE_LINK_MAP_FILE may not be set by Xcode)"
           fi
 
       - name: Upload IPA artifact
