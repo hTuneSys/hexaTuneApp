@@ -151,79 +151,108 @@ jobs:
         run: |
           set +e
 
-          echo "=== 0. Effective build settings (linker flags + export + strip) ==="
-          xcodebuild -workspace ios/Runner.xcworkspace \
+          echo "=== 0. Effective build settings ==="
+          SETTINGS=$(xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner -configuration Release -sdk iphoneos \
-            -showBuildSettings 2>/dev/null | \
-            grep -E 'OTHER_LDFLAGS|EXPORTED|STRIP|DEAD_CODE|SRCROOT' || \
+            -showBuildSettings 2>/dev/null)
+          echo "$SETTINGS" | grep -E 'OTHER_LDFLAGS|EXPORTED|STRIP|DEAD_CODE|SRCROOT' || \
             echo "(xcodebuild -showBuildSettings failed)"
           echo ""
 
-          echo "=== 0b. Verify ffi_exports.exp exists ==="
-          SRCROOT=$(xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner -configuration Release -sdk iphoneos \
-            -showBuildSettings 2>/dev/null | grep ' SRCROOT ' | awk '{print $NF}')
-          EXP_FILE="${SRCROOT}/Runner/ffi_exports.exp"
-          if [ -f "$EXP_FILE" ]; then
-            echo "✅ $EXP_FILE exists ($(wc -l < "$EXP_FILE") lines)"
-            grep -v '^#' "$EXP_FILE" | grep -v '^$' | head -10
+          echo "=== 0b. Verify -export_dynamic in linker flags ==="
+          if echo "$SETTINGS" | grep -q 'export_dynamic'; then
+            echo "✅ -export_dynamic found in build settings"
           else
-            echo "❌ MISSING: $EXP_FILE"
-            echo "   SRCROOT=$SRCROOT"
-            ls -la "${SRCROOT}/Runner/" 2>/dev/null | head -20
+            echo "⚠️ -export_dynamic NOT found in build settings"
           fi
           echo ""
 
-          echo "=== 0c. Static library verification ==="
-          for LIB in ios/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a \
-                     ios/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a; do
-            if [ -f "$LIB" ]; then
-              SIZE=$(ls -lh "$LIB" | awk '{print $5}')
-              SYM_COUNT=0
-              SYM_COUNT=$(nm -gU "$LIB" 2>/dev/null | grep -cE '_htp_|_htd_') || true
-              echo "✅ $LIB ($SIZE, $SYM_COUNT FFI symbols)"
-              nm -gU "$LIB" 2>/dev/null | grep -E '_htp_|_htd_' | head -15
-              if [ "$SYM_COUNT" -eq 0 ]; then
-                echo "   (showing first 15 global symbols for debug):"
-                nm -gU "$LIB" 2>/dev/null | head -15
-              fi
-            else
-              echo "❌ MISSING: $LIB"
-            fi
-          done
+          echo "=== 0c. Verify ffi_exports.exp ==="
+          SRCROOT=$(echo "$SETTINGS" | grep ' SRCROOT ' | awk '{print $NF}')
+          EXP_FILE="${SRCROOT}/Runner/ffi_exports.exp"
+          if [ -f "$EXP_FILE" ]; then
+            SYMBOL_COUNT=$(grep -v '^#' "$EXP_FILE" | grep -v '^$' | wc -l | tr -d ' ')
+            echo "✅ $EXP_FILE ($SYMBOL_COUNT symbols)"
+            grep -v '^#' "$EXP_FILE" | grep -v '^$'
+          else
+            echo "❌ MISSING: $EXP_FILE (SRCROOT=$SRCROOT)"
+          fi
           echo ""
 
-          echo "=== 1. Searching for Runner binary ==="
+          echo "=== 1a. Proto .a verification ==="
+          PROTO_LIB="ios/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a"
+          if [ -f "$PROTO_LIB" ]; then
+            SIZE=$(ls -lh "$PROTO_LIB" | awk '{print $5}')
+            HTP_COUNT=0
+            HTP_COUNT=$(nm -gU "$PROTO_LIB" 2>/dev/null | grep -c '_htp_') || true
+            echo "✅ Proto .a ($SIZE) — $HTP_COUNT htp_ symbols"
+            nm -gU "$PROTO_LIB" 2>/dev/null | grep '_htp_' | head -10
+          else
+            echo "❌ MISSING: $PROTO_LIB"
+          fi
+          echo ""
+
+          echo "=== 1b. DSP .a verification ==="
+          DSP_LIB="ios/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a"
+          if [ -f "$DSP_LIB" ]; then
+            SIZE=$(ls -lh "$DSP_LIB" | awk '{print $5}')
+            HTD_COUNT=0
+            HTD_COUNT=$(nm -gU "$DSP_LIB" 2>/dev/null | grep -c '_htd_') || true
+            TOTAL_SYMS=0
+            TOTAL_SYMS=$(nm -gU "$DSP_LIB" 2>/dev/null | wc -l | tr -d ' ') || true
+            echo "📋 DSP .a ($SIZE) — $HTD_COUNT htd_ symbols, $TOTAL_SYMS total global"
+            if [ "$HTD_COUNT" -gt 0 ]; then
+              nm -gU "$DSP_LIB" 2>/dev/null | grep '_htd_' | head -25
+            else
+              echo "   htd_ not visible (expected: LTO+strip=symbols hides nlist)"
+              echo "   First 20 global symbols:"
+              nm -gU "$DSP_LIB" 2>/dev/null | head -20
+              echo "   Object files in archive:"
+              ar -t "$DSP_LIB" 2>/dev/null | head -10
+            fi
+          else
+            echo "❌ MISSING: $DSP_LIB"
+          fi
+          echo ""
+
+          echo "=== 2. Runner binary ==="
           APP_BINARY=$(find build/ios/archive -path "*/Runner.app/Runner" -type f 2>/dev/null | head -1)
           if [ -z "$APP_BINARY" ]; then
-            echo "❌ Runner binary not found in archive"
-            find build/ios/archive -type f -name "Runner*" 2>/dev/null || true
+            echo "❌ Runner binary not found"
             exit 1
           fi
           echo "Binary: $APP_BINARY"
           echo "Size: $(ls -lh "$APP_BINARY" | awk '{print $5}')"
           echo ""
 
-          echo "=== 2. Export trie (full dump) ==="
+          echo "=== 3. Export trie (full dump) ==="
           objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -80
           EXPORT_TOTAL=0
           EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -c '0x') || true
           echo "Total export trie entries: $EXPORT_TOTAL"
           echo ""
 
-          echo "=== 3. FFI symbols in export trie ==="
+          echo "=== 4. FFI symbols in export trie ==="
           FFI_EXPORTS=0
           FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE 'htp_|htd_') || true
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E 'htp_|htd_' | head -40 || echo "(none found)"
+          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E 'htp_|htd_|force_link' | head -40 || echo "(none found)"
           echo "FFI export count: $FFI_EXPORTS"
           echo ""
 
-          echo "=== 4. hexa_force_link_symbols in export trie ==="
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -i "force_link" || echo "(not found)"
+          echo "=== 5. Section sizes ==="
+          size -m "$APP_BINARY" 2>/dev/null | head -15 || echo "(size command failed)"
           echo ""
 
-          echo "=== 5. Section sizes ==="
-          size -m "$APP_BINARY" 2>/dev/null | head -20 || echo "(size command failed)"
+          echo "=== 6. strings check for symbol names ==="
+          HTP_STR=0
+          HTP_STR=$(strings "$APP_BINARY" | grep -c "htp_at_encode") || true
+          HTD_STR=0
+          HTD_STR=$(strings "$APP_BINARY" | grep -c "htd_engine_init") || true
+          FORCE_STR=0
+          FORCE_STR=$(strings "$APP_BINARY" | grep -c "force_link") || true
+          echo "htp_at_encode in strings: $HTP_STR"
+          echo "htd_engine_init in strings: $HTD_STR"
+          echo "hexa_force_link in strings: $FORCE_STR"
           echo ""
 
           echo "=== HARD VERIFICATION ==="
@@ -231,7 +260,9 @@ jobs:
             echo "✅ Found $FFI_EXPORTS FFI symbols in export trie — dlsym should work"
           else
             echo "❌ FAIL: No FFI symbols in export trie — dlsym will fail at runtime"
-            echo "📋 Export trie has $EXPORT_TOTAL total entries"
+            echo "📋 Export trie: $EXPORT_TOTAL entries | strings: htp=$HTP_STR htd=$HTD_STR"
+            echo "📋 If strings>0 but exports=0: symbols linked but not exported (LTO issue)"
+            echo "📋 If strings=0: symbols not linked at all (inclusion issue)"
             exit 1
           fi
 

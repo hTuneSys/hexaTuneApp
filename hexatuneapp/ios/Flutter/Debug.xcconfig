@@ -2,5 +2,6 @@
 #include "Generated.xcconfig"
 
 // Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
-// MH_EXECUTE (iOS main binary) does NOT export symbols by default.
-OTHER_LDFLAGS = $(inherited) -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
+// -export_dynamic: prevents LTO from internalizing global C symbols.
+// -exported_symbols_list: restricts which symbols appear in the export trie.
+OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
