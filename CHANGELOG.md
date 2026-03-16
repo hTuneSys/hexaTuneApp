@@ -1,3 +1,11 @@
+## [1.3.15](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.14...v1.3.15) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** harden FFI export with visibility attrs, EXPORTED_SYMBOLS_FILE, and improved CI diagnostics ([fdbaf2a](https://github.com/hTuneSys/hexaTuneApp/commit/fdbaf2a1ce1b163d289955a73e2e6f4023165719))
+* **ios:** use ld_classic linker to resolve Rust FFI duplicate symbols ([e71c4f3](https://github.com/hTuneSys/hexaTuneApp/commit/e71c4f33f68d259f5a6bf593a65d6ab4bf1a95ab)), closes [#35](https://github.com/hTuneSys/hexaTuneApp/issues/35)
+
 ## [1.3.14](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.13...v1.3.14) (2026-03-16)
 
 
