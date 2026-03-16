@@ -1,3 +1,10 @@
+## [1.3.11](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.10...v1.3.11) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** add -export_dynamic to preserve FFI symbols through LTO ([7d4d3dc](https://github.com/hTuneSys/hexaTuneApp/commit/7d4d3dc8a2493860f19578f5cbe37a4e381bf441))
+
 ## [1.3.10](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.9...v1.3.10) (2026-03-16)
 
 
