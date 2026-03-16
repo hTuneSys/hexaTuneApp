@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.5...v1.3.6) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** pass -exported_symbols_list via OTHER_LDFLAGS for export trie visibility ([687fd76](https://github.com/hTuneSys/hexaTuneApp/commit/687fd76b2bac57942f58da63899fcf9b73f65421))
+
 ## [1.3.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.4...v1.3.5) (2026-03-16)
 
 
