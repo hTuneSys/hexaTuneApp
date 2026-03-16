@@ -3,26 +3,26 @@
 
 // Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
 //
-// Problem: Two Rust staticlibs (DSP + Proto) share runtime symbols
-// (___rust_alloc etc.). Force-loading DSP + normally linking Proto causes
-// 1 duplicate symbol in ld_prime (Xcode 16). DEAD_CODE_STRIPPING=YES
-// masks the duplicate but also strips ALL Rust FFI code (832K binary).
+// Problem: Two Rust staticlibs (DSP + Proto) bundle identical Rust runtime
+// crates (std, panic_unwind, compiler_builtins). Force-loading DSP pulls in
+// all its objects; Proto's runtime objects then duplicate symbols like
+// _rust_eh_personality — causing linker errors on Xcode 16+ (ld_prime).
 //
 // Solution:
+//   strip_proto_duplicates.sh — pre-link build phase strips Rust runtime
+//                                objects from Proto.a (DSP provides them)
 //   DEAD_CODE_STRIPPING=NO    — keeps Rust FFI code alive
-//   -ld_classic                — legacy linker silently resolves the duplicate
 //   -export_dynamic            — preserves global symbols through LTO
 //   EXPORTED_SYMBOLS_FILE      — places FFI symbols into the Mach-O export trie
 //   LD_GENERATE_MAP_FILE       — produces link map for CI diagnostics
 //
 // Long-term fix: combine DSP + Proto into one Rust crate (one staticlib),
-// eliminating duplicate runtime symbols. Then remove -ld_classic and
-// -force_load, switch back to ld_prime with DEAD_CODE_STRIPPING=YES.
+// eliminating duplicate runtime symbols entirely.
 DEAD_CODE_STRIPPING = NO
 EXPORTED_SYMBOLS_FILE = $(SRCROOT)/Runner/ffi_exports.exp
 LD_GENERATE_MAP_FILE = YES
 LD_MAP_FILE_PATH = $(SRCROOT)/build/Runner-FFI-LinkMap-$(CURRENT_ARCH).txt
-OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic
+OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic
 
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9

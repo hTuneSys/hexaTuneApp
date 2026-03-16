@@ -7,7 +7,7 @@ DEAD_CODE_STRIPPING = NO
 EXPORTED_SYMBOLS_FILE = $(SRCROOT)/Runner/ffi_exports.exp
 LD_GENERATE_MAP_FILE = YES
 LD_MAP_FILE_PATH = $(SRCROOT)/build/Runner-FFI-LinkMap-$(CURRENT_ARCH).txt
-OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic
+OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic
 
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9

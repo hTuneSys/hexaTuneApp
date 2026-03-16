@@ -164,11 +164,6 @@ jobs:
 
           echo "=== 0b. Verify FFI export configuration ==="
           PASS=true
-          if echo "$SETTINGS" | grep -q 'ld_classic'; then
-            echo "✅ -ld_classic found (legacy linker handles Rust duplicate symbols)"
-          else
-            echo "❌ -ld_classic NOT found"; PASS=false
-          fi
           if echo "$SETTINGS" | grep -q 'export_dynamic'; then
             echo "✅ -export_dynamic found (preserves globals through LTO)"
           else
@@ -210,7 +205,7 @@ jobs:
             DUPS=$(comm -12 <(echo "$PROTO_RT") <(echo "$DSP_RT") 2>/dev/null | head -5)
             if [ -n "$DUPS" ]; then
               DUP_COUNT=$(echo "$DUPS" | wc -l | tr -d ' ')
-              echo "⚠️ $DUP_COUNT shared Rust runtime symbols (handled by -ld_classic):"
+              echo "⚠️ $DUP_COUNT shared Rust runtime symbols (handled by Proto dedup script):"
               echo "$DUPS" | head -3
             else
               echo "✅ No shared Rust runtime symbols detected"
