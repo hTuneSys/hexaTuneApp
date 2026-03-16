@@ -2,19 +2,9 @@
 #include "Generated.xcconfig"
 
 // Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
-//
-// Three mechanisms work together:
-//   -export_dynamic: preserves global symbols through LTO (prevents inlining)
-//   -exported_symbols_list: places FFI symbols into the Mach-O export trie
-//   -u flags: linker-level undefined refs that force archive member inclusion,
-//             survive LTO internalization, and serve as dead-stripping roots
-//
-// Why -u instead of DEAD_CODE_STRIPPING=NO:
-//   DEAD_CODE_STRIPPING=NO causes duplicate Rust runtime symbols (___rust_alloc)
-//   between force-loaded DSP and normally-linked Proto archives.
-//   The -u flags keep DEAD_CODE_STRIPPING=YES (resolves duplicates) while
-//   ensuring FFI symbols and their transitive deps survive stripping.
-OTHER_LDFLAGS = $(inherited) -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp -Wl,-u,_hexa_force_link_symbols -Wl,-u,_htp_at_encode -Wl,-u,_htp_at_parse -Wl,-u,_htp_sysex_frame -Wl,-u,_htp_sysex_unframe -Wl,-u,_htp_usb_packetize -Wl,-u,_htp_usb_depacketize -Wl,-u,_htp_encode_to_packets -Wl,-u,_htd_engine_init -Wl,-u,_htd_engine_destroy -Wl,-u,_htd_engine_start -Wl,-u,_htd_engine_stop -Wl,-u,_htd_engine_stop_graceful -Wl,-u,_htd_engine_render -Wl,-u,_htd_engine_set_base -Wl,-u,_htd_engine_clear_base -Wl,-u,_htd_engine_set_texture -Wl,-u,_htd_engine_clear_texture -Wl,-u,_htd_engine_set_event -Wl,-u,_htd_engine_clear_event -Wl,-u,_htd_engine_clear_all_layers -Wl,-u,_htd_engine_set_base_gain -Wl,-u,_htd_engine_set_texture_gain -Wl,-u,_htd_engine_set_event_gain -Wl,-u,_htd_engine_set_binaural_gain -Wl,-u,_htd_engine_set_master_gain -Wl,-u,_htd_engine_update_config -Wl,-u,_htd_engine_load_base_wav -Wl,-u,_htd_engine_is_running -Wl,-u,_htd_engine_sample_rate
+// See Release.xcconfig for detailed explanation of this configuration.
+DEAD_CODE_STRIPPING = NO
+OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
 
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9
