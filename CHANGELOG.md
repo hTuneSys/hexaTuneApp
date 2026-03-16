@@ -1,3 +1,10 @@
+## [1.3.10](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.9...v1.3.10) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** add -exported_symbols_list via xcconfig for FFI export trie ([4702497](https://github.com/hTuneSys/hexaTuneApp/commit/4702497498218569411ba5494ccfa743afd5a003))
+
 ## [1.3.9](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.8...v1.3.9) (2026-03-16)
 
 
