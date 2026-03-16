@@ -1,3 +1,10 @@
+## [1.3.9](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.8...v1.3.9) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** force-link FFI symbols from AppDelegate for export trie ([5f65ad4](https://github.com/hTuneSys/hexaTuneApp/commit/5f65ad46dea0c4075fc2720e3c70eb434d0eb170))
+
 ## [1.3.8](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.7...v1.3.8) (2026-03-16)
 
 
