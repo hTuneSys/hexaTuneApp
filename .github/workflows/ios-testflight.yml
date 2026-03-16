@@ -159,7 +159,7 @@ jobs:
             echo "(xcodebuild -showBuildSettings failed)"
           echo ""
 
-          echo "=== 0b. Verify triple-flag FFI export configuration ==="
+          echo "=== 0b. Verify FFI export configuration ==="
           PASS=true
           if echo "$SETTINGS" | grep -q 'export_dynamic'; then
             echo "✅ -export_dynamic found (preserves globals through LTO)"
@@ -171,16 +171,19 @@ jobs:
           else
             echo "❌ -exported_symbols_list NOT found"; PASS=false
           fi
-          DCS=$(echo "$SETTINGS" | grep 'DEAD_CODE_STRIPPING' | head -1 | awk '{print $NF}')
-          if [ "$DCS" = "NO" ]; then
-            echo "✅ DEAD_CODE_STRIPPING = NO (prevents cascade stripping of Rust deps)"
+          U_COUNT=0
+          U_COUNT=$(echo "$SETTINGS" | grep -o '\-u,' | wc -l | tr -d ' ') || true
+          if [ "$U_COUNT" -gt 20 ]; then
+            echo "✅ Found $U_COUNT -u flags (linker-level undefined refs for FFI symbols)"
           else
-            echo "❌ DEAD_CODE_STRIPPING = $DCS (should be NO)"; PASS=false
+            echo "⚠️ Only $U_COUNT -u flags found (expected 30)"
           fi
+          DCS=$(echo "$SETTINGS" | grep 'DEAD_CODE_STRIPPING' | head -1 | awk '{print $NF}')
+          echo "📋 DEAD_CODE_STRIPPING = $DCS (YES=resolves duplicates, NO=may cause dup)"
           if [ "$PASS" = true ]; then
-            echo "✅ All three FFI export flags configured correctly"
+            echo "✅ FFI export configuration correct"
           else
-            echo "⚠️ FFI export configuration incomplete — symbols may not appear in trie"
+            echo "⚠️ FFI export configuration incomplete"
           fi
           echo ""
 
