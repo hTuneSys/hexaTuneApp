@@ -166,32 +166,42 @@ class HexagenDeviceManager {
   // -----------------------------------------------------------------------
 
   void _sendATVersion(String deviceId) {
-    final command = ATCommand.version();
-    final bytes = command.buildSysEx(_protoService);
-    _waitingForResponse = true;
-    _sysexBuffer.clear();
-    _notifyResponse(waiting: true);
+    try {
+      final command = ATCommand.version();
+      final bytes = command.buildSysEx(_protoService);
+      _waitingForResponse = true;
+      _sysexBuffer.clear();
+      _notifyResponse(waiting: true);
 
-    _logService.info(
-      'Sending AT+VERSION? (${bytes.length} bytes)',
-      category: LogCategory.hardware,
-    );
+      _logService.info(
+        'Sending AT+VERSION? (${bytes.length} bytes)',
+        category: LogCategory.hardware,
+      );
 
-    _midi.sendData(bytes, deviceId: deviceId);
+      _midi.sendData(bytes, deviceId: deviceId);
 
-    _responseTimeout?.cancel();
-    _responseTimeout = Timer(const Duration(seconds: 10), () {
-      if (_waitingForResponse) {
-        _logService.warning(
-          'AT+VERSION? response timeout',
-          category: LogCategory.hardware,
-        );
-        _waitingForResponse = false;
-        _connectedId = null;
-        _sysexBuffer.clear();
-        _notifyResponse(version: 'No response', waiting: false);
-      }
-    });
+      _responseTimeout?.cancel();
+      _responseTimeout = Timer(const Duration(seconds: 10), () {
+        if (_waitingForResponse) {
+          _logService.warning(
+            'AT+VERSION? response timeout',
+            category: LogCategory.hardware,
+          );
+          _waitingForResponse = false;
+          _connectedId = null;
+          _sysexBuffer.clear();
+          _notifyResponse(version: 'No response', waiting: false);
+        }
+      });
+    } catch (e, st) {
+      _logService.warning(
+        'Failed to send AT+VERSION? (proto library may not be loaded): $e',
+        category: LogCategory.hardware,
+        exception: e,
+        stackTrace: st,
+      );
+      _notifyResponse(waiting: false);
+    }
   }
 
   // -----------------------------------------------------------------------

@@ -71,12 +71,17 @@ class HexagenService {
   // Lifecycle
   // -----------------------------------------------------------------------
 
-  /// Initialize the service — loads FFI, starts MIDI listening, scans for
-  /// devices.
+  /// Initialize the service — starts MIDI listening, scans for devices,
+  /// and loads the FFI protocol library.
+  ///
+  /// MIDI device discovery is performed independently of the FFI library so
+  /// that devices can still be detected even when the native proto library
+  /// is unavailable (e.g. missing symbols on iOS).
   Future<void> init() async {
     try {
-      _protoService.init();
-
+      // Step 1: Start MIDI listeners and scan for devices.
+      // This must happen before ProtoService so that device discovery
+      // is never blocked by an FFI failure.
       _deviceManager = HexagenDeviceManager(_logService, _protoService);
       _deviceManagerInitialized = true;
       _deviceManager.initialize(
@@ -86,12 +91,28 @@ class HexagenService {
 
       await _loadDevices();
 
+      // Step 2: Load the native protocol library (best-effort).
+      // If this fails the device is still visible in the UI; only
+      // command encoding/decoding will be unavailable.
+      try {
+        _protoService.init();
+      } catch (e, st) {
+        _logService.warning(
+          'ProtoService initialization failed (device discovery unaffected): '
+          '$e',
+          category: LogCategory.hardware,
+          exception: e,
+          stackTrace: st,
+        );
+      }
+
       _updateState(_currentState.copyWith(isInitialized: true));
 
       _logService.info(
         'HexagenService initialized — '
         'connected: ${_currentState.isConnected}, '
-        'device: ${_currentState.deviceName ?? "none"}',
+        'device: ${_currentState.deviceName ?? "none"}, '
+        'proto: ${_protoService.isLoaded}',
         category: LogCategory.hardware,
       );
     } catch (e, st) {

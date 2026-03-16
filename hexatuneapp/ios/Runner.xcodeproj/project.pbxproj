@@ -404,11 +404,15 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -603,11 +607,15 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -645,11 +653,15 @@
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
+					"-force_load",
+					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";

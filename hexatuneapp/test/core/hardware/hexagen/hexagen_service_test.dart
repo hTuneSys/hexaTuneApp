@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -12,6 +13,10 @@ import 'package:hexatuneapp/src/core/proto/proto_service.dart';
 class MockLogService extends Mock implements LogService {}
 
 class MockProtoService extends Mock implements ProtoService {}
+
+const _midiMethodChannel = MethodChannel(
+  'plugins.invisiblewrench.com/flutter_midi_command',
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -25,9 +30,19 @@ void main() {
       mockLog = MockLogService();
       mockProto = MockProtoService();
       service = HexagenService(mockLog, mockProto);
+
+      // Mock the flutter_midi_command platform channels so that
+      // HexagenDeviceManager can be created in the test environment.
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(_midiMethodChannel, (call) async {
+            if (call.method == 'getDevices') return <dynamic>[];
+            return null;
+          });
     });
 
     tearDown(() {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+          .setMockMethodCallHandler(_midiMethodChannel, null);
       service.dispose();
     });
 
@@ -79,6 +94,29 @@ void main() {
       // Cannot fully test (needs BLE), but verify state reset works.
       service.resetOperationState();
       expect(service.currentOperationId, isNull);
+    });
+
+    test(
+      'init succeeds and sets isInitialized even when ProtoService fails',
+      () async {
+        when(
+          () => mockProto.init(),
+        ).thenThrow(ArgumentError('Failed to lookup symbol'));
+        when(() => mockProto.isLoaded).thenReturn(false);
+
+        await service.init();
+
+        expect(service.currentState.isInitialized, true);
+      },
+    );
+
+    test('init sets isInitialized when ProtoService succeeds', () async {
+      when(() => mockProto.init()).thenReturn(null);
+      when(() => mockProto.isLoaded).thenReturn(true);
+
+      await service.init();
+
+      expect(service.currentState.isInitialized, true);
     });
   });
 }
