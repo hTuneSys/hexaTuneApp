@@ -149,22 +149,44 @@ jobs:
       - name: Verify FFI symbols in binary
         if: always()
         run: |
-          echo "=== 0. Effective build settings (linker-related) ==="
+          set +e
+
+          echo "=== 0. Effective build settings (linker flags + export + strip) ==="
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner -configuration Release -sdk iphoneos \
             -showBuildSettings 2>/dev/null | \
-            grep -E 'OTHER_LDFLAGS|EXPORTED|STRIP|DEAD_CODE|UNDEFINED' || \
+            grep -E 'OTHER_LDFLAGS|EXPORTED|STRIP|DEAD_CODE|SRCROOT' || \
             echo "(xcodebuild -showBuildSettings failed)"
           echo ""
 
-          echo "=== 0b. Static library verification ==="
+          echo "=== 0b. Verify ffi_exports.exp exists ==="
+          SRCROOT=$(xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner -configuration Release -sdk iphoneos \
+            -showBuildSettings 2>/dev/null | grep ' SRCROOT ' | awk '{print $NF}')
+          EXP_FILE="${SRCROOT}/Runner/ffi_exports.exp"
+          if [ -f "$EXP_FILE" ]; then
+            echo "✅ $EXP_FILE exists ($(wc -l < "$EXP_FILE") lines)"
+            grep -v '^#' "$EXP_FILE" | grep -v '^$' | head -10
+          else
+            echo "❌ MISSING: $EXP_FILE"
+            echo "   SRCROOT=$SRCROOT"
+            ls -la "${SRCROOT}/Runner/" 2>/dev/null | head -20
+          fi
+          echo ""
+
+          echo "=== 0c. Static library verification ==="
           for LIB in ios/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a \
                      ios/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a; do
             if [ -f "$LIB" ]; then
               SIZE=$(ls -lh "$LIB" | awk '{print $5}')
-              SYM_COUNT=$(nm -gU "$LIB" 2>/dev/null | grep -cE '_htp_|_htd_' || echo 0)
+              SYM_COUNT=0
+              SYM_COUNT=$(nm -gU "$LIB" 2>/dev/null | grep -cE '_htp_|_htd_') || true
               echo "✅ $LIB ($SIZE, $SYM_COUNT FFI symbols)"
-              nm -gU "$LIB" 2>/dev/null | grep -E '_htp_|_htd_' | head -10
+              nm -gU "$LIB" 2>/dev/null | grep -E '_htp_|_htd_' | head -15
+              if [ "$SYM_COUNT" -eq 0 ]; then
+                echo "   (showing first 15 global symbols for debug):"
+                nm -gU "$LIB" 2>/dev/null | head -15
+              fi
             else
               echo "❌ MISSING: $LIB"
             fi
@@ -183,36 +205,33 @@ jobs:
           echo ""
 
           echo "=== 2. Export trie (full dump) ==="
-          objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -60
-          EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -c '0x' || echo 0)
+          objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -80
+          EXPORT_TOTAL=0
+          EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -c '0x') || true
           echo "Total export trie entries: $EXPORT_TOTAL"
           echo ""
 
           echo "=== 3. FFI symbols in export trie ==="
-          FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE 'htp_|htd_' || echo 0)
+          FFI_EXPORTS=0
+          FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE 'htp_|htd_') || true
           objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E 'htp_|htd_' | head -40 || echo "(none found)"
           echo "FFI export count: $FFI_EXPORTS"
           echo ""
 
-          echo "=== 4. FFI symbols in nlist ==="
-          nm -gU "$APP_BINARY" 2>/dev/null | grep -E '_htp_|_htd_' | head -40 || echo "(none — binary may be stripped)"
-          echo ""
-
-          echo "=== 5. hexa_force_link in export trie ==="
+          echo "=== 4. hexa_force_link_symbols in export trie ==="
           objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -i "force_link" || echo "(not found)"
           echo ""
 
-          echo "=== 6. Section sizes ==="
+          echo "=== 5. Section sizes ==="
           size -m "$APP_BINARY" 2>/dev/null | head -20 || echo "(size command failed)"
           echo ""
 
           echo "=== HARD VERIFICATION ==="
-          if [ "$FFI_EXPORTS" -gt 0 ] 2>/dev/null; then
+          if [ "$FFI_EXPORTS" -gt 0 ]; then
             echo "✅ Found $FFI_EXPORTS FFI symbols in export trie — dlsym should work"
           else
             echo "❌ FAIL: No FFI symbols in export trie — dlsym will fail at runtime"
             echo "📋 Export trie has $EXPORT_TOTAL total entries"
-            echo "📋 Next steps: check if OTHER_LDFLAGS conditional is effective"
             exit 1
           fi
 

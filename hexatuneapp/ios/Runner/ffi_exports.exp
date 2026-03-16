@@ -1,9 +1,11 @@
-# FFI symbols exported for Dart DynamicLibrary.process() → dlsym(RTLD_DEFAULT)
+# FFI symbols exported for Dart DynamicLibrary.process() / dlsym(RTLD_DEFAULT).
 #
-# Without an explicit export list, ld64 may omit static-library symbols
-# from the MH_EXECUTE export trie.  This file forces those entries so
-# that Dart FFI lookups succeed at runtime.
+# iOS MH_EXECUTE does NOT export symbols by default. This file tells the
+# linker which symbols to place in the Mach-O export trie so that Dart
+# FFI lookups succeed at runtime.
 #
+# Force-link helper (called from AppDelegate)
+_hexa_force_link_symbols
 # Protocol encoding  (Rust crate: hexa-tune-proto-ffi)
 _htp_at_encode
 _htp_at_parse

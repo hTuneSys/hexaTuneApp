@@ -1,6 +1,10 @@
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"
 #include "Generated.xcconfig"
 
+// Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
+// MH_EXECUTE (iOS main binary) does NOT export symbols by default.
+OTHER_LDFLAGS = $(inherited) -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
+
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9
 CODE_SIGN_STYLE = Manual
