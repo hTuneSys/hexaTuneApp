@@ -1,4 +1,4 @@
-# FFI symbols exported for Dart DynamicLibrary.executable() → dlsym()
+# FFI symbols exported for Dart DynamicLibrary.process() → dlsym(RTLD_DEFAULT)
 #
 # Without an explicit export list, ld64 may omit static-library symbols
 # from the MH_EXECUTE export trie.  This file forces those entries so

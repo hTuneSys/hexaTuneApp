@@ -290,7 +290,7 @@ class HexaTuneProto {
   }
 
   /// Use the process-level symbols (iOS static linking).
-  HexaTuneProto.open() : _lib = DynamicLibrary.executable() {
+  HexaTuneProto.open() : _lib = DynamicLibrary.process() {
     _bindAll();
   }
 

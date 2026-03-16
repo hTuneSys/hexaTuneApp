@@ -262,7 +262,7 @@ class DspBindings {
     if (Platform.isAndroid) {
       _lib = DynamicLibrary.open('libhexatune_dsp_ffi.so');
     } else if (Platform.isIOS) {
-      _lib = DynamicLibrary.executable();
+      _lib = DynamicLibrary.process();
     } else {
       throw UnsupportedError(
         'hexaTuneDsp FFI is not supported on ${Platform.operatingSystem}',

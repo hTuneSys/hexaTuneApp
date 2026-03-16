@@ -413,15 +413,18 @@
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
-				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -615,15 +618,18 @@
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
-				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -660,15 +666,18 @@
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				"OTHER_LDFLAGS[sdk=iphonesimulator*]" = (
 					"$(inherited)",
 					"-force_load",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64-simulator/libhexatune_dsp_ffi.a",
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
+					"-exported_symbols_list",
+					"$(PROJECT_DIR)/Runner/ffi_exports.exp",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
-				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

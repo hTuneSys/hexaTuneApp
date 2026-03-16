@@ -149,19 +149,39 @@ jobs:
       - name: Verify FFI symbols in binary
         if: always()
         run: |
-          BINARY=$(find hexatuneapp/build/ios/archive -name "Runner" -not -name "*.dSYM" -type f 2>/dev/null | head -1)
-          if [ -z "$BINARY" ]; then
-            echo "⚠️ Runner binary not found in archive"
-            exit 0
+          echo "=== Searching for Runner binary ==="
+          APP_BINARY=$(find hexatuneapp/build/ios/archive -path "*/Runner.app/Runner" -type f 2>/dev/null | head -1)
+          if [ -z "$APP_BINARY" ]; then
+            echo "❌ Runner binary not found in archive"
+            echo "=== Archive contents ==="
+            find hexatuneapp/build/ios/archive -type f -name "Runner*" 2>/dev/null || true
+            find hexatuneapp/build/ios/archive -name "*.app" -type d 2>/dev/null || true
+            exit 1
           fi
-          echo "Binary: $BINARY"
-          echo "=== Global defined symbols (nlist) ==="
-          nm -gU "$BINARY" 2>/dev/null | grep -E '_htp_|_htd_' | head -35 || echo "⚠️ No FFI symbols in nlist"
-          echo "=== Export trie ==="
-          objdump --exports-trie "$BINARY" 2>/dev/null | grep -E 'htp_|htd_' | head -35 || echo "⚠️ No FFI symbols in export trie"
-          echo "=== FFI symbol count ==="
-          COUNT=$(nm -gU "$BINARY" 2>/dev/null | grep -cE '_htp_|_htd_' || echo 0)
-          echo "Found $COUNT FFI symbols (expected 29)"
+          echo "Binary: $APP_BINARY"
+
+          echo ""
+          echo "=== Symbol table (nm -gU) ==="
+          nm -gU "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "⚠️ No FFI symbols in nlist"
+
+          echo ""
+          echo "=== Export trie (objdump --macho --exports-trie) ==="
+          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "⚠️ No FFI symbols in export trie"
+
+          echo ""
+          echo "=== Hard verification ==="
+          nm -gU "$APP_BINARY" 2>/dev/null | grep -q "_htp_at_encode" || { echo "❌ FAIL: htp_at_encode NOT in symbol table"; exit 1; }
+          echo "✅ htp_at_encode found in symbol table"
+          nm -gU "$APP_BINARY" 2>/dev/null | grep -q "_htd_engine_init" || { echo "❌ FAIL: htd_engine_init NOT in symbol table"; exit 1; }
+          echo "✅ htd_engine_init found in symbol table"
+          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -q "htp_at_encode" || { echo "❌ FAIL: htp_at_encode NOT in export trie"; exit 1; }
+          echo "✅ htp_at_encode found in export trie"
+          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -q "htd_engine_init" || { echo "❌ FAIL: htd_engine_init NOT in export trie"; exit 1; }
+          echo "✅ htd_engine_init found in export trie"
+
+          echo ""
+          COUNT=$(nm -gU "$APP_BINARY" 2>/dev/null | grep -cE '_htp_|_htd_' || echo 0)
+          echo "✅ All FFI symbol checks passed ($COUNT symbols found)"
 
       - name: Upload IPA artifact
         if: always()
