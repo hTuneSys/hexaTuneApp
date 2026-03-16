@@ -1,3 +1,10 @@
+## [1.3.14](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.13...v1.3.14) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** use -Wl,-u flags instead of DEAD_CODE_STRIPPING=NO ([5679230](https://github.com/hTuneSys/hexaTuneApp/commit/567923081a42c3f5ae72af39bb79dcc71f954698)), closes [Build#34](https://github.com/Build/issues/34)
+
 ## [1.3.13](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.12...v1.3.13) (2026-03-16)
 
 
