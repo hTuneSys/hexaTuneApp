@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.6...v1.3.7) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ci:** correct diagnostic find path for working-directory default ([fddebc7](https://github.com/hTuneSys/hexaTuneApp/commit/fddebc77b89f64d567a5f8a6b738212cb586484d))
+
 ## [1.3.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.5...v1.3.6) (2026-03-16)
 
 
