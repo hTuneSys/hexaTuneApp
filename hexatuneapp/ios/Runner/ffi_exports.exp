@@ -1,0 +1,37 @@
+# FFI symbols exported for Dart DynamicLibrary.executable() → dlsym()
+#
+# Without an explicit export list, ld64 may omit static-library symbols
+# from the MH_EXECUTE export trie.  This file forces those entries so
+# that Dart FFI lookups succeed at runtime.
+#
+# Protocol encoding  (Rust crate: hexa-tune-proto-ffi)
+_htp_at_encode
+_htp_at_parse
+_htp_sysex_frame
+_htp_sysex_unframe
+_htp_usb_packetize
+_htp_usb_depacketize
+_htp_encode_to_packets
+# DSP engine  (Rust crate: hexatune-dsp-ffi)
+_htd_engine_init
+_htd_engine_destroy
+_htd_engine_start
+_htd_engine_stop
+_htd_engine_stop_graceful
+_htd_engine_render
+_htd_engine_set_base
+_htd_engine_clear_base
+_htd_engine_set_texture
+_htd_engine_clear_texture
+_htd_engine_set_event
+_htd_engine_clear_event
+_htd_engine_clear_all_layers
+_htd_engine_set_base_gain
+_htd_engine_set_texture_gain
+_htd_engine_set_event_gain
+_htd_engine_set_binaural_gain
+_htd_engine_set_master_gain
+_htd_engine_update_config
+_htd_engine_load_base_wav
+_htd_engine_is_running
+_htd_engine_sample_rate

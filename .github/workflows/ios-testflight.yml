@@ -146,6 +146,23 @@ jobs:
           cd "$GITHUB_WORKSPACE"
           bundle exec fastlane ios beta
 
+      - name: Verify FFI symbols in binary
+        if: always()
+        run: |
+          BINARY=$(find hexatuneapp/build/ios/archive -name "Runner" -not -name "*.dSYM" -type f 2>/dev/null | head -1)
+          if [ -z "$BINARY" ]; then
+            echo "⚠️ Runner binary not found in archive"
+            exit 0
+          fi
+          echo "Binary: $BINARY"
+          echo "=== Global defined symbols (nlist) ==="
+          nm -gU "$BINARY" 2>/dev/null | grep -E '_htp_|_htd_' | head -35 || echo "⚠️ No FFI symbols in nlist"
+          echo "=== Export trie ==="
+          objdump --exports-trie "$BINARY" 2>/dev/null | grep -E 'htp_|htd_' | head -35 || echo "⚠️ No FFI symbols in export trie"
+          echo "=== FFI symbol count ==="
+          COUNT=$(nm -gU "$BINARY" 2>/dev/null | grep -cE '_htp_|_htd_' || echo 0)
+          echo "Found $COUNT FFI symbols (expected 29)"
+
       - name: Upload IPA artifact
         if: always()
         uses: actions/upload-artifact@v6

@@ -69,6 +69,7 @@
 		B611844C4B2EBEDFCC8BACCB /* DspAudioDecoder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DspAudioDecoder.swift; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F7081234AB01 /* ffi_force_export.c */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.c; path = ffi_force_export.c; sourceTree = "<group>"; };
 		F1A2B3C4D5E6F7081234AB02 /* hexa_tune_proto.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = hexa_tune_proto.h; sourceTree = "<group>"; };
+		F1A2B3C4D5E6F7081234AB03 /* ffi_exports.exp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.exports; path = ffi_exports.exp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +141,7 @@
 				6270DE05A899F4DC66D8B546 /* DspMethodChannelHandler.swift */,
 				F1A2B3C4D5E6F7081234AB01 /* ffi_force_export.c */,
 				F1A2B3C4D5E6F7081234AB02 /* hexa_tune_proto.h */,
+				F1A2B3C4D5E6F7081234AB03 /* ffi_exports.exp */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -419,6 +421,7 @@
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
+				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -620,6 +623,7 @@
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
+				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -664,6 +668,7 @@
 					"$(PROJECT_DIR)/Frameworks/HexaTuneProto.xcframework/ios-arm64-simulator/libhexa_tune_proto_ffi.a",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp;
+				EXPORTED_SYMBOLS_FILE = Runner/ffi_exports.exp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
