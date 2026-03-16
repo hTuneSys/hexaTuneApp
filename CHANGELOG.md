@@ -1,3 +1,10 @@
+## [1.3.8](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.7...v1.3.8) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ci:** add comprehensive FFI binary diagnostics ([ed2ef09](https://github.com/hTuneSys/hexaTuneApp/commit/ed2ef092fd63817b7d169e1f98c78d27d120d29d))
+
 ## [1.3.7](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.6...v1.3.7) (2026-03-16)
 
 
