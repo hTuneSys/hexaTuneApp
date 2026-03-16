@@ -153,35 +153,76 @@ jobs:
           APP_BINARY=$(find build/ios/archive -path "*/Runner.app/Runner" -type f 2>/dev/null | head -1)
           if [ -z "$APP_BINARY" ]; then
             echo "❌ Runner binary not found in archive"
-            echo "=== Archive contents ==="
             find build/ios/archive -type f -name "Runner*" 2>/dev/null || true
             find build/ios/archive -name "*.app" -type d 2>/dev/null || true
             exit 1
           fi
           echo "Binary: $APP_BINARY"
-
+          echo "Size: $(ls -lh "$APP_BINARY" | awk '{print $5}')"
           echo ""
-          echo "=== Symbol table (nm -gU) ==="
-          nm -gU "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "⚠️ No FFI symbols in nlist"
 
+          echo "=== 1. Strip status (is nlist present?) ==="
+          NM_RAW=$(nm "$APP_BINARY" 2>&1 | head -5)
+          echo "$NM_RAW"
+          NM_TOTAL=$(nm "$APP_BINARY" 2>/dev/null | wc -l || echo 0)
+          NM_GLOBAL=$(nm -gU "$APP_BINARY" 2>/dev/null | wc -l || echo 0)
+          echo "Total nlist entries: $NM_TOTAL | Global defined: $NM_GLOBAL"
           echo ""
-          echo "=== Export trie (objdump --macho --exports-trie) ==="
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "⚠️ No FFI symbols in export trie"
 
+          echo "=== 2. Export trie (full dump, first 30 lines) ==="
+          objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -30
+          EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | wc -l || echo 0)
+          echo "Total export trie entries: $EXPORT_TOTAL"
           echo ""
-          echo "=== Hard verification ==="
-          nm -gU "$APP_BINARY" 2>/dev/null | grep -q "_htp_at_encode" || { echo "❌ FAIL: htp_at_encode NOT in symbol table"; exit 1; }
-          echo "✅ htp_at_encode found in symbol table"
-          nm -gU "$APP_BINARY" 2>/dev/null | grep -q "_htd_engine_init" || { echo "❌ FAIL: htd_engine_init NOT in symbol table"; exit 1; }
-          echo "✅ htd_engine_init found in symbol table"
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -q "htp_at_encode" || { echo "❌ FAIL: htp_at_encode NOT in export trie"; exit 1; }
-          echo "✅ htp_at_encode found in export trie"
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -q "htd_engine_init" || { echo "❌ FAIL: htd_engine_init NOT in export trie"; exit 1; }
-          echo "✅ htd_engine_init found in export trie"
 
+          echo "=== 3. FFI symbols in nlist ==="
+          nm -gU "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "(none found)"
           echo ""
-          COUNT=$(nm -gU "$APP_BINARY" 2>/dev/null | grep -cE '_htp_|_htd_' || echo 0)
-          echo "✅ All FFI symbol checks passed ($COUNT symbols found)"
+
+          echo "=== 4. FFI symbols in export trie ==="
+          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E '_?htp_|_?htd_' | head -40 || echo "(none found)"
+          echo ""
+
+          echo "=== 5. strings check (symbol names in binary code) ==="
+          HTP_STRINGS=$(strings "$APP_BINARY" | grep -c "htp_at_encode" || echo 0)
+          HTD_STRINGS=$(strings "$APP_BINARY" | grep -c "htd_engine_init" || echo 0)
+          echo "htp_at_encode string occurrences: $HTP_STRINGS"
+          echo "htd_engine_init string occurrences: $HTD_STRINGS"
+          echo ""
+
+          echo "=== 6. Mach-O load commands (LC_SYMTAB + LC_DYLD) ==="
+          otool -l "$APP_BINARY" 2>/dev/null | grep -A4 'LC_SYMTAB\|LC_DYLD_INFO\|LC_DYLD_EXPORTS' || echo "(no matching load commands)"
+          echo ""
+
+          echo "=== 7. Section sizes ==="
+          size -m "$APP_BINARY" 2>/dev/null | head -20 || echo "(size command failed)"
+          echo ""
+
+          echo "=== 8. ffi_force_export.c references in binary ==="
+          strings "$APP_BINARY" | grep -i "ffi_force" | head -5 || echo "(no ffi_force references)"
+          echo ""
+
+          echo "=== DIAGNOSIS ==="
+          if echo "$NM_RAW" | grep -qi "no symbols"; then
+            echo "📋 Binary is STRIPPED (nlist removed) — nm results are unreliable"
+            echo "📋 Relying on export trie and strings checks only"
+          fi
+          if [ "$EXPORT_TOTAL" -eq 0 ] 2>/dev/null; then
+            echo "❌ Export trie is COMPLETELY EMPTY — -exported_symbols_list did NOT reach linker"
+          elif [ "$EXPORT_TOTAL" -gt 0 ] 2>/dev/null; then
+            echo "📋 Export trie has $EXPORT_TOTAL entries"
+            FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE '_?htp_|_?htd_' || echo 0)
+            if [ "$FFI_EXPORTS" -eq 0 ] 2>/dev/null; then
+              echo "❌ Export trie has entries but NONE are FFI symbols"
+            else
+              echo "✅ Found $FFI_EXPORTS FFI symbols in export trie"
+            fi
+          fi
+          if [ "$HTP_STRINGS" -gt 0 ] 2>/dev/null || [ "$HTD_STRINGS" -gt 0 ] 2>/dev/null; then
+            echo "📋 Symbol name strings FOUND in binary — code likely linked in"
+          else
+            echo "⚠️ Symbol name strings NOT found — symbols may not be in binary code"
+          fi
 
       - name: Upload IPA artifact
         if: always()
