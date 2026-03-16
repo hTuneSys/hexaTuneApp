@@ -1,3 +1,15 @@
+# [1.3.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.9...v1.3.0) (2026-03-16)
+
+
+### Bug Fixes
+
+* **notification:** implement foreground display, background handler, and fix iOS APNs ([9535b8c](https://github.com/hTuneSys/hexaTuneApp/commit/9535b8c9c1686895115475512bc0be0db509094e))
+
+
+### Features
+
+* **log:** add debug log monitor page with in-memory capture ([3649dba](https://github.com/hTuneSys/hexaTuneApp/commit/3649dba0aca10099b87a8b7fe3343047376c9257))
+
 ## [1.2.9](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.8...v1.2.9) (2026-03-15)
 
 
