@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.3...v1.3.4) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** force-export FFI symbols to survive dead-code stripping ([dfa8af2](https://github.com/hTuneSys/hexaTuneApp/commit/dfa8af27139b8809914cb952637a5e428782757a))
+
 ## [1.3.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.2...v1.3.3) (2026-03-16)
 
 
