@@ -212,7 +212,7 @@ class DspBindings {
   DspBindings(this._logService);
 
   final LogService _logService;
-  late final DynamicLibrary _lib;
+  late DynamicLibrary _lib;
   bool _loaded = false;
 
   /// Whether the native library has been loaded successfully.
@@ -228,35 +228,35 @@ class DspBindings {
   }
 
   // Lifecycle
-  late final _InitD _htdEngineInit;
-  late final _DestroyD _htdEngineDestroy;
-  late final _StartD _htdEngineStart;
-  late final _StopD _htdEngineStop;
-  late final _StopGracefulD _htdEngineStopGraceful;
-  late final _RenderD _htdEngineRender;
+  late _InitD _htdEngineInit;
+  late _DestroyD _htdEngineDestroy;
+  late _StartD _htdEngineStart;
+  late _StopD _htdEngineStop;
+  late _StopGracefulD _htdEngineStopGraceful;
+  late _RenderD _htdEngineRender;
 
   // Layer management
-  late final _SetBaseD _htdEngineSetBase;
-  late final _ClearBaseD _htdEngineClearBase;
-  late final _SetTextureD _htdEngineSetTexture;
-  late final _ClearTextureD _htdEngineClearTexture;
-  late final _SetEventD _htdEngineSetEvent;
-  late final _ClearEventD _htdEngineClearEvent;
-  late final _ClearAllLayersD _htdEngineClearAllLayers;
+  late _SetBaseD _htdEngineSetBase;
+  late _ClearBaseD _htdEngineClearBase;
+  late _SetTextureD _htdEngineSetTexture;
+  late _ClearTextureD _htdEngineClearTexture;
+  late _SetEventD _htdEngineSetEvent;
+  late _ClearEventD _htdEngineClearEvent;
+  late _ClearAllLayersD _htdEngineClearAllLayers;
 
   // Gain setters
-  late final _SetGainD _htdEngineSetBaseGain;
-  late final _SetGainD _htdEngineSetTextureGain;
-  late final _SetGainD _htdEngineSetEventGain;
-  late final _SetGainD _htdEngineSetBinauralGain;
-  late final _SetGainD _htdEngineSetMasterGain;
+  late _SetGainD _htdEngineSetBaseGain;
+  late _SetGainD _htdEngineSetTextureGain;
+  late _SetGainD _htdEngineSetEventGain;
+  late _SetGainD _htdEngineSetBinauralGain;
+  late _SetGainD _htdEngineSetMasterGain;
 
   // Config update
-  late final _UpdateConfigD _htdEngineUpdateConfig;
+  late _UpdateConfigD _htdEngineUpdateConfig;
 
   // Query
-  late final _IsRunningD _htdEngineIsRunning;
-  late final _SampleRateD _htdEngineSampleRate;
+  late _IsRunningD _htdEngineIsRunning;
+  late _SampleRateD _htdEngineSampleRate;
 
   void _load() {
     if (Platform.isAndroid) {
