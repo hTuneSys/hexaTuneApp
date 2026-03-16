@@ -4,7 +4,10 @@
 // Export Rust FFI symbols so dlsym(RTLD_DEFAULT) can find them at runtime.
 // See Release.xcconfig for detailed explanation of this configuration.
 DEAD_CODE_STRIPPING = NO
-OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
+EXPORTED_SYMBOLS_FILE = $(SRCROOT)/Runner/ffi_exports.exp
+LD_GENERATE_MAP_FILE = YES
+LD_MAP_FILE_PATH = $(BUILD_DIR)/ffi-link-map-$(CURRENT_ARCH).txt
+OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic
 
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9

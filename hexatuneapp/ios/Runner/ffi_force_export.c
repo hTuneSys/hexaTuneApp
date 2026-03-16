@@ -11,14 +11,15 @@
 // Solution: This file creates an unbreakable reference chain:
 //   _main -> AppDelegate -> hexa_force_link_symbols() -> all FFI symbols
 //
-// AppDelegate.swift MUST call hexa_force_link_symbols() during launch.
-// This ensures the linker includes all referenced Rust objects and marks
-// them as reachable, placing them in the export trie.
+// The visibility("default") attribute ensures the symbols remain globally
+// visible through LTO. The used attribute prevents the compiler from
+// discarding the array. Together with -export_dynamic and
+// EXPORTED_SYMBOLS_FILE, this guarantees export trie presence.
 
 #include "hexatune_dsp_ffi.h"
 #include "hexa_tune_proto.h"
 
-__attribute__((used))
+__attribute__((used, visibility("default")))
 static const void *_ffi_force_export[] = {
     // ── DSP engine ──────────────────────────────────────────────
     (const void *)&htd_engine_init,
@@ -55,6 +56,7 @@ static const void *_ffi_force_export[] = {
 
 // Called from AppDelegate.swift to create a code-level reference chain
 // from _main to every Rust FFI symbol. Returns the number of symbols.
+__attribute__((visibility("default")))
 int hexa_force_link_symbols(void) {
     int count = (int)(sizeof(_ffi_force_export) / sizeof(_ffi_force_export[0]));
     volatile const void *ref = NULL;

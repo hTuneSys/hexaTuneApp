@@ -155,7 +155,7 @@ jobs:
           SETTINGS=$(xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner -configuration Release -sdk iphoneos \
             -showBuildSettings 2>/dev/null)
-          echo "$SETTINGS" | grep -E 'OTHER_LDFLAGS|EXPORTED|STRIP|DEAD_CODE|SRCROOT' || \
+          echo "$SETTINGS" | grep -E 'OTHER_LDFLAGS|EXPORTED_SYMBOLS_FILE|STRIP|DEAD_CODE|SRCROOT|LD_GENERATE_MAP|LD_MAP_FILE' || \
             echo "(xcodebuild -showBuildSettings failed)"
           echo ""
 
@@ -171,16 +171,21 @@ jobs:
           else
             echo "❌ -export_dynamic NOT found"; PASS=false
           fi
-          if echo "$SETTINGS" | grep -q 'exported_symbols_list'; then
-            echo "✅ -exported_symbols_list found (places symbols in export trie)"
+          if echo "$SETTINGS" | grep -q 'exported_symbols_list\|EXPORTED_SYMBOLS_FILE'; then
+            echo "✅ Export list found (places symbols in export trie)"
           else
-            echo "❌ -exported_symbols_list NOT found"; PASS=false
+            echo "❌ No EXPORTED_SYMBOLS_FILE or -exported_symbols_list found"; PASS=false
           fi
           DCS=$(echo "$SETTINGS" | grep 'DEAD_CODE_STRIPPING' | head -1 | awk '{print $NF}')
           if [ "$DCS" = "NO" ]; then
             echo "✅ DEAD_CODE_STRIPPING = NO (prevents Rust FFI code stripping)"
           else
             echo "❌ DEAD_CODE_STRIPPING = $DCS (should be NO)"; PASS=false
+          fi
+          if echo "$SETTINGS" | grep 'OTHER_LDFLAGS' | grep -q 'no_exported_symbols'; then
+            echo "❌ -no_exported_symbols found (silently disables export trie!)"; PASS=false
+          else
+            echo "✅ No -no_exported_symbols override"
           fi
           if [ "$PASS" = true ]; then
             echo "✅ FFI export configuration correct"
@@ -189,8 +194,30 @@ jobs:
           fi
           echo ""
 
-          echo "=== 1a. Proto .a verification ==="
           PROTO_LIB="ios/Frameworks/HexaTuneProto.xcframework/ios-arm64/libhexa_tune_proto_ffi.a"
+          DSP_LIB="ios/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a"
+
+          echo "=== 0c. Duplicate Rust runtime symbol check ==="
+          if [ -f "$PROTO_LIB" ] && [ -f "$DSP_LIB" ]; then
+            PROTO_RT=$(nm -gU "$PROTO_LIB" 2>/dev/null | awk '{print $NF}' | grep -E '__rust_alloc|compiler_builtins' | sort -u)
+            DSP_RT=$(nm -gU "$DSP_LIB" 2>/dev/null | awk '{print $NF}' | grep -E '__rust_alloc|compiler_builtins' | sort -u)
+            if [ -z "$DSP_RT" ]; then
+              DSP_RT=$(xcrun llvm-nm -gU "$DSP_LIB" 2>/dev/null | awk '{print $NF}' | grep -E '__rust_alloc|compiler_builtins' | sort -u)
+            fi
+            DUPS=$(comm -12 <(echo "$PROTO_RT") <(echo "$DSP_RT") 2>/dev/null | head -5)
+            if [ -n "$DUPS" ]; then
+              DUP_COUNT=$(echo "$DUPS" | wc -l | tr -d ' ')
+              echo "⚠️ $DUP_COUNT shared Rust runtime symbols (handled by -ld_classic):"
+              echo "$DUPS" | head -3
+            else
+              echo "✅ No shared Rust runtime symbols detected"
+            fi
+          else
+            echo "📋 Skipped (one or both .a files missing)"
+          fi
+          echo ""
+
+          echo "=== 1a. Proto .a verification ==="
           if [ -f "$PROTO_LIB" ]; then
             SIZE=$(ls -lh "$PROTO_LIB" | awk '{print $5}')
             HTP_COUNT=0
@@ -203,7 +230,6 @@ jobs:
           echo ""
 
           echo "=== 1b. DSP .a verification ==="
-          DSP_LIB="ios/Frameworks/HexaTuneDspFfi.xcframework/ios-arm64/libhexatune_dsp_ffi.a"
           if [ -f "$DSP_LIB" ]; then
             SIZE=$(ls -lh "$DSP_LIB" | awk '{print $5}')
             HTD_COUNT=0
@@ -215,8 +241,13 @@ jobs:
               nm -gU "$DSP_LIB" 2>/dev/null | grep '_htd_' | head -25
             else
               echo "   htd_ not visible (expected: LTO+strip=symbols hides nlist)"
-              echo "   First 20 global symbols:"
-              nm -gU "$DSP_LIB" 2>/dev/null | head -20
+              echo "   Trying llvm-nm for bitcode archives..."
+              LLVM_HTD=0
+              LLVM_HTD=$(xcrun llvm-nm -gU "$DSP_LIB" 2>/dev/null | grep -c '_htd_') || true
+              echo "   llvm-nm: $LLVM_HTD htd_ symbols"
+              if [ "$LLVM_HTD" -gt 0 ]; then
+                xcrun llvm-nm -gU "$DSP_LIB" 2>/dev/null | grep '_htd_' | head -10
+              fi
               echo "   Object files in archive:"
               ar -t "$DSP_LIB" 2>/dev/null | head -10
             fi
@@ -235,17 +266,35 @@ jobs:
           echo "Size: $(ls -lh "$APP_BINARY" | awk '{print $5}')"
           echo ""
 
-          echo "=== 3. Export trie (full dump) ==="
-          objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -80
-          EXPORT_TOTAL=0
-          EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -c '0x') || true
-          echo "Total export trie entries: $EXPORT_TOTAL"
+          echo "=== 2b. Mach-O load commands (export format) ==="
+          xcrun otool -l "$APP_BINARY" 2>/dev/null | grep -E 'LC_DYLD_(EXPORTS_TRIE|INFO|CHAINED_FIXUPS)|LC_SYMTAB' -A2 | head -20 || echo "(otool failed)"
+          echo ""
+
+          echo "=== 3. Export trie (dyld_info preferred) ==="
+          DYLD_EXPORTS=""
+          if xcrun dyld_info -exports "$APP_BINARY" > /tmp/dyld_exports.txt 2>/dev/null; then
+            DYLD_EXPORTS=/tmp/dyld_exports.txt
+            head -80 "$DYLD_EXPORTS"
+            EXPORT_TOTAL=$(grep -c '0x' "$DYLD_EXPORTS" 2>/dev/null) || EXPORT_TOTAL=0
+            echo "Total export trie entries (dyld_info): $EXPORT_TOTAL"
+          else
+            echo "(dyld_info unavailable, falling back to objdump)"
+            objdump --macho --exports-trie "$APP_BINARY" 2>&1 | head -80
+            EXPORT_TOTAL=0
+            EXPORT_TOTAL=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -c '0x') || true
+            echo "Total export trie entries (objdump): $EXPORT_TOTAL"
+          fi
           echo ""
 
           echo "=== 4. FFI symbols in export trie ==="
           FFI_EXPORTS=0
-          FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE 'htp_|htd_') || true
-          objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E 'htp_|htd_|force_link' | head -40 || echo "(none found)"
+          if [ -n "$DYLD_EXPORTS" ]; then
+            FFI_EXPORTS=$(grep -cE 'htp_|htd_' "$DYLD_EXPORTS" 2>/dev/null) || FFI_EXPORTS=0
+            grep -E 'htp_|htd_|force_link' "$DYLD_EXPORTS" | head -40 || echo "(none found)"
+          else
+            FFI_EXPORTS=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -cE 'htp_|htd_') || FFI_EXPORTS=0
+            objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null | grep -E 'htp_|htd_|force_link' | head -40 || echo "(none found)"
+          fi
           echo "FFI export count: $FFI_EXPORTS"
           echo ""
 
@@ -277,11 +326,32 @@ jobs:
           else
             echo "❌ Binary ≤ 860K — Rust FFI code stripped"
           fi
-          if [ "$FFI_EXPORTS" -gt 0 ]; then
-            echo "✅ Found $FFI_EXPORTS FFI symbols in export trie — dlsym should work"
+
+          echo "=== STRICT PER-SYMBOL GATE ==="
+          EXPORTS_DATA=""
+          if [ -n "$DYLD_EXPORTS" ]; then
+            EXPORTS_DATA=$(cat "$DYLD_EXPORTS")
           else
-            echo "❌ FAIL: No FFI symbols in export trie — dlsym will fail at runtime"
+            EXPORTS_DATA=$(objdump --macho --exports-trie "$APP_BINARY" 2>/dev/null)
+          fi
+          REQUIRED_SYMS="htp_at_encode htd_engine_init hexa_force_link_symbols"
+          GATE_PASS=true
+          for sym in $REQUIRED_SYMS; do
+            if echo "$EXPORTS_DATA" | grep -q "$sym"; then
+              echo "✅ $sym found in export trie"
+            else
+              echo "❌ $sym NOT in export trie — dlsym will fail"
+              GATE_PASS=false
+            fi
+          done
+          echo "Total FFI exports: $FFI_EXPORTS"
+          if [ "$GATE_PASS" = true ]; then
+            echo "✅ All required symbols exported — dlsym should work at runtime"
+          else
+            echo "❌ FAIL: Required FFI symbols missing from export trie"
             echo "📋 Export trie: $EXPORT_TOTAL entries | strings: htp=$HTP_STR htd=$HTD_STR force=$FORCE_STR"
+            echo "📋 If binary>1.5M but exports=0: code included but not exported"
+            echo "📋 If binary<860K: code stripped entirely"
             exit 1
           fi
 
@@ -290,7 +360,7 @@ jobs:
         run: |
           set +e
           echo "=== Link map: FFI symbol inclusion ==="
-          LINK_MAP=$(find build/ios -name "*-LinkMap.txt" -type f 2>/dev/null | head -1)
+          LINK_MAP=$(find build/ios -name "ffi-link-map*.txt" -o -name "*-LinkMap*.txt" 2>/dev/null | head -1)
           if [ -z "$LINK_MAP" ]; then
             LINK_MAP=$(find ~/Library/Developer/Xcode -name "*Runner*LinkMap*" -type f 2>/dev/null | head -1)
           fi
@@ -308,8 +378,12 @@ jobs:
             echo ""
             echo "--- Dead stripped symbols (FFI related) ---"
             grep -i 'dead.*htp_\|dead.*htd_\|htp_.*dead\|htd_.*dead' "$LINK_MAP" | head -20 || echo "(none found — good)"
+            echo ""
+            echo "📋 Interpretation:"
+            echo "   Symbol in link map but NOT in export trie → export policy problem"
+            echo "   Symbol NOT in link map → archive extraction/retention problem"
           else
-            echo "⚠️ Link map not found (WRITE_LINK_MAP_FILE may not be set by Xcode)"
+            echo "⚠️ Link map not found (check LD_GENERATE_MAP_FILE and LD_MAP_FILE_PATH)"
           fi
 
       - name: Upload IPA artifact

@@ -9,16 +9,20 @@
 // masks the duplicate but also strips ALL Rust FFI code (832K binary).
 //
 // Solution:
-//   DEAD_CODE_STRIPPING=NO  — keeps Rust FFI code alive
-//   -ld_classic              — legacy linker silently resolves the duplicate
-//   -export_dynamic          — preserves global symbols through LTO
-//   -exported_symbols_list   — places FFI symbols into the Mach-O export trie
+//   DEAD_CODE_STRIPPING=NO    — keeps Rust FFI code alive
+//   -ld_classic                — legacy linker silently resolves the duplicate
+//   -export_dynamic            — preserves global symbols through LTO
+//   EXPORTED_SYMBOLS_FILE      — places FFI symbols into the Mach-O export trie
+//   LD_GENERATE_MAP_FILE       — produces link map for CI diagnostics
 //
-// Long-term fix: rebuild hexaTuneDsp with strip="debuginfo" so htd_*
-// symbols appear in SYMDEF, then remove -force_load → no duplicate →
-// migrate back to ld_prime.
+// Long-term fix: combine DSP + Proto into one Rust crate (one staticlib),
+// eliminating duplicate runtime symbols. Then remove -ld_classic and
+// -force_load, switch back to ld_prime with DEAD_CODE_STRIPPING=YES.
 DEAD_CODE_STRIPPING = NO
-OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic -Wl,-exported_symbols_list,$(SRCROOT)/Runner/ffi_exports.exp
+EXPORTED_SYMBOLS_FILE = $(SRCROOT)/Runner/ffi_exports.exp
+LD_GENERATE_MAP_FILE = YES
+LD_MAP_FILE_PATH = $(BUILD_DIR)/ffi-link-map-$(CURRENT_ARCH).txt
+OTHER_LDFLAGS = $(inherited) -Wl,-ld_classic -Wl,-export_dynamic
 
 PRODUCT_BUNDLE_IDENTIFIER = com.hexatune.hexatuneapp
 DEVELOPMENT_TEAM = 3B6JLK5JN9
