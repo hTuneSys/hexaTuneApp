@@ -5,6 +5,7 @@ import 'package:injectable/injectable.dart';
 import 'package:talker/talker.dart';
 
 import 'package:hexatuneapp/src/core/config/env.dart';
+import 'package:hexatuneapp/src/core/log/debug_log_buffer.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 
 /// Application-wide logging service built on Talker.
@@ -43,6 +44,7 @@ class LogService {
 
   /// Alias for [debug] kept for backward compatibility.
   void devLog(String message, {LogCategory? category}) {
+    _buffer('DEBUG', message, category: category);
     if (!Env.isDev) return;
     _talker.debug(_formatMessage(message, category: category));
   }
@@ -55,16 +57,19 @@ class LogService {
   }
 
   void verbose(String message, {LogCategory? category}) {
+    _buffer('VERBOSE', message, category: category);
     if (!Env.isDev) return;
     _talker.verbose(_formatMessage(message, category: category));
   }
 
   void debug(String message, {LogCategory? category}) {
+    _buffer('DEBUG', message, category: category);
     if (!Env.isDev) return;
     _talker.debug(_formatMessage(message, category: category));
   }
 
   void info(String message, {LogCategory? category}) {
+    _buffer('INFO', message, category: category);
     if (!Env.isDev) return;
     _talker.info(_formatMessage(message, category: category));
   }
@@ -75,6 +80,7 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    _buffer('WARN', message, category: category, exception: exception);
     if (!Env.isDev) return;
     _talker.warning(
       _formatMessage(message, category: category),
@@ -89,6 +95,7 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    _buffer('ERROR', message, category: category, exception: exception);
     if (!Env.isDev) return;
     _talker.error(
       _formatMessage(message, category: category),
@@ -103,11 +110,25 @@ class LogService {
     Object? exception,
     StackTrace? stackTrace,
   }) {
+    _buffer('CRITICAL', message, category: category, exception: exception);
     if (!Env.isDev) return;
     _talker.critical(
       _formatMessage(message, category: category),
       exception,
       stackTrace,
     );
+  }
+
+  void _buffer(
+    String level,
+    String message, {
+    LogCategory? category,
+    Object? exception,
+  }) {
+    final formatted = _formatMessage(message, category: category);
+    final text = exception != null
+        ? '$formatted\n  Exception: $exception'
+        : formatted;
+    DebugLogBuffer.instance.add(level, text);
   }
 }

@@ -38,4 +38,5 @@ class RouteNames {
   static const String steps = '/dev/steps';
   static const String otp = '/dev/otp';
   static const String wallet = '/dev/wallet';
+  static const String logMonitor = '/dev/log-monitor';
 }

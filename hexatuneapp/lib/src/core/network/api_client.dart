@@ -8,6 +8,7 @@ import 'package:hexatuneapp/src/core/config/app_constants.dart';
 import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/auth_interceptor.dart';
+import 'package:hexatuneapp/src/core/network/interceptors/debug_interceptor.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/error_interceptor.dart';
 import 'package:hexatuneapp/src/core/network/interceptors/logging_interceptor.dart';
 
@@ -45,8 +46,9 @@ class ApiClient {
       ),
     );
 
-    // Order matters: logging → auth → error
+    // Order matters: debug buffer → logging → auth → error
     _dio.interceptors.addAll([
+      DebugDioInterceptor(),
       _loggingInterceptor.interceptor,
       _authInterceptor,
       _errorInterceptor,

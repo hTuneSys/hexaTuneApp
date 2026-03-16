@@ -141,6 +141,12 @@ class DummyHomePage extends StatelessWidget {
       subtitle: 'Balance, packages, purchases, transactions',
       route: RouteNames.wallet,
     ),
+    _NavItem(
+      icon: Icons.bug_report,
+      title: 'Log Monitor',
+      subtitle: 'Real-time debug logs, REST traffic, FFI events',
+      route: RouteNames.logMonitor,
+    ),
   ];
 
   @override

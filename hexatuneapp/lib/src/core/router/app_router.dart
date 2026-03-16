@@ -30,6 +30,7 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_flows_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_steps_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_wallet_page.dart';
+import 'package:hexatuneapp/src/pages/dummy/dummy_log_monitor_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
@@ -207,6 +208,10 @@ class AppRouter {
           GoRoute(
             path: RouteNames.wallet,
             builder: (context, state) => const DummyWalletPage(),
+          ),
+          GoRoute(
+            path: RouteNames.logMonitor,
+            builder: (context, state) => const DummyLogMonitorPage(),
           ),
         ],
       ),
