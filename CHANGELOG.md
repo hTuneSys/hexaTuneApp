@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.2...v1.3.3) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** resolve 146 duplicate symbols by using selective linking for proto lib ([b5767dd](https://github.com/hTuneSys/hexaTuneApp/commit/b5767ddb0230e52b08d27c17902fafceea9fd1c1))
+
 ## [1.3.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.1...v1.3.2) (2026-03-16)
 
 
