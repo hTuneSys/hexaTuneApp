@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.0...v1.3.1) (2026-03-16)
+
+
+### Bug Fixes
+
+* **notification:** add iOS background modes, foreground presentation options, and APNs token logging ([9310b99](https://github.com/hTuneSys/hexaTuneApp/commit/9310b99dfc22dab0cf835bfd257f88989c86e427))
+
 # [1.3.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.2.9...v1.3.0) (2026-03-16)
 
 
