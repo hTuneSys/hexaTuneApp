@@ -1,3 +1,12 @@
+## [1.3.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.1...v1.3.2) (2026-03-16)
+
+
+### Bug Fixes
+
+* **dsp:** make FFI bindings retryable after init failure ([a6c3864](https://github.com/hTuneSys/hexaTuneApp/commit/a6c38645d3fe7a0ea6d10f2d8f795391c2722fea))
+* **inventory:** fix iOS camera photo upload with explicit multipart content type ([aaa1d6b](https://github.com/hTuneSys/hexaTuneApp/commit/aaa1d6be8c458f4118b36d16536af3a4a73fa0c4))
+* **ios:** link HexaTuneProto and decouple MIDI from FFI for device discovery ([83eefe0](https://github.com/hTuneSys/hexaTuneApp/commit/83eefe0839f695fd0d0100b9988eb1c28fa5d255))
+
 ## [1.3.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.0...v1.3.1) (2026-03-16)
 
 
