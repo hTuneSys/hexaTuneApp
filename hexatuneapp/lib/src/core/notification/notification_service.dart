@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,14 +10,28 @@ import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/notification/local_notification_service.dart';
+
+/// Top-level handler for background/terminated FCM messages.
+///
+/// Must be a top-level function (not a class method) because it runs in
+/// a separate isolate on Android.
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  // Background messages with a `notification` payload are automatically
+  // displayed by the system tray. Data-only messages are silently received
+  // here for processing (e.g. cache updates, silent syncs).
+}
 
 /// Manages Firebase Cloud Messaging: token retrieval, foreground/background
 /// handling, and topic subscription.
 @singleton
 class NotificationService {
-  NotificationService(this._logService);
+  NotificationService(this._logService, this._localNotificationService);
 
   final LogService _logService;
+  final LocalNotificationService _localNotificationService;
 
   /// Whether Firebase is initialized and FCM is available.
   bool _firebaseAvailable = false;
@@ -24,6 +39,9 @@ class NotificationService {
   FirebaseMessaging? _messaging;
 
   String? _fcmToken;
+
+  /// Counter for generating unique local notification IDs.
+  int _notificationIdCounter = 0;
 
   // Stream subscriptions for cleanup.
   StreamSubscription<String>? _tokenRefreshSub;
@@ -60,6 +78,9 @@ class NotificationService {
 
     _firebaseAvailable = true;
     _messaging = FirebaseMessaging.instance;
+
+    // Register background handler before requesting permission.
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     final settings = await _messaging!.requestPermission();
     _logService.info(
@@ -106,18 +127,27 @@ class NotificationService {
   }
 
   void _handleForegroundMessage(RemoteMessage message) {
+    final title = message.notification?.title;
+    final body = message.notification?.body;
+
     _logService.debug(
-      'Foreground message: ${message.notification?.title}',
+      'Foreground message: $title',
       category: LogCategory.notification,
     );
     _logService.devLog(
       'Foreground message details — '
-      'title: ${message.notification?.title}, '
-      'body: ${message.notification?.body}, '
-      'data: ${message.data}',
+      'title: $title, body: $body, data: ${message.data}',
       category: LogCategory.notification,
     );
-    // TODO: show local notification via LocalNotificationService
+
+    if (title != null) {
+      _localNotificationService.show(
+        id: _notificationIdCounter++,
+        title: title,
+        body: body,
+        payload: message.data.isNotEmpty ? jsonEncode(message.data) : null,
+      );
+    }
   }
 
   void _handleMessageOpenedApp(RemoteMessage message) {
@@ -132,7 +162,8 @@ class NotificationService {
       'data: ${message.data}',
       category: LogCategory.notification,
     );
-    // TODO: deep-link navigation based on message data
+    // Deep-link navigation will be implemented when the navigation
+    // architecture supports payload-based routing.
   }
 
   Future<void> subscribeToTopic(String topic) async {

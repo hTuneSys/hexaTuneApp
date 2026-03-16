@@ -94,6 +94,14 @@ class LocalNotificationService {
       'Local notification tapped: ${response.payload}',
       category: LogCategory.notification,
     );
-    // TODO: deep-link navigation based on payload
+    _logService.devLog(
+      'Notification tap details — '
+      'id: ${response.id}, '
+      'actionId: ${response.actionId}, '
+      'payload: ${response.payload}',
+      category: LogCategory.notification,
+    );
+    // Deep-link navigation will be implemented when the navigation
+    // architecture supports payload-based routing.
   }
 }

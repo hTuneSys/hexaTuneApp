@@ -111,10 +111,6 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i367.LocalNotificationService>(
       () => _i367.LocalNotificationService(gh<_i571.LogService>()),
     );
-    gh.singleton<_i623.NotificationService>(
-      () => _i623.NotificationService(gh<_i571.LogService>()),
-      dispose: (i) => i.dispose(),
-    );
     gh.singleton<_i1001.PermissionService>(
       () => _i1001.PermissionService(gh<_i571.LogService>()),
     );
@@ -139,6 +135,13 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i815.OAuthService>(
       () =>
           _i815.OAuthService(gh<_i292.DeviceService>(), gh<_i571.LogService>()),
+    );
+    gh.singleton<_i623.NotificationService>(
+      () => _i623.NotificationService(
+        gh<_i571.LogService>(),
+        gh<_i367.LocalNotificationService>(),
+      ),
+      dispose: (i) => i.dispose(),
     );
     gh.singleton<_i56.AuthInterceptor>(
       () => _i56.AuthInterceptor(
