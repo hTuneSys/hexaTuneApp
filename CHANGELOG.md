@@ -1,3 +1,10 @@
+## [1.3.17](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.16...v1.3.17) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** strip duplicate Rust runtime from Proto.a before linking ([77bc0d0](https://github.com/hTuneSys/hexaTuneApp/commit/77bc0d01bcdf6fc340fb949e9eff8e2bbc94de28))
+
 ## [1.3.16](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.15...v1.3.16) (2026-03-16)
 
 
