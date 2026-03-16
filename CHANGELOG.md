@@ -1,3 +1,10 @@
+## [1.3.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.4...v1.3.5) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** force FFI symbols into export trie and use DynamicLibrary.executable() ([56e767d](https://github.com/hTuneSys/hexaTuneApp/commit/56e767d7f230602f94daaae365f04a7284a0a0f7))
+
 ## [1.3.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.3...v1.3.4) (2026-03-16)
 
 
