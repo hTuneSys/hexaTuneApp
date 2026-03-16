@@ -1,3 +1,10 @@
+## [1.3.18](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.17...v1.3.18) (2026-03-16)
+
+
+### Bug Fixes
+
+* **ios:** resolve duplicate Rust symbols with ld -r pre-link dedup ([fbd4688](https://github.com/hTuneSys/hexaTuneApp/commit/fbd46888ce0b6f1c1922aebdddce8a4e14b1e6f1))
+
 ## [1.3.17](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.16...v1.3.17) (2026-03-16)
 
 
