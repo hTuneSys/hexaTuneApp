@@ -39,10 +39,8 @@ class ApiClient {
         connectTimeout: AppConstants.connectTimeout,
         receiveTimeout: AppConstants.receiveTimeout,
         sendTimeout: AppConstants.sendTimeout,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
+        contentType: 'application/json',
+        headers: {'Accept': 'application/json'},
       ),
     );
 

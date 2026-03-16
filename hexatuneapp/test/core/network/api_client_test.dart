@@ -66,9 +66,9 @@ void main() {
     });
 
     test('dio has correct default headers', () {
-      final headers = apiClient.dio.options.headers;
-      expect(headers['Content-Type'], 'application/json');
-      expect(headers['Accept'], 'application/json');
+      final options = apiClient.dio.options;
+      expect(options.contentType, 'application/json');
+      expect(options.headers['Accept'], 'application/json');
     });
 
     test('dio has the expected interceptors added', () {

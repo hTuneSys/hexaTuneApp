@@ -5,7 +5,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path/path.dart' as p;
 
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/image_url_response.dart';
@@ -64,7 +66,11 @@ class InventoryRepository {
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
       if (imageFile != null)
-        'image': await MultipartFile.fromFile(imageFile.path),
+        'image': MultipartFile.fromBytes(
+          await imageFile.readAsBytes(),
+          filename: p.basename(imageFile.path),
+          contentType: MediaType('image', 'jpeg'),
+        ),
     });
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.inventories,
@@ -114,7 +120,11 @@ class InventoryRepository {
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
       if (imageFile != null)
-        'image': await MultipartFile.fromFile(imageFile.path),
+        'image': MultipartFile.fromBytes(
+          await imageFile.readAsBytes(),
+          filename: p.basename(imageFile.path),
+          contentType: MediaType('image', 'jpeg'),
+        ),
     });
     final response = await _dio.patch<Map<String, dynamic>>(
       ApiEndpoints.inventory(id),
