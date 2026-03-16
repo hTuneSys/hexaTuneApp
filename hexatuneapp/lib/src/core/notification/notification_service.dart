@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -88,8 +89,33 @@ class NotificationService {
       category: LogCategory.notification,
     );
 
+    // Tell the OS to display notifications even when the app is in foreground.
+    // On iOS this is required; on Android it ensures consistent behavior.
+    await _messaging!.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
     if (settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional) {
+      // On iOS, verify APNs token was obtained — if null, push won't work.
+      if (Platform.isIOS) {
+        final apnsToken = await _messaging!.getAPNSToken();
+        _logService.devLog(
+          'APNs token: ${apnsToken != null ? "obtained (${apnsToken.length} bytes)" : "NULL — push delivery will fail"}',
+          category: LogCategory.notification,
+        );
+        if (apnsToken == null) {
+          _logService.warning(
+            'APNs token is null — iOS push notifications will not work. '
+            'Ensure UIBackgroundModes includes remote-notification in Info.plist '
+            'and APNs key is uploaded to Firebase Console.',
+            category: LogCategory.notification,
+          );
+        }
+      }
+
       _fcmToken = await _messaging!.getToken();
       _logService.info(
         'FCM token obtained',

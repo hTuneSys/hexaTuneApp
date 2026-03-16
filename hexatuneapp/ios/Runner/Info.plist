@@ -52,6 +52,10 @@
     <string>1096689897838-gu7l9ooauihl1j9oe2bjq933ij389q5j.apps.googleusercontent.com</string>
     <key>GIDServerClientID</key>
     <string>1096689897838-39kcpg364itssg1o7e1ffm9651deo32s.apps.googleusercontent.com</string>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>remote-notification</string>
+    </array>
     <key>CFBundleURLTypes</key>
     <array>
         <dict>
