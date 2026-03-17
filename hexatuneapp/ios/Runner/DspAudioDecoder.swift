@@ -33,11 +33,13 @@ class DspAudioDecoder {
             return nil
         }
 
+        // AVAudioPCMBuffer and AVAudioFile.read require non-interleaved format.
+        // We interleave manually afterward for the DSP engine.
         let format = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
             sampleRate: audioFile.processingFormat.sampleRate,
             channels: audioFile.processingFormat.channelCount,
-            interleaved: true
+            interleaved: false
         )!
 
         let frameCount = AVAudioFrameCount(audioFile.length)
@@ -59,13 +61,10 @@ class DspAudioDecoder {
 
         var samples = [Float](repeating: 0, count: totalSamples)
         if let floatData = buffer.floatChannelData {
-            if format.isInterleaved {
-                memcpy(&samples, floatData[0], totalSamples * MemoryLayout<Float>.stride)
-            } else {
-                for frame in 0..<numFrames {
-                    for ch in 0..<channels {
-                        samples[frame * channels + ch] = floatData[ch][frame]
-                    }
+            // Non-interleaved buffer → interleave for DSP engine
+            for frame in 0..<numFrames {
+                for ch in 0..<channels {
+                    samples[frame * channels + ch] = floatData[ch][frame]
                 }
             }
         }
