@@ -166,6 +166,12 @@ class _DummyDspPageState extends State<DummyDspPage> {
   // ---------------------------------------------------------------------------
 
   Future<void> _play() async {
+    // If no ambience is selected, ensure previous layers are cleared so only
+    // binaural/monaural tones play.
+    if (_selectedAmbience == null && _dspService.isBaseLoaded) {
+      await _dspService.clearBase();
+    }
+
     _dspService.updateBinauralConfig(
       binauralEnabled: _binauralEnabled,
       cycleSteps: _cycleSteps
@@ -400,6 +406,18 @@ class _DummyDspPageState extends State<DummyDspPage> {
                   icon: const Icon(Icons.settings, size: 16),
                   label: Text(l10n.dspAmbienceManage),
                 ),
+                if (_selectedAmbience != null && !_isPlaying)
+                  IconButton(
+                    onPressed: () async {
+                      await _dspService.clearBase();
+                      setState(() {
+                        _selectedAmbience = null;
+                        _statusMessage = null;
+                      });
+                    },
+                    icon: Icon(Icons.clear, size: 18, color: colorScheme.error),
+                    tooltip: 'Clear ambience',
+                  ),
               ],
             ),
             const SizedBox(height: 8),
@@ -586,9 +604,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
       return SizedBox(
         height: 56,
         child: FilledButton.icon(
-          onPressed: _ambienceLoading || _selectedAmbience == null
-              ? null
-              : _play,
+          onPressed: _ambienceLoading ? null : _play,
           icon: _ambienceLoading
               ? const SizedBox(
                   width: 24,

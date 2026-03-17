@@ -117,12 +117,16 @@ class DspService {
       final config = calloc<HtdEngineConfig>();
       config.ref.carrierFrequency = _carrierFreq;
       config.ref.binauralEnabled = _binaural;
-      config.ref.sampleRate = 0;
-      config.ref.baseGain = -1;
-      config.ref.textureGain = -1;
-      config.ref.eventGain = -1;
-      config.ref.binauralGain = -1;
-      config.ref.masterGain = -1;
+      // Pass current values for all fields so the engine state stays
+      // consistent even if the Rust side applies them (the docs say gain
+      // fields are ignored by update_config, but passing real values is
+      // safer than sentinel -1 which could be mis-applied as zero gain).
+      config.ref.sampleRate = DspConstants.sampleRate;
+      config.ref.baseGain = _baseGain;
+      config.ref.textureGain = _textureGain;
+      config.ref.eventGain = _eventGain;
+      config.ref.binauralGain = _binauralGain;
+      config.ref.masterGain = _masterGain;
 
       Pointer<HtdCycleItem>? items;
       if (_steps.isNotEmpty) {
@@ -139,13 +143,15 @@ class DspService {
         config.ref.cycleCount = 0;
       }
 
-      _bindings.htdEngineUpdateConfig(_engine!, config);
+      final rc = _bindings.htdEngineUpdateConfig(_engine!, config);
       if (items != null) calloc.free(items);
       calloc.free(config);
 
       _logService.devLog(
-        'Config updated: carrier=$_carrierFreq Hz, '
-        'binaural=$_binaural, steps=${_steps.length}',
+        'Config updated (rc=$rc): carrier=$_carrierFreq Hz, '
+        'binaural=$_binaural, steps=${_steps.length}, '
+        'binGain=$_binauralGain, masterGain=$_masterGain'
+        '${_steps.isNotEmpty ? ", step0: delta=${_steps[0].frequencyDelta}Hz dur=${_steps[0].durationSeconds}s" : ""}',
         category: LogCategory.dsp,
       );
     }
@@ -183,7 +189,9 @@ class DspService {
   Future<String?> _doInitialize() async {
     _logService.info(
       'Initializing DSP engine: carrier=$_carrierFreq Hz, '
-      'binaural=$_binaural, steps=${_steps.length}',
+      'binaural=$_binaural, steps=${_steps.length}, '
+      'gains=[base=$_baseGain tex=$_textureGain evt=$_eventGain '
+      'bin=$_binauralGain master=$_masterGain]',
       category: LogCategory.dsp,
     );
 
@@ -455,12 +463,24 @@ class DspService {
     final initErr = await ensureInitialized();
     if (initErr != null) return initErr;
 
-    _logService.info('Starting DSP engine', category: LogCategory.dsp);
+    _logService.info(
+      'Starting DSP engine: binaural=$_binaural, '
+      'steps=${_steps.length}, binGain=$_binauralGain, '
+      'baseLoaded=$_baseLoaded',
+      category: LogCategory.dsp,
+    );
     final result = _bindings.htdEngineStart(_engine!);
     if (result != 0) {
       final error = HtdError.fromCode(result);
       return 'Engine start failed: ${error.description} (code: $result)';
     }
+
+    // Verify the engine is running
+    final running = _bindings.htdEngineIsRunning(_engine!);
+    _logService.devLog(
+      'htdEngineStart returned 0, isRunning=$running',
+      category: LogCategory.dsp,
+    );
 
     try {
       await _channel.invokeMethod('startAudio', {
