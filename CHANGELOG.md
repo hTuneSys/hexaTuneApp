@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.4...v1.6.0) (2026-03-17)
+
+
+### Features
+
+* **android:** restrict to phone-only and add VR head tracking ([c817032](https://github.com/hTuneSys/hexaTuneApp/commit/c817032823e5e25dc2123d13f9877fe91d7f196f))
+
 ## [1.5.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.3...v1.5.4) (2026-03-17)
 
 
