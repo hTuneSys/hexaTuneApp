@@ -161,9 +161,11 @@ class IapService {
       productDetails: storeProducts.productDetails.first,
     );
 
+    // autoConsume: true so Android consumes immediately, allowing re-purchase.
+    // On iOS this parameter has no effect — completePurchase() is still needed.
     return InAppPurchase.instance.buyConsumable(
       purchaseParam: param,
-      autoConsume: false,
+      autoConsume: true,
     );
   }
 
