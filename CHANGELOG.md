@@ -1,3 +1,10 @@
+## [1.5.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.2...v1.5.3) (2026-03-17)
+
+
+### Bug Fixes
+
+* **ci:** add default changelog for TestFlight external distribution ([75ebd74](https://github.com/hTuneSys/hexaTuneApp/commit/75ebd7427807dd211f449c9f1c224719ab4bf802))
+
 ## [1.5.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.1...v1.5.2) (2026-03-17)
 
 
