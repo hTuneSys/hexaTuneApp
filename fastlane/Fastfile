@@ -92,17 +92,16 @@ platform :ios do
         app_identifier: app_id,
         api_key_path: api_key_path,
         skip_waiting_for_build_processing: true,
-        notify_external_testers: false,
         distribute_external: false,
+        groups: ["Internal Testers"],
       )
     when 'testflight_external'
       upload_to_testflight(
         ipa: ipa,
         app_identifier: app_id,
         api_key_path: api_key_path,
-        skip_waiting_for_build_processing: false,
-        notify_external_testers: true,
-        distribute_external: true,
+        skip_waiting_for_build_processing: true,
+        distribute_external: false,
         groups: ["External Testers"],
         changelog: ENV['CHANGELOG'] || "Bug fixes and improvements",
       )

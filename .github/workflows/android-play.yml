@@ -47,7 +47,7 @@ jobs:
         run: |
           case "$ENVIRONMENT" in
             test)  TRACK="internal"   ;;
-            stage) TRACK="beta"       ;;
+            stage) TRACK="internal"   ;;
             prod)  TRACK="production" ;;
             *)     echo "❌ Unknown environment: $ENVIRONMENT"; exit 1 ;;
           esac
