@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.0...v1.6.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* **android:** remove invalid type.* feature declarations ([f4f6736](https://github.com/hTuneSys/hexaTuneApp/commit/f4f67363f301eeb2b7c148d7a766bffc0b6d886b))
+
 # [1.6.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.4...v1.6.0) (2026-03-17)
 
 
