@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.1...v1.6.2) (2026-03-17)
+
+
+### Bug Fixes
+
+* **ci:** remove changelog from stage to prevent upload wait ([a5d8d76](https://github.com/hTuneSys/hexaTuneApp/commit/a5d8d76607c9e91eb52565c0aead73113b2ea69f))
+
 ## [1.6.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.0...v1.6.1) (2026-03-17)
 
 
