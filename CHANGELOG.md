@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.1...v1.5.2) (2026-03-17)
+
+
+### Bug Fixes
+
+* **payment:** enable autoConsume for Android consumable purchases ([9af47e2](https://github.com/hTuneSys/hexaTuneApp/commit/9af47e2ca3252983966a2af50be6d86b0809b98e))
+
 ## [1.5.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.0...v1.5.1) (2026-03-17)
 
 
