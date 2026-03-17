@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.21...v1.4.0) (2026-03-17)
+
+
+### Features
+
+* **wallet:** update purchase API to match new OpenAPI spec ([c60d97c](https://github.com/hTuneSys/hexaTuneApp/commit/c60d97cbbf1bb1da2d13ee16aa69cc3f3869d163))
+
 ## [1.3.21](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.20...v1.3.21) (2026-03-17)
 
 
