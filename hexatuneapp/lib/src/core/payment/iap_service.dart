@@ -241,17 +241,19 @@ class IapService {
         category: LogCategory.payment,
       );
       _setStatus(IapStatus.success);
-    } catch (e) {
-      _lastError = 'Verification failed: $e';
-      _logService.error(
-        'Purchase verification failed: $e',
-        category: LogCategory.payment,
-      );
-      _setStatus(IapStatus.error);
-    } finally {
+
+      // Only complete after successful backend verification.
+      // On failure, leaving it pending lets the store re-deliver on next launch.
       if (purchase.pendingCompletePurchase) {
         await InAppPurchase.instance.completePurchase(purchase);
       }
+    } catch (e) {
+      _lastError = 'Verification failed: $e';
+      _logService.error(
+        'Purchase verification failed — transaction kept pending for retry: $e',
+        category: LogCategory.payment,
+      );
+      _setStatus(IapStatus.error);
     }
   }
 
