@@ -1,3 +1,10 @@
+## [1.3.21](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.20...v1.3.21) (2026-03-17)
+
+
+### Bug Fixes
+
+* **dsp:** pass real gain values in updateConfig and make ambience optional ([d41b556](https://github.com/hTuneSys/hexaTuneApp/commit/d41b55655190aff3f6aada921efc38c10ba8022c))
+
 ## [1.3.20](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.19...v1.3.20) (2026-03-17)
 
 
