@@ -12,10 +12,11 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
 import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/mobile_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/transaction_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
@@ -28,7 +29,9 @@ class MockLogService extends Mock implements LogService {}
 class FakeInitiatePurchaseRequest extends Fake
     implements InitiatePurchaseRequest {}
 
-class FakeMobilePurchaseRequest extends Fake implements MobilePurchaseRequest {}
+class FakeApplePurchaseRequest extends Fake implements ApplePurchaseRequest {}
+
+class FakeGooglePurchaseRequest extends Fake implements GooglePurchaseRequest {}
 
 Widget _buildApp() {
   return MaterialApp(
@@ -45,7 +48,8 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeInitiatePurchaseRequest());
-    registerFallbackValue(FakeMobilePurchaseRequest());
+    registerFallbackValue(FakeApplePurchaseRequest());
+    registerFallbackValue(FakeGooglePurchaseRequest());
   });
 
   setUp(() {
@@ -90,9 +94,9 @@ void main() {
       expect(find.text('Get Balance'), findsOneWidget);
       expect(find.text('List Packages'), findsOneWidget);
       expect(find.text('List Transactions'), findsOneWidget);
-      expect(find.text('Apple'), findsOneWidget);
-      expect(find.text('Google'), findsOneWidget);
-      expect(find.text('Stripe'), findsOneWidget);
+      expect(find.text('Apple', skipOffstage: false), findsOneWidget);
+      expect(find.text('Google', skipOffstage: false), findsOneWidget);
+      expect(find.text('Stripe', skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('shows text fields for purchase', (tester) async {
@@ -100,7 +104,18 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Package ID'), findsOneWidget);
-      expect(find.text('Receipt Data (Apple/Google)'), findsOneWidget);
+      expect(
+        find.text('Transaction ID (Apple)', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Product ID (Google)', skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(
+        find.text('Purchase Token (Google)', skipOffstage: false),
+        findsOneWidget,
+      );
     });
 
     testWidgets('Get Balance calls repo and shows result', (tester) async {
@@ -195,7 +210,7 @@ void main() {
     });
 
     testWidgets('Stripe purchase calls repo and shows result', (tester) async {
-      when(() => mockRepo.purchaseStripe(any())).thenAnswer(
+      when(() => mockRepo.checkoutStripe(any())).thenAnswer(
         (_) async => const CheckoutResponse(
           sessionId: 'cs_abc',
           checkoutUrl: 'https://checkout.stripe.com/pay/abc',
@@ -214,7 +229,7 @@ void main() {
       await tester.tap(find.text('Stripe'));
       await tester.pump();
 
-      verify(() => mockRepo.purchaseStripe(any())).called(1);
+      verify(() => mockRepo.checkoutStripe(any())).called(1);
       expect(
         find.textContaining('cs_abc', skipOffstage: false),
         findsOneWidget,

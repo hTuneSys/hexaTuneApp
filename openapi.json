@@ -4395,6 +4395,63 @@
         ]
       }
     },
+    "/api/v1/wallet/checkout/stripe": {
+      "post": {
+        "tags": [
+          "Wallet"
+        ],
+        "summary": "`POST /api/v1/wallet/checkout/stripe` — Create Stripe checkout session",
+        "description": "Creates a Stripe Checkout session for a coin package purchase.\nReturns a session ID and checkout URL for redirect.\nThis endpoint does not directly charge — the user completes\npayment on Stripe's hosted checkout page.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`InitiatePurchaseRequest`] — Package ID to purchase.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Checkout session created | [`CheckoutResponse`] |\n| `400`  | Invalid input or provider not enabled | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Stripe is not configured.",
+        "operationId": "initiate_stripe_checkout",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InitiatePurchaseRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Package not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer_auth": []
+          }
+        ]
+      }
+    },
     "/api/v1/wallet/packages": {
       "get": {
         "tags": [
@@ -4430,25 +4487,25 @@
         "tags": [
           "Wallet"
         ],
-        "summary": "`POST /api/v1/wallet/purchase/apple` — Record Apple In-App Purchase",
-        "description": "Records an Apple In-App Purchase receipt for server-side verification.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`MobilePurchaseRequest`] — Package ID and Apple receipt data.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Purchase recorded | — |\n| `400`  | Invalid input | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Apple is not configured.",
+        "summary": "`POST /api/v1/wallet/purchase/apple` — Verify and credit Apple In-App Purchase",
+        "description": "Verifies an Apple In-App Purchase with the App Store Server API,\ncredits coins to the wallet, and records the transaction atomically.\nReturns 201 Created on success. Duplicate purchases are handled idempotently.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`ApplePurchaseRequest`] — Package ID and Apple `StoreKit2` transaction ID.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `201`  | Purchase verified and coins credited | — |\n| `400`  | Invalid input or verification failed | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found, Apple verification fails,\nor the purchase receipt is invalid.",
         "operationId": "initiate_apple_purchase",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MobilePurchaseRequest"
+                "$ref": "#/components/schemas/ApplePurchaseRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "Purchase recorded"
+          "201": {
+            "description": "Purchase verified and coins credited"
           },
           "400": {
-            "description": "Invalid input",
+            "description": "Invalid input or verification failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -4480,82 +4537,25 @@
         "tags": [
           "Wallet"
         ],
-        "summary": "`POST /api/v1/wallet/purchase/google` — Record Google Play purchase",
-        "description": "Records a Google Play purchase token for server-side verification.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`MobilePurchaseRequest`] — Package ID and Google purchase token.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `204`  | Purchase recorded | — |\n| `400`  | Invalid input | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Google is not configured.",
+        "summary": "`POST /api/v1/wallet/purchase/google` — Verify and credit Google Play purchase",
+        "description": "Verifies a Google Play purchase with the Android Publisher API,\ncredits coins to the wallet, and records the transaction atomically.\nReturns 201 Created on success. Duplicate purchases are handled idempotently.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GooglePurchaseRequest`] — Package ID, Google product ID, and purchase token.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `201`  | Purchase verified and coins credited | — |\n| `400`  | Invalid input or verification failed | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found, Google verification fails,\nor the purchase token is invalid.",
         "operationId": "initiate_google_purchase",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/MobilePurchaseRequest"
+                "$ref": "#/components/schemas/GooglePurchaseRequest"
               }
             }
           },
           "required": true
         },
         "responses": {
-          "204": {
-            "description": "Purchase recorded"
+          "201": {
+            "description": "Purchase verified and coins credited"
           },
           "400": {
-            "description": "Invalid input",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Package not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "bearer_auth": []
-          }
-        ]
-      }
-    },
-    "/api/v1/wallet/purchase/stripe": {
-      "post": {
-        "tags": [
-          "Wallet"
-        ],
-        "summary": "`POST /api/v1/wallet/purchase/stripe` — Initiate Stripe checkout",
-        "description": "Creates a Stripe Checkout session for a coin package purchase.\nReturns a session ID and checkout URL for redirect.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`InitiatePurchaseRequest`] — Package ID to purchase.\n\n# Responses\n\n| Status | Description | Body |\n|--------|-------------|------|\n| `200`  | Checkout session created | [`CheckoutResponse`] |\n| `400`  | Invalid input or provider not enabled | [`ProblemDetails`] |\n| `404`  | Package not found | [`ProblemDetails`] |\n\n# Errors\n\nReturns [`ProblemDetails`] if the package is not found or Stripe is not configured.",
-        "operationId": "initiate_stripe_purchase",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/InitiatePurchaseRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Checkout session created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckoutResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input",
+            "description": "Invalid input or verification failed",
             "content": {
               "application/json": {
                 "schema": {
@@ -4901,6 +4901,24 @@
             "type": "string",
             "description": "Apple ID token (JWT) obtained from the Apple Sign-In SDK",
             "example": "eyJhbGciOiJSUzI1NiIs..."
+          }
+        }
+      },
+      "ApplePurchaseRequest": {
+        "type": "object",
+        "description": "Request DTO for Apple In-App Purchase verification.",
+        "required": [
+          "packageId",
+          "transactionId"
+        ],
+        "properties": {
+          "packageId": {
+            "type": "string",
+            "description": "Coin package identifier."
+          },
+          "transactionId": {
+            "type": "string",
+            "description": "Apple `StoreKit2` original transaction identifier."
           }
         }
       },
@@ -5934,6 +5952,29 @@
           }
         }
       },
+      "GooglePurchaseRequest": {
+        "type": "object",
+        "description": "Request DTO for Google Play purchase verification.",
+        "required": [
+          "packageId",
+          "productId",
+          "purchaseToken"
+        ],
+        "properties": {
+          "packageId": {
+            "type": "string",
+            "description": "Coin package identifier."
+          },
+          "productId": {
+            "type": "string",
+            "description": "Google Play product identifier (e.g., `coins_pack_small`)."
+          },
+          "purchaseToken": {
+            "type": "string",
+            "description": "Google Play purchase token from the Billing Library."
+          }
+        }
+      },
       "HarmonicPacketDto": {
         "type": "object",
         "description": "A single packet in the harmonic sequence response.",
@@ -6163,24 +6204,6 @@
             "type": "string",
             "description": "Session ID",
             "example": "550e8400-e29b-41d4-a716-446655440000"
-          }
-        }
-      },
-      "MobilePurchaseRequest": {
-        "type": "object",
-        "description": "Request DTO for mobile (Apple/Google) purchase verification.",
-        "required": [
-          "packageId",
-          "receiptData"
-        ],
-        "properties": {
-          "packageId": {
-            "type": "string",
-            "description": "Coin package identifier."
-          },
-          "receiptData": {
-            "type": "string",
-            "description": "Provider-specific receipt/token data."
           }
         }
       },

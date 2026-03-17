@@ -7,8 +7,9 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/mobile_purchase_request.dart';
 
 /// Dummy page for testing wallet endpoints.
 class DummyWalletPage extends StatefulWidget {
@@ -20,14 +21,18 @@ class DummyWalletPage extends StatefulWidget {
 
 class _DummyWalletPageState extends State<DummyWalletPage> {
   final _packageIdCtrl = TextEditingController();
-  final _receiptDataCtrl = TextEditingController();
+  final _transactionIdCtrl = TextEditingController();
+  final _productIdCtrl = TextEditingController();
+  final _purchaseTokenCtrl = TextEditingController();
   String? _resultText;
   bool _isLoading = false;
 
   @override
   void dispose() {
     _packageIdCtrl.dispose();
-    _receiptDataCtrl.dispose();
+    _transactionIdCtrl.dispose();
+    _productIdCtrl.dispose();
+    _purchaseTokenCtrl.dispose();
     super.dispose();
   }
 
@@ -140,9 +145,25 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
           ),
           const SizedBox(height: 8),
           TextField(
-            controller: _receiptDataCtrl,
+            controller: _transactionIdCtrl,
             decoration: const InputDecoration(
-              labelText: 'Receipt Data (Apple/Google)',
+              labelText: 'Transaction ID (Apple)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _productIdCtrl,
+            decoration: const InputDecoration(
+              labelText: 'Product ID (Google)',
+              border: OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: _purchaseTokenCtrl,
+            decoration: const InputDecoration(
+              labelText: 'Purchase Token (Google)',
               border: OutlineInputBorder(),
             ),
             maxLines: 2,
@@ -158,12 +179,12 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
                     : () => _run('Apple Purchase', () async {
                         final repo = getIt<WalletRepository>();
                         await repo.purchaseApple(
-                          MobilePurchaseRequest(
+                          ApplePurchaseRequest(
                             packageId: _packageIdCtrl.text.trim(),
-                            receiptData: _receiptDataCtrl.text.trim(),
+                            transactionId: _transactionIdCtrl.text.trim(),
                           ),
                         );
-                        return 'Apple purchase recorded';
+                        return 'Apple purchase verified';
                       }),
                 child: const Text('Apple'),
               ),
@@ -173,12 +194,13 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
                     : () => _run('Google Purchase', () async {
                         final repo = getIt<WalletRepository>();
                         await repo.purchaseGoogle(
-                          MobilePurchaseRequest(
+                          GooglePurchaseRequest(
                             packageId: _packageIdCtrl.text.trim(),
-                            receiptData: _receiptDataCtrl.text.trim(),
+                            productId: _productIdCtrl.text.trim(),
+                            purchaseToken: _purchaseTokenCtrl.text.trim(),
                           ),
                         );
-                        return 'Google purchase recorded';
+                        return 'Google purchase verified';
                       }),
                 child: const Text('Google'),
               ),
@@ -187,7 +209,7 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
                     ? null
                     : () => _run('Stripe Checkout', () async {
                         final repo = getIt<WalletRepository>();
-                        final result = await repo.purchaseStripe(
+                        final result = await repo.checkoutStripe(
                           InitiatePurchaseRequest(
                             packageId: _packageIdCtrl.text.trim(),
                           ),

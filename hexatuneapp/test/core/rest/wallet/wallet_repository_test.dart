@@ -7,10 +7,11 @@ import 'package:http_mock_adapter/http_mock_adapter.dart';
 import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/mobile_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -133,14 +134,14 @@ void main() {
 
     group('purchaseApple', () {
       test('sends POST to apple purchase endpoint', () async {
-        const request = MobilePurchaseRequest(
+        const request = ApplePurchaseRequest(
           packageId: 'pkg-001',
-          receiptData: 'receipt-abc',
+          transactionId: 'txn-abc-123',
         );
 
         dioAdapter.onPost(
           ApiEndpoints.walletPurchaseApple,
-          (server) => server.reply(204, null),
+          (server) => server.reply(201, null),
           data: request.toJson(),
         );
 
@@ -150,14 +151,15 @@ void main() {
 
     group('purchaseGoogle', () {
       test('sends POST to google purchase endpoint', () async {
-        const request = MobilePurchaseRequest(
+        const request = GooglePurchaseRequest(
           packageId: 'pkg-001',
-          receiptData: 'receipt-xyz',
+          productId: 'coins_pack_small',
+          purchaseToken: 'token-xyz',
         );
 
         dioAdapter.onPost(
           ApiEndpoints.walletPurchaseGoogle,
-          (server) => server.reply(204, null),
+          (server) => server.reply(201, null),
           data: request.toJson(),
         );
 
@@ -165,12 +167,12 @@ void main() {
       });
     });
 
-    group('purchaseStripe', () {
+    group('checkoutStripe', () {
       test('sends POST and returns checkout response', () async {
         const request = InitiatePurchaseRequest(packageId: 'pkg-001');
 
         dioAdapter.onPost(
-          ApiEndpoints.walletPurchaseStripe,
+          ApiEndpoints.walletCheckoutStripe,
           (server) => server.reply(200, {
             'sessionId': 'cs_abc123',
             'checkoutUrl': 'https://checkout.stripe.com/pay/abc',
@@ -178,7 +180,7 @@ void main() {
           data: request.toJson(),
         );
 
-        final result = await repository.purchaseStripe(request);
+        final result = await repository.checkoutStripe(request);
 
         expect(result, isA<CheckoutResponse>());
         expect(result.sessionId, 'cs_abc123');

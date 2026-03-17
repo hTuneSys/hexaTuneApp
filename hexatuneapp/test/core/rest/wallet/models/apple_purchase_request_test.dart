@@ -3,63 +3,63 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:hexatuneapp/src/core/rest/wallet/models/mobile_purchase_request.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
 
 void main() {
-  group('MobilePurchaseRequest', () {
+  group('ApplePurchaseRequest', () {
     final fullJson = <String, dynamic>{
       'packageId': 'pkg-001',
-      'receiptData': 'receipt-abc-123',
+      'transactionId': 'txn-abc-123',
     };
 
     test('can be created with required fields', () {
-      const result = MobilePurchaseRequest(
+      const result = ApplePurchaseRequest(
         packageId: 'pkg-001',
-        receiptData: 'receipt-abc-123',
+        transactionId: 'txn-abc-123',
       );
       expect(result.packageId, 'pkg-001');
-      expect(result.receiptData, 'receipt-abc-123');
+      expect(result.transactionId, 'txn-abc-123');
     });
 
     test('serializes to JSON correctly', () {
-      const result = MobilePurchaseRequest(
+      const result = ApplePurchaseRequest(
         packageId: 'pkg-001',
-        receiptData: 'receipt-abc-123',
+        transactionId: 'txn-abc-123',
       );
       final json = result.toJson();
       expect(json['packageId'], 'pkg-001');
-      expect(json['receiptData'], 'receipt-abc-123');
+      expect(json['transactionId'], 'txn-abc-123');
     });
 
     test('deserializes from JSON correctly', () {
-      final result = MobilePurchaseRequest.fromJson(fullJson);
+      final result = ApplePurchaseRequest.fromJson(fullJson);
       expect(result.packageId, 'pkg-001');
-      expect(result.receiptData, 'receipt-abc-123');
+      expect(result.transactionId, 'txn-abc-123');
     });
 
     test('equality works correctly', () {
-      const a = MobilePurchaseRequest(
+      const a = ApplePurchaseRequest(
         packageId: 'pkg-001',
-        receiptData: 'receipt-abc',
+        transactionId: 'txn-abc',
       );
-      const b = MobilePurchaseRequest(
+      const b = ApplePurchaseRequest(
         packageId: 'pkg-001',
-        receiptData: 'receipt-abc',
+        transactionId: 'txn-abc',
       );
-      const c = MobilePurchaseRequest(
+      const c = ApplePurchaseRequest(
         packageId: 'pkg-002',
-        receiptData: 'receipt-xyz',
+        transactionId: 'txn-xyz',
       );
       expect(a, equals(b));
       expect(a, isNot(equals(c)));
     });
 
     test('round-trip serialization preserves data', () {
-      const original = MobilePurchaseRequest(
+      const original = ApplePurchaseRequest(
         packageId: 'pkg-001',
-        receiptData: 'receipt-abc-123',
+        transactionId: 'txn-abc-123',
       );
-      final roundTripped = MobilePurchaseRequest.fromJson(original.toJson());
+      final roundTripped = ApplePurchaseRequest.fromJson(original.toJson());
       expect(roundTripped, equals(original));
     });
   });

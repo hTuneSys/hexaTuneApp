@@ -1,21 +1,21 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'mobile_purchase_request.dart';
+part of 'apple_purchase_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_MobilePurchaseRequest _$MobilePurchaseRequestFromJson(
+_ApplePurchaseRequest _$ApplePurchaseRequestFromJson(
   Map<String, dynamic> json,
-) => _MobilePurchaseRequest(
+) => _ApplePurchaseRequest(
   packageId: json['packageId'] as String,
-  receiptData: json['receiptData'] as String,
+  transactionId: json['transactionId'] as String,
 );
 
-Map<String, dynamic> _$MobilePurchaseRequestToJson(
-  _MobilePurchaseRequest instance,
+Map<String, dynamic> _$ApplePurchaseRequestToJson(
+  _ApplePurchaseRequest instance,
 ) => <String, dynamic>{
   'packageId': instance.packageId,
-  'receiptData': instance.receiptData,
+  'transactionId': instance.transactionId,
 };

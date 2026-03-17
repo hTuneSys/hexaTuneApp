@@ -9,10 +9,11 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_client.dart';
 import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
+import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/mobile_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/transaction_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 
@@ -84,7 +85,7 @@ class WalletRepository {
   }
 
   /// POST /api/v1/wallet/purchase/apple
-  Future<void> purchaseApple(MobilePurchaseRequest request) async {
+  Future<void> purchaseApple(ApplePurchaseRequest request) async {
     _logService.debug(
       'POST wallet/purchase/apple',
       category: LogCategory.network,
@@ -93,7 +94,7 @@ class WalletRepository {
   }
 
   /// POST /api/v1/wallet/purchase/google
-  Future<void> purchaseGoogle(MobilePurchaseRequest request) async {
+  Future<void> purchaseGoogle(GooglePurchaseRequest request) async {
     _logService.debug(
       'POST wallet/purchase/google',
       category: LogCategory.network,
@@ -101,16 +102,16 @@ class WalletRepository {
     await _dio.post(ApiEndpoints.walletPurchaseGoogle, data: request.toJson());
   }
 
-  /// POST /api/v1/wallet/purchase/stripe
-  Future<CheckoutResponse> purchaseStripe(
+  /// POST /api/v1/wallet/checkout/stripe
+  Future<CheckoutResponse> checkoutStripe(
     InitiatePurchaseRequest request,
   ) async {
     _logService.debug(
-      'POST wallet/purchase/stripe',
+      'POST wallet/checkout/stripe',
       category: LogCategory.network,
     );
     final response = await _dio.post<Map<String, dynamic>>(
-      ApiEndpoints.walletPurchaseStripe,
+      ApiEndpoints.walletCheckoutStripe,
       data: request.toJson(),
     );
     final data = response.data;
