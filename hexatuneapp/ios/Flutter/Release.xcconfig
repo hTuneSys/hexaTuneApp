@@ -19,6 +19,7 @@
 // Long-term fix: combine DSP + Proto into one Rust crate (one staticlib),
 // eliminating duplicate runtime symbols entirely.
 DEAD_CODE_STRIPPING = NO
+STRIP_STYLE = non-global
 EXPORTED_SYMBOLS_FILE = $(SRCROOT)/Runner/ffi_exports.exp
 LD_GENERATE_MAP_FILE = YES
 LD_MAP_FILE_PATH = $(SRCROOT)/build/Runner-FFI-LinkMap-$(CURRENT_ARCH).txt
