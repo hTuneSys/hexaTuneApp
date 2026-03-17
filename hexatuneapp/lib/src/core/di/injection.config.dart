@@ -34,6 +34,7 @@ import 'package:hexatuneapp/src/core/notification/local_notification_service.dar
     as _i367;
 import 'package:hexatuneapp/src/core/notification/notification_service.dart'
     as _i623;
+import 'package:hexatuneapp/src/core/payment/iap_service.dart' as _i996;
 import 'package:hexatuneapp/src/core/permission/permission_service.dart'
     as _i1001;
 import 'package:hexatuneapp/src/core/proto/proto_service.dart' as _i410;
@@ -262,6 +263,11 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i877.AppRouter>(
       () => _i877.AppRouter(gh<_i907.AuthService>(), gh<_i571.LogService>()),
+    );
+    gh.singleton<_i996.IapService>(
+      () =>
+          _i996.IapService(gh<_i571.LogService>(), gh<_i957.WalletRepository>())
+            ..init(),
     );
     return this;
   }

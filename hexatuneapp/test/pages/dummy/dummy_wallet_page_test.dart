@@ -12,11 +12,9 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
 import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
+import 'package:hexatuneapp/src/core/payment/iap_service.dart';
+import 'package:hexatuneapp/src/core/payment/models/iap_product.dart';
+import 'package:hexatuneapp/src/core/payment/models/iap_status.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/transaction_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
@@ -26,12 +24,7 @@ class MockWalletRepository extends Mock implements WalletRepository {}
 
 class MockLogService extends Mock implements LogService {}
 
-class FakeInitiatePurchaseRequest extends Fake
-    implements InitiatePurchaseRequest {}
-
-class FakeApplePurchaseRequest extends Fake implements ApplePurchaseRequest {}
-
-class FakeGooglePurchaseRequest extends Fake implements GooglePurchaseRequest {}
+class MockIapService extends Mock implements IapService {}
 
 Widget _buildApp() {
   return MaterialApp(
@@ -45,27 +38,34 @@ Widget _buildApp() {
 void main() {
   late MockWalletRepository mockRepo;
   late MockLogService mockLog;
-
-  setUpAll(() {
-    registerFallbackValue(FakeInitiatePurchaseRequest());
-    registerFallbackValue(FakeApplePurchaseRequest());
-    registerFallbackValue(FakeGooglePurchaseRequest());
-  });
+  late MockIapService mockIap;
+  late StreamController<IapStatus> statusController;
+  late StreamController<List<IapProduct>> productsController;
 
   setUp(() {
     mockRepo = MockWalletRepository();
     mockLog = MockLogService();
+    mockIap = MockIapService();
+    statusController = StreamController<IapStatus>.broadcast();
+    productsController = StreamController<List<IapProduct>>.broadcast();
 
     when(
       () => mockLog.devLog(any(), category: any(named: 'category')),
     ).thenReturn(null);
+    when(() => mockIap.statusStream).thenAnswer((_) => statusController.stream);
+    when(
+      () => mockIap.productsStream,
+    ).thenAnswer((_) => productsController.stream);
 
     getIt.allowReassignment = true;
     getIt.registerSingleton<WalletRepository>(mockRepo);
     getIt.registerSingleton<LogService>(mockLog);
+    getIt.registerSingleton<IapService>(mockIap);
   });
 
   tearDown(() async {
+    await statusController.close();
+    await productsController.close();
     await getIt.reset();
   });
 
@@ -82,9 +82,8 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Balance'), findsOneWidget);
-      expect(find.text('Coin Packages'), findsOneWidget);
       expect(find.text('Transactions'), findsOneWidget);
-      expect(find.text('Purchase'), findsOneWidget);
+      expect(find.text('Store Products'), findsOneWidget);
     });
 
     testWidgets('shows action buttons', (tester) async {
@@ -92,30 +91,15 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Get Balance'), findsOneWidget);
-      expect(find.text('List Packages'), findsOneWidget);
       expect(find.text('List Transactions'), findsOneWidget);
-      expect(find.text('Apple', skipOffstage: false), findsOneWidget);
-      expect(find.text('Google', skipOffstage: false), findsOneWidget);
-      expect(find.text('Stripe', skipOffstage: false), findsOneWidget);
+      expect(find.text('Load Products'), findsOneWidget);
     });
 
-    testWidgets('shows text fields for purchase', (tester) async {
+    testWidgets('shows IAP status', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Package ID'), findsOneWidget);
-      expect(
-        find.text('Transaction ID (Apple)', skipOffstage: false),
-        findsOneWidget,
-      );
-      expect(
-        find.text('Product ID (Google)', skipOffstage: false),
-        findsOneWidget,
-      );
-      expect(
-        find.text('Purchase Token (Google)', skipOffstage: false),
-        findsOneWidget,
-      );
+      expect(find.text('Status: idle', skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('Get Balance calls repo and shows result', (tester) async {
@@ -137,33 +121,6 @@ void main() {
       verify(() => mockRepo.getBalance()).called(1);
       expect(
         find.textContaining('500 coins', skipOffstage: false),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('List Packages calls repo and shows result', (tester) async {
-      when(() => mockRepo.listPackages()).thenAnswer(
-        (_) async => const [
-          CoinPackageResponse(
-            id: 'pkg-001',
-            name: 'Starter',
-            coins: 100,
-            priceCents: 999,
-            currency: 'USD',
-            sortOrder: 1,
-          ),
-        ],
-      );
-
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('List Packages'));
-      await tester.pump();
-
-      verify(() => mockRepo.listPackages()).called(1);
-      expect(
-        find.textContaining('Starter', skipOffstage: false),
         findsOneWidget,
       );
     });
@@ -209,31 +166,61 @@ void main() {
       );
     });
 
-    testWidgets('Stripe purchase calls repo and shows result', (tester) async {
-      when(() => mockRepo.checkoutStripe(any())).thenAnswer(
-        (_) async => const CheckoutResponse(
-          sessionId: 'cs_abc',
-          checkoutUrl: 'https://checkout.stripe.com/pay/abc',
-        ),
+    testWidgets('Load Products calls IapService and shows result', (
+      tester,
+    ) async {
+      when(() => mockIap.loadProducts()).thenAnswer(
+        (_) async => const [
+          IapProduct(
+            packageId: 'pkg-001',
+            name: 'Starter',
+            coins: 100,
+            storeProductId: 'com.hexatune.coins100',
+            price: r'$0.99',
+            rawPrice: 0.99,
+            currencyCode: 'USD',
+          ),
+        ],
       );
+      when(() => mockIap.isAvailable).thenReturn(true);
 
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      await tester.scrollUntilVisible(
-        find.text('Stripe'),
-        200,
-        scrollable: find.byType(Scrollable).first,
-      );
-      await tester.enterText(find.byType(TextField).first, 'pkg-001');
-      await tester.tap(find.text('Stripe'));
+      await tester.tap(find.text('Load Products'));
       await tester.pump();
 
-      verify(() => mockRepo.checkoutStripe(any())).called(1);
+      verify(() => mockIap.loadProducts()).called(1);
       expect(
-        find.textContaining('cs_abc', skipOffstage: false),
+        find.textContaining('Starter', skipOffstage: false),
         findsOneWidget,
       );
+    });
+
+    testWidgets('product cards appear when products stream emits', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ListTile), findsNothing);
+
+      productsController.add(const [
+        IapProduct(
+          packageId: 'pkg-001',
+          name: 'Starter Pack',
+          coins: 100,
+          storeProductId: 'com.hexatune.coins100',
+          price: r'$0.99',
+          rawPrice: 0.99,
+          currencyCode: 'USD',
+        ),
+      ]);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Starter Pack', skipOffstage: false), findsOneWidget);
+      expect(find.text('100 coins', skipOffstage: false), findsOneWidget);
+      expect(find.text(r'$0.99', skipOffstage: false), findsOneWidget);
     });
 
     testWidgets('shows loading indicator during operation', (tester) async {

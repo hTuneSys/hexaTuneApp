@@ -10,10 +10,8 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_client.dart';
 import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/transaction_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 
@@ -100,28 +98,5 @@ class WalletRepository {
       category: LogCategory.network,
     );
     await _dio.post(ApiEndpoints.walletPurchaseGoogle, data: request.toJson());
-  }
-
-  /// POST /api/v1/wallet/checkout/stripe
-  Future<CheckoutResponse> checkoutStripe(
-    InitiatePurchaseRequest request,
-  ) async {
-    _logService.debug(
-      'POST wallet/checkout/stripe',
-      category: LogCategory.network,
-    );
-    final response = await _dio.post<Map<String, dynamic>>(
-      ApiEndpoints.walletCheckoutStripe,
-      data: request.toJson(),
-    );
-    final data = response.data;
-    if (data == null) {
-      throw DioException(
-        requestOptions: response.requestOptions,
-        response: response,
-        message: 'Stripe checkout response body is null',
-      );
-    }
-    return CheckoutResponse.fromJson(data);
   }
 }

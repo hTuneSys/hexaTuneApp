@@ -185,14 +185,12 @@ class ApiEndpoints {
     return '$_v1/steps/$id/image';
   }
 
-  // --- Wallet (7 endpoints) ---
+  // --- Wallet (6 endpoints) ---
   static const String walletBalance = '$_v1/wallet/balance';
   static const String walletPackages = '$_v1/wallet/packages';
   static const String walletTransactions = '$_v1/wallet/transactions';
   static const String walletPurchaseApple = '$_v1/wallet/purchase/apple';
   static const String walletPurchaseGoogle = '$_v1/wallet/purchase/google';
-  static const String walletCheckoutStripe = '$_v1/wallet/checkout/stripe';
   static const String walletWebhookApple = '$_v1/wallet/webhook/apple';
   static const String walletWebhookGoogle = '$_v1/wallet/webhook/google';
-  static const String walletWebhookStripe = '$_v1/wallet/webhook/stripe';
 }

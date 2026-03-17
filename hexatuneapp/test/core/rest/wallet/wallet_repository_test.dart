@@ -8,10 +8,8 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/checkout_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/coin_package_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -164,27 +162,6 @@ void main() {
         );
 
         await expectLater(repository.purchaseGoogle(request), completes);
-      });
-    });
-
-    group('checkoutStripe', () {
-      test('sends POST and returns checkout response', () async {
-        const request = InitiatePurchaseRequest(packageId: 'pkg-001');
-
-        dioAdapter.onPost(
-          ApiEndpoints.walletCheckoutStripe,
-          (server) => server.reply(200, {
-            'sessionId': 'cs_abc123',
-            'checkoutUrl': 'https://checkout.stripe.com/pay/abc',
-          }),
-          data: request.toJson(),
-        );
-
-        final result = await repository.checkoutStripe(request);
-
-        expect(result, isA<CheckoutResponse>());
-        expect(result.sessionId, 'cs_abc123');
-        expect(result.checkoutUrl, 'https://checkout.stripe.com/pay/abc');
       });
     });
   });

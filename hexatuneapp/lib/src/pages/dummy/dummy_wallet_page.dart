@@ -1,17 +1,19 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/payment/iap_service.dart';
+import 'package:hexatuneapp/src/core/payment/models/iap_product.dart';
+import 'package:hexatuneapp/src/core/payment/models/iap_status.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/apple_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/google_purchase_request.dart';
-import 'package:hexatuneapp/src/core/rest/wallet/models/initiate_purchase_request.dart';
 
-/// Dummy page for testing wallet endpoints.
+/// Dummy page for testing wallet and in-app purchase flows.
 class DummyWalletPage extends StatefulWidget {
   const DummyWalletPage({super.key});
 
@@ -20,19 +22,29 @@ class DummyWalletPage extends StatefulWidget {
 }
 
 class _DummyWalletPageState extends State<DummyWalletPage> {
-  final _packageIdCtrl = TextEditingController();
-  final _transactionIdCtrl = TextEditingController();
-  final _productIdCtrl = TextEditingController();
-  final _purchaseTokenCtrl = TextEditingController();
   String? _resultText;
   bool _isLoading = false;
+  List<IapProduct> _products = [];
+  IapStatus _iapStatus = IapStatus.idle;
+  StreamSubscription<IapStatus>? _statusSub;
+  StreamSubscription<List<IapProduct>>? _productsSub;
+
+  @override
+  void initState() {
+    super.initState();
+    final iap = getIt<IapService>();
+    _statusSub = iap.statusStream.listen((status) {
+      if (mounted) setState(() => _iapStatus = status);
+    });
+    _productsSub = iap.productsStream.listen((products) {
+      if (mounted) setState(() => _products = products);
+    });
+  }
 
   @override
   void dispose() {
-    _packageIdCtrl.dispose();
-    _transactionIdCtrl.dispose();
-    _productIdCtrl.dispose();
-    _purchaseTokenCtrl.dispose();
+    _statusSub?.cancel();
+    _productsSub?.cancel();
     super.dispose();
   }
 
@@ -81,30 +93,6 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
           ),
           const Divider(height: 32),
 
-          // Packages
-          Text('Coin Packages', style: theme.textTheme.titleMedium),
-          const SizedBox(height: 8),
-          ElevatedButton.icon(
-            icon: const Icon(Icons.shopping_bag),
-            label: const Text('List Packages'),
-            onPressed: _isLoading
-                ? null
-                : () => _run('List Packages', () async {
-                    final repo = getIt<WalletRepository>();
-                    final packages = await repo.listPackages();
-                    if (packages.isEmpty) return 'No packages available';
-                    return packages
-                        .map(
-                          (p) =>
-                              '${p.name} (${p.id})\n'
-                              '  ${p.coins} coins — '
-                              '${p.priceCents} cents ${p.currency}',
-                        )
-                        .join('\n\n');
-                  }),
-          ),
-          const Divider(height: 32),
-
           // Transactions
           Text('Transactions', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
@@ -133,94 +121,58 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
           ),
           const Divider(height: 32),
 
-          // Purchase
-          Text('Purchase', style: theme.textTheme.titleMedium),
+          // Store Products
+          Text('Store Products', style: theme.textTheme.titleMedium),
+          const SizedBox(height: 4),
+          Text('Status: ${_iapStatus.name}', style: theme.textTheme.bodySmall),
           const SizedBox(height: 8),
-          TextField(
-            controller: _packageIdCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Package ID',
-              border: OutlineInputBorder(),
-            ),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.refresh),
+            label: const Text('Load Products'),
+            onPressed: _isLoading
+                ? null
+                : () => _run('Load Products', () async {
+                    final iap = getIt<IapService>();
+                    final products = await iap.loadProducts();
+                    if (products.isEmpty) {
+                      return 'No products available\n'
+                          'Store available: ${iap.isAvailable}';
+                    }
+                    return products
+                        .map((p) => '${p.name}: ${p.coins} coins — ${p.price}')
+                        .join('\n');
+                  }),
           ),
           const SizedBox(height: 8),
-          TextField(
-            controller: _transactionIdCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Transaction ID (Apple)',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _productIdCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Product ID (Google)',
-              border: OutlineInputBorder(),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _purchaseTokenCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Purchase Token (Google)',
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 2,
-          ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ElevatedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () => _run('Apple Purchase', () async {
-                        final repo = getIt<WalletRepository>();
-                        await repo.purchaseApple(
-                          ApplePurchaseRequest(
-                            packageId: _packageIdCtrl.text.trim(),
-                            transactionId: _transactionIdCtrl.text.trim(),
-                          ),
-                        );
-                        return 'Apple purchase verified';
-                      }),
-                child: const Text('Apple'),
+
+          // Product list with buy buttons
+          if (_products.isNotEmpty) ...[
+            for (final product in _products)
+              Card(
+                child: ListTile(
+                  title: Text(product.name),
+                  subtitle: Text('${product.coins} coins'),
+                  trailing: ElevatedButton(
+                    onPressed:
+                        (_isLoading ||
+                            _iapStatus == IapStatus.pending ||
+                            _iapStatus == IapStatus.verifying)
+                        ? null
+                        : () => _run('Purchase ${product.name}', () async {
+                            final iap = getIt<IapService>();
+                            final ok = await iap.purchase(product);
+                            if (!ok) {
+                              return 'Purchase initiation failed: '
+                                  '${iap.lastError ?? "unknown"}';
+                            }
+                            return 'Purchase initiated — '
+                                'waiting for store confirmation';
+                          }),
+                    child: Text(product.price),
+                  ),
+                ),
               ),
-              ElevatedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () => _run('Google Purchase', () async {
-                        final repo = getIt<WalletRepository>();
-                        await repo.purchaseGoogle(
-                          GooglePurchaseRequest(
-                            packageId: _packageIdCtrl.text.trim(),
-                            productId: _productIdCtrl.text.trim(),
-                            purchaseToken: _purchaseTokenCtrl.text.trim(),
-                          ),
-                        );
-                        return 'Google purchase verified';
-                      }),
-                child: const Text('Google'),
-              ),
-              OutlinedButton(
-                onPressed: _isLoading
-                    ? null
-                    : () => _run('Stripe Checkout', () async {
-                        final repo = getIt<WalletRepository>();
-                        final result = await repo.checkoutStripe(
-                          InitiatePurchaseRequest(
-                            packageId: _packageIdCtrl.text.trim(),
-                          ),
-                        );
-                        return 'Session: ${result.sessionId}\n'
-                            'URL: ${result.checkoutUrl ?? 'N/A'}';
-                      }),
-                child: const Text('Stripe'),
-              ),
-            ],
-          ),
+          ],
           const Divider(height: 32),
 
           // Result display

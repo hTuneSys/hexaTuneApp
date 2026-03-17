@@ -16,4 +16,5 @@ enum LogCategory {
   ui,
   hardware,
   dsp,
+  payment,
 }
