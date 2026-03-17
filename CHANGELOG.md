@@ -1,3 +1,10 @@
+## [1.3.19](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.18...v1.3.19) (2026-03-17)
+
+
+### Bug Fixes
+
+* **ios:** preserve FFI export trie by setting STRIP_STYLE=non-global ([4178311](https://github.com/hTuneSys/hexaTuneApp/commit/417831124ad740983ff05d494991c1e111998b5c))
+
 ## [1.3.18](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.17...v1.3.18) (2026-03-16)
 
 
