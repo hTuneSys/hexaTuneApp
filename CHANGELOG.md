@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.4.0...v1.5.0) (2026-03-17)
+
+
+### Features
+
+* **payment:** add IAP service and remove Stripe from mobile ([eed9bbf](https://github.com/hTuneSys/hexaTuneApp/commit/eed9bbf2b7857d2512a775958a5f1e88cd17ba2c))
+
 # [1.4.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.21...v1.4.0) (2026-03-17)
 
 
