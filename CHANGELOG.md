@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.0...v1.5.1) (2026-03-17)
+
+
+### Bug Fixes
+
+* **payment:** only complete purchase after successful backend verification ([85566b6](https://github.com/hTuneSys/hexaTuneApp/commit/85566b64cc1ba93fb40e988ef3e12f274d71caf3))
+
 # [1.5.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.4.0...v1.5.0) (2026-03-17)
 
 
