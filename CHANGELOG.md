@@ -1,3 +1,11 @@
+## [1.5.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.3...v1.5.4) (2026-03-17)
+
+
+### Bug Fixes
+
+* **ci:** adjust distribution for draft app stage ([904fddc](https://github.com/hTuneSys/hexaTuneApp/commit/904fddcc814f1f2ebef446dc2defef1c35477451))
+* **ci:** use alpha track for Android stage builds ([36d328f](https://github.com/hTuneSys/hexaTuneApp/commit/36d328fdfa4dbfb2bab11777ab209b116201fb3f))
+
 ## [1.5.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.5.2...v1.5.3) (2026-03-17)
 
 
