@@ -1,3 +1,10 @@
+## [1.3.20](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.19...v1.3.20) (2026-03-17)
+
+
+### Bug Fixes
+
+* **ios:** use non-interleaved audio format for AVAudioEngine and decoder ([43bae24](https://github.com/hTuneSys/hexaTuneApp/commit/43bae24192a4e14d99b8d200814490b5730f238c))
+
 ## [1.3.19](https://github.com/hTuneSys/hexaTuneApp/compare/v1.3.18...v1.3.19) (2026-03-17)
 
 
