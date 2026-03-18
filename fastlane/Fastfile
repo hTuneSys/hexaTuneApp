@@ -136,7 +136,7 @@ platform :ios do
     UI.message("Distributing build #{build_num} to External Testers")
 
     upload_to_testflight(
-      skip_upload: true,
+      distribute_only: true,
       app_identifier: app_id,
       api_key_path: api_key_path,
       build_number: build_num,
