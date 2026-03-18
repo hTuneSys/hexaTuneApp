@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.4...v1.6.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* **android:** remove restrictive manifest features to allow broader device compatibility ([2c3172f](https://github.com/hTuneSys/hexaTuneApp/commit/2c3172f9fcb7afd0b6843af21ef6d1f4807766a2))
+
 ## [1.6.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.3...v1.6.4) (2026-03-18)
 
 
