@@ -102,7 +102,6 @@ platform :ios do
         api_key_path: api_key_path,
         skip_waiting_for_build_processing: true,
         distribute_external: false,
-        changelog: "hexaTune pre-release build for external testing. Please test core features and report any issues.",
       )
     when 'app_store'
       upload_to_app_store(
@@ -120,34 +119,6 @@ platform :ios do
     end
 
     UI.success("🎉 Upload completed for target: #{dist_target}")
-  end
-
-  desc "Distribute an already-uploaded build to External Testers on TestFlight"
-  lane :distribute_external do
-    api_key_path = ENV['APP_STORE_CONNECT_API_KEY_PATH']
-    UI.user_error!("APP_STORE_CONNECT_API_KEY_PATH is missing") unless api_key_path && File.exist?(api_key_path)
-
-    app_id = ENV['BUNDLE_ID'] || CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier) || 'com.hexatune.hexatuneapp'
-    build_num = ENV['BUILD_NUMBER']
-    UI.user_error!("BUILD_NUMBER is required for external distribution") unless build_num
-
-    changelog = ENV['CHANGELOG'] || "hexaTune pre-release build for external testing. Please test core features and report any issues."
-
-    UI.message("Distributing build #{build_num} to External Testers")
-
-    upload_to_testflight(
-      distribute_only: true,
-      app_identifier: app_id,
-      api_key_path: api_key_path,
-      build_number: build_num,
-      distribute_external: true,
-      groups: ["External Testers"],
-      changelog: changelog,
-      notify_external_testers: true,
-      skip_waiting_for_build_processing: false,
-    )
-
-    UI.success("🎉 Build #{build_num} distributed to External Testers")
   end
 end
 
