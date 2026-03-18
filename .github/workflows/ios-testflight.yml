@@ -20,6 +20,8 @@ jobs:
   build-and-upload:
     runs-on: macos-26
     timeout-minutes: 60
+    outputs:
+      build_number: ${{ steps.build-number.outputs.build_number }}
     defaults:
       run:
         working-directory: hexatuneapp
@@ -105,9 +107,11 @@ jobs:
           ls -l "$HOME/Library/MobileDevice/Provisioning Profiles" || true
 
       - name: Derive BUILD_NUMBER from run_number
+        id: build-number
         run: |
           BUILD_NUMBER=$((10000 + GITHUB_RUN_NUMBER))
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          echo "build_number=$BUILD_NUMBER" >> $GITHUB_OUTPUT
           echo "🔢 Using BUILD_NUMBER=$BUILD_NUMBER"
 
       - name: Create environment file
@@ -396,3 +400,50 @@ jobs:
           name: ios-ipa-${{ env.ENVIRONMENT }}
           path: hexatuneapp/build/ios/ipa/*.ipa
           if-no-files-found: ignore
+
+  distribute-external:
+    needs: build-and-upload
+    if: github.event.inputs.environment == 'stage'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    env:
+      BUNDLE_ID: com.hexatune.hexatuneapp
+      BUILD_NUMBER: ${{ needs.build-and-upload.outputs.build_number }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+          working-directory: .
+
+      - name: Configure App Store Connect API key
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE/fastlane"
+          python3 - <<'PY'
+          import os, json
+          key = os.environ["ASC_PRIVATE_KEY"].replace("\\n","\n")
+          payload = {
+            "key_id": os.environ["ASC_KEY_ID"],
+            "issuer_id": os.environ["ASC_ISSUER_ID"],
+            "key": key,
+            "in_house": False
+          }
+          with open(os.environ["GITHUB_WORKSPACE"] + "/fastlane/api_key.json","w") as f:
+            json.dump(payload, f)
+          PY
+          echo "APP_STORE_CONNECT_API_KEY_PATH=$GITHUB_WORKSPACE/fastlane/api_key.json" >> $GITHUB_ENV
+
+      - name: Distribute to External Testers
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          bundle exec fastlane ios distribute_external
