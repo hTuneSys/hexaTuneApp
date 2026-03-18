@@ -11,7 +11,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/theme/hexatune.dart';
 import 'package:hexatuneapp/src/app.dart';
-import 'package:hexatuneapp/src/pages/shared/splash_page.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/splash_page.dart';
 
 /// Root widget that manages the bootstrap-to-app lifecycle.
 ///

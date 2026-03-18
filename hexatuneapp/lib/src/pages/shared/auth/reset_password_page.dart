@@ -8,31 +8,35 @@ import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/core/rest/auth/models/resend_verification_request.dart';
-import 'package:hexatuneapp/src/core/rest/auth/models/verify_email_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/resend_password_reset_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/hexagonal_background.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/password_strength_indicator.dart';
 
-/// Email OTP verification page matching the Figma design.
-class VerifyEmailPage extends StatefulWidget {
-  const VerifyEmailPage({required this.email, super.key});
+/// Reset password page with OTP verification + new password, matching Figma.
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({required this.email, super.key});
 
   final String email;
 
   @override
-  State<VerifyEmailPage> createState() => _VerifyEmailPageState();
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
 }
 
-class _VerifyEmailPageState extends State<VerifyEmailPage> {
-  final _otpKey = GlobalKey<OtpInputFieldState>();
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  final _passwordController = TextEditingController();
+  final _confirmController = TextEditingController();
   String _otpCode = '';
   bool _isLoading = false;
   bool _isResending = false;
+  bool _obscurePassword = true;
+  bool _obscureConfirm = true;
 
   // Resend countdown
   int _resendSeconds = 30;
@@ -47,6 +51,8 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   @override
   void dispose() {
     _resendTimer?.cancel();
+    _passwordController.dispose();
+    _confirmController.dispose();
     super.dispose();
   }
 
@@ -69,13 +75,26 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Verify
+  // Reset password
   // ---------------------------------------------------------------------------
 
-  Future<void> _verify() async {
+  Future<void> _resetPassword() async {
     final l10n = AppLocalizations.of(context)!;
+
     if (_otpCode.length < 8) {
       _showMessage(l10n.otpRequired, isError: true);
+      return;
+    }
+
+    final password = _passwordController.text;
+    final confirm = _confirmController.text;
+
+    if (password.isEmpty) {
+      _showMessage(l10n.passwordRequired, isError: true);
+      return;
+    }
+    if (password != confirm) {
+      _showMessage(l10n.passwordsDoNotMatch, isError: true);
       return;
     }
 
@@ -84,22 +103,26 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
     try {
       log.devLog(
-        '→ Verify email: email=${widget.email}, code=$_otpCode',
+        '→ Reset password: email=${widget.email}, code=$_otpCode',
         category: LogCategory.ui,
       );
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.verifyEmail(
-        VerifyEmailRequest(email: widget.email, code: _otpCode),
+      await authRepo.resetPassword(
+        ResetPasswordRequest(
+          email: widget.email,
+          code: _otpCode,
+          newPassword: password,
+        ),
       );
 
-      log.devLog('✓ Email verified successfully', category: LogCategory.ui);
+      log.devLog('✓ Password reset successfully', category: LogCategory.ui);
 
       if (!mounted) return;
-      _showMessage(l10n.emailVerifiedSignIn, isError: false);
+      _showMessage(l10n.passwordResetSuccess, isError: false);
       context.go(RouteNames.login);
     } catch (e) {
-      log.devLog('✗ Verify failed: $e', category: LogCategory.ui);
+      log.devLog('✗ Reset password failed: $e', category: LogCategory.ui);
       if (mounted) _showMessage(e.toString(), isError: true);
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -107,7 +130,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Resend
+  // Resend OTP
   // ---------------------------------------------------------------------------
 
   Future<void> _resendOtp() async {
@@ -116,20 +139,20 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
     try {
       log.devLog(
-        '→ Resend OTP: email=${widget.email}',
+        '→ Resend password reset OTP: email=${widget.email}',
         category: LogCategory.ui,
       );
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.resendVerification(
-        ResendVerificationRequest(email: widget.email),
+      await authRepo.resendPasswordReset(
+        ResendPasswordResetRequest(email: widget.email),
       );
 
-      log.devLog('✓ Verification email resent', category: LogCategory.ui);
+      log.devLog('✓ Password reset OTP resent', category: LogCategory.ui);
 
       if (mounted) {
         final l10n = AppLocalizations.of(context)!;
-        _showMessage(l10n.verificationCodeResent, isError: false);
+        _showMessage(l10n.otpSentTo(widget.email), isError: false);
         _startResendTimer();
       }
     } catch (e) {
@@ -179,56 +202,99 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   children: [
                     const SizedBox(height: 48),
                     const AuthHeader(),
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 32),
 
-                    // Title
+                    // Title + subtitle
                     Text(
-                      l10n.enterOtpCode,
+                      l10n.resetYourPassword,
                       style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Subtitle
-                    Text(
-                      l10n.verificationCodeSentTo,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.email,
-                      style: theme.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      l10n.enterDigitCodeBelow,
-                      style: theme.textTheme.bodySmall?.copyWith(
+                      l10n.resetPasswordSubtitle,
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
                     // OTP input
                     OtpInputField(
-                      key: _otpKey,
-                      onCompleted: (code) {
-                        _otpCode = code;
-                        _verify();
-                      },
+                      onCompleted: (code) => _otpCode = code,
                       onChanged: (code) => _otpCode = code,
                     ),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 24),
 
-                    // Verify button
+                    // New Password
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextField(
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          labelText: l10n.newPassword,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                            ),
+                            onPressed: () => setState(
+                              () => _obscurePassword = !_obscurePassword,
+                            ),
+                          ),
+                        ),
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.next,
+                        onChanged: (_) => setState(() {}),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Strength indicator
+                    PasswordStrengthIndicator(
+                      password: _passwordController.text,
+                    ),
+                    const SizedBox(height: 16),
+
+                    // Confirm Password
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextField(
+                        controller: _confirmController,
+                        decoration: InputDecoration(
+                          labelText: l10n.confirmPassword,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscureConfirm
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                            ),
+                            onPressed: () => setState(
+                              () => _obscureConfirm = !_obscureConfirm,
+                            ),
+                          ),
+                        ),
+                        obscureText: _obscureConfirm,
+                        textInputAction: TextInputAction.done,
+                        onSubmitted: (_) => _resetPassword(),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // Reset Password button
                     SizedBox(
                       width: double.infinity,
                       child: FilledButton(
-                        onPressed: _isLoading ? null : _verify,
+                        onPressed: _isLoading ? null : _resetPassword,
                         style: FilledButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
@@ -244,7 +310,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                                   color: theme.colorScheme.onPrimary,
                                 ),
                               )
-                            : Text(l10n.verify),
+                            : Text(l10n.resetPassword),
                       ),
                     ),
                     const SizedBox(height: 24),

@@ -9,9 +9,9 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/reset_password_page.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/otp_input_field.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/password_strength_indicator.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/reset_password_page.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/password_strength_indicator.dart';
 
 class MockLogService extends Mock implements LogService {}
 

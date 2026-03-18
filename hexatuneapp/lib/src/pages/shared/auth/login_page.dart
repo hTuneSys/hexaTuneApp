@@ -1,63 +1,60 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
-import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
-import 'package:hexatuneapp/src/core/rest/auth/models/create_account_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
+import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
+import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
+import 'package:hexatuneapp/src/core/rest/device/models/register_push_token_request.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/hexagonal_background.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/password_strength_indicator.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/social_sign_in_buttons.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/social_sign_in_buttons.dart';
 
-/// Registration page matching the Figma design.
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+/// Login page matching the Figma design.
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
-  bool _obscureConfirm = true;
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
   // ---------------------------------------------------------------------------
-  // Email registration
+  // Email login
   // ---------------------------------------------------------------------------
 
-  Future<void> _register() async {
+  Future<void> _login() async {
     final l10n = AppLocalizations.of(context)!;
     final email = _emailController.text.trim();
     final password = _passwordController.text;
-    final confirm = _confirmPasswordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      _showMessage(l10n.emailAndPasswordRequired, isError: true);
-      return;
-    }
-    if (password != confirm) {
-      _showMessage(l10n.passwordsDoNotMatch, isError: true);
+      _showError(l10n.emailAndPasswordRequired);
       return;
     }
 
@@ -65,34 +62,42 @@ class _RegisterPageState extends State<RegisterPage> {
     final log = getIt<LogService>();
 
     try {
-      log.devLog('→ Register attempt: email=$email', category: LogCategory.ui);
+      final authService = getIt<AuthService>();
+      final deviceService = getIt<DeviceService>();
 
-      final authRepo = getIt<AuthRepository>();
-      await authRepo.register(
-        CreateAccountRequest(email: email, password: password),
+      log.devLog(
+        '→ Login attempt: email=$email, deviceId=${deviceService.deviceId}',
+        category: LogCategory.ui,
       );
 
-      log.devLog('✓ Register success', category: LogCategory.ui);
-
-      if (!mounted) return;
-      _showMessage(l10n.accountCreatedVerifyEmail, isError: false);
-
-      context.go(
-        '${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}',
+      final response = await authService.login(
+        LoginRequest(
+          email: email,
+          password: password,
+          deviceId: deviceService.deviceId,
+        ),
       );
+
+      log.devLog(
+        '✓ Login success: sessionId=${response.sessionId}, '
+        'expiresAt=${response.expiresAt}',
+        category: LogCategory.ui,
+      );
+
+      await _registerPushToken();
     } catch (e) {
-      log.devLog('✗ Register failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      log.devLog('✗ Login failed: $e', category: LogCategory.ui);
+      _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
   // ---------------------------------------------------------------------------
-  // OAuth sign-up (unified endpoint)
+  // OAuth flows
   // ---------------------------------------------------------------------------
 
-  Future<void> _signUpWithGoogle() async {
+  Future<void> _signInWithGoogle() async {
     setState(() => _isLoading = true);
     final log = getIt<LogService>();
 
@@ -104,31 +109,32 @@ class _RegisterPageState extends State<RegisterPage> {
       final response = await authService.loginWithGoogle(request);
 
       log.devLog(
-        '✓ Google sign-up: sessionId=${response.sessionId}, '
+        '✓ Google sign-in: sessionId=${response.sessionId}, '
         'isNewAccount=${response.isNewAccount}',
         category: LogCategory.ui,
       );
 
-      if (!mounted) return;
-      final l10n = AppLocalizations.of(context)!;
-      if (response.isNewAccount) {
-        _showMessage(l10n.newAccountViaGoogle, isError: false);
+      if (mounted && response.isNewAccount) {
+        final l10n = AppLocalizations.of(context)!;
+        _showInfo(l10n.newAccountViaGoogle);
       }
+
+      await _registerPushToken();
     } on OAuthCancelledException {
-      log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
+      log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
+      _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
-  Future<void> _signUpWithApple() async {
+  Future<void> _signInWithApple() async {
     final oauthService = getIt<OAuthService>();
     if (!oauthService.isAppleSignInAvailable) {
       final l10n = AppLocalizations.of(context)!;
-      _showMessage(l10n.appleSignInNotAvailable, isError: true);
+      _showError(l10n.appleSignInNotAvailable);
       return;
     }
 
@@ -141,23 +147,60 @@ class _RegisterPageState extends State<RegisterPage> {
       final response = await authService.loginWithApple(request);
 
       log.devLog(
-        '✓ Apple sign-up: sessionId=${response.sessionId}, '
+        '✓ Apple sign-in: sessionId=${response.sessionId}, '
         'isNewAccount=${response.isNewAccount}',
         category: LogCategory.ui,
       );
 
-      if (!mounted) return;
-      final l10n = AppLocalizations.of(context)!;
-      if (response.isNewAccount) {
-        _showMessage(l10n.newAccountViaApple, isError: false);
+      if (mounted && response.isNewAccount) {
+        final l10n = AppLocalizations.of(context)!;
+        _showInfo(l10n.newAccountViaApple);
       }
+
+      await _registerPushToken();
     } on OAuthCancelledException {
-      log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
+      log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
-      log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
+      _showError(e.toString());
     } finally {
       if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Push token registration
+  // ---------------------------------------------------------------------------
+
+  Future<void> _registerPushToken() async {
+    try {
+      final notificationService = getIt<NotificationService>();
+
+      if (notificationService.fcmToken == null) {
+        getIt<LogService>().devLog(
+          'Initializing NotificationService after login…',
+          category: LogCategory.notification,
+        );
+        await notificationService.init();
+      }
+
+      final fcmToken = notificationService.fcmToken;
+      if (fcmToken == null) return;
+
+      final deviceRepo = getIt<DeviceRepository>();
+      await deviceRepo.registerPushToken(
+        RegisterPushTokenRequest(
+          token: fcmToken,
+          platform: Platform.isIOS ? 'ios' : 'android',
+          appId: Env.appBundleId,
+        ),
+      );
+    } catch (e) {
+      getIt<LogService>().warning(
+        'Push token registration failed (non-critical)',
+        category: LogCategory.notification,
+        exception: e,
+      );
     }
   }
 
@@ -165,15 +208,22 @@ class _RegisterPageState extends State<RegisterPage> {
   // Helpers
   // ---------------------------------------------------------------------------
 
-  void _showMessage(String message, {required bool isError}) {
+  void _showError(String message) {
     if (!mounted) return;
-    final theme = Theme.of(context);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
-        backgroundColor: isError
-            ? theme.colorScheme.error
-            : theme.colorScheme.primary,
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+    );
+  }
+
+  void _showInfo(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -199,28 +249,20 @@ class _RegisterPageState extends State<RegisterPage> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
                     const Center(child: AuthHeader()),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 48),
 
-                    // Title + subtitle
+                    // Title
                     Text(
-                      l10n.createAnAccount,
+                      l10n.signInTitle,
                       style: theme.textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.signUpSubtitle,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 24),
 
-                    // Email
+                    // Email field
                     TextField(
                       controller: _emailController,
                       decoration: InputDecoration(
@@ -234,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Password
+                    // Password field
                     TextField(
                       controller: _passwordController,
                       decoration: InputDecoration(
@@ -254,45 +296,26 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
-                      onChanged: (_) => setState(() {}),
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _login(),
+                    ),
+
+                    // Forgot Password link
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () => context.go(RouteNames.forgotPassword),
+                        child: Text(
+                          l10n.forgotPasswordQuestion,
+                          style: TextStyle(color: theme.colorScheme.primary),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
 
-                    // Strength indicator
-                    PasswordStrengthIndicator(
-                      password: _passwordController.text,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Confirm password
-                    TextField(
-                      controller: _confirmPasswordController,
-                      decoration: InputDecoration(
-                        labelText: l10n.confirmPassword,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureConfirm
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscureConfirm = !_obscureConfirm,
-                          ),
-                        ),
-                      ),
-                      obscureText: _obscureConfirm,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _register(),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Sign Up button
+                    // Sign In button
                     FilledButton(
-                      onPressed: _isLoading ? null : _register,
+                      onPressed: _isLoading ? null : _login,
                       style: FilledButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
@@ -308,30 +331,30 @@ class _RegisterPageState extends State<RegisterPage> {
                                 color: theme.colorScheme.onPrimary,
                               ),
                             )
-                          : Text(l10n.signUp),
+                          : Text(l10n.signIn),
                     ),
                     const SizedBox(height: 24),
 
-                    // Social
+                    // Social sign-in
                     SocialSignInButtons(
-                      onApplePressed: _signUpWithApple,
-                      onGooglePressed: _signUpWithGoogle,
+                      onApplePressed: _signInWithApple,
+                      onGooglePressed: _signInWithGoogle,
                       isLoading: _isLoading,
                     ),
                     const SizedBox(height: 24),
 
-                    // Login link
+                    // Register link
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          l10n.alreadyHaveAccountPrefix,
+                          l10n.dontHaveAccountPrefix,
                           style: theme.textTheme.bodyMedium,
                         ),
                         GestureDetector(
-                          onTap: () => context.go(RouteNames.login),
+                          onTap: () => context.go(RouteNames.register),
                           child: Text(
-                            l10n.signInLink,
+                            l10n.createAccount,
                             style: theme.textTheme.bodyMedium?.copyWith(
                               color: theme.colorScheme.primary,
                               fontWeight: FontWeight.w600,

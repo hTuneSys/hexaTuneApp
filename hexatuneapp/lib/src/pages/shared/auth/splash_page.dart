@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/hexagonal_background.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
 
 /// Splash screen shown during app initialization.
 ///

@@ -11,8 +11,8 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/hexagonal_background.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
 
 /// Forgot password page — sends OTP reset code to the given email.
 class ForgotPasswordPage extends StatefulWidget {

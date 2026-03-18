@@ -9,7 +9,7 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/forgot_password_page.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/forgot_password_page.dart';
 
 class MockLogService extends Mock implements LogService {}
 

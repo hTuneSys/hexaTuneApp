@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/password_strength_indicator.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/password_strength_indicator.dart';
 
 Widget _buildApp({required String password}) {
   return MaterialApp(

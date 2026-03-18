@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
-import 'package:hexatuneapp/src/pages/shared/widgets/social_sign_in_buttons.dart';
+import 'package:hexatuneapp/src/pages/shared/auth/widgets/social_sign_in_buttons.dart';
 
 Widget _buildApp({
   VoidCallback? onApplePressed,
