@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.3...v1.6.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* **ci:** use distribute_only instead of invalid skip_upload parameter ([411c2e0](https://github.com/hTuneSys/hexaTuneApp/commit/411c2e0b070d20ea89c191ce3b9cc07a7be7955c))
+
 ## [1.6.3](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.2...v1.6.3) (2026-03-18)
 
 
