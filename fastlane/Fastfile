@@ -136,6 +136,7 @@ platform :ios do
     UI.message("Distributing build #{build_num} to External Testers")
 
     upload_to_testflight(
+      skip_upload: true,
       app_identifier: app_id,
       api_key_path: api_key_path,
       build_number: build_num,
@@ -144,22 +145,6 @@ platform :ios do
       changelog: changelog,
       notify_external_testers: true,
       skip_waiting_for_build_processing: false,
-      beta_app_review_info: {
-        contact_email: "info@hexatune.com",
-        contact_first_name: "Husamettin",
-        contact_last_name: "ARABACI",
-        contact_phone: "+13022898727",
-        demo_account_required: true,
-        demo_account_name: "owner@hexatune.com",
-        demo_account_password: "Password123!",
-        notes: "Login is required to access app features. Use the provided demo account credentials to sign in and explore the app.",
-      },
-      localized_app_info: {
-        "default" => {
-          feedback_email: "info@hexatune.com",
-          description: "hexaTune pre-release beta build for external testing. Please report any issues or feedback through the app or via email.",
-        },
-      },
     )
 
     UI.success("🎉 Build #{build_num} distributed to External Testers")
