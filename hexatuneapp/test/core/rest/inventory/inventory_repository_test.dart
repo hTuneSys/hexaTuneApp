@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http_mock_adapter/http_mock_adapter.dart';
@@ -163,6 +165,89 @@ void main() {
         final result = await repository.listLabels();
 
         expect(result, isEmpty);
+      });
+    });
+
+    group('create', () {
+      test('sends POST and returns created inventory', () async {
+        dioAdapter.onPost(
+          ApiEndpoints.inventories,
+          (server) => server.reply(201, inventoryJson),
+          data: Matchers.any,
+        );
+
+        final result = await repository.create(
+          categoryId: 'cat-001',
+          name: 'Red Paint',
+        );
+
+        expect(result, isA<InventoryResponse>());
+        expect(result.name, 'Red Paint');
+      });
+
+      test('includes image bytes as multipart when provided', () async {
+        dioAdapter.onPost(
+          ApiEndpoints.inventories,
+          (server) => server.reply(201, inventoryJson),
+          data: Matchers.any,
+        );
+
+        final result = await repository.create(
+          categoryId: 'cat-001',
+          name: 'Red Paint',
+          imageBytes: Uint8List.fromList([0xFF, 0xD8, 0xFF, 0xE0]),
+        );
+
+        expect(result, isA<InventoryResponse>());
+      });
+
+      test('sends optional fields when provided', () async {
+        dioAdapter.onPost(
+          ApiEndpoints.inventories,
+          (server) => server.reply(201, inventoryJson),
+          data: Matchers.any,
+        );
+
+        final result = await repository.create(
+          categoryId: 'cat-001',
+          name: 'Red Paint',
+          description: 'A red oil paint',
+          labels: ['oil'],
+        );
+
+        expect(result.name, 'Red Paint');
+      });
+    });
+
+    group('update', () {
+      test('sends PATCH and returns updated inventory', () async {
+        dioAdapter.onPatch(
+          ApiEndpoints.inventory('inv-001'),
+          (server) => server.reply(200, inventoryJson),
+          data: Matchers.any,
+        );
+
+        final result = await repository.update(
+          'inv-001',
+          name: 'Updated Paint',
+        );
+
+        expect(result, isA<InventoryResponse>());
+      });
+
+      test('includes image bytes as multipart when provided', () async {
+        dioAdapter.onPatch(
+          ApiEndpoints.inventory('inv-001'),
+          (server) => server.reply(200, inventoryJson),
+          data: Matchers.any,
+        );
+
+        final result = await repository.update(
+          'inv-001',
+          imageBytes: Uint8List.fromList([0xFF, 0xD8, 0xFF, 0xE0]),
+        );
+
+        expect(result, isA<InventoryResponse>());
       });
     });
   });

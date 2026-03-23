@@ -2,12 +2,11 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:convert';
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path/path.dart' as p;
 
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/image_url_response.dart';
@@ -57,7 +56,7 @@ class InventoryRepository {
     required String name,
     String? description,
     List<String>? labels,
-    File? imageFile,
+    Uint8List? imageBytes,
   }) async {
     _logService.debug('POST inventory', category: LogCategory.network);
     final formData = FormData.fromMap(<String, dynamic>{
@@ -65,10 +64,10 @@ class InventoryRepository {
       'name': name,
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
-      if (imageFile != null)
+      if (imageBytes != null)
         'image': MultipartFile.fromBytes(
-          await imageFile.readAsBytes(),
-          filename: p.basename(imageFile.path),
+          imageBytes,
+          filename: 'inventory.jpg',
           contentType: MediaType('image', 'jpeg'),
         ),
     });
@@ -111,7 +110,7 @@ class InventoryRepository {
     String? name,
     String? description,
     List<String>? labels,
-    File? imageFile,
+    Uint8List? imageBytes,
   }) async {
     _logService.debug('PATCH inventory $id', category: LogCategory.network);
     final formData = FormData.fromMap(<String, dynamic>{
@@ -119,10 +118,10 @@ class InventoryRepository {
       if (name != null) 'name': name,
       if (description != null) 'description': description,
       if (labels != null) 'labels': jsonEncode(labels),
-      if (imageFile != null)
+      if (imageBytes != null)
         'image': MultipartFile.fromBytes(
-          await imageFile.readAsBytes(),
-          filename: p.basename(imageFile.path),
+          imageBytes,
+          filename: 'inventory.jpg',
           contentType: MediaType('image', 'jpeg'),
         ),
     });

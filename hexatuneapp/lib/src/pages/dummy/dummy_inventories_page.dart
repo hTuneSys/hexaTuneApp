@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/media/image_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 
 /// Dummy page for testing inventory CRUD endpoints.
@@ -102,8 +104,15 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
     }
   }
 
-  Future<XFile?> _pickImage(ImageSource source) async {
-    return _picker.pickImage(source: source);
+  Future<({String name, Uint8List bytes})?> _pickImage(
+    ImageSource source,
+  ) async {
+    final xFile = await _picker.pickImage(source: source);
+    if (xFile == null) return null;
+    final imageService = getIt<ImageService>();
+    final bytes = await imageService.processFile(File(xFile.path));
+    if (bytes == null) return null;
+    return (name: xFile.name, bytes: bytes);
   }
 
   Future<List<CategoryResponse>> _fetchCategories() async {
@@ -125,7 +134,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
     final nameCtrl = TextEditingController();
     final descCtrl = TextEditingController();
     final labelsCtrl = TextEditingController();
-    XFile? pickedImage;
+    ({String name, Uint8List bytes})? pickedImage;
     String? selectedCategoryId;
 
     final result = await showDialog<bool>(
@@ -239,7 +248,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
         name: nameCtrl.text.trim(),
         description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
-        imageFile: pickedImage != null ? File(pickedImage!.path) : null,
+        imageBytes: pickedImage?.bytes,
       );
       if (mounted) {
         _showMessage('Inventory created');
@@ -353,7 +362,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
     final nameCtrl = TextEditingController(text: item.name);
     final descCtrl = TextEditingController(text: item.description ?? '');
     final labelsCtrl = TextEditingController(text: item.labels.join(', '));
-    XFile? pickedImage;
+    ({String name, Uint8List bytes})? pickedImage;
     String? selectedCategoryId = categories.any((c) => c.id == item.categoryId)
         ? item.categoryId
         : null;
@@ -470,7 +479,7 @@ class _DummyInventoriesPageState extends State<DummyInventoriesPage> {
         name: nameCtrl.text.trim().isEmpty ? null : nameCtrl.text.trim(),
         description: descCtrl.text.trim().isEmpty ? null : descCtrl.text.trim(),
         labels: labels.isEmpty ? null : labels,
-        imageFile: pickedImage != null ? File(pickedImage!.path) : null,
+        imageBytes: pickedImage?.bytes,
       );
       if (mounted) {
         _showMessage('Inventory updated');

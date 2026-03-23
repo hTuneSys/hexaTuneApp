@@ -9,6 +9,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/media/image_service.dart';
 import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
 import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
@@ -24,6 +25,8 @@ class MockInventoryRepository extends Mock implements InventoryRepository {}
 class MockCategoryRepository extends Mock implements CategoryRepository {}
 
 class MockLogService extends Mock implements LogService {}
+
+class MockImageService extends Mock implements ImageService {}
 
 const _emptyPagination = PaginationMeta(
   hasMore: false,
@@ -66,11 +69,13 @@ void main() {
   late MockInventoryRepository mockRepo;
   late MockCategoryRepository mockCatRepo;
   late MockLogService mockLog;
+  late MockImageService mockImageService;
 
   setUp(() {
     mockRepo = MockInventoryRepository();
     mockCatRepo = MockCategoryRepository();
     mockLog = MockLogService();
+    mockImageService = MockImageService();
 
     when(() => mockRepo.list(params: any(named: 'params'))).thenAnswer(
       (_) async => PaginatedResponse(
@@ -112,6 +117,7 @@ void main() {
     getIt.registerSingleton<InventoryRepository>(mockRepo);
     getIt.registerSingleton<CategoryRepository>(mockCatRepo);
     getIt.registerSingleton<LogService>(mockLog);
+    getIt.registerSingleton<ImageService>(mockImageService);
   });
 
   tearDown(() async {
