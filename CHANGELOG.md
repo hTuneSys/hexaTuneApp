@@ -1,3 +1,10 @@
+## [1.6.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.5...v1.6.6) (2026-03-23)
+
+
+### Bug Fixes
+
+* **inventory:** process camera images via ImageService before upload ([14e1814](https://github.com/hTuneSys/hexaTuneApp/commit/14e181491b28fe5fbd2f3ba8c18a58aa81f76915))
+
 ## [1.6.5](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.4...v1.6.5) (2026-03-18)
 
 
