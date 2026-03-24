@@ -386,5 +386,64 @@
   "inventoryCategoryRequired": "Category is required",
   "inventoryNameRequired": "Name is required",
   "inventoryImageCamera": "Camera",
-  "inventoryImageGallery": "Gallery"
+  "inventoryImageGallery": "Gallery",
+
+  "formulaManagement": "Formula Management",
+  "formulaCreate": "Create Formula",
+  "formulaEdit": "Edit Formula",
+  "formulaView": "View Formula",
+  "formulaName": "Name",
+  "formulaNameHint": "Enter formula name",
+  "formulaDescription": "Description",
+  "formulaDescriptionHint": "Enter a short description",
+  "formulaLabels": "Labels",
+  "formulaAddLabel": "Add labels",
+  "formulaAddInventory": "Add Inventory",
+  "formulaSearchInventory": "Search inventory to add",
+  "formulaItemCount": "Count",
+  "formulaInventoryCount": "{count} Inventory",
+  "@formulaInventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "formulaSearchHint": "Search formulas...",
+  "formulaSortTitle": "Sort",
+  "formulaFilterTitle": "Filter",
+  "formulaSortDefault": "Default",
+  "formulaSortNameAsc": "Name (A→Z)",
+  "formulaSortNameDesc": "Name (Z→A)",
+  "formulaSortNewest": "Newest first",
+  "formulaSortOldest": "Oldest first",
+  "formulaEmptyTitle": "No formulas yet.",
+  "formulaEmptyHint": "Press the + button to add your first item.",
+  "formulaCreated": "Formula created",
+  "formulaUpdated": "Formula saved",
+  "formulaDeleted": "Formula deleted",
+  "formulaDeleteConfirm": "Are you sure you want to delete {name}?",
+  "@formulaDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "formulaNoLabels": "No labels",
+  "formulaEditMenuItem": "Edit",
+  "formulaViewMenuItem": "View",
+  "formulaNameRequired": "Name is required",
+  "formulaAddedInventory": "Added inventory",
+  "formulaItemRemoved": "Item removed",
+  "formulaItemAdded": "Item added",
+  "formulaQuantityMax": "Maximum total quantity reached ({max})",
+  "@formulaQuantityMax": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "formulaInventoryDuplicate": "This inventory is already added"
 }

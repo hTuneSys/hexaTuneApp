@@ -844,4 +844,121 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get inventoryImageGallery => 'Galeri';
+
+  @override
+  String get formulaManagement => 'Formül Yönetimi';
+
+  @override
+  String get formulaCreate => 'Formül Oluştur';
+
+  @override
+  String get formulaEdit => 'Formül Düzenle';
+
+  @override
+  String get formulaView => 'Formül Görüntüle';
+
+  @override
+  String get formulaName => 'Ad';
+
+  @override
+  String get formulaNameHint => 'Formül adını girin';
+
+  @override
+  String get formulaDescription => 'Açıklama';
+
+  @override
+  String get formulaDescriptionHint => 'Kısa bir açıklama girin';
+
+  @override
+  String get formulaLabels => 'Etiketler';
+
+  @override
+  String get formulaAddLabel => 'Etiket ekle';
+
+  @override
+  String get formulaAddInventory => 'Envanter Ekle';
+
+  @override
+  String get formulaSearchInventory => 'Eklenecek envanteri ara';
+
+  @override
+  String get formulaItemCount => 'Adet';
+
+  @override
+  String formulaInventoryCount(int count) {
+    return '$count Envanter';
+  }
+
+  @override
+  String get formulaSearchHint => 'Formülleri ara...';
+
+  @override
+  String get formulaSortTitle => 'Sırala';
+
+  @override
+  String get formulaFilterTitle => 'Filtre';
+
+  @override
+  String get formulaSortDefault => 'Varsayılan';
+
+  @override
+  String get formulaSortNameAsc => 'Ad (A→Z)';
+
+  @override
+  String get formulaSortNameDesc => 'Ad (Z→A)';
+
+  @override
+  String get formulaSortNewest => 'En yeni';
+
+  @override
+  String get formulaSortOldest => 'En eski';
+
+  @override
+  String get formulaEmptyTitle => 'Henüz formül yok.';
+
+  @override
+  String get formulaEmptyHint => 'İlk öğenizi eklemek için + düğmesine basın.';
+
+  @override
+  String get formulaCreated => 'Formül oluşturuldu';
+
+  @override
+  String get formulaUpdated => 'Formül kaydedildi';
+
+  @override
+  String get formulaDeleted => 'Formül silindi';
+
+  @override
+  String formulaDeleteConfirm(String name) {
+    return '$name silmek istediğinizden emin misiniz?';
+  }
+
+  @override
+  String get formulaNoLabels => 'Etiket yok';
+
+  @override
+  String get formulaEditMenuItem => 'Düzenle';
+
+  @override
+  String get formulaViewMenuItem => 'Görüntüle';
+
+  @override
+  String get formulaNameRequired => 'Ad gereklidir';
+
+  @override
+  String get formulaAddedInventory => 'Eklenen envanter';
+
+  @override
+  String get formulaItemRemoved => 'Öğe kaldırıldı';
+
+  @override
+  String get formulaItemAdded => 'Öğe eklendi';
+
+  @override
+  String formulaQuantityMax(int max) {
+    return 'Maksimum toplam miktar aşıldı ($max)';
+  }
+
+  @override
+  String get formulaInventoryDuplicate => 'Bu envanter zaten eklenmiş';
 }

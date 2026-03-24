@@ -29,7 +29,6 @@ void main() {
       expect(RouteNames.devices, startsWith('/dev/'));
       expect(RouteNames.providers, startsWith('/dev/'));
       expect(RouteNames.tenants, startsWith('/dev/'));
-      expect(RouteNames.inventories, startsWith('/dev/'));
       expect(RouteNames.formulas, startsWith('/dev/'));
       expect(RouteNames.formulaItems, startsWith('/dev/'));
       expect(RouteNames.tasks, startsWith('/dev/'));
@@ -50,6 +49,18 @@ void main() {
     test('inventory helper methods generate correct paths', () {
       expect(RouteNames.inventoryEditFor('abc'), '/inventories/abc/edit');
       expect(RouteNames.inventoryViewFor('abc'), '/inventories/abc');
+    });
+
+    test('formula production routes have correct paths', () {
+      expect(RouteNames.formulaList, '/formulas');
+      expect(RouteNames.formulaCreate, '/formulas/create');
+      expect(RouteNames.formulaEdit, '/formulas/:formulaId/edit');
+      expect(RouteNames.formulaView, '/formulas/:formulaId');
+    });
+
+    test('formula helper methods generate correct paths', () {
+      expect(RouteNames.formulaEditFor('abc'), '/formulas/abc/edit');
+      expect(RouteNames.formulaViewFor('abc'), '/formulas/abc');
     });
   });
 }

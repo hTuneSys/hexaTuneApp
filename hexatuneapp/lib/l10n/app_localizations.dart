@@ -1669,6 +1669,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Gallery'**
   String get inventoryImageGallery;
+
+  /// No description provided for @formulaManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula Management'**
+  String get formulaManagement;
+
+  /// No description provided for @formulaCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Formula'**
+  String get formulaCreate;
+
+  /// No description provided for @formulaEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Formula'**
+  String get formulaEdit;
+
+  /// No description provided for @formulaView.
+  ///
+  /// In en, this message translates to:
+  /// **'View Formula'**
+  String get formulaView;
+
+  /// No description provided for @formulaName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get formulaName;
+
+  /// No description provided for @formulaNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter formula name'**
+  String get formulaNameHint;
+
+  /// No description provided for @formulaDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get formulaDescription;
+
+  /// No description provided for @formulaDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a short description'**
+  String get formulaDescriptionHint;
+
+  /// No description provided for @formulaLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'Labels'**
+  String get formulaLabels;
+
+  /// No description provided for @formulaAddLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add labels'**
+  String get formulaAddLabel;
+
+  /// No description provided for @formulaAddInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Inventory'**
+  String get formulaAddInventory;
+
+  /// No description provided for @formulaSearchInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Search inventory to add'**
+  String get formulaSearchInventory;
+
+  /// No description provided for @formulaItemCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Count'**
+  String get formulaItemCount;
+
+  /// No description provided for @formulaInventoryCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Inventory'**
+  String formulaInventoryCount(int count);
+
+  /// No description provided for @formulaSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search formulas...'**
+  String get formulaSearchHint;
+
+  /// No description provided for @formulaSortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get formulaSortTitle;
+
+  /// No description provided for @formulaFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get formulaFilterTitle;
+
+  /// No description provided for @formulaSortDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get formulaSortDefault;
+
+  /// No description provided for @formulaSortNameAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A→Z)'**
+  String get formulaSortNameAsc;
+
+  /// No description provided for @formulaSortNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z→A)'**
+  String get formulaSortNameDesc;
+
+  /// No description provided for @formulaSortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get formulaSortNewest;
+
+  /// No description provided for @formulaSortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get formulaSortOldest;
+
+  /// No description provided for @formulaEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No formulas yet.'**
+  String get formulaEmptyTitle;
+
+  /// No description provided for @formulaEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the + button to add your first item.'**
+  String get formulaEmptyHint;
+
+  /// No description provided for @formulaCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula created'**
+  String get formulaCreated;
+
+  /// No description provided for @formulaUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula saved'**
+  String get formulaUpdated;
+
+  /// No description provided for @formulaDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula deleted'**
+  String get formulaDeleted;
+
+  /// No description provided for @formulaDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete {name}?'**
+  String formulaDeleteConfirm(String name);
+
+  /// No description provided for @formulaNoLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'No labels'**
+  String get formulaNoLabels;
+
+  /// No description provided for @formulaEditMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get formulaEditMenuItem;
+
+  /// No description provided for @formulaViewMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get formulaViewMenuItem;
+
+  /// No description provided for @formulaNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get formulaNameRequired;
+
+  /// No description provided for @formulaAddedInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Added inventory'**
+  String get formulaAddedInventory;
+
+  /// No description provided for @formulaItemRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Item removed'**
+  String get formulaItemRemoved;
+
+  /// No description provided for @formulaItemAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Item added'**
+  String get formulaItemAdded;
+
+  /// No description provided for @formulaQuantityMax.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum total quantity reached ({max})'**
+  String formulaQuantityMax(int max);
+
+  /// No description provided for @formulaInventoryDuplicate.
+  ///
+  /// In en, this message translates to:
+  /// **'This inventory is already added'**
+  String get formulaInventoryDuplicate;
 }
 
 class _AppLocalizationsDelegate

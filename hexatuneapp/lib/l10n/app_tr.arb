@@ -386,5 +386,64 @@
   "inventoryCategoryRequired": "Kategori gereklidir",
   "inventoryNameRequired": "İsim gereklidir",
   "inventoryImageCamera": "Kamera",
-  "inventoryImageGallery": "Galeri"
+  "inventoryImageGallery": "Galeri",
+
+  "formulaManagement": "Formül Yönetimi",
+  "formulaCreate": "Formül Oluştur",
+  "formulaEdit": "Formül Düzenle",
+  "formulaView": "Formül Görüntüle",
+  "formulaName": "Ad",
+  "formulaNameHint": "Formül adını girin",
+  "formulaDescription": "Açıklama",
+  "formulaDescriptionHint": "Kısa bir açıklama girin",
+  "formulaLabels": "Etiketler",
+  "formulaAddLabel": "Etiket ekle",
+  "formulaAddInventory": "Envanter Ekle",
+  "formulaSearchInventory": "Eklenecek envanteri ara",
+  "formulaItemCount": "Adet",
+  "formulaInventoryCount": "{count} Envanter",
+  "@formulaInventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "formulaSearchHint": "Formülleri ara...",
+  "formulaSortTitle": "Sırala",
+  "formulaFilterTitle": "Filtre",
+  "formulaSortDefault": "Varsayılan",
+  "formulaSortNameAsc": "Ad (A→Z)",
+  "formulaSortNameDesc": "Ad (Z→A)",
+  "formulaSortNewest": "En yeni",
+  "formulaSortOldest": "En eski",
+  "formulaEmptyTitle": "Henüz formül yok.",
+  "formulaEmptyHint": "İlk öğenizi eklemek için + düğmesine basın.",
+  "formulaCreated": "Formül oluşturuldu",
+  "formulaUpdated": "Formül kaydedildi",
+  "formulaDeleted": "Formül silindi",
+  "formulaDeleteConfirm": "{name} silmek istediğinizden emin misiniz?",
+  "@formulaDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "formulaNoLabels": "Etiket yok",
+  "formulaEditMenuItem": "Düzenle",
+  "formulaViewMenuItem": "Görüntüle",
+  "formulaNameRequired": "Ad gereklidir",
+  "formulaAddedInventory": "Eklenen envanter",
+  "formulaItemRemoved": "Öğe kaldırıldı",
+  "formulaItemAdded": "Öğe eklendi",
+  "formulaQuantityMax": "Maksimum toplam miktar aşıldı ({max})",
+  "@formulaQuantityMax": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "formulaInventoryDuplicate": "Bu envanter zaten eklenmiş"
 }

@@ -841,4 +841,121 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get inventoryImageGallery => 'Gallery';
+
+  @override
+  String get formulaManagement => 'Formula Management';
+
+  @override
+  String get formulaCreate => 'Create Formula';
+
+  @override
+  String get formulaEdit => 'Edit Formula';
+
+  @override
+  String get formulaView => 'View Formula';
+
+  @override
+  String get formulaName => 'Name';
+
+  @override
+  String get formulaNameHint => 'Enter formula name';
+
+  @override
+  String get formulaDescription => 'Description';
+
+  @override
+  String get formulaDescriptionHint => 'Enter a short description';
+
+  @override
+  String get formulaLabels => 'Labels';
+
+  @override
+  String get formulaAddLabel => 'Add labels';
+
+  @override
+  String get formulaAddInventory => 'Add Inventory';
+
+  @override
+  String get formulaSearchInventory => 'Search inventory to add';
+
+  @override
+  String get formulaItemCount => 'Count';
+
+  @override
+  String formulaInventoryCount(int count) {
+    return '$count Inventory';
+  }
+
+  @override
+  String get formulaSearchHint => 'Search formulas...';
+
+  @override
+  String get formulaSortTitle => 'Sort';
+
+  @override
+  String get formulaFilterTitle => 'Filter';
+
+  @override
+  String get formulaSortDefault => 'Default';
+
+  @override
+  String get formulaSortNameAsc => 'Name (A→Z)';
+
+  @override
+  String get formulaSortNameDesc => 'Name (Z→A)';
+
+  @override
+  String get formulaSortNewest => 'Newest first';
+
+  @override
+  String get formulaSortOldest => 'Oldest first';
+
+  @override
+  String get formulaEmptyTitle => 'No formulas yet.';
+
+  @override
+  String get formulaEmptyHint => 'Press the + button to add your first item.';
+
+  @override
+  String get formulaCreated => 'Formula created';
+
+  @override
+  String get formulaUpdated => 'Formula saved';
+
+  @override
+  String get formulaDeleted => 'Formula deleted';
+
+  @override
+  String formulaDeleteConfirm(String name) {
+    return 'Are you sure you want to delete $name?';
+  }
+
+  @override
+  String get formulaNoLabels => 'No labels';
+
+  @override
+  String get formulaEditMenuItem => 'Edit';
+
+  @override
+  String get formulaViewMenuItem => 'View';
+
+  @override
+  String get formulaNameRequired => 'Name is required';
+
+  @override
+  String get formulaAddedInventory => 'Added inventory';
+
+  @override
+  String get formulaItemRemoved => 'Item removed';
+
+  @override
+  String get formulaItemAdded => 'Item added';
+
+  @override
+  String formulaQuantityMax(int max) {
+    return 'Maximum total quantity reached ($max)';
+  }
+
+  @override
+  String get formulaInventoryDuplicate => 'This inventory is already added';
 }

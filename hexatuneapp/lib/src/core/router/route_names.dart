@@ -36,7 +36,13 @@ class RouteNames {
 
   static String inventoryEditFor(String id) => '/inventories/$id/edit';
   static String inventoryViewFor(String id) => '/inventories/$id';
-  static const String inventories = '/dev/inventories';
+  static const String formulaList = '/formulas';
+  static const String formulaCreate = '/formulas/create';
+  static const String formulaEdit = '/formulas/:formulaId/edit';
+  static const String formulaView = '/formulas/:formulaId';
+
+  static String formulaEditFor(String id) => '/formulas/$id/edit';
+  static String formulaViewFor(String id) => '/formulas/$id';
   static const String formulas = '/dev/formulas';
   static const String formulaItems = '/dev/formulas/:formulaId/items';
   static const String tasks = '/dev/tasks';

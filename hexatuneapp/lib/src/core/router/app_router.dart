@@ -23,7 +23,6 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_harmonics_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_harmonizer_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_inventories_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_packages_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_flows_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_steps_page.dart';
@@ -43,6 +42,10 @@ import 'package:hexatuneapp/src/pages/inventory/inventory_list_page.dart';
 import 'package:hexatuneapp/src/pages/inventory/inventory_create_page.dart';
 import 'package:hexatuneapp/src/pages/inventory/inventory_edit_page.dart';
 import 'package:hexatuneapp/src/pages/inventory/inventory_view_page.dart';
+import 'package:hexatuneapp/src/pages/formula/formula_list_page.dart';
+import 'package:hexatuneapp/src/pages/formula/formula_create_page.dart';
+import 'package:hexatuneapp/src/pages/formula/formula_edit_page.dart';
+import 'package:hexatuneapp/src/pages/formula/formula_view_page.dart';
 import 'package:hexatuneapp/src/pages/auth/forgot_password_page.dart';
 import 'package:hexatuneapp/src/pages/auth/login_page.dart';
 import 'package:hexatuneapp/src/pages/auth/register_page.dart';
@@ -189,8 +192,26 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: RouteNames.inventories,
-            builder: (context, state) => const DummyInventoriesPage(),
+            path: RouteNames.formulaList,
+            builder: (context, state) => const FormulaListPage(),
+          ),
+          GoRoute(
+            path: RouteNames.formulaCreate,
+            builder: (context, state) => const FormulaCreatePage(),
+          ),
+          GoRoute(
+            path: RouteNames.formulaEdit,
+            builder: (context, state) {
+              final id = state.pathParameters['formulaId'] ?? '';
+              return FormulaEditPage(formulaId: id);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.formulaView,
+            builder: (context, state) {
+              final id = state.pathParameters['formulaId'] ?? '';
+              return FormulaViewPage(formulaId: id);
+            },
           ),
           GoRoute(
             path: RouteNames.formulas,

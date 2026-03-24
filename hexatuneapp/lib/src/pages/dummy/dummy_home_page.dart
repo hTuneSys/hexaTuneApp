@@ -67,8 +67,8 @@ class DummyHomePage extends StatelessWidget {
     _NavItem(
       icon: Icons.science,
       title: 'Formulas',
-      subtitle: 'CRUD + item management',
-      route: RouteNames.formulas,
+      subtitle: 'Formula management',
+      route: RouteNames.formulaList,
     ),
     _NavItem(
       icon: Icons.task,
