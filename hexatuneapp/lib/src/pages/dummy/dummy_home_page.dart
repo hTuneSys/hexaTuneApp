@@ -98,7 +98,7 @@ class DummyHomePage extends StatelessWidget {
       icon: Icons.landscape,
       title: 'Ambience Presets',
       subtitle: 'Create and manage sound ambiences',
-      route: RouteNames.ambience,
+      route: RouteNames.ambienceList,
     ),
     _NavItem(
       icon: Icons.cable,

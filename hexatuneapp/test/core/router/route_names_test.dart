@@ -29,14 +29,8 @@ void main() {
       expect(RouteNames.devices, startsWith('/dev/'));
       expect(RouteNames.providers, startsWith('/dev/'));
       expect(RouteNames.tenants, startsWith('/dev/'));
-      expect(RouteNames.formulas, startsWith('/dev/'));
-      expect(RouteNames.formulaItems, startsWith('/dev/'));
       expect(RouteNames.tasks, startsWith('/dev/'));
       expect(RouteNames.audit, startsWith('/dev/'));
-    });
-
-    test('formulaItems contains path parameter', () {
-      expect(RouteNames.formulaItems, contains(':formulaId'));
     });
 
     test('inventory production routes have correct paths', () {
@@ -61,6 +55,18 @@ void main() {
     test('formula helper methods generate correct paths', () {
       expect(RouteNames.formulaEditFor('abc'), '/formulas/abc/edit');
       expect(RouteNames.formulaViewFor('abc'), '/formulas/abc');
+    });
+
+    test('ambience production routes have correct paths', () {
+      expect(RouteNames.ambienceList, '/ambiences');
+      expect(RouteNames.ambienceCreate, '/ambiences/create');
+      expect(RouteNames.ambienceEdit, '/ambiences/:ambienceId/edit');
+      expect(RouteNames.ambienceView, '/ambiences/:ambienceId');
+    });
+
+    test('ambience helper methods generate correct paths', () {
+      expect(RouteNames.ambienceEditFor('abc'), '/ambiences/abc/edit');
+      expect(RouteNames.ambienceViewFor('abc'), '/ambiences/abc');
     });
   });
 }

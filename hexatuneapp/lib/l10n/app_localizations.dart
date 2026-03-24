@@ -848,6 +848,174 @@ abstract class AppLocalizations {
   /// **'Manage'**
   String get dspAmbienceManage;
 
+  /// No description provided for @ambienceManagementTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance Management'**
+  String get ambienceManagementTitle;
+
+  /// No description provided for @ambienceCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Ambiance'**
+  String get ambienceCreateTitle;
+
+  /// No description provided for @ambienceEditTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Ambiance'**
+  String get ambienceEditTitle;
+
+  /// No description provided for @ambienceViewTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'View Ambiance'**
+  String get ambienceViewTitle;
+
+  /// No description provided for @ambienceEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No ambiance yet.'**
+  String get ambienceEmptyTitle;
+
+  /// No description provided for @ambienceEmptySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the + button to add your first item.'**
+  String get ambienceEmptySubtitle;
+
+  /// No description provided for @ambienceDeleteConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Ambiance'**
+  String get ambienceDeleteConfirmTitle;
+
+  /// No description provided for @ambienceDeleteConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This cannot be undone.'**
+  String ambienceDeleteConfirmMessage(String name);
+
+  /// No description provided for @ambienceSortByName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get ambienceSortByName;
+
+  /// No description provided for @ambienceSortByNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get ambienceSortByNewest;
+
+  /// No description provided for @ambienceSortByOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest'**
+  String get ambienceSortByOldest;
+
+  /// No description provided for @ambienceSoundLayers.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Layers'**
+  String get ambienceSoundLayers;
+
+  /// No description provided for @ambienceSoundSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound Settings'**
+  String get ambienceSoundSettings;
+
+  /// No description provided for @ambienceMaster.
+  ///
+  /// In en, this message translates to:
+  /// **'Master'**
+  String get ambienceMaster;
+
+  /// No description provided for @ambienceNameLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get ambienceNameLabel;
+
+  /// No description provided for @ambienceNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter ambiance name'**
+  String get ambienceNameHint;
+
+  /// No description provided for @ambienceNoBase.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get ambienceNoBase;
+
+  /// No description provided for @ambienceCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance created successfully.'**
+  String get ambienceCreated;
+
+  /// No description provided for @ambienceUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance updated successfully.'**
+  String get ambienceUpdated;
+
+  /// No description provided for @ambienceDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance deleted.'**
+  String get ambienceDeleted;
+
+  /// No description provided for @ambienceNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required.'**
+  String get ambienceNameRequired;
+
+  /// No description provided for @ambienceSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search ambiances...'**
+  String get ambienceSearchHint;
+
+  /// No description provided for @ambienceSortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get ambienceSortTitle;
+
+  /// No description provided for @ambienceFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get ambienceFilterTitle;
+
+  /// No description provided for @ambienceFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get ambienceFilterAll;
+
+  /// No description provided for @ambienceViewMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get ambienceViewMenuItem;
+
+  /// No description provided for @ambienceEditMenuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get ambienceEditMenuItem;
+
+  /// No description provided for @ambienceNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance not found.'**
+  String get ambienceNotFound;
+
   /// No description provided for @hexagenTitle.
   ///
   /// In en, this message translates to:

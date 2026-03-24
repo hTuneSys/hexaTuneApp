@@ -43,8 +43,13 @@ class RouteNames {
 
   static String formulaEditFor(String id) => '/formulas/$id/edit';
   static String formulaViewFor(String id) => '/formulas/$id';
-  static const String formulas = '/dev/formulas';
-  static const String formulaItems = '/dev/formulas/:formulaId/items';
+  static const String ambienceList = '/ambiences';
+  static const String ambienceCreate = '/ambiences/create';
+  static const String ambienceEdit = '/ambiences/:ambienceId/edit';
+  static const String ambienceView = '/ambiences/:ambienceId';
+
+  static String ambienceEditFor(String id) => '/ambiences/$id/edit';
+  static String ambienceViewFor(String id) => '/ambiences/$id';
   static const String tasks = '/dev/tasks';
   static const String audit = '/dev/audit';
   static const String harmonics = '/dev/harmonics';

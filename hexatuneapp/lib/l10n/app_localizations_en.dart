@@ -406,6 +406,93 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dspAmbienceManage => 'Manage';
 
   @override
+  String get ambienceManagementTitle => 'Ambiance Management';
+
+  @override
+  String get ambienceCreateTitle => 'Create Ambiance';
+
+  @override
+  String get ambienceEditTitle => 'Edit Ambiance';
+
+  @override
+  String get ambienceViewTitle => 'View Ambiance';
+
+  @override
+  String get ambienceEmptyTitle => 'No ambiance yet.';
+
+  @override
+  String get ambienceEmptySubtitle =>
+      'Press the + button to add your first item.';
+
+  @override
+  String get ambienceDeleteConfirmTitle => 'Delete Ambiance';
+
+  @override
+  String ambienceDeleteConfirmMessage(String name) {
+    return 'Delete \"$name\"? This cannot be undone.';
+  }
+
+  @override
+  String get ambienceSortByName => 'Name';
+
+  @override
+  String get ambienceSortByNewest => 'Newest';
+
+  @override
+  String get ambienceSortByOldest => 'Oldest';
+
+  @override
+  String get ambienceSoundLayers => 'Sound Layers';
+
+  @override
+  String get ambienceSoundSettings => 'Sound Settings';
+
+  @override
+  String get ambienceMaster => 'Master';
+
+  @override
+  String get ambienceNameLabel => 'Name';
+
+  @override
+  String get ambienceNameHint => 'Enter ambiance name';
+
+  @override
+  String get ambienceNoBase => 'None';
+
+  @override
+  String get ambienceCreated => 'Ambiance created successfully.';
+
+  @override
+  String get ambienceUpdated => 'Ambiance updated successfully.';
+
+  @override
+  String get ambienceDeleted => 'Ambiance deleted.';
+
+  @override
+  String get ambienceNameRequired => 'Name is required.';
+
+  @override
+  String get ambienceSearchHint => 'Search ambiances...';
+
+  @override
+  String get ambienceSortTitle => 'Sort';
+
+  @override
+  String get ambienceFilterTitle => 'Filter';
+
+  @override
+  String get ambienceFilterAll => 'All';
+
+  @override
+  String get ambienceViewMenuItem => 'View';
+
+  @override
+  String get ambienceEditMenuItem => 'Edit';
+
+  @override
+  String get ambienceNotFound => 'Ambiance not found.';
+
+  @override
   String get hexagenTitle => 'hexaGen Device';
 
   @override

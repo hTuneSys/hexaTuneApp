@@ -407,6 +407,93 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dspAmbienceManage => 'Yönet';
 
   @override
+  String get ambienceManagementTitle => 'Ambiyans Yönetimi';
+
+  @override
+  String get ambienceCreateTitle => 'Ambiyans Oluştur';
+
+  @override
+  String get ambienceEditTitle => 'Ambiyans Düzenle';
+
+  @override
+  String get ambienceViewTitle => 'Ambiyans Görüntüle';
+
+  @override
+  String get ambienceEmptyTitle => 'Henüz ambiyans yok.';
+
+  @override
+  String get ambienceEmptySubtitle =>
+      'İlk öğenizi eklemek için + düğmesine basın.';
+
+  @override
+  String get ambienceDeleteConfirmTitle => 'Ambiyansı Sil';
+
+  @override
+  String ambienceDeleteConfirmMessage(String name) {
+    return '\"$name\" silinsin mi? Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get ambienceSortByName => 'Ad';
+
+  @override
+  String get ambienceSortByNewest => 'En Yeni';
+
+  @override
+  String get ambienceSortByOldest => 'En Eski';
+
+  @override
+  String get ambienceSoundLayers => 'Ses Katmanları';
+
+  @override
+  String get ambienceSoundSettings => 'Ses Ayarları';
+
+  @override
+  String get ambienceMaster => 'Ana Ses';
+
+  @override
+  String get ambienceNameLabel => 'Ad';
+
+  @override
+  String get ambienceNameHint => 'Ambiyans adı girin';
+
+  @override
+  String get ambienceNoBase => 'Yok';
+
+  @override
+  String get ambienceCreated => 'Ambiyans başarıyla oluşturuldu.';
+
+  @override
+  String get ambienceUpdated => 'Ambiyans başarıyla güncellendi.';
+
+  @override
+  String get ambienceDeleted => 'Ambiyans silindi.';
+
+  @override
+  String get ambienceNameRequired => 'Ad gereklidir.';
+
+  @override
+  String get ambienceSearchHint => 'Ambiyans ara...';
+
+  @override
+  String get ambienceSortTitle => 'Sırala';
+
+  @override
+  String get ambienceFilterTitle => 'Filtre';
+
+  @override
+  String get ambienceFilterAll => 'Tümü';
+
+  @override
+  String get ambienceViewMenuItem => 'Görüntüle';
+
+  @override
+  String get ambienceEditMenuItem => 'Düzenle';
+
+  @override
+  String get ambienceNotFound => 'Ambiyans bulunamadı.';
+
+  @override
   String get hexagenTitle => 'hexaGen Cihazı';
 
   @override

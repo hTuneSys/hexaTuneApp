@@ -17,8 +17,6 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_devices_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_dsp_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_ambience_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_formula_items_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_formulas_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_harmonics_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_harmonizer_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
@@ -52,6 +50,10 @@ import 'package:hexatuneapp/src/pages/auth/register_page.dart';
 import 'package:hexatuneapp/src/pages/auth/reset_password_page.dart';
 import 'package:hexatuneapp/src/pages/auth/splash_page.dart';
 import 'package:hexatuneapp/src/pages/auth/verify_email_page.dart';
+import 'package:hexatuneapp/src/pages/ambience/ambience_list_page.dart';
+import 'package:hexatuneapp/src/pages/ambience/ambience_create_page.dart';
+import 'package:hexatuneapp/src/pages/ambience/ambience_edit_page.dart';
+import 'package:hexatuneapp/src/pages/ambience/ambience_view_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -214,14 +216,25 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: RouteNames.formulas,
-            builder: (context, state) => const DummyFormulasPage(),
+            path: RouteNames.ambienceList,
+            builder: (context, state) => const AmbienceListPage(),
           ),
           GoRoute(
-            path: RouteNames.formulaItems,
+            path: RouteNames.ambienceCreate,
+            builder: (context, state) => const AmbienceCreatePage(),
+          ),
+          GoRoute(
+            path: RouteNames.ambienceEdit,
             builder: (context, state) {
-              final formulaId = state.pathParameters['formulaId'] ?? '';
-              return DummyFormulaItemsPage(formulaId: formulaId);
+              final id = state.pathParameters['ambienceId'] ?? '';
+              return AmbienceEditPage(ambienceId: id);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.ambienceView,
+            builder: (context, state) {
+              final id = state.pathParameters['ambienceId'] ?? '';
+              return AmbienceViewPage(ambienceId: id);
             },
           ),
           GoRoute(
