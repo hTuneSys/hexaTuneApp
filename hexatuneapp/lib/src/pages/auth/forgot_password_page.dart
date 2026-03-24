@@ -156,7 +156,29 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         )
                       : Text(l10n.sendResetCode),
                 ),
-                const SizedBox(height: 48),
+                const SizedBox(height: 24),
+
+                // Back to sign in
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      l10n.alreadyHaveAccountPrefix,
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    GestureDetector(
+                      onTap: () => context.go(RouteNames.login),
+                      child: Text(
+                        l10n.signInLink,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 32),
               ],
             ),
           ),

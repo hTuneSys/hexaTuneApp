@@ -108,5 +108,15 @@ void main() {
       // AuthHeader shows an Image
       expect(find.byType(Image), findsOneWidget);
     });
+
+    testWidgets('shows sign in link to return to login', (tester) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      // alreadyHaveAccountPrefix = "Already have an account? "
+      expect(find.text('Already have an account? '), findsOneWidget);
+      // signInLink = "Sign In"
+      expect(find.text('Sign In'), findsOneWidget);
+    });
   });
 }
