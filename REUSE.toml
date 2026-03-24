@@ -127,3 +127,12 @@ path = [
 precedence = "aggregate"
 SPDX-FileCopyrightText = "2025 hexaTune LLC"
 SPDX-License-Identifier = "MIT"
+
+# Page images
+[[annotations]]
+path = [
+  "page_images/**",
+]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2025 hexaTune LLC"
+SPDX-License-Identifier = "MIT"

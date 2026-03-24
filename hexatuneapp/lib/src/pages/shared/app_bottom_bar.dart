@@ -188,7 +188,7 @@ class _HexagonPainter extends CustomPainter {
     final r = math.min(cx, cy) - strokeWidth / 2;
     final path = Path();
     for (var i = 0; i < 6; i++) {
-      final angle = (60.0 * i - 30.0) * math.pi / 180.0;
+      final angle = (60.0 * i) * math.pi / 180.0;
       final x = cx + r * math.cos(angle);
       final y = cy + r * math.sin(angle);
       if (i == 0) {
