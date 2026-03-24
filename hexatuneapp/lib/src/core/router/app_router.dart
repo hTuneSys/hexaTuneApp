@@ -39,6 +39,10 @@ import 'package:hexatuneapp/src/pages/category/category_list_page.dart';
 import 'package:hexatuneapp/src/pages/category/category_create_page.dart';
 import 'package:hexatuneapp/src/pages/category/category_edit_page.dart';
 import 'package:hexatuneapp/src/pages/category/category_view_page.dart';
+import 'package:hexatuneapp/src/pages/inventory/inventory_list_page.dart';
+import 'package:hexatuneapp/src/pages/inventory/inventory_create_page.dart';
+import 'package:hexatuneapp/src/pages/inventory/inventory_edit_page.dart';
+import 'package:hexatuneapp/src/pages/inventory/inventory_view_page.dart';
 import 'package:hexatuneapp/src/pages/auth/forgot_password_page.dart';
 import 'package:hexatuneapp/src/pages/auth/login_page.dart';
 import 'package:hexatuneapp/src/pages/auth/register_page.dart';
@@ -160,6 +164,28 @@ class AppRouter {
             builder: (context, state) {
               final id = state.pathParameters['categoryId'] ?? '';
               return CategoryViewPage(categoryId: id);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.inventoryList,
+            builder: (context, state) => const InventoryListPage(),
+          ),
+          GoRoute(
+            path: RouteNames.inventoryCreate,
+            builder: (context, state) => const InventoryCreatePage(),
+          ),
+          GoRoute(
+            path: RouteNames.inventoryEdit,
+            builder: (context, state) {
+              final id = state.pathParameters['inventoryId'] ?? '';
+              return InventoryEditPage(inventoryId: id);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.inventoryView,
+            builder: (context, state) {
+              final id = state.pathParameters['inventoryId'] ?? '';
+              return InventoryViewPage(inventoryId: id);
             },
           ),
           GoRoute(

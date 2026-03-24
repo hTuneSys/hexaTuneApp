@@ -39,5 +39,17 @@ void main() {
     test('formulaItems contains path parameter', () {
       expect(RouteNames.formulaItems, contains(':formulaId'));
     });
+
+    test('inventory production routes have correct paths', () {
+      expect(RouteNames.inventoryList, '/inventories');
+      expect(RouteNames.inventoryCreate, '/inventories/create');
+      expect(RouteNames.inventoryEdit, '/inventories/:inventoryId/edit');
+      expect(RouteNames.inventoryView, '/inventories/:inventoryId');
+    });
+
+    test('inventory helper methods generate correct paths', () {
+      expect(RouteNames.inventoryEditFor('abc'), '/inventories/abc/edit');
+      expect(RouteNames.inventoryViewFor('abc'), '/inventories/abc');
+    });
   });
 }

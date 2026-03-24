@@ -29,6 +29,13 @@ class RouteNames {
 
   static String categoryEditFor(String id) => '/categories/$id/edit';
   static String categoryViewFor(String id) => '/categories/$id';
+  static const String inventoryList = '/inventories';
+  static const String inventoryCreate = '/inventories/create';
+  static const String inventoryEdit = '/inventories/:inventoryId/edit';
+  static const String inventoryView = '/inventories/:inventoryId';
+
+  static String inventoryEditFor(String id) => '/inventories/$id/edit';
+  static String inventoryViewFor(String id) => '/inventories/$id';
   static const String inventories = '/dev/inventories';
   static const String formulas = '/dev/formulas';
   static const String formulaItems = '/dev/formulas/:formulaId/items';

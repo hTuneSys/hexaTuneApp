@@ -1453,6 +1453,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Load More'**
   String get loadMore;
+
+  /// No description provided for @inventoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory Management'**
+  String get inventoryManagement;
+
+  /// No description provided for @inventoryCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Inventory'**
+  String get inventoryCreate;
+
+  /// No description provided for @inventoryEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Inventory'**
+  String get inventoryEdit;
+
+  /// No description provided for @inventoryView.
+  ///
+  /// In en, this message translates to:
+  /// **'View Inventory'**
+  String get inventoryView;
+
+  /// No description provided for @inventoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get inventoryName;
+
+  /// No description provided for @inventoryNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter inventory name'**
+  String get inventoryNameHint;
+
+  /// No description provided for @inventoryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get inventoryDescription;
+
+  /// No description provided for @inventoryDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a short description'**
+  String get inventoryDescriptionHint;
+
+  /// No description provided for @inventoryCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get inventoryCategory;
+
+  /// No description provided for @inventoryCategoryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Select category'**
+  String get inventoryCategoryHint;
+
+  /// No description provided for @inventoryLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'Labels'**
+  String get inventoryLabels;
+
+  /// No description provided for @inventoryAddLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add labels'**
+  String get inventoryAddLabel;
+
+  /// No description provided for @inventoryAddImage.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Image'**
+  String get inventoryAddImage;
+
+  /// No description provided for @inventorySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search inventories...'**
+  String get inventorySearchHint;
+
+  /// No description provided for @inventorySortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get inventorySortTitle;
+
+  /// No description provided for @inventoryFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get inventoryFilterTitle;
+
+  /// No description provided for @inventorySortDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get inventorySortDefault;
+
+  /// No description provided for @inventorySortNameAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A→Z)'**
+  String get inventorySortNameAsc;
+
+  /// No description provided for @inventorySortNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z→A)'**
+  String get inventorySortNameDesc;
+
+  /// No description provided for @inventorySortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get inventorySortNewest;
+
+  /// No description provided for @inventorySortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get inventorySortOldest;
+
+  /// No description provided for @inventoryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your inventory is empty.'**
+  String get inventoryEmptyTitle;
+
+  /// No description provided for @inventoryEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the + button to add your first item.'**
+  String get inventoryEmptyHint;
+
+  /// No description provided for @inventoryCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory created'**
+  String get inventoryCreated;
+
+  /// No description provided for @inventoryUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory updated'**
+  String get inventoryUpdated;
+
+  /// No description provided for @inventoryDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory deleted'**
+  String get inventoryDeleted;
+
+  /// No description provided for @inventoryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This cannot be undone.'**
+  String inventoryDeleteConfirm(String name);
+
+  /// No description provided for @inventoryNoLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'No labels'**
+  String get inventoryNoLabels;
+
+  /// No description provided for @inventoryEdit_menuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get inventoryEdit_menuItem;
+
+  /// No description provided for @inventoryView_menuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get inventoryView_menuItem;
+
+  /// No description provided for @inventoryCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Inventory'**
+  String inventoryCount(int count);
+
+  /// No description provided for @inventoryCategoryAddNew.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New'**
+  String get inventoryCategoryAddNew;
+
+  /// No description provided for @inventoryCategoryRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Category is required'**
+  String get inventoryCategoryRequired;
+
+  /// No description provided for @inventoryNameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Name is required'**
+  String get inventoryNameRequired;
 }
 
 class _AppLocalizationsDelegate

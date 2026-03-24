@@ -732,4 +732,110 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get loadMore => 'Daha Fazla';
+
+  @override
+  String get inventoryManagement => 'Envanter Yönetimi';
+
+  @override
+  String get inventoryCreate => 'Envanter Oluştur';
+
+  @override
+  String get inventoryEdit => 'Envanter Düzenle';
+
+  @override
+  String get inventoryView => 'Envanter Görüntüle';
+
+  @override
+  String get inventoryName => 'İsim';
+
+  @override
+  String get inventoryNameHint => 'Envanter adını girin';
+
+  @override
+  String get inventoryDescription => 'Açıklama';
+
+  @override
+  String get inventoryDescriptionHint => 'Kısa bir açıklama girin';
+
+  @override
+  String get inventoryCategory => 'Kategori';
+
+  @override
+  String get inventoryCategoryHint => 'Kategori seçin';
+
+  @override
+  String get inventoryLabels => 'Etiketler';
+
+  @override
+  String get inventoryAddLabel => 'Etiket ekle';
+
+  @override
+  String get inventoryAddImage => 'Resim Ekle';
+
+  @override
+  String get inventorySearchHint => 'Envanterlerde ara...';
+
+  @override
+  String get inventorySortTitle => 'Sırala';
+
+  @override
+  String get inventoryFilterTitle => 'Filtrele';
+
+  @override
+  String get inventorySortDefault => 'Varsayılan';
+
+  @override
+  String get inventorySortNameAsc => 'İsim (A→Z)';
+
+  @override
+  String get inventorySortNameDesc => 'İsim (Z→A)';
+
+  @override
+  String get inventorySortNewest => 'En yeni';
+
+  @override
+  String get inventorySortOldest => 'En eski';
+
+  @override
+  String get inventoryEmptyTitle => 'Envanteriniz boş.';
+
+  @override
+  String get inventoryEmptyHint => 'İlk öğenizi eklemek için + butonuna basın.';
+
+  @override
+  String get inventoryCreated => 'Envanter oluşturuldu';
+
+  @override
+  String get inventoryUpdated => 'Envanter güncellendi';
+
+  @override
+  String get inventoryDeleted => 'Envanter silindi';
+
+  @override
+  String inventoryDeleteConfirm(String name) {
+    return '\"$name\" silinsin mi? Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get inventoryNoLabels => 'Etiket yok';
+
+  @override
+  String get inventoryEdit_menuItem => 'Düzenle';
+
+  @override
+  String get inventoryView_menuItem => 'Görüntüle';
+
+  @override
+  String inventoryCount(int count) {
+    return '$count Envanter';
+  }
+
+  @override
+  String get inventoryCategoryAddNew => 'Yeni Ekle';
+
+  @override
+  String get inventoryCategoryRequired => 'Kategori gereklidir';
+
+  @override
+  String get inventoryNameRequired => 'İsim gereklidir';
 }

@@ -61,8 +61,8 @@ class DummyHomePage extends StatelessWidget {
     _NavItem(
       icon: Icons.inventory_2,
       title: 'Inventories',
-      subtitle: 'CRUD + image upload/view',
-      route: RouteNames.inventories,
+      subtitle: 'Inventory management',
+      route: RouteNames.inventoryList,
     ),
     _NavItem(
       icon: Icons.science,

@@ -336,5 +336,53 @@
   "delete": "Delete",
   "create": "Create",
   "cancel": "Cancel",
-  "loadMore": "Load More"
+  "loadMore": "Load More",
+  "inventoryManagement": "Inventory Management",
+  "inventoryCreate": "Create Inventory",
+  "inventoryEdit": "Edit Inventory",
+  "inventoryView": "View Inventory",
+  "inventoryName": "Name",
+  "inventoryNameHint": "Enter inventory name",
+  "inventoryDescription": "Description",
+  "inventoryDescriptionHint": "Enter a short description",
+  "inventoryCategory": "Category",
+  "inventoryCategoryHint": "Select category",
+  "inventoryLabels": "Labels",
+  "inventoryAddLabel": "Add labels",
+  "inventoryAddImage": "Add Image",
+  "inventorySearchHint": "Search inventories...",
+  "inventorySortTitle": "Sort",
+  "inventoryFilterTitle": "Filter",
+  "inventorySortDefault": "Default",
+  "inventorySortNameAsc": "Name (A→Z)",
+  "inventorySortNameDesc": "Name (Z→A)",
+  "inventorySortNewest": "Newest first",
+  "inventorySortOldest": "Oldest first",
+  "inventoryEmptyTitle": "Your inventory is empty.",
+  "inventoryEmptyHint": "Press the + button to add your first item.",
+  "inventoryCreated": "Inventory created",
+  "inventoryUpdated": "Inventory updated",
+  "inventoryDeleted": "Inventory deleted",
+  "inventoryDeleteConfirm": "Delete \"{name}\"? This cannot be undone.",
+  "@inventoryDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inventoryNoLabels": "No labels",
+  "inventoryEdit_menuItem": "Edit",
+  "inventoryView_menuItem": "View",
+  "inventoryCount": "{count} Inventory",
+  "@inventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryCategoryAddNew": "Add New",
+  "inventoryCategoryRequired": "Category is required",
+  "inventoryNameRequired": "Name is required"
 }

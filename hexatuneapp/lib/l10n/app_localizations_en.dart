@@ -729,4 +729,110 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loadMore => 'Load More';
+
+  @override
+  String get inventoryManagement => 'Inventory Management';
+
+  @override
+  String get inventoryCreate => 'Create Inventory';
+
+  @override
+  String get inventoryEdit => 'Edit Inventory';
+
+  @override
+  String get inventoryView => 'View Inventory';
+
+  @override
+  String get inventoryName => 'Name';
+
+  @override
+  String get inventoryNameHint => 'Enter inventory name';
+
+  @override
+  String get inventoryDescription => 'Description';
+
+  @override
+  String get inventoryDescriptionHint => 'Enter a short description';
+
+  @override
+  String get inventoryCategory => 'Category';
+
+  @override
+  String get inventoryCategoryHint => 'Select category';
+
+  @override
+  String get inventoryLabels => 'Labels';
+
+  @override
+  String get inventoryAddLabel => 'Add labels';
+
+  @override
+  String get inventoryAddImage => 'Add Image';
+
+  @override
+  String get inventorySearchHint => 'Search inventories...';
+
+  @override
+  String get inventorySortTitle => 'Sort';
+
+  @override
+  String get inventoryFilterTitle => 'Filter';
+
+  @override
+  String get inventorySortDefault => 'Default';
+
+  @override
+  String get inventorySortNameAsc => 'Name (A→Z)';
+
+  @override
+  String get inventorySortNameDesc => 'Name (Z→A)';
+
+  @override
+  String get inventorySortNewest => 'Newest first';
+
+  @override
+  String get inventorySortOldest => 'Oldest first';
+
+  @override
+  String get inventoryEmptyTitle => 'Your inventory is empty.';
+
+  @override
+  String get inventoryEmptyHint => 'Press the + button to add your first item.';
+
+  @override
+  String get inventoryCreated => 'Inventory created';
+
+  @override
+  String get inventoryUpdated => 'Inventory updated';
+
+  @override
+  String get inventoryDeleted => 'Inventory deleted';
+
+  @override
+  String inventoryDeleteConfirm(String name) {
+    return 'Delete \"$name\"? This cannot be undone.';
+  }
+
+  @override
+  String get inventoryNoLabels => 'No labels';
+
+  @override
+  String get inventoryEdit_menuItem => 'Edit';
+
+  @override
+  String get inventoryView_menuItem => 'View';
+
+  @override
+  String inventoryCount(int count) {
+    return '$count Inventory';
+  }
+
+  @override
+  String get inventoryCategoryAddNew => 'Add New';
+
+  @override
+  String get inventoryCategoryRequired => 'Category is required';
+
+  @override
+  String get inventoryNameRequired => 'Name is required';
 }

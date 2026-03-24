@@ -336,5 +336,53 @@
   "delete": "Sil",
   "create": "Oluştur",
   "cancel": "İptal",
-  "loadMore": "Daha Fazla"
+  "loadMore": "Daha Fazla",
+  "inventoryManagement": "Envanter Yönetimi",
+  "inventoryCreate": "Envanter Oluştur",
+  "inventoryEdit": "Envanter Düzenle",
+  "inventoryView": "Envanter Görüntüle",
+  "inventoryName": "İsim",
+  "inventoryNameHint": "Envanter adını girin",
+  "inventoryDescription": "Açıklama",
+  "inventoryDescriptionHint": "Kısa bir açıklama girin",
+  "inventoryCategory": "Kategori",
+  "inventoryCategoryHint": "Kategori seçin",
+  "inventoryLabels": "Etiketler",
+  "inventoryAddLabel": "Etiket ekle",
+  "inventoryAddImage": "Resim Ekle",
+  "inventorySearchHint": "Envanterlerde ara...",
+  "inventorySortTitle": "Sırala",
+  "inventoryFilterTitle": "Filtrele",
+  "inventorySortDefault": "Varsayılan",
+  "inventorySortNameAsc": "İsim (A→Z)",
+  "inventorySortNameDesc": "İsim (Z→A)",
+  "inventorySortNewest": "En yeni",
+  "inventorySortOldest": "En eski",
+  "inventoryEmptyTitle": "Envanteriniz boş.",
+  "inventoryEmptyHint": "İlk öğenizi eklemek için + butonuna basın.",
+  "inventoryCreated": "Envanter oluşturuldu",
+  "inventoryUpdated": "Envanter güncellendi",
+  "inventoryDeleted": "Envanter silindi",
+  "inventoryDeleteConfirm": "\"{name}\" silinsin mi? Bu işlem geri alınamaz.",
+  "@inventoryDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "inventoryNoLabels": "Etiket yok",
+  "inventoryEdit_menuItem": "Düzenle",
+  "inventoryView_menuItem": "Görüntüle",
+  "inventoryCount": "{count} Envanter",
+  "@inventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "inventoryCategoryAddNew": "Yeni Ekle",
+  "inventoryCategoryRequired": "Kategori gereklidir",
+  "inventoryNameRequired": "İsim gereklidir"
 }
