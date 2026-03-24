@@ -1,14 +1,19 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/media/image_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
@@ -31,9 +36,11 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
   final _nameCtrl = TextEditingController();
   final _descCtrl = TextEditingController();
   final _labelInputCtrl = TextEditingController();
+  final _picker = ImagePicker();
   final List<String> _labels = [];
   List<CategoryResponse> _categories = [];
   String? _selectedCategoryId;
+  ({String name, Uint8List bytes})? _pickedImage;
   bool _isLoading = true;
   bool _isSubmitting = false;
   InventoryResponse? _inventory;
@@ -100,6 +107,60 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
       setState(() => _labels.add(label));
       _labelInputCtrl.clear();
     }
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    try {
+      final xFile = await _picker.pickImage(source: source);
+      if (xFile == null) return;
+      final imageService = getIt<ImageService>();
+      final bytes = await imageService.processFile(File(xFile.path));
+      if (bytes != null && mounted) {
+        setState(() => _pickedImage = (name: xFile.name, bytes: bytes));
+      }
+    } catch (e) {
+      getIt<LogService>().devLog(
+        'Image pick failed: $e',
+        category: LogCategory.ui,
+      );
+    }
+  }
+
+  void _showImageSourceDialog() {
+    final l10n = AppLocalizations.of(context)!;
+    showModalBottomSheet<void>(
+      context: context,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                l10n.inventoryAddImage,
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: Text(l10n.inventoryImageCamera),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: Text(l10n.inventoryImageGallery),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   void _removeLabel(String label) {
@@ -240,6 +301,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
             ? null
             : _descCtrl.text.trim(),
         labels: _labels.isEmpty ? null : _labels,
+        imageBytes: _pickedImage?.bytes,
       );
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -342,55 +404,88 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Image area
-                    Container(
-                      height: 160,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: _inventory?.imageUploaded == true
-                          ? Stack(
-                              children: [
-                                Center(
-                                  child: Icon(
-                                    Icons.image,
-                                    size: 64,
-                                    color: theme.colorScheme.outline,
+                    GestureDetector(
+                      onTap: _showImageSourceDialog,
+                      child: Container(
+                        height: 160,
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: _pickedImage != null
+                            ? Stack(
+                                children: [
+                                  Center(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.memory(
+                                        _pickedImage!.bytes,
+                                        height: 160,
+                                        width: double.infinity,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                                Positioned(
-                                  right: 8,
-                                  bottom: 8,
-                                  child: CircleAvatar(
-                                    radius: 16,
-                                    backgroundColor:
-                                        theme.colorScheme.primaryContainer,
+                                  Positioned(
+                                    right: 8,
+                                    bottom: 8,
+                                    child: CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor:
+                                          theme.colorScheme.primaryContainer,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : _inventory?.imageUploaded == true
+                            ? Stack(
+                                children: [
+                                  Center(
                                     child: Icon(
-                                      Icons.edit,
-                                      size: 16,
+                                      Icons.image,
+                                      size: 64,
+                                      color: theme.colorScheme.outline,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 8,
+                                    bottom: 8,
+                                    child: CircleAvatar(
+                                      radius: 16,
+                                      backgroundColor:
+                                          theme.colorScheme.primaryContainer,
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 16,
+                                        color: theme.colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate_outlined,
+                                    size: 48,
+                                    color: theme.colorScheme.primary,
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    l10n.inventoryAddImage,
+                                    style: theme.textTheme.bodyMedium?.copyWith(
                                       color: theme.colorScheme.primary,
                                     ),
                                   ),
-                                ),
-                              ],
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.add_photo_alternate_outlined,
-                                  size: 48,
-                                  color: theme.colorScheme.primary,
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  l10n.inventoryAddImage,
-                                  style: theme.textTheme.bodyMedium?.copyWith(
-                                    color: theme.colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
+                                ],
+                              ),
+                      ),
                     ),
                     const SizedBox(height: 24),
                     Text(l10n.inventoryName, style: theme.textTheme.titleSmall),

@@ -1657,6 +1657,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name is required'**
   String get inventoryNameRequired;
+
+  /// No description provided for @inventoryImageCamera.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera'**
+  String get inventoryImageCamera;
+
+  /// No description provided for @inventoryImageGallery.
+  ///
+  /// In en, this message translates to:
+  /// **'Gallery'**
+  String get inventoryImageGallery;
 }
 
 class _AppLocalizationsDelegate

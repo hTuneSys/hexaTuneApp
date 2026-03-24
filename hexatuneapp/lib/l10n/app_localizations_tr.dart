@@ -838,4 +838,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get inventoryNameRequired => 'İsim gereklidir';
+
+  @override
+  String get inventoryImageCamera => 'Kamera';
+
+  @override
+  String get inventoryImageGallery => 'Galeri';
 }

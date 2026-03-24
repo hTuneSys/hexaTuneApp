@@ -384,5 +384,7 @@
   },
   "inventoryCategoryAddNew": "Yeni Ekle",
   "inventoryCategoryRequired": "Kategori gereklidir",
-  "inventoryNameRequired": "İsim gereklidir"
+  "inventoryNameRequired": "İsim gereklidir",
+  "inventoryImageCamera": "Kamera",
+  "inventoryImageGallery": "Galeri"
 }

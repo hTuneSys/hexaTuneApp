@@ -384,5 +384,7 @@
   },
   "inventoryCategoryAddNew": "Add New",
   "inventoryCategoryRequired": "Category is required",
-  "inventoryNameRequired": "Name is required"
+  "inventoryNameRequired": "Name is required",
+  "inventoryImageCamera": "Camera",
+  "inventoryImageGallery": "Gallery"
 }
