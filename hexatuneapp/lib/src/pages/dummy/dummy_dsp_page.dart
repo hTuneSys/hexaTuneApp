@@ -398,7 +398,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                 ),
                 TextButton.icon(
                   onPressed: () async {
-                    await context.push(RouteNames.ambience);
+                    await context.push(RouteNames.ambienceList);
                     // Reload ambiences when returning
                     await _ambienceService.load();
                     if (mounted) setState(() {});
