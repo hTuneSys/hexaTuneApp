@@ -22,7 +22,6 @@ class RouteNames {
   static const String devices = '/dev/devices';
   static const String providers = '/dev/providers';
   static const String tenants = '/dev/tenants';
-  static const String categories = '/dev/categories';
   static const String categoryList = '/categories';
   static const String categoryCreate = '/categories/create';
   static const String categoryEdit = '/categories/:categoryId/edit';

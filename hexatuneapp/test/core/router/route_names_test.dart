@@ -29,7 +29,6 @@ void main() {
       expect(RouteNames.devices, startsWith('/dev/'));
       expect(RouteNames.providers, startsWith('/dev/'));
       expect(RouteNames.tenants, startsWith('/dev/'));
-      expect(RouteNames.categories, startsWith('/dev/'));
       expect(RouteNames.inventories, startsWith('/dev/'));
       expect(RouteNames.formulas, startsWith('/dev/'));
       expect(RouteNames.formulaItems, startsWith('/dev/'));
