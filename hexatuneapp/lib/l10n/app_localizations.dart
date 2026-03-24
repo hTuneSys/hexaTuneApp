@@ -1267,6 +1267,192 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No formula selected'**
   String get harmonizerNoSequence;
+
+  /// No description provided for @categoryManagement.
+  ///
+  /// In en, this message translates to:
+  /// **'Category Management'**
+  String get categoryManagement;
+
+  /// No description provided for @categoryCreate.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Category'**
+  String get categoryCreate;
+
+  /// No description provided for @categoryEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Category'**
+  String get categoryEdit;
+
+  /// No description provided for @categoryView.
+  ///
+  /// In en, this message translates to:
+  /// **'View Category'**
+  String get categoryView;
+
+  /// No description provided for @categoryName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get categoryName;
+
+  /// No description provided for @categoryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get categoryDescription;
+
+  /// No description provided for @categoryLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'Labels'**
+  String get categoryLabels;
+
+  /// No description provided for @categoryAddLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Add label'**
+  String get categoryAddLabel;
+
+  /// No description provided for @categoryInventoryCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Inventory'**
+  String categoryInventoryCount(int count);
+
+  /// No description provided for @categorySearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search categories...'**
+  String get categorySearchHint;
+
+  /// No description provided for @categorySortTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get categorySortTitle;
+
+  /// No description provided for @categoryFilterTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get categoryFilterTitle;
+
+  /// No description provided for @categorySortDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get categorySortDefault;
+
+  /// No description provided for @categorySortNameAsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (A→Z)'**
+  String get categorySortNameAsc;
+
+  /// No description provided for @categorySortNameDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Name (Z→A)'**
+  String get categorySortNameDesc;
+
+  /// No description provided for @categorySortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest first'**
+  String get categorySortNewest;
+
+  /// No description provided for @categorySortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest first'**
+  String get categorySortOldest;
+
+  /// No description provided for @categoryEmptyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No categories yet.'**
+  String get categoryEmptyTitle;
+
+  /// No description provided for @categoryEmptyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the + button to add your first item.'**
+  String get categoryEmptyHint;
+
+  /// No description provided for @categoryCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Category created'**
+  String get categoryCreated;
+
+  /// No description provided for @categoryUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Category updated'**
+  String get categoryUpdated;
+
+  /// No description provided for @categoryDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Category deleted'**
+  String get categoryDeleted;
+
+  /// No description provided for @categoryDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete \"{name}\"? This cannot be undone.'**
+  String categoryDeleteConfirm(String name);
+
+  /// No description provided for @categoryNoLabels.
+  ///
+  /// In en, this message translates to:
+  /// **'No labels'**
+  String get categoryNoLabels;
+
+  /// No description provided for @categoryEdit_menuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get categoryEdit_menuItem;
+
+  /// No description provided for @categoryView_menuItem.
+  ///
+  /// In en, this message translates to:
+  /// **'View'**
+  String get categoryView_menuItem;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @create.
+  ///
+  /// In en, this message translates to:
+  /// **'Create'**
+  String get create;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @loadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get loadMore;
 }
 
 class _AppLocalizationsDelegate

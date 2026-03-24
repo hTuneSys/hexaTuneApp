@@ -55,8 +55,8 @@ class DummyHomePage extends StatelessWidget {
     _NavItem(
       icon: Icons.category,
       title: 'Categories',
-      subtitle: 'CRUD + search',
-      route: RouteNames.categories,
+      subtitle: 'Category management',
+      route: RouteNames.categoryList,
     ),
     _NavItem(
       icon: Icons.inventory_2,

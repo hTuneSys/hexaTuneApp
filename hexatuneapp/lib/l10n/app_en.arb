@@ -290,5 +290,51 @@
   "harmonizerGracefulStopHint": "Tap to stop after current cycle",
   "harmonizerImmediateStopHint": "Hold 3s to stop immediately",
   "harmonizerGenerating": "Generating sequence...",
-  "harmonizerNoSequence": "No formula selected"
+  "harmonizerNoSequence": "No formula selected",
+
+  "categoryManagement": "Category Management",
+  "categoryCreate": "Create Category",
+  "categoryEdit": "Edit Category",
+  "categoryView": "View Category",
+  "categoryName": "Name",
+  "categoryDescription": "Description",
+  "categoryLabels": "Labels",
+  "categoryAddLabel": "Add label",
+  "categoryInventoryCount": "{count} Inventory",
+  "@categoryInventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categorySearchHint": "Search categories...",
+  "categorySortTitle": "Sort",
+  "categoryFilterTitle": "Filter",
+  "categorySortDefault": "Default",
+  "categorySortNameAsc": "Name (A\u2192Z)",
+  "categorySortNameDesc": "Name (Z\u2192A)",
+  "categorySortNewest": "Newest first",
+  "categorySortOldest": "Oldest first",
+  "categoryEmptyTitle": "No categories yet.",
+  "categoryEmptyHint": "Press the + button to add your first item.",
+  "categoryCreated": "Category created",
+  "categoryUpdated": "Category updated",
+  "categoryDeleted": "Category deleted",
+  "categoryDeleteConfirm": "Delete \"{name}\"? This cannot be undone.",
+  "@categoryDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryNoLabels": "No labels",
+  "categoryEdit_menuItem": "Edit",
+  "categoryView_menuItem": "View",
+  "save": "Save",
+  "delete": "Delete",
+  "create": "Create",
+  "cancel": "Cancel",
+  "loadMore": "Load More"
 }

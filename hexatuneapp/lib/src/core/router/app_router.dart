@@ -36,6 +36,10 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/widgets/mini_harmonizer_bar.dart';
+import 'package:hexatuneapp/src/pages/category/category_list_page.dart';
+import 'package:hexatuneapp/src/pages/category/category_create_page.dart';
+import 'package:hexatuneapp/src/pages/category/category_edit_page.dart';
+import 'package:hexatuneapp/src/pages/category/category_view_page.dart';
 import 'package:hexatuneapp/src/pages/auth/forgot_password_page.dart';
 import 'package:hexatuneapp/src/pages/auth/login_page.dart';
 import 'package:hexatuneapp/src/pages/auth/register_page.dart';
@@ -140,6 +144,28 @@ class AppRouter {
           GoRoute(
             path: RouteNames.categories,
             builder: (context, state) => const DummyCategoriesPage(),
+          ),
+          GoRoute(
+            path: RouteNames.categoryList,
+            builder: (context, state) => const CategoryListPage(),
+          ),
+          GoRoute(
+            path: RouteNames.categoryCreate,
+            builder: (context, state) => const CategoryCreatePage(),
+          ),
+          GoRoute(
+            path: RouteNames.categoryEdit,
+            builder: (context, state) {
+              final id = state.pathParameters['categoryId'] ?? '';
+              return CategoryEditPage(categoryId: id);
+            },
+          ),
+          GoRoute(
+            path: RouteNames.categoryView,
+            builder: (context, state) {
+              final id = state.pathParameters['categoryId'] ?? '';
+              return CategoryViewPage(categoryId: id);
+            },
           ),
           GoRoute(
             path: RouteNames.inventories,

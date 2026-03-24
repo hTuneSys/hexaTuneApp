@@ -290,5 +290,51 @@
   "harmonizerGracefulStopHint": "Mevcut döngü bitince durdurmak için dokunun",
   "harmonizerImmediateStopHint": "Anında durdurmak için 3 saniye basılı tutun",
   "harmonizerGenerating": "Sekans üretiliyor...",
-  "harmonizerNoSequence": "Formül seçilmedi"
+  "harmonizerNoSequence": "Formül seçilmedi",
+
+  "categoryManagement": "Kategori Yönetimi",
+  "categoryCreate": "Kategori Oluştur",
+  "categoryEdit": "Kategori Düzenle",
+  "categoryView": "Kategori Görüntüle",
+  "categoryName": "Ad",
+  "categoryDescription": "Açıklama",
+  "categoryLabels": "Etiketler",
+  "categoryAddLabel": "Etiket ekle",
+  "categoryInventoryCount": "{count} Envanter",
+  "@categoryInventoryCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "categorySearchHint": "Kategori ara...",
+  "categorySortTitle": "Sırala",
+  "categoryFilterTitle": "Filtrele",
+  "categorySortDefault": "Varsayılan",
+  "categorySortNameAsc": "Ad (A\u2192Z)",
+  "categorySortNameDesc": "Ad (Z\u2192A)",
+  "categorySortNewest": "En yeni",
+  "categorySortOldest": "En eski",
+  "categoryEmptyTitle": "Henüz kategori yok.",
+  "categoryEmptyHint": "+ butonuna basarak ilk öğenizi ekleyin.",
+  "categoryCreated": "Kategori oluşturuldu",
+  "categoryUpdated": "Kategori güncellendi",
+  "categoryDeleted": "Kategori silindi",
+  "categoryDeleteConfirm": "\"{name}\" silinsin mi? Bu işlem geri alınamaz.",
+  "@categoryDeleteConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "categoryNoLabels": "Etiket yok",
+  "categoryEdit_menuItem": "Düzenle",
+  "categoryView_menuItem": "Görüntüle",
+  "save": "Kaydet",
+  "delete": "Sil",
+  "create": "Oluştur",
+  "cancel": "İptal",
+  "loadMore": "Daha Fazla"
 }

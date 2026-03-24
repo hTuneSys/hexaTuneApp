@@ -23,6 +23,13 @@ class RouteNames {
   static const String providers = '/dev/providers';
   static const String tenants = '/dev/tenants';
   static const String categories = '/dev/categories';
+  static const String categoryList = '/categories';
+  static const String categoryCreate = '/categories/create';
+  static const String categoryEdit = '/categories/:categoryId/edit';
+  static const String categoryView = '/categories/:categoryId';
+
+  static String categoryEditFor(String id) => '/categories/$id/edit';
+  static String categoryViewFor(String id) => '/categories/$id';
   static const String inventories = '/dev/inventories';
   static const String formulas = '/dev/formulas';
   static const String formulaItems = '/dev/formulas/:formulaId/items';

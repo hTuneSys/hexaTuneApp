@@ -635,4 +635,101 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get harmonizerNoSequence => 'Formül seçilmedi';
+
+  @override
+  String get categoryManagement => 'Kategori Yönetimi';
+
+  @override
+  String get categoryCreate => 'Kategori Oluştur';
+
+  @override
+  String get categoryEdit => 'Kategori Düzenle';
+
+  @override
+  String get categoryView => 'Kategori Görüntüle';
+
+  @override
+  String get categoryName => 'Ad';
+
+  @override
+  String get categoryDescription => 'Açıklama';
+
+  @override
+  String get categoryLabels => 'Etiketler';
+
+  @override
+  String get categoryAddLabel => 'Etiket ekle';
+
+  @override
+  String categoryInventoryCount(int count) {
+    return '$count Envanter';
+  }
+
+  @override
+  String get categorySearchHint => 'Kategori ara...';
+
+  @override
+  String get categorySortTitle => 'Sırala';
+
+  @override
+  String get categoryFilterTitle => 'Filtrele';
+
+  @override
+  String get categorySortDefault => 'Varsayılan';
+
+  @override
+  String get categorySortNameAsc => 'Ad (A→Z)';
+
+  @override
+  String get categorySortNameDesc => 'Ad (Z→A)';
+
+  @override
+  String get categorySortNewest => 'En yeni';
+
+  @override
+  String get categorySortOldest => 'En eski';
+
+  @override
+  String get categoryEmptyTitle => 'Henüz kategori yok.';
+
+  @override
+  String get categoryEmptyHint => '+ butonuna basarak ilk öğenizi ekleyin.';
+
+  @override
+  String get categoryCreated => 'Kategori oluşturuldu';
+
+  @override
+  String get categoryUpdated => 'Kategori güncellendi';
+
+  @override
+  String get categoryDeleted => 'Kategori silindi';
+
+  @override
+  String categoryDeleteConfirm(String name) {
+    return '\"$name\" silinsin mi? Bu işlem geri alınamaz.';
+  }
+
+  @override
+  String get categoryNoLabels => 'Etiket yok';
+
+  @override
+  String get categoryEdit_menuItem => 'Düzenle';
+
+  @override
+  String get categoryView_menuItem => 'Görüntüle';
+
+  @override
+  String get save => 'Kaydet';
+
+  @override
+  String get delete => 'Sil';
+
+  @override
+  String get create => 'Oluştur';
+
+  @override
+  String get cancel => 'İptal';
+
+  @override
+  String get loadMore => 'Daha Fazla';
 }

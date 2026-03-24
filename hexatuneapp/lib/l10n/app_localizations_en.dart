@@ -632,4 +632,101 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get harmonizerNoSequence => 'No formula selected';
+
+  @override
+  String get categoryManagement => 'Category Management';
+
+  @override
+  String get categoryCreate => 'Create Category';
+
+  @override
+  String get categoryEdit => 'Edit Category';
+
+  @override
+  String get categoryView => 'View Category';
+
+  @override
+  String get categoryName => 'Name';
+
+  @override
+  String get categoryDescription => 'Description';
+
+  @override
+  String get categoryLabels => 'Labels';
+
+  @override
+  String get categoryAddLabel => 'Add label';
+
+  @override
+  String categoryInventoryCount(int count) {
+    return '$count Inventory';
+  }
+
+  @override
+  String get categorySearchHint => 'Search categories...';
+
+  @override
+  String get categorySortTitle => 'Sort';
+
+  @override
+  String get categoryFilterTitle => 'Filter';
+
+  @override
+  String get categorySortDefault => 'Default';
+
+  @override
+  String get categorySortNameAsc => 'Name (A→Z)';
+
+  @override
+  String get categorySortNameDesc => 'Name (Z→A)';
+
+  @override
+  String get categorySortNewest => 'Newest first';
+
+  @override
+  String get categorySortOldest => 'Oldest first';
+
+  @override
+  String get categoryEmptyTitle => 'No categories yet.';
+
+  @override
+  String get categoryEmptyHint => 'Press the + button to add your first item.';
+
+  @override
+  String get categoryCreated => 'Category created';
+
+  @override
+  String get categoryUpdated => 'Category updated';
+
+  @override
+  String get categoryDeleted => 'Category deleted';
+
+  @override
+  String categoryDeleteConfirm(String name) {
+    return 'Delete \"$name\"? This cannot be undone.';
+  }
+
+  @override
+  String get categoryNoLabels => 'No labels';
+
+  @override
+  String get categoryEdit_menuItem => 'Edit';
+
+  @override
+  String get categoryView_menuItem => 'View';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get create => 'Create';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get loadMore => 'Load More';
 }
