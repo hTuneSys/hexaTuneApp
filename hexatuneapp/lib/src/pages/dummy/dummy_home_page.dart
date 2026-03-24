@@ -154,6 +154,7 @@ class DummyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
+      extendBody: true,
       appBar: AppBar(
         title: const Text('hexaTune Dev'),
         actions: [
@@ -186,8 +187,6 @@ class DummyHomePage extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: const AppCenterFab(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: const AppBottomBar(),
     );
   }

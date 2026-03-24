@@ -6,83 +6,116 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
-Widget _buildBarApp({ValueChanged<int>? onItemTapped}) {
+Widget _buildApp({
+  ValueChanged<int>? onItemTapped,
+  VoidCallback? onCenterTapped,
+}) {
   return MaterialApp(
     home: Scaffold(
-      bottomNavigationBar: AppBottomBar(onItemTapped: onItemTapped),
-      floatingActionButton: const AppCenterFab(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      extendBody: true,
+      body: const SizedBox.expand(),
+      bottomNavigationBar: AppBottomBar(
+        onItemTapped: onItemTapped,
+        onCenterTapped: onCenterTapped,
+      ),
     ),
-  );
-}
-
-Widget _buildFabApp({VoidCallback? onPressed}) {
-  return MaterialApp(
-    home: Scaffold(floatingActionButton: AppCenterFab(onPressed: onPressed)),
   );
 }
 
 void main() {
   group('AppBottomBar', () {
-    testWidgets('renders BottomAppBar with four icon buttons', (tester) async {
-      await tester.pumpWidget(_buildBarApp());
+    testWidgets('renders with four icon buttons and a center hex button', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
 
       expect(find.byType(AppBottomBar), findsOneWidget);
-      expect(find.byType(BottomAppBar), findsOneWidget);
       expect(find.byType(IconButton), findsNWidgets(4));
+      expect(find.byType(CustomPaint), findsWidgets);
     });
 
-    testWidgets('displays correct icons', (tester) async {
-      await tester.pumpWidget(_buildBarApp());
+    testWidgets('displays correct navigation icons', (tester) async {
+      await tester.pumpWidget(_buildApp());
 
       expect(find.byIcon(Icons.home_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.search), findsOneWidget);
-      expect(find.byIcon(Icons.library_music_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.person_outline), findsOneWidget);
+      expect(find.byIcon(Icons.newspaper_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.workspaces_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
     });
 
-    testWidgets('has a center gap spacer for the FAB', (tester) async {
-      await tester.pumpWidget(_buildBarApp());
+    testWidgets('displays play icon in the center hex button', (tester) async {
+      await tester.pumpWidget(_buildApp());
 
-      final sizedBoxes = tester.widgetList<SizedBox>(
-        find.descendant(of: find.byType(Row), matching: find.byType(SizedBox)),
-      );
-      final gap = sizedBoxes.where((sb) => sb.width == 48);
-      expect(gap.length, 1);
+      expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
     });
 
     testWidgets('fires onItemTapped with correct index for each button', (
       tester,
     ) async {
       final tapped = <int>[];
-      await tester.pumpWidget(_buildBarApp(onItemTapped: (i) => tapped.add(i)));
+      await tester.pumpWidget(_buildApp(onItemTapped: (i) => tapped.add(i)));
 
       await tester.tap(find.byIcon(Icons.home_outlined));
-      await tester.tap(find.byIcon(Icons.search));
-      await tester.tap(find.byIcon(Icons.library_music_outlined));
-      await tester.tap(find.byIcon(Icons.person_outline));
+      await tester.tap(find.byIcon(Icons.newspaper_outlined));
+      await tester.tap(find.byIcon(Icons.workspaces_outlined));
+      await tester.tap(find.byIcon(Icons.settings_outlined));
 
       expect(tapped, [0, 1, 2, 3]);
     });
 
-    testWidgets('tapping icons does not crash when onItemTapped is null', (
+    testWidgets('fires onCenterTapped when hex button is tapped', (
       tester,
     ) async {
-      await tester.pumpWidget(_buildBarApp());
+      var tapped = false;
+      await tester.pumpWidget(_buildApp(onCenterTapped: () => tapped = true));
 
-      await tester.tap(find.byIcon(Icons.home_outlined));
-      await tester.tap(find.byIcon(Icons.search));
-      await tester.tap(find.byIcon(Icons.library_music_outlined));
-      await tester.tap(find.byIcon(Icons.person_outline));
-
-      // No exception means pass
+      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+      expect(tapped, isTrue);
     });
 
-    testWidgets('uses CircularNotchedRectangle shape', (tester) async {
-      await tester.pumpWidget(_buildBarApp());
+    testWidgets('tapping icons does not crash when callbacks are null', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
 
-      final bar = tester.widget<BottomAppBar>(find.byType(BottomAppBar));
-      expect(bar.shape, isA<CircularNotchedRectangle>());
+      await tester.tap(find.byIcon(Icons.home_outlined));
+      await tester.tap(find.byIcon(Icons.newspaper_outlined));
+      await tester.tap(find.byIcon(Icons.workspaces_outlined));
+      await tester.tap(find.byIcon(Icons.settings_outlined));
+      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+    });
+
+    testWidgets('bar floats with padding from edges', (tester) async {
+      await tester.pumpWidget(_buildApp());
+
+      final padding = tester.widget<Padding>(
+        find
+            .descendant(
+              of: find.byType(AppBottomBar),
+              matching: find.byType(Padding),
+            )
+            .first,
+      );
+      final insets = padding.padding as EdgeInsets;
+      expect(insets.left, 16);
+      expect(insets.right, 16);
+      expect(insets.bottom, greaterThanOrEqualTo(16));
+    });
+
+    testWidgets('bar uses Material with elevation for floating effect', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+
+      final material = tester.widget<Material>(
+        find
+            .descendant(
+              of: find.byType(AppBottomBar),
+              matching: find.byType(Material),
+            )
+            .first,
+      );
+      expect(material.elevation, 3);
     });
 
     testWidgets('icon colors come from theme colorScheme.onSurface', (
@@ -96,7 +129,10 @@ void main() {
               seedColor: Colors.blue,
             ).copyWith(onSurface: testColor),
           ),
-          home: const Scaffold(bottomNavigationBar: AppBottomBar()),
+          home: const Scaffold(
+            extendBody: true,
+            bottomNavigationBar: AppBottomBar(),
+          ),
         ),
       );
 
@@ -104,43 +140,6 @@ void main() {
       for (final button in buttons) {
         expect(button.color, testColor);
       }
-    });
-  });
-
-  group('AppCenterFab', () {
-    testWidgets('renders FloatingActionButton with hexagon icon', (
-      tester,
-    ) async {
-      await tester.pumpWidget(_buildFabApp());
-
-      expect(find.byType(AppCenterFab), findsOneWidget);
-      expect(find.byType(FloatingActionButton), findsOneWidget);
-      expect(find.byIcon(Icons.hexagon_outlined), findsOneWidget);
-    });
-
-    testWidgets('fires onPressed callback when tapped', (tester) async {
-      var tapped = false;
-      await tester.pumpWidget(_buildFabApp(onPressed: () => tapped = true));
-
-      await tester.tap(find.byType(FloatingActionButton));
-      expect(tapped, isTrue);
-    });
-
-    testWidgets('does not crash when onPressed is null', (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(home: Scaffold(floatingActionButton: const AppCenterFab())),
-      );
-
-      await tester.tap(find.byType(FloatingActionButton));
-      // No exception means pass
-    });
-
-    testWidgets('uses large FAB variant', (tester) async {
-      await tester.pumpWidget(_buildFabApp());
-
-      final size = tester.getSize(find.byType(FloatingActionButton));
-      expect(size.width, greaterThanOrEqualTo(80));
-      expect(size.height, greaterThanOrEqualTo(80));
     });
   });
 }
