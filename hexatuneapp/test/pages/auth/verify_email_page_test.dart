@@ -9,8 +9,8 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/verify_email_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/auth/verify_email_page.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 
 class MockLogService extends Mock implements LogService {}
 

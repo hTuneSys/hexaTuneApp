@@ -14,9 +14,8 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 
 /// Email OTP verification page matching the Figma design.
 class VerifyEmailPage extends StatefulWidget {
@@ -167,125 +166,120 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const HexagonalBackground(),
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 48),
-                    const AuthHeader(),
-                    const SizedBox(height: 40),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 48),
+                const AuthHeader(),
+                const SizedBox(height: 40),
 
-                    // Title
-                    Text(
-                      l10n.enterOtpCode,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Subtitle
-                    Text(
-                      l10n.verificationCodeSentTo,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      widget.email,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.enterDigitCodeBelow,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-
-                    // OTP input
-                    OtpInputField(
-                      key: _otpKey,
-                      onCompleted: (code) {
-                        _otpCode = code;
-                        _verify();
-                      },
-                      onChanged: (code) => _otpCode = code,
-                    ),
-                    const SizedBox(height: 32),
-
-                    // Verify button
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: _isLoading ? null : _verify,
-                        style: FilledButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        child: _isLoading
-                            ? SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: theme.colorScheme.onPrimary,
-                                ),
-                              )
-                            : Text(l10n.verify),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Resend section
-                    Text(
-                      l10n.didntReceiveCode,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    if (_resendSeconds > 0)
-                      Text(
-                        l10n.resendIn(_formattedTimer),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                    else
-                      TextButton(
-                        onPressed: _isResending ? null : _resendOtp,
-                        child: _isResending
-                            ? SizedBox(
-                                height: 16,
-                                width: 16,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  color: theme.colorScheme.primary,
-                                ),
-                              )
-                            : Text(l10n.resendCode),
-                      ),
-                    const SizedBox(height: 32),
-                  ],
+                // Title
+                Text(
+                  l10n.enterOtpCode,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
+                const SizedBox(height: 12),
+
+                // Subtitle
+                Text(
+                  l10n.verificationCodeSentTo,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  widget.email,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  l10n.enterDigitCodeBelow,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 32),
+
+                // OTP input
+                OtpInputField(
+                  key: _otpKey,
+                  onCompleted: (code) {
+                    _otpCode = code;
+                    _verify();
+                  },
+                  onChanged: (code) => _otpCode = code,
+                ),
+                const SizedBox(height: 32),
+
+                // Verify button
+                SizedBox(
+                  width: double.infinity,
+                  child: FilledButton(
+                    onPressed: _isLoading ? null : _verify,
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: _isLoading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.onPrimary,
+                            ),
+                          )
+                        : Text(l10n.verify),
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Resend section
+                Text(
+                  l10n.didntReceiveCode,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                if (_resendSeconds > 0)
+                  Text(
+                    l10n.resendIn(_formattedTimer),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  )
+                else
+                  TextButton(
+                    onPressed: _isResending ? null : _resendOtp,
+                    child: _isResending
+                        ? SizedBox(
+                            height: 16,
+                            width: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: theme.colorScheme.primary,
+                            ),
+                          )
+                        : Text(l10n.resendCode),
+                  ),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

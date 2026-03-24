@@ -36,12 +36,12 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/widgets/mini_harmonizer_bar.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/forgot_password_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/login_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/register_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/reset_password_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/splash_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/verify_email_page.dart';
+import 'package:hexatuneapp/src/pages/auth/forgot_password_page.dart';
+import 'package:hexatuneapp/src/pages/auth/login_page.dart';
+import 'package:hexatuneapp/src/pages/auth/register_page.dart';
+import 'package:hexatuneapp/src/pages/auth/reset_password_page.dart';
+import 'package:hexatuneapp/src/pages/auth/splash_page.dart';
+import 'package:hexatuneapp/src/pages/auth/verify_email_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton

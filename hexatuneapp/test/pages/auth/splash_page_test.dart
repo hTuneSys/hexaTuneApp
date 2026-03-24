@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/splash_page.dart';
+import 'package:hexatuneapp/src/pages/auth/splash_page.dart';
 
 Widget _buildApp({
   ValueNotifier<List<BootstrapStep>>? steps,

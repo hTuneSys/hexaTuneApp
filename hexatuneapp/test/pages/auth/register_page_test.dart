@@ -11,8 +11,8 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/register_page.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/password_strength_indicator.dart';
+import 'package:hexatuneapp/src/pages/auth/register_page.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
 
 class MockLogService extends Mock implements LogService {}
 

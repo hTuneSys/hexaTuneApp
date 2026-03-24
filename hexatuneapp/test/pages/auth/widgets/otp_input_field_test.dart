@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/otp_input_field.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 
 Widget _buildApp({
   required ValueChanged<String> onCompleted,

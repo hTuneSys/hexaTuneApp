@@ -13,7 +13,7 @@ import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_service.dart';
 import 'package:hexatuneapp/src/core/notification/notification_service.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/login_page.dart';
+import 'package:hexatuneapp/src/pages/auth/login_page.dart';
 
 class MockLogService extends Mock implements LogService {}
 

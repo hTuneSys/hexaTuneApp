@@ -19,9 +19,8 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/notification/notification_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/social_sign_in_buttons.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/social_sign_in_buttons.dart';
 
 /// Login page matching the Figma design.
 class LoginPage extends StatefulWidget {
@@ -238,138 +237,132 @@ class _LoginPageState extends State<LoginPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const HexagonalBackground(),
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 48),
+                const Center(child: AuthHeader()),
+                const SizedBox(height: 48),
+
+                // Title
+                Text(
+                  l10n.signInTitle,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Email field
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: l10n.emailAddress,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 16),
+
+                // Password field
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.password,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                  ),
+                  obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _login(),
+                ),
+
+                // Forgot Password link
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () => context.go(RouteNames.forgotPassword),
+                    child: Text(
+                      l10n.forgotPasswordQuestion,
+                      style: TextStyle(color: theme.colorScheme.primary),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Sign In button
+                FilledButton(
+                  onPressed: _isLoading ? null : _login,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        )
+                      : Text(l10n.signIn),
+                ),
+                const SizedBox(height: 24),
+
+                // Social sign-in
+                SocialSignInButtons(
+                  onApplePressed: _signInWithApple,
+                  onGooglePressed: _signInWithGoogle,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 24),
+
+                // Register link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 48),
-                    const Center(child: AuthHeader()),
-                    const SizedBox(height: 48),
-
-                    // Title
                     Text(
-                      l10n.signInTitle,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                      l10n.dontHaveAccountPrefix,
+                      style: theme.textTheme.bodyMedium,
                     ),
-                    const SizedBox(height: 24),
-
-                    // Email field
-                    TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: l10n.emailAddress,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Password field
-                    TextField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: l10n.password,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
-                          ),
-                        ),
-                      ),
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _login(),
-                    ),
-
-                    // Forgot Password link
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: () => context.go(RouteNames.forgotPassword),
-                        child: Text(
-                          l10n.forgotPasswordQuestion,
-                          style: TextStyle(color: theme.colorScheme.primary),
+                    GestureDetector(
+                      onTap: () => context.go(RouteNames.register),
+                      child: Text(
+                        l10n.createAccount,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-
-                    // Sign In button
-                    FilledButton(
-                      onPressed: _isLoading ? null : _login,
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: theme.colorScheme.onPrimary,
-                              ),
-                            )
-                          : Text(l10n.signIn),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Social sign-in
-                    SocialSignInButtons(
-                      onApplePressed: _signInWithApple,
-                      onGooglePressed: _signInWithGoogle,
-                      isLoading: _isLoading,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Register link
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          l10n.dontHaveAccountPrefix,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go(RouteNames.register),
-                          child: Text(
-                            l10n.createAccount,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
                   ],
                 ),
-              ),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 
 Widget _buildApp({double? size}) {
   return MaterialApp(

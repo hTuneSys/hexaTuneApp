@@ -13,10 +13,9 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/auth_header.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/password_strength_indicator.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/social_sign_in_buttons.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
+import 'package:hexatuneapp/src/pages/auth/widgets/social_sign_in_buttons.dart';
 
 /// Registration page matching the Figma design.
 class RegisterPage extends StatefulWidget {
@@ -188,165 +187,156 @@ class _RegisterPageState extends State<RegisterPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const HexagonalBackground(),
-          SafeArea(
-            child: Center(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 32),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 32),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 32),
+                const Center(child: AuthHeader()),
+                const SizedBox(height: 32),
+
+                // Title + subtitle
+                Text(
+                  l10n.createAnAccount,
+                  style: theme.textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  l10n.signUpSubtitle,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Email
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: l10n.emailAddress,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                ),
+                const SizedBox(height: 16),
+
+                // Password
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.password,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                  ),
+                  obscureText: _obscurePassword,
+                  textInputAction: TextInputAction.next,
+                  onChanged: (_) => setState(() {}),
+                ),
+                const SizedBox(height: 8),
+
+                // Strength indicator
+                PasswordStrengthIndicator(password: _passwordController.text),
+                const SizedBox(height: 16),
+
+                // Confirm password
+                TextField(
+                  controller: _confirmPasswordController,
+                  decoration: InputDecoration(
+                    labelText: l10n.confirmPassword,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscureConfirm
+                            ? Icons.visibility_off_outlined
+                            : Icons.visibility_outlined,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscureConfirm = !_obscureConfirm),
+                    ),
+                  ),
+                  obscureText: _obscureConfirm,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _register(),
+                ),
+                const SizedBox(height: 24),
+
+                // Sign Up button
+                FilledButton(
+                  onPressed: _isLoading ? null : _register,
+                  style: FilledButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: _isLoading
+                      ? SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: theme.colorScheme.onPrimary,
+                          ),
+                        )
+                      : Text(l10n.signUp),
+                ),
+                const SizedBox(height: 24),
+
+                // Social
+                SocialSignInButtons(
+                  onApplePressed: _signUpWithApple,
+                  onGooglePressed: _signUpWithGoogle,
+                  isLoading: _isLoading,
+                ),
+                const SizedBox(height: 24),
+
+                // Login link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 32),
-                    const Center(child: AuthHeader()),
-                    const SizedBox(height: 32),
-
-                    // Title + subtitle
                     Text(
-                      l10n.createAnAccount,
-                      style: theme.textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: theme.colorScheme.primary,
-                      ),
+                      l10n.alreadyHaveAccountPrefix,
+                      style: theme.textTheme.bodyMedium,
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      l10n.signUpSubtitle,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Email
-                    TextField(
-                      controller: _emailController,
-                      decoration: InputDecoration(
-                        labelText: l10n.emailAddress,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
+                    GestureDetector(
+                      onTap: () => context.go(RouteNames.login),
+                      child: Text(
+                        l10n.signInLink,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
                     ),
-                    const SizedBox(height: 16),
-
-                    // Password
-                    TextField(
-                      controller: _passwordController,
-                      decoration: InputDecoration(
-                        labelText: l10n.password,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
-                          ),
-                        ),
-                      ),
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
-                      onChanged: (_) => setState(() {}),
-                    ),
-                    const SizedBox(height: 8),
-
-                    // Strength indicator
-                    PasswordStrengthIndicator(
-                      password: _passwordController.text,
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Confirm password
-                    TextField(
-                      controller: _confirmPasswordController,
-                      decoration: InputDecoration(
-                        labelText: l10n.confirmPassword,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _obscureConfirm
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility_outlined,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscureConfirm = !_obscureConfirm,
-                          ),
-                        ),
-                      ),
-                      obscureText: _obscureConfirm,
-                      textInputAction: TextInputAction.done,
-                      onSubmitted: (_) => _register(),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Sign Up button
-                    FilledButton(
-                      onPressed: _isLoading ? null : _register,
-                      style: FilledButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: _isLoading
-                          ? SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: theme.colorScheme.onPrimary,
-                              ),
-                            )
-                          : Text(l10n.signUp),
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Social
-                    SocialSignInButtons(
-                      onApplePressed: _signUpWithApple,
-                      onGooglePressed: _signUpWithGoogle,
-                      isLoading: _isLoading,
-                    ),
-                    const SizedBox(height: 24),
-
-                    // Login link
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          l10n.alreadyHaveAccountPrefix,
-                          style: theme.textTheme.bodyMedium,
-                        ),
-                        GestureDetector(
-                          onTap: () => context.go(RouteNames.login),
-                          child: Text(
-                            l10n.signInLink,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.primary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 32),
                   ],
                 ),
-              ),
+                const SizedBox(height: 32),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
-import 'package:hexatuneapp/src/pages/shared/auth/widgets/hexagonal_background.dart';
 
 /// Splash screen shown during app initialization.
 ///
@@ -24,36 +23,27 @@ class SplashPage extends StatelessWidget {
     final appName = AppLocalizations.of(context)?.app ?? 'hexaTune';
 
     return Scaffold(
-      body: Stack(
-        children: [
-          const HexagonalBackground(),
-          Center(
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Image.asset(
-                    'assets/icon/app_icon.png',
-                    width: 100,
-                    height: 100,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    appName,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      color: theme.colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  if (steps != null) ...[
-                    const SizedBox(height: 32),
-                    _BootstrapProgress(steps: steps!, onRetry: onRetry),
-                  ],
-                ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset('assets/icon/app_icon.png', width: 100, height: 100),
+              const SizedBox(height: 16),
+              Text(
+                appName,
+                style: theme.textTheme.headlineLarge?.copyWith(
+                  color: theme.colorScheme.onSurface,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
+              if (steps != null) ...[
+                const SizedBox(height: 32),
+                _BootstrapProgress(steps: steps!, onRetry: onRetry),
+              ],
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
