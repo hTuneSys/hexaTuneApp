@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy home page — navigation hub for testing all API endpoints.
 class DummyHomePage extends StatelessWidget {
@@ -185,6 +186,9 @@ class DummyHomePage extends StatelessWidget {
           );
         },
       ),
+      floatingActionButton: const AppCenterFab(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: const AppBottomBar(),
     );
   }
 }
