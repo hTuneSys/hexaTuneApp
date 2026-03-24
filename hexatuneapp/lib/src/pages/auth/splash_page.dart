@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
@@ -28,7 +29,15 @@ class SplashPage extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.asset('assets/icon/app_icon.png', width: 100, height: 100),
+              SvgPicture.asset(
+                'assets/icon/app_icon.svg',
+                width: 100,
+                height: 100,
+                colorFilter: ColorFilter.mode(
+                  theme.colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
+              ),
               const SizedBox(height: 16),
               Text(
                 appName,

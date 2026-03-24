@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 
@@ -19,7 +20,15 @@ class AuthHeader extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset('assets/icon/app_icon.png', width: size, height: size),
+        SvgPicture.asset(
+          'assets/icon/app_icon.svg',
+          width: size,
+          height: size,
+          colorFilter: ColorFilter.mode(
+            theme.colorScheme.onSurface,
+            BlendMode.srcIn,
+          ),
+        ),
         const SizedBox(height: 12),
         Text(
           l10n.app,

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
@@ -24,7 +25,7 @@ void main() {
 
       expect(find.byType(AuthHeader), findsOneWidget);
       expect(find.byType(Column), findsOneWidget);
-      expect(find.byType(Image), findsOneWidget);
+      expect(find.byType(SvgPicture), findsOneWidget);
       expect(find.text('hexaTune'), findsOneWidget);
     });
 
@@ -43,7 +44,7 @@ void main() {
       await tester.pumpWidget(_buildApp(size: customSize));
       await tester.pump();
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
       expect(image.width, customSize);
       expect(image.height, customSize);
     });
@@ -52,7 +53,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pump();
 
-      final image = tester.widget<Image>(find.byType(Image));
+      final image = tester.widget<SvgPicture>(find.byType(SvgPicture));
       expect(image.width, 80);
       expect(image.height, 80);
     });

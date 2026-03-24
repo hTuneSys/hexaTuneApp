@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -105,8 +106,8 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // AuthHeader shows an Image
-      expect(find.byType(Image), findsOneWidget);
+      // AuthHeader shows an SVG icon
+      expect(find.byType(SvgPicture), findsOneWidget);
     });
 
     testWidgets('shows sign in link to return to login', (tester) async {
