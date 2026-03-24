@@ -25,6 +25,7 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
   bool _isLoading = true;
   InventoryResponse? _inventory;
   String? _categoryName;
+  String? _imageUrl;
 
   @override
   void initState() {
@@ -44,10 +45,20 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
       } catch (_) {
         catName = inv.categoryId;
       }
+      String? imgUrl;
+      if (inv.imageUploaded) {
+        try {
+          final imgResp = await invRepo.getImageUrl(widget.inventoryId);
+          imgUrl = imgResp.url;
+        } catch (_) {
+          // Image URL fetch failed — show placeholder
+        }
+      }
       if (mounted) {
         setState(() {
           _inventory = inv;
           _categoryName = catName;
+          _imageUrl = imgUrl;
           _isLoading = false;
         });
       }
@@ -96,17 +107,28 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
                       color: theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: _inventory!.imageUploaded
-                        ? Center(
-                            child: Icon(
-                              Icons.image,
-                              size: 64,
-                              color: theme.colorScheme.outline,
+                    child: _imageUrl != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              _imageUrl!,
+                              height: 160,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                              errorBuilder: (_, error, stack) => Center(
+                                child: Icon(
+                                  Icons.broken_image_outlined,
+                                  size: 64,
+                                  color: theme.colorScheme.outline,
+                                ),
+                              ),
                             ),
                           )
                         : Center(
                             child: Icon(
-                              Icons.image_not_supported_outlined,
+                              _inventory!.imageUploaded
+                                  ? Icons.image
+                                  : Icons.image_not_supported_outlined,
                               size: 64,
                               color: theme.colorScheme.outline,
                             ),

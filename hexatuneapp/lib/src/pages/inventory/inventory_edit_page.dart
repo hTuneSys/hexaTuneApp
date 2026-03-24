@@ -41,6 +41,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
   List<CategoryResponse> _categories = [];
   String? _selectedCategoryId;
   ({String name, Uint8List bytes})? _pickedImage;
+  String? _imageUrl;
   bool _isLoading = true;
   bool _isSubmitting = false;
   InventoryResponse? _inventory;
@@ -69,6 +70,15 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
       ]);
       final inv = results[0] as InventoryResponse;
       final catResp = results[1];
+      String? imgUrl;
+      if (inv.imageUploaded) {
+        try {
+          final imgResp = await invRepo.getImageUrl(widget.inventoryId);
+          imgUrl = imgResp.url;
+        } catch (_) {
+          // Image URL fetch failed — show placeholder
+        }
+      }
       if (mounted) {
         setState(() {
           _inventory = inv;
@@ -81,6 +91,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
           _selectedCategoryId = _categories.any((c) => c.id == inv.categoryId)
               ? inv.categoryId
               : null;
+          _imageUrl = imgUrl;
           _isLoading = false;
         });
       }
@@ -442,14 +453,23 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                                   ),
                                 ],
                               )
-                            : _inventory?.imageUploaded == true
+                            : _imageUrl != null
                             ? Stack(
                                 children: [
-                                  Center(
-                                    child: Icon(
-                                      Icons.image,
-                                      size: 64,
-                                      color: theme.colorScheme.outline,
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      _imageUrl!,
+                                      height: 160,
+                                      width: double.infinity,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, error, stack) => Center(
+                                        child: Icon(
+                                          Icons.broken_image_outlined,
+                                          size: 64,
+                                          color: theme.colorScheme.outline,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   Positioned(
