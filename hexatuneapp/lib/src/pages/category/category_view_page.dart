@@ -76,60 +76,68 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                 16,
                 16 + AppBottomBar.scrollPadding,
               ),
-              child: Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.categoryName,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.outline,
-                        ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    l10n.categoryName,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        _category!.name,
+                        style: theme.textTheme.bodyLarge,
                       ),
-                      const SizedBox(height: 4),
-                      Text(_category!.name, style: theme.textTheme.titleLarge),
-                      const SizedBox(height: 20),
-                      Text(
-                        l10n.categoryDescription,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.outline,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.categoryDescription,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
                         '—',
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: theme.colorScheme.outline,
                         ),
                       ),
-                      const SizedBox(height: 20),
-                      Text(
-                        l10n.categoryLabels,
-                        style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.outline,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      if (_category!.labels.isEmpty)
-                        Text(
-                          l10n.categoryNoLabels,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.outline,
-                          ),
-                        )
-                      else
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: _category!.labels
-                              .map((l) => Chip(label: Text(l)))
-                              .toList(),
-                        ),
-                    ],
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 16),
+                  Text(
+                    l10n.categoryLabels,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.outline,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  if (_category!.labels.isEmpty)
+                    Text(
+                      l10n.categoryNoLabels,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.outline,
+                      ),
+                    )
+                  else
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: _category!.labels
+                          .map((l) => Chip(label: Text(l)))
+                          .toList(),
+                    ),
+                ],
               ),
             ),
     );
