@@ -19,6 +19,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Page for creating a new inventory item.
 class InventoryCreatePage extends StatefulWidget {
@@ -256,12 +257,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     }
   }
@@ -269,13 +265,9 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_selectedCategoryId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            AppLocalizations.of(context)!.inventoryCategoryRequired,
-          ),
-          backgroundColor: Theme.of(context).colorScheme.error,
-        ),
+      AppSnackBar.error(
+        context,
+        message: AppLocalizations.of(context)!.inventoryCategoryRequired,
       );
       return;
     }
@@ -293,12 +285,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
         imageBytes: _pickedImage?.bytes,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.inventoryCreated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.inventoryCreated);
         context.pop(true);
       }
     } catch (e) {
@@ -307,12 +294,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

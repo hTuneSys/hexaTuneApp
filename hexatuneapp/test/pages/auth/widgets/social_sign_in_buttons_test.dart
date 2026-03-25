@@ -127,7 +127,10 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(FilledButton), findsNWidgets(2));
+      expect(
+        find.byWidgetPredicate((w) => w is FilledButton),
+        findsNWidgets(2),
+      );
     });
   });
 }

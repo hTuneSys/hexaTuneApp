@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Page for creating a new category.
 class CategoryCreatePage extends StatefulWidget {
@@ -61,12 +62,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
         ),
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.categoryCreated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.categoryCreated);
         context.pop(true);
       }
     } catch (e) {
@@ -75,12 +71,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

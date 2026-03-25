@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:hexatuneapp/src/core/log/debug_log_buffer.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Temporary debug page that displays all in-memory log entries captured
 /// by [DebugLogBuffer] since app launch. Supports real-time streaming,
@@ -110,13 +111,7 @@ class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
 
   void _showSnackBar(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: const Duration(seconds: 2),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
+    AppSnackBar.success(context, message: message);
   }
 
   @override

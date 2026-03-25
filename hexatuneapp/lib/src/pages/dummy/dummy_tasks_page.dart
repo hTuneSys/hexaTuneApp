@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/task/models/cancel_task_request.dart';
 import 'package:hexatuneapp/src/core/rest/task/models/create_task_request.dart';
 import 'package:hexatuneapp/src/core/rest/task/models/task_summary_dto.dart';
 import 'package:hexatuneapp/src/core/rest/task/task_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing task workflow endpoints.
 class DummyTasksPage extends StatefulWidget {
@@ -300,14 +301,11 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
 
   void _showMessage(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   Color _statusColor(String status, ColorScheme colorScheme) {

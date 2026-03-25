@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/update_category_request.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Page for editing an existing category.
 class CategoryEditPage extends StatefulWidget {
@@ -66,12 +67,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
         setState(() => _isLoading = false);
       }
     }
@@ -103,12 +99,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
         ),
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.categoryUpdated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.categoryUpdated);
         context.pop(true);
       }
     } catch (e) {
@@ -117,12 +108,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -159,22 +145,12 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
     try {
       await getIt<CategoryRepository>().delete(widget.categoryId);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.categoryDeleted),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.categoryDeleted);
         context.pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

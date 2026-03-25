@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/step/models/step_response.dart';
 import 'package:hexatuneapp/src/core/rest/step/step_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing read-only step endpoints.
 class DummyStepsPage extends StatefulWidget {
@@ -164,14 +165,11 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
 
   void _showMessage(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   @override

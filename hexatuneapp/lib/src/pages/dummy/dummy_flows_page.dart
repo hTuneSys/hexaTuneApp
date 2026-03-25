@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/rest/flow/flow_repository.dart';
 import 'package:hexatuneapp/src/core/rest/flow/models/flow_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/models/package_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/package_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing read-only flow endpoints.
 class DummyFlowsPage extends StatefulWidget {
@@ -216,14 +217,11 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
 
   void _showMessage(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   @override

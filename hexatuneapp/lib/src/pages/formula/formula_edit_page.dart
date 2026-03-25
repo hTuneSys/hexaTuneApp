@@ -20,6 +20,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/update_formula_item_qua
 import 'package:hexatuneapp/src/core/rest/formula/models/update_formula_request.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Tracks an item in the edit page — either existing or newly added.
 class _EditItem {
@@ -131,12 +132,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
         setState(() => _isLoading = false);
       }
     }
@@ -258,12 +254,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.formulaUpdated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.formulaUpdated);
         context.pop(true);
       }
     } catch (e) {
@@ -272,12 +263,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(_formatError(e)),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: _formatError(e));
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -313,22 +299,12 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
     try {
       await getIt<FormulaRepository>().delete(widget.formulaId);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.formulaDeleted),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.formulaDeleted);
         context.pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

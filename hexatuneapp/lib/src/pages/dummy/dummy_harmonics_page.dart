@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_re
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing the harmonics generation endpoint.
 class DummyHarmonicsPage extends StatefulWidget {
@@ -109,14 +110,11 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
 
   void _showMessage(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   @override

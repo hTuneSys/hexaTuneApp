@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/session/models/session_response.dart';
 import 'package:hexatuneapp/src/core/rest/session/session_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing session management endpoints.
 class DummySessionsPage extends StatefulWidget {
@@ -149,14 +150,11 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
 
   void _showMessage(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? Theme.of(context).colorScheme.error
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   @override

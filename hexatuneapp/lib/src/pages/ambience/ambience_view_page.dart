@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Read-only view of an ambience preset with playback support.
 class AmbienceViewPage extends StatefulWidget {
@@ -124,12 +125,7 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
 
   void _showError(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    AppSnackBar.error(context, message: msg);
   }
 
   @override

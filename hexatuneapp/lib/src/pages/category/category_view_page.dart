@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Read-only page for viewing a category's details.
 class CategoryViewPage extends StatefulWidget {
@@ -45,12 +46,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
         setState(() => _isLoading = false);
       }
     }

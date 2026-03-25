@@ -17,6 +17,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/add_formula_items_reque
 import 'package:hexatuneapp/src/core/rest/formula/models/create_formula_request.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Local model for inventory items being added to a formula before creation.
 class _PendingItem {
@@ -164,12 +165,7 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.formulaCreated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.formulaCreated);
         context.pop(true);
       }
     } catch (e) {
@@ -178,12 +174,7 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

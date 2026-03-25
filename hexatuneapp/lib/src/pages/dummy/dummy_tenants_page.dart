@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing tenant membership and switching endpoints.
 class DummyTenantsPage extends StatefulWidget {
@@ -94,9 +95,7 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
 
   void _showSnack(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    AppSnackBar.success(context, message: message);
   }
 
   @override

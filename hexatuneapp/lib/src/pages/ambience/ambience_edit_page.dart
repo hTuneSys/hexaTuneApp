@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Edit an existing ambience preset.
 class AmbienceEditPage extends StatefulWidget {
@@ -123,9 +124,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
         masterGain: _masterGain,
       );
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.ambienceUpdated)));
+        AppSnackBar.success(context, message: l10n.ambienceUpdated);
         context.pop(true);
       }
     } catch (e) {
@@ -163,9 +162,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
       if (_isPlaying) await _stop();
       await _ambienceService.delete(widget.ambienceId);
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.ambienceDeleted)));
+        AppSnackBar.success(context, message: l10n.ambienceDeleted);
         context.pop(true);
       }
     }
@@ -268,12 +265,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
 
   void _showError(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    AppSnackBar.error(context, message: msg);
   }
 
   @override

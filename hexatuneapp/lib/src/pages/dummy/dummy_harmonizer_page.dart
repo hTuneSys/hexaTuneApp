@@ -22,6 +22,7 @@ import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_request.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing the Harmonizer player.
 ///
@@ -182,16 +183,12 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
 
       final error = await _harmonizer.play(config);
       if (error != null && mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error)));
+        AppSnackBar.success(context, message: error);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _generating = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(e.toString())));
+        AppSnackBar.success(context, message: e.toString());
       }
     }
   }

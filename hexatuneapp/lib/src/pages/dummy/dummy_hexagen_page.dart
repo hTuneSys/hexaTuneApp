@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_command.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/models/hexagen_state.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/proto/at_command.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -271,17 +272,11 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
 
   void _showToast(String message, {bool isError = false}) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context)
-      ..clearSnackBars()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(message),
-          duration: const Duration(seconds: 2),
-          backgroundColor: isError
-              ? Theme.of(context).colorScheme.error
-              : Theme.of(context).colorScheme.primary,
-        ),
-      );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   // ---------------------------------------------------------------------------

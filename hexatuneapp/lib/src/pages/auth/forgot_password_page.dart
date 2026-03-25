@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Forgot password page — sends OTP reset code to the given email.
 class ForgotPasswordPage extends StatefulWidget {
@@ -67,22 +68,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   void _showError(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    AppSnackBar.error(context, message: message);
   }
 
   void _showInfo(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
+    AppSnackBar.success(context, message: message);
   }
 
   @override

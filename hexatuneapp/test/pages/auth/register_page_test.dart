@@ -118,7 +118,10 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byType(FilledButton), findsNWidgets(3));
+      expect(
+        find.byWidgetPredicate((w) => w is FilledButton),
+        findsNWidgets(3),
+      );
     });
 
     testWidgets('shows sign-in link for existing users', (tester) async {

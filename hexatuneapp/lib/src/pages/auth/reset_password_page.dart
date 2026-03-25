@@ -17,6 +17,7 @@ import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Reset password page with OTP verification + new password, matching Figma.
 class ResetPasswordPage extends StatefulWidget {
@@ -168,15 +169,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
 
   void _showMessage(String message, {required bool isError}) {
     if (!mounted) return;
-    final theme = Theme.of(context);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: isError
-            ? theme.colorScheme.error
-            : theme.colorScheme.primary,
-      ),
-    );
+    if (isError) {
+      AppSnackBar.error(context, message: message);
+    } else {
+      AppSnackBar.success(context, message: message);
+    }
   }
 
   // ---------------------------------------------------------------------------

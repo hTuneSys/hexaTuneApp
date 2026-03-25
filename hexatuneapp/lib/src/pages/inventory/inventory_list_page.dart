@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Inventory list page with search, sort, filter, and category-grouped accordion.
 class InventoryListPage extends StatefulWidget {
@@ -127,12 +128,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
 
   void _showError(String message) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    AppSnackBar.error(context, message: message);
   }
 
   void _showSortSheet() {

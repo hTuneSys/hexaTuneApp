@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Create a new ambience preset with sound layer selection and gain controls.
 class AmbienceCreatePage extends StatefulWidget {
@@ -92,9 +93,7 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
         masterGain: _masterGain,
       );
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(l10n.ambienceCreated)));
+        AppSnackBar.success(context, message: l10n.ambienceCreated);
         context.pop(true);
       }
     } catch (e) {
@@ -201,12 +200,7 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
 
   void _showError(String msg) {
     if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(msg),
-        backgroundColor: Theme.of(context).colorScheme.error,
-      ),
-    );
+    AppSnackBar.error(context, message: msg);
   }
 
   @override

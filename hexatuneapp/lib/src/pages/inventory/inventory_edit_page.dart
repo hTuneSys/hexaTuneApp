@@ -20,6 +20,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Page for editing an existing inventory item.
 class InventoryEditPage extends StatefulWidget {
@@ -101,12 +102,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
         setState(() => _isLoading = false);
       }
     }
@@ -292,12 +288,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     }
   }
@@ -319,12 +310,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         imageBytes: _pickedImage?.bytes,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.inventoryUpdated),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.inventoryUpdated);
         context.pop(true);
       }
     } catch (e) {
@@ -333,12 +319,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -375,22 +356,12 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
     try {
       await getIt<InventoryRepository>().delete(widget.inventoryId);
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(l10n.inventoryDeleted),
-            backgroundColor: Theme.of(context).colorScheme.primary,
-          ),
-        );
+        AppSnackBar.success(context, message: l10n.inventoryDeleted);
         context.pop(true);
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(e.toString()),
-            backgroundColor: Theme.of(context).colorScheme.error,
-          ),
-        );
+        AppSnackBar.error(context, message: e.toString());
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
