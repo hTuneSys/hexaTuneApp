@@ -103,10 +103,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
             children: [
               TextFormField(
                 controller: _nameCtrl,
-                decoration: InputDecoration(
-                  labelText: l10n.categoryName,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(labelText: l10n.categoryName),
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? l10n.categoryName : null,
                 textInputAction: TextInputAction.next,
@@ -116,7 +113,6 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 controller: _descCtrl,
                 decoration: InputDecoration(
                   labelText: l10n.categoryDescription,
-                  border: const OutlineInputBorder(),
                 ),
                 maxLines: 3,
                 enabled: false,
@@ -126,7 +122,6 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 controller: _labelInputCtrl,
                 decoration: InputDecoration(
                   labelText: l10n.categoryAddLabel,
-                  border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: _addLabel,

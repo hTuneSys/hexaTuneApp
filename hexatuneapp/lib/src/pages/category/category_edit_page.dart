@@ -198,10 +198,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                   children: [
                     TextFormField(
                       controller: _nameCtrl,
-                      decoration: InputDecoration(
-                        labelText: l10n.categoryName,
-                        border: const OutlineInputBorder(),
-                      ),
+                      decoration: InputDecoration(labelText: l10n.categoryName),
                       validator: (v) => (v == null || v.trim().isEmpty)
                           ? l10n.categoryName
                           : null,
@@ -212,7 +209,6 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                       controller: _descCtrl,
                       decoration: InputDecoration(
                         labelText: l10n.categoryDescription,
-                        border: const OutlineInputBorder(),
                       ),
                       maxLines: 3,
                       enabled: false,
@@ -222,7 +218,6 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                       controller: _labelInputCtrl,
                       decoration: InputDecoration(
                         labelText: l10n.categoryAddLabel,
-                        border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.add),
                           onPressed: _addLabel,
@@ -253,7 +248,6 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                             onPressed: _isSubmitting ? null : _delete,
                             style: OutlinedButton.styleFrom(
                               foregroundColor: theme.colorScheme.error,
-                              side: BorderSide(color: theme.colorScheme.error),
                               minimumSize: const Size.fromHeight(48),
                             ),
                             child: Text(l10n.delete),

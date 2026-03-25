@@ -219,12 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Email
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: l10n.emailAddress,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  decoration: InputDecoration(labelText: l10n.emailAddress),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                 ),
@@ -235,9 +230,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: l10n.password,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
@@ -263,9 +255,6 @@ class _RegisterPageState extends State<RegisterPage> {
                   controller: _confirmPasswordController,
                   decoration: InputDecoration(
                     labelText: l10n.confirmPassword,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirm

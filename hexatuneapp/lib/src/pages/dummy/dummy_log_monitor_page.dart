@@ -198,7 +198,6 @@ class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
                 hintText: 'Search logs...',
                 prefixIcon: Icon(Icons.search),
                 isDense: true,
-                border: OutlineInputBorder(),
                 contentPadding: EdgeInsets.symmetric(
                   horizontal: 12,
                   vertical: 8,

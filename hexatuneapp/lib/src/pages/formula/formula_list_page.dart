@@ -238,7 +238,6 @@ class _FormulaListPageState extends State<FormulaListPage> {
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: l10n.formulaSearchHint,
-                  border: const OutlineInputBorder(),
                   isDense: true,
                   prefixIcon: IconButton(
                     icon: const Icon(Icons.arrow_back),

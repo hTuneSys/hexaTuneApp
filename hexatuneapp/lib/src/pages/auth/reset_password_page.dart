@@ -231,9 +231,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     controller: _passwordController,
                     decoration: InputDecoration(
                       labelText: l10n.newPassword,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscurePassword
@@ -263,9 +260,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                     controller: _confirmController,
                     decoration: InputDecoration(
                       labelText: l10n.confirmPassword,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
                       suffixIcon: IconButton(
                         icon: Icon(
                           _obscureConfirm

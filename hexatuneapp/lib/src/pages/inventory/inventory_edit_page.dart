@@ -212,7 +212,6 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                           controller: addNewCtrl,
                           decoration: InputDecoration(
                             hintText: l10n.inventoryCategoryAddNew,
-                            border: const OutlineInputBorder(),
                             isDense: true,
                           ),
                           onSubmitted: (_) async {
@@ -514,7 +513,6 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       controller: _nameCtrl,
                       decoration: InputDecoration(
                         hintText: l10n.inventoryNameHint,
-                        border: const OutlineInputBorder(),
                       ),
                       validator: (v) => (v == null || v.trim().isEmpty)
                           ? l10n.inventoryNameRequired
@@ -531,7 +529,6 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       controller: _descCtrl,
                       decoration: InputDecoration(
                         hintText: l10n.inventoryDescriptionHint,
-                        border: const OutlineInputBorder(),
                       ),
                       maxLines: 3,
                     ),
@@ -545,9 +542,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       onTap: _showCategoryPicker,
                       borderRadius: BorderRadius.circular(12),
                       child: InputDecorator(
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                        ),
+                        decoration: const InputDecoration(),
                         child: Row(
                           children: [
                             Expanded(
@@ -579,7 +574,6 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       controller: _labelInputCtrl,
                       decoration: InputDecoration(
                         hintText: l10n.inventoryAddLabel,
-                        border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
                           icon: const Icon(Icons.add),
                           onPressed: _addLabel,

@@ -355,7 +355,7 @@ class MaterialTheme {
       style: ElevatedButton.styleFrom(elevation: 1),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(elevation: 1),
+      style: OutlinedButton.styleFrom(elevation: 1, side: BorderSide.none),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(elevation: 1),
@@ -366,6 +366,18 @@ class MaterialTheme {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: colorScheme.surfaceContainerLow,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
     ),
   );
 

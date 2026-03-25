@@ -560,7 +560,6 @@ class _DummyDspPageState extends State<DummyDspPage> {
       decoration: InputDecoration(
         hintText: hint,
         isDense: true,
-        border: const OutlineInputBorder(),
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
           vertical: 10,

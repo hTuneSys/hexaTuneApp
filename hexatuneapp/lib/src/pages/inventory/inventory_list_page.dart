@@ -270,7 +270,6 @@ class _InventoryListPageState extends State<InventoryListPage> {
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: l10n.inventorySearchHint,
-                  border: const OutlineInputBorder(),
                   isDense: true,
                   prefixIcon: IconButton(
                     icon: const Icon(Icons.arrow_back),

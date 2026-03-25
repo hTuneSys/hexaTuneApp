@@ -157,7 +157,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         decoration: const InputDecoration(
                           labelText: 'Search',
                           prefixIcon: Icon(Icons.search),
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                         onSubmitted: (_) => _load(),
@@ -202,7 +201,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         initialValue: _outcomeFilter,
                         decoration: const InputDecoration(
                           labelText: 'Outcome',
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                         items: const [
@@ -227,7 +225,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         initialValue: _severityFilter,
                         decoration: const InputDecoration(
                           labelText: 'Severity',
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                         items: const [
@@ -259,7 +256,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         controller: _actionCtrl,
                         decoration: const InputDecoration(
                           labelText: 'Action',
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                       ),
@@ -270,7 +266,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         controller: _resourceTypeCtrl,
                         decoration: const InputDecoration(
                           labelText: 'Resource Type',
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                       ),
@@ -285,7 +280,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                         controller: _actorTypeCtrl,
                         decoration: const InputDecoration(
                           labelText: 'Actor Type',
-                          border: OutlineInputBorder(),
                           isDense: true,
                         ),
                       ),

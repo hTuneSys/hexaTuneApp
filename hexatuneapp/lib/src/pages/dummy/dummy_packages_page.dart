@@ -199,7 +199,6 @@ class _DummyPackagesPageState extends State<DummyPackagesPage> {
                         controller: _searchCtrl,
                         decoration: InputDecoration(
                           hintText: 'Search packages…',
-                          border: const OutlineInputBorder(),
                           isDense: true,
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.search),

@@ -76,10 +76,7 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _forgotEmailCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Email'),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
@@ -118,10 +115,7 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _resetEmailCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Email'),
             keyboardType: TextInputType.emailAddress,
           ),
           const SizedBox(height: 8),
@@ -130,7 +124,6 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             decoration: const InputDecoration(
               labelText: 'OTP Code (8 digits)',
               hintText: '12345678',
-              border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
             maxLength: 8,
@@ -138,10 +131,7 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _resetPasswordCtrl,
-            decoration: const InputDecoration(
-              labelText: 'New Password',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'New Password'),
             obscureText: true,
           ),
           const SizedBox(height: 8),
@@ -168,10 +158,7 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _reAuthPasswordCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Current Password',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Current Password'),
             obscureText: true,
           ),
           const SizedBox(height: 8),

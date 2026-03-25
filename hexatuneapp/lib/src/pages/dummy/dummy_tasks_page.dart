@@ -100,17 +100,13 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
             children: [
               TextField(
                 controller: typeCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Task Type *',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Task Type *'),
               ),
               const SizedBox(height: 8),
               TextField(
                 controller: payloadCtrl,
                 decoration: const InputDecoration(
                   labelText: 'Payload (JSON) *',
-                  border: OutlineInputBorder(),
                 ),
                 maxLines: 4,
               ),
@@ -119,7 +115,6 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
                 controller: cronCtrl,
                 decoration: const InputDecoration(
                   labelText: 'Cron Expression (optional)',
-                  border: OutlineInputBorder(),
                 ),
               ),
             ],
@@ -245,10 +240,7 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
         title: const Text('Cancel Task'),
         content: TextField(
           controller: reasonCtrl,
-          decoration: const InputDecoration(
-            labelText: 'Reason (optional)',
-            border: OutlineInputBorder(),
-          ),
+          decoration: const InputDecoration(labelText: 'Reason (optional)'),
         ),
         actions: [
           TextButton(
@@ -344,7 +336,6 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
                     decoration: const InputDecoration(
                       labelText: 'Search',
                       prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
                       isDense: true,
                     ),
                     onSubmitted: (_) => _load(),
@@ -356,7 +347,6 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
                     controller: _taskTypeController,
                     decoration: const InputDecoration(
                       labelText: 'Task Type',
-                      border: OutlineInputBorder(),
                       isDense: true,
                     ),
                     onSubmitted: (_) => _load(),

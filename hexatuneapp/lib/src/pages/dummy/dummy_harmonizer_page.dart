@@ -536,7 +536,6 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     return InputDecorator(
       decoration: InputDecoration(
         labelText: l10n.harmonizerSelectAmbience,
-        border: const OutlineInputBorder(),
         isDense: true,
       ),
       child: DropdownButtonHideUnderline(

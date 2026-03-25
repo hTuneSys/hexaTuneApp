@@ -167,7 +167,7 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
             TextField(
               controller: TextEditingController(text: config.name),
               readOnly: true,
-              decoration: const InputDecoration(border: OutlineInputBorder()),
+              decoration: const InputDecoration(),
             ),
             const SizedBox(height: 24),
 

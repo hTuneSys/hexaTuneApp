@@ -192,7 +192,6 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
                     decoration: const InputDecoration(
                       labelText: 'Search',
                       prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(),
                       isDense: true,
                     ),
                     onSubmitted: (_) => _load(),

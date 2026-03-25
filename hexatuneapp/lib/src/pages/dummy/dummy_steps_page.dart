@@ -199,7 +199,6 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
                         controller: _searchCtrl,
                         decoration: InputDecoration(
                           hintText: 'Search steps…',
-                          border: const OutlineInputBorder(),
                           isDense: true,
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.search),

@@ -208,10 +208,7 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
               const SizedBox(height: 8),
               TextFormField(
                 controller: _nameCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.formulaNameHint,
-                  border: const OutlineInputBorder(),
-                ),
+                decoration: InputDecoration(hintText: l10n.formulaNameHint),
                 validator: (v) => (v == null || v.trim().isEmpty)
                     ? l10n.formulaNameRequired
                     : null,
@@ -224,7 +221,6 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
                 controller: _descCtrl,
                 decoration: InputDecoration(
                   hintText: l10n.formulaDescriptionHint,
-                  border: const OutlineInputBorder(),
                 ),
                 maxLines: 3,
               ),
@@ -235,7 +231,6 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
                 controller: _labelInputCtrl,
                 decoration: InputDecoration(
                   hintText: l10n.formulaAddLabel,
-                  border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: const Icon(Icons.add),
                     onPressed: _addLabel,
@@ -265,7 +260,6 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
                 controller: _inventorySearchCtrl,
                 decoration: InputDecoration(
                   hintText: l10n.formulaSearchInventory,
-                  border: const OutlineInputBorder(),
                   prefixIcon: const Icon(Icons.search),
                 ),
                 onChanged: _filterInventories,
@@ -337,7 +331,6 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
                             textAlign: TextAlign.center,
                             decoration: const InputDecoration(
                               isDense: true,
-                              border: OutlineInputBorder(),
                               contentPadding: EdgeInsets.symmetric(
                                 horizontal: 4,
                                 vertical: 8,

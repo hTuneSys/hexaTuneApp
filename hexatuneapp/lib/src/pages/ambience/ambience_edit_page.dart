@@ -309,10 +309,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             const SizedBox(height: 8),
             TextField(
               controller: _nameCtrl,
-              decoration: InputDecoration(
-                hintText: l10n.ambienceNameHint,
-                border: const OutlineInputBorder(),
-              ),
+              decoration: InputDecoration(hintText: l10n.ambienceNameHint),
             ),
             const SizedBox(height: 24),
 

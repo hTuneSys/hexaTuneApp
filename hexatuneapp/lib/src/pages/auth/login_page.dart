@@ -261,12 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                 // Email field
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: l10n.emailAddress,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  decoration: InputDecoration(labelText: l10n.emailAddress),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                 ),
@@ -277,9 +272,6 @@ class _LoginPageState extends State<LoginPage> {
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: l10n.password,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword

@@ -236,19 +236,13 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                 const SizedBox(height: 8),
                 TextField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Email'),
                   keyboardType: TextInputType.emailAddress,
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Password'),
                   obscureText: true,
                 ),
                 const SizedBox(height: 8),
@@ -297,7 +291,6 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                     controller: _googleTokenController,
                     decoration: const InputDecoration(
                       labelText: 'Google ID Token',
-                      border: OutlineInputBorder(),
                     ),
                     maxLines: 2,
                   ),
@@ -354,7 +347,6 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                     controller: _appleTokenController,
                     decoration: const InputDecoration(
                       labelText: 'Apple ID Token',
-                      border: OutlineInputBorder(),
                     ),
                     maxLines: 2,
                   ),

@@ -493,11 +493,7 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
     return TextField(
       controller: ctrl,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: '0–255',
-        border: const OutlineInputBorder(),
-      ),
+      decoration: InputDecoration(labelText: label, hintText: '0–255'),
       onChanged: (_) => setState(() {}),
     );
   }
@@ -596,7 +592,6 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: l10n.hexagenFreqHz,
-                      border: const OutlineInputBorder(),
                       isDense: true,
                     ),
                   ),
@@ -608,7 +603,6 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                     keyboardType: TextInputType.number,
                     decoration: InputDecoration(
                       labelText: l10n.hexagenDurationMs,
-                      border: const OutlineInputBorder(),
                       isDense: true,
                     ),
                   ),

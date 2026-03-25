@@ -148,10 +148,7 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: DropdownButtonFormField<String>(
               initialValue: _selectedGenType,
-              decoration: const InputDecoration(
-                labelText: 'Generation Type',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Generation Type'),
               items: _generationTypes
                   .map((t) => DropdownMenuItem(value: t, child: Text(t)))
                   .toList(),
@@ -166,10 +163,7 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: DropdownButtonFormField<String>(
               initialValue: _selectedSourceType,
-              decoration: const InputDecoration(
-                labelText: 'Source Type',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Source Type'),
               items: _sourceTypes
                   .map((t) => DropdownMenuItem(value: t, child: Text(t)))
                   .toList(),
@@ -189,10 +183,7 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: DropdownButtonFormField<String>(
               initialValue: _selectedSourceId,
-              decoration: const InputDecoration(
-                labelText: 'Source',
-                border: OutlineInputBorder(),
-              ),
+              decoration: const InputDecoration(labelText: 'Source'),
               items: _formulas
                   .map(
                     (f) => DropdownMenuItem(value: f.id, child: Text(f.name)),

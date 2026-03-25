@@ -287,7 +287,6 @@ class _CategoryListPageState extends State<CategoryListPage> {
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: l10n.categorySearchHint,
-                  border: const OutlineInputBorder(),
                   isDense: true,
                   prefixIcon: IconButton(
                     icon: const Icon(Icons.arrow_back),

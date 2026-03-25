@@ -127,10 +127,7 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _operationTypeCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Operation Type',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Operation Type'),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
@@ -159,10 +156,7 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _approvalIdCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Approval Request ID',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Approval Request ID'),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -247,10 +241,7 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
           const SizedBox(height: 8),
           TextField(
             controller: _deviceIdCtrl,
-            decoration: const InputDecoration(
-              labelText: 'Device ID (UUID)',
-              border: OutlineInputBorder(),
-            ),
+            decoration: const InputDecoration(labelText: 'Device ID (UUID)'),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(

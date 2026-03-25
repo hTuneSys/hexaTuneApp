@@ -200,26 +200,17 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
                 const SizedBox(height: 8),
                 TextField(
                   controller: _displayNameCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Display Name',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Display Name'),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _avatarUrlCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Avatar URL',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Avatar URL'),
                 ),
                 const SizedBox(height: 8),
                 TextField(
                   controller: _bioCtrl,
-                  decoration: const InputDecoration(
-                    labelText: 'Bio',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Bio'),
                   maxLines: 3,
                 ),
                 const SizedBox(height: 16),

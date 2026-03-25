@@ -124,12 +124,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 // Email field
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
-                    labelText: l10n.emailAddress,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+                  decoration: InputDecoration(labelText: l10n.emailAddress),
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.done,
                   onSubmitted: (_) => _sendResetCode(),

@@ -232,7 +232,6 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                                   setState(() => _searchExpanded = false);
                                 },
                               ),
-                              border: const OutlineInputBorder(),
                               isDense: true,
                             ),
                             onChanged: (_) => setState(() {}),

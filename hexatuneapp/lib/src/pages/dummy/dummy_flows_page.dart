@@ -248,7 +248,6 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
                   controller: _searchCtrl,
                   decoration: InputDecoration(
                     hintText: 'Search flows…',
-                    border: const OutlineInputBorder(),
                     isDense: true,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.search),
