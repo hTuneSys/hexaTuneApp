@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/auth/provider_repository.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Dummy page for testing provider management endpoints.
@@ -89,8 +90,15 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
     }
     await _runAction('Link email provider', () async {
       final repo = getIt<ProviderRepository>();
-      await repo.linkEmail(
+      final result = await repo.linkEmail(
         LinkEmailProviderRequest(email: email, password: password),
+      );
+
+      final otpTimer = getIt<OtpTimerService>();
+      await otpTimer.saveOtpExpiry(
+        OtpFlow.emailProviderLink,
+        email,
+        result.expiresInSeconds,
       );
     });
   }

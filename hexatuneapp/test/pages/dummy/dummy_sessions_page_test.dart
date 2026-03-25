@@ -34,6 +34,7 @@ const _testSessions = [
     deviceId: 'dev-00100',
     createdAt: '2025-01-01T00:00:00Z',
     expiresAt: '2025-02-01T00:00:00Z',
+    lastActivityAt: '2025-01-15T00:00:00Z',
   ),
   SessionResponse(
     id: 'sess-00200',
@@ -41,6 +42,7 @@ const _testSessions = [
     deviceId: 'dev-00200',
     createdAt: '2025-01-02T00:00:00Z',
     expiresAt: '2025-02-02T00:00:00Z',
+    lastActivityAt: '2025-01-16T00:00:00Z',
   ),
 ];
 

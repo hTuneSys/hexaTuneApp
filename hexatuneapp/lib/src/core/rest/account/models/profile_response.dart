@@ -14,6 +14,7 @@ abstract class ProfileResponse with _$ProfileResponse {
     String? displayName,
     String? avatarUrl,
     String? bio,
+    required String createdAt,
     required String updatedAt,
   }) = _ProfileResponse;
 

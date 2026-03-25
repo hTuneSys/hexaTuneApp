@@ -9,6 +9,7 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/auth/reset_password_page.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
@@ -16,6 +17,8 @@ import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.d
 class MockLogService extends Mock implements LogService {}
 
 class MockAuthRepository extends Mock implements AuthRepository {}
+
+class MockOtpTimerService extends Mock implements OtpTimerService {}
 
 Widget _buildApp({String email = 'test@example.com'}) {
   return MaterialApp(
@@ -29,18 +32,26 @@ Widget _buildApp({String email = 'test@example.com'}) {
 void main() {
   late MockLogService mockLog;
   late MockAuthRepository mockAuthRepo;
+  late MockOtpTimerService mockOtpTimer;
+
+  setUpAll(() {
+    registerFallbackValue(OtpFlow.passwordReset);
+  });
 
   setUp(() {
     mockLog = MockLogService();
     mockAuthRepo = MockAuthRepository();
+    mockOtpTimer = MockOtpTimerService();
 
     when(
       () => mockLog.devLog(any(), category: any(named: 'category')),
     ).thenReturn(null);
+    when(() => mockOtpTimer.getRemainingSeconds(any(), any())).thenReturn(30);
 
     getIt.allowReassignment = true;
     getIt.registerSingleton<LogService>(mockLog);
     getIt.registerSingleton<AuthRepository>(mockAuthRepo);
+    getIt.registerSingleton<OtpTimerService>(mockOtpTimer);
   });
 
   tearDown(() async {

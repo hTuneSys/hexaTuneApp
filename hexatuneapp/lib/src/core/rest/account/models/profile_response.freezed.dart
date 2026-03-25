@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProfileResponse {
 
- String get accountId; String? get displayName; String? get avatarUrl; String? get bio; String get updatedAt;
+ String get accountId; String? get displayName; String? get avatarUrl; String? get bio; String get createdAt; String get updatedAt;
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProfileResponseCopyWith<ProfileResponse> get copyWith => _$ProfileResponseCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileResponse&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProfileResponse&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accountId,displayName,avatarUrl,bio,updatedAt);
+int get hashCode => Object.hash(runtimeType,accountId,displayName,avatarUrl,bio,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ProfileResponse(accountId: $accountId, displayName: $displayName, avatarUrl: $avatarUrl, bio: $bio, updatedAt: $updatedAt)';
+  return 'ProfileResponse(accountId: $accountId, displayName: $displayName, avatarUrl: $avatarUrl, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProfileResponseCopyWith<$Res>  {
   factory $ProfileResponseCopyWith(ProfileResponse value, $Res Function(ProfileResponse) _then) = _$ProfileResponseCopyWithImpl;
 @useResult
 $Res call({
- String accountId, String? displayName, String? avatarUrl, String? bio, String updatedAt
+ String accountId, String? displayName, String? avatarUrl, String? bio, String createdAt, String updatedAt
 });
 
 
@@ -65,13 +65,14 @@ class _$ProfileResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? accountId = null,Object? displayName = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String createdAt,  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProfileResponse() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.updatedAt);case _:
+return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String createdAt,  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ProfileResponse():
-return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.updatedAt);case _:
+return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String accountId,  String? displayName,  String? avatarUrl,  String? bio,  String createdAt,  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ProfileResponse() when $default != null:
-return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.updatedAt);case _:
+return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -213,13 +214,14 @@ return $default(_that.accountId,_that.displayName,_that.avatarUrl,_that.bio,_tha
 @JsonSerializable()
 
 class _ProfileResponse implements ProfileResponse {
-  const _ProfileResponse({required this.accountId, this.displayName, this.avatarUrl, this.bio, required this.updatedAt});
+  const _ProfileResponse({required this.accountId, this.displayName, this.avatarUrl, this.bio, required this.createdAt, required this.updatedAt});
   factory _ProfileResponse.fromJson(Map<String, dynamic> json) => _$ProfileResponseFromJson(json);
 
 @override final  String accountId;
 @override final  String? displayName;
 @override final  String? avatarUrl;
 @override final  String? bio;
+@override final  String createdAt;
 @override final  String updatedAt;
 
 /// Create a copy of ProfileResponse
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileResponse&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProfileResponse&&(identical(other.accountId, accountId) || other.accountId == accountId)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.avatarUrl, avatarUrl) || other.avatarUrl == avatarUrl)&&(identical(other.bio, bio) || other.bio == bio)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,accountId,displayName,avatarUrl,bio,updatedAt);
+int get hashCode => Object.hash(runtimeType,accountId,displayName,avatarUrl,bio,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'ProfileResponse(accountId: $accountId, displayName: $displayName, avatarUrl: $avatarUrl, bio: $bio, updatedAt: $updatedAt)';
+  return 'ProfileResponse(accountId: $accountId, displayName: $displayName, avatarUrl: $avatarUrl, bio: $bio, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$ProfileResponseCopyWith<$Res> implements $ProfileResponse
   factory _$ProfileResponseCopyWith(_ProfileResponse value, $Res Function(_ProfileResponse) _then) = __$ProfileResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String accountId, String? displayName, String? avatarUrl, String? bio, String updatedAt
+ String accountId, String? displayName, String? avatarUrl, String? bio, String createdAt, String updatedAt
 });
 
 
@@ -272,13 +274,14 @@ class __$ProfileResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProfileResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? accountId = null,Object? displayName = freezed,Object? avatarUrl = freezed,Object? bio = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ProfileResponse(
 accountId: null == accountId ? _self.accountId : accountId // ignore: cast_nullable_to_non_nullable
 as String,displayName: freezed == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String?,avatarUrl: freezed == avatarUrl ? _self.avatarUrl : avatarUrl // ignore: cast_nullable_to_non_nullable
 as String?,bio: freezed == bio ? _self.bio : bio // ignore: cast_nullable_to_non_nullable
-as String?,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }

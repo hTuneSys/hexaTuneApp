@@ -2191,6 +2191,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Too many requests. Please slow down.'**
   String get errorRateLimited;
+
+  /// No description provided for @otpExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'Code expired. Tap resend to get a new code.'**
+  String get otpExpired;
+
+  /// No description provided for @otpExpiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Code expires in {time}'**
+  String otpExpiresIn(String time);
 }
 
 class _AppLocalizationsDelegate

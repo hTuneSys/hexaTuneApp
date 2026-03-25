@@ -13,6 +13,7 @@ abstract class SessionResponse with _$SessionResponse {
     required String id,
     required String accountId,
     required String deviceId,
+    required String lastActivityAt,
     required String createdAt,
     required String expiresAt,
   }) = _SessionResponse;

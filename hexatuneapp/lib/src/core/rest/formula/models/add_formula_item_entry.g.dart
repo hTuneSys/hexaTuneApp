@@ -11,7 +11,6 @@ _AddFormulaItemEntry _$AddFormulaItemEntryFromJson(Map<String, dynamic> json) =>
       inventoryId: json['inventoryId'] as String,
       quantity: (json['quantity'] as num?)?.toInt(),
       sortOrder: (json['sortOrder'] as num?)?.toInt(),
-      timeMs: (json['timeMs'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$AddFormulaItemEntryToJson(
@@ -20,5 +19,4 @@ Map<String, dynamic> _$AddFormulaItemEntryToJson(
   'inventoryId': instance.inventoryId,
   'quantity': instance.quantity,
   'sortOrder': instance.sortOrder,
-  'timeMs': instance.timeMs,
 };

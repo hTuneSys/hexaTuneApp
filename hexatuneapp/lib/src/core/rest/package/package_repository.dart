@@ -84,10 +84,11 @@ class PackageRepository {
   }
 
   /// GET /api/v1/packages/{id}/image
-  Future<ImageUrlResponse> getImageUrl(String id) async {
+  Future<ImageUrlResponse> getImageUrl(String id, {String? locale}) async {
     _logService.debug('GET package image $id', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.packageImage(id),
+      queryParameters: locale != null ? {'locale': locale} : null,
     );
     final data = response.data;
     if (data == null) {

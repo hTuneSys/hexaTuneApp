@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GooglePurchaseRequest {
 
- String get packageId; String get productId; String get purchaseToken;
+ String get packageId; String get purchaseToken;
 /// Create a copy of GooglePurchaseRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GooglePurchaseRequestCopyWith<GooglePurchaseRequest> get copyWith => _$GooglePu
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GooglePurchaseRequest&&(identical(other.packageId, packageId) || other.packageId == packageId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.purchaseToken, purchaseToken) || other.purchaseToken == purchaseToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GooglePurchaseRequest&&(identical(other.packageId, packageId) || other.packageId == packageId)&&(identical(other.purchaseToken, purchaseToken) || other.purchaseToken == purchaseToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,packageId,productId,purchaseToken);
+int get hashCode => Object.hash(runtimeType,packageId,purchaseToken);
 
 @override
 String toString() {
-  return 'GooglePurchaseRequest(packageId: $packageId, productId: $productId, purchaseToken: $purchaseToken)';
+  return 'GooglePurchaseRequest(packageId: $packageId, purchaseToken: $purchaseToken)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $GooglePurchaseRequestCopyWith<$Res>  {
   factory $GooglePurchaseRequestCopyWith(GooglePurchaseRequest value, $Res Function(GooglePurchaseRequest) _then) = _$GooglePurchaseRequestCopyWithImpl;
 @useResult
 $Res call({
- String packageId, String productId, String purchaseToken
+ String packageId, String purchaseToken
 });
 
 
@@ -65,10 +65,9 @@ class _$GooglePurchaseRequestCopyWithImpl<$Res>
 
 /// Create a copy of GooglePurchaseRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? packageId = null,Object? productId = null,Object? purchaseToken = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? packageId = null,Object? purchaseToken = null,}) {
   return _then(_self.copyWith(
 packageId: null == packageId ? _self.packageId : packageId // ignore: cast_nullable_to_non_nullable
-as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as String,purchaseToken: null == purchaseToken ? _self.purchaseToken : purchaseToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -155,10 +154,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageId,  String productId,  String purchaseToken)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String packageId,  String purchaseToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GooglePurchaseRequest() when $default != null:
-return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
+return $default(_that.packageId,_that.purchaseToken);case _:
   return orElse();
 
 }
@@ -176,10 +175,10 @@ return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageId,  String productId,  String purchaseToken)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String packageId,  String purchaseToken)  $default,) {final _that = this;
 switch (_that) {
 case _GooglePurchaseRequest():
-return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
+return $default(_that.packageId,_that.purchaseToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +195,10 @@ return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageId,  String productId,  String purchaseToken)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String packageId,  String purchaseToken)?  $default,) {final _that = this;
 switch (_that) {
 case _GooglePurchaseRequest() when $default != null:
-return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
+return $default(_that.packageId,_that.purchaseToken);case _:
   return null;
 
 }
@@ -211,11 +210,10 @@ return $default(_that.packageId,_that.productId,_that.purchaseToken);case _:
 @JsonSerializable()
 
 class _GooglePurchaseRequest implements GooglePurchaseRequest {
-  const _GooglePurchaseRequest({required this.packageId, required this.productId, required this.purchaseToken});
+  const _GooglePurchaseRequest({required this.packageId, required this.purchaseToken});
   factory _GooglePurchaseRequest.fromJson(Map<String, dynamic> json) => _$GooglePurchaseRequestFromJson(json);
 
 @override final  String packageId;
-@override final  String productId;
 @override final  String purchaseToken;
 
 /// Create a copy of GooglePurchaseRequest
@@ -231,16 +229,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GooglePurchaseRequest&&(identical(other.packageId, packageId) || other.packageId == packageId)&&(identical(other.productId, productId) || other.productId == productId)&&(identical(other.purchaseToken, purchaseToken) || other.purchaseToken == purchaseToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GooglePurchaseRequest&&(identical(other.packageId, packageId) || other.packageId == packageId)&&(identical(other.purchaseToken, purchaseToken) || other.purchaseToken == purchaseToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,packageId,productId,purchaseToken);
+int get hashCode => Object.hash(runtimeType,packageId,purchaseToken);
 
 @override
 String toString() {
-  return 'GooglePurchaseRequest(packageId: $packageId, productId: $productId, purchaseToken: $purchaseToken)';
+  return 'GooglePurchaseRequest(packageId: $packageId, purchaseToken: $purchaseToken)';
 }
 
 
@@ -251,7 +249,7 @@ abstract mixin class _$GooglePurchaseRequestCopyWith<$Res> implements $GooglePur
   factory _$GooglePurchaseRequestCopyWith(_GooglePurchaseRequest value, $Res Function(_GooglePurchaseRequest) _then) = __$GooglePurchaseRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String packageId, String productId, String purchaseToken
+ String packageId, String purchaseToken
 });
 
 
@@ -268,10 +266,9 @@ class __$GooglePurchaseRequestCopyWithImpl<$Res>
 
 /// Create a copy of GooglePurchaseRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? packageId = null,Object? productId = null,Object? purchaseToken = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? packageId = null,Object? purchaseToken = null,}) {
   return _then(_GooglePurchaseRequest(
 packageId: null == packageId ? _self.packageId : packageId // ignore: cast_nullable_to_non_nullable
-as String,productId: null == productId ? _self.productId : productId // ignore: cast_nullable_to_non_nullable
 as String,purchaseToken: null == purchaseToken ? _self.purchaseToken : purchaseToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));

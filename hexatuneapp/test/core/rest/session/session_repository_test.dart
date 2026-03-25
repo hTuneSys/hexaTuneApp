@@ -32,6 +32,7 @@ void main() {
       'deviceId': 'dev-001',
       'createdAt': '2025-01-01T00:00:00Z',
       'expiresAt': '2025-02-01T00:00:00Z',
+      'lastActivityAt': '2025-01-15T00:00:00Z',
     };
 
     setUp(() {

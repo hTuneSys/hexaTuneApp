@@ -12,9 +12,11 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_apple_provider_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_email_provider_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_google_provider_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/otp_sent_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/provider_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/provider_repository.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 
@@ -23,6 +25,8 @@ class MockProviderRepository extends Mock implements ProviderRepository {}
 class MockOAuthService extends Mock implements OAuthService {}
 
 class MockLogService extends Mock implements LogService {}
+
+class MockOtpTimerService extends Mock implements OtpTimerService {}
 
 const _testProviders = [
   ProviderResponse(
@@ -50,6 +54,7 @@ void main() {
   late MockProviderRepository mockRepo;
   late MockOAuthService mockOAuth;
   late MockLogService mockLog;
+  late MockOtpTimerService mockOtpTimer;
 
   setUpAll(() {
     registerFallbackValue(
@@ -57,17 +62,21 @@ void main() {
     );
     registerFallbackValue(const LinkGoogleProviderRequest(idToken: ''));
     registerFallbackValue(const LinkAppleProviderRequest(idToken: ''));
+    registerFallbackValue(OtpFlow.emailProviderLink);
   });
 
   setUp(() {
     mockRepo = MockProviderRepository();
     mockOAuth = MockOAuthService();
     mockLog = MockLogService();
+    mockOtpTimer = MockOtpTimerService();
 
     when(
       () => mockRepo.listProviders(),
     ).thenAnswer((_) async => _testProviders);
-    when(() => mockRepo.linkEmail(any())).thenAnswer((_) async {});
+    when(
+      () => mockRepo.linkEmail(any()),
+    ).thenAnswer((_) async => const OtpSentResponse(expiresInSeconds: 300));
     when(() => mockRepo.linkGoogle(any())).thenAnswer((_) async {});
     when(() => mockRepo.linkApple(any())).thenAnswer((_) async {});
     when(() => mockRepo.unlinkProvider(any())).thenAnswer((_) async {});
@@ -75,11 +84,15 @@ void main() {
     when(
       () => mockLog.devLog(any(), category: any(named: 'category')),
     ).thenReturn(null);
+    when(
+      () => mockOtpTimer.saveOtpExpiry(any(), any(), any()),
+    ).thenAnswer((_) async {});
 
     getIt.allowReassignment = true;
     getIt.registerSingleton<ProviderRepository>(mockRepo);
     getIt.registerSingleton<OAuthService>(mockOAuth);
     getIt.registerSingleton<LogService>(mockLog);
+    getIt.registerSingleton<OtpTimerService>(mockOtpTimer);
   });
 
   tearDown(() async {

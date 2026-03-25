@@ -93,6 +93,7 @@ void main() {
               'displayName': 'Test User',
               'avatarUrl': 'https://example.com/avatar.png',
               'bio': 'A test bio',
+              'createdAt': '2025-01-01T00:00:00Z',
               'updatedAt': '2025-01-02T00:00:00Z',
             }),
           );
@@ -112,6 +113,7 @@ void main() {
           ApiEndpoints.profile,
           (server) => server.reply(200, {
             'accountId': 'acc-001',
+            'createdAt': '2025-01-01T00:00:00Z',
             'updatedAt': '2025-01-02T00:00:00Z',
           }),
         );
@@ -139,6 +141,7 @@ void main() {
               'accountId': 'acc-001',
               'displayName': 'New Name',
               'bio': 'New bio',
+              'createdAt': '2025-01-01T00:00:00Z',
               'updatedAt': '2025-01-03T00:00:00Z',
             }),
             data: request.toJson(),

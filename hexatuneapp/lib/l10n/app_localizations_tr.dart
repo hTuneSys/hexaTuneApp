@@ -1127,4 +1127,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get errorRateLimited => 'Çok fazla istek. Lütfen yavaşlayın.';
+
+  @override
+  String get otpExpired =>
+      'Kodun süresi doldu. Yeni kod almak için tekrar gönder\'e dokunun.';
+
+  @override
+  String otpExpiresIn(String time) {
+    return 'Kodun süresi $time içinde doluyor';
+  }
 }

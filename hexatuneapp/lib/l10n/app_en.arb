@@ -500,5 +500,14 @@
   "errorNetwork": "No internet connection.",
   "errorTimeout": "Request timed out. Please try again.",
   "errorUnknown": "An unexpected error occurred.",
-  "errorRateLimited": "Too many requests. Please slow down."
+  "errorRateLimited": "Too many requests. Please slow down.",
+  "otpExpired": "Code expired. Tap resend to get a new code.",
+  "otpExpiresIn": "Code expires in {time}",
+  "@otpExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  }
 }

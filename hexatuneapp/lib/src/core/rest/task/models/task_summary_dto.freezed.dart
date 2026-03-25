@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$TaskSummaryDto {
 
- String get taskId; String get taskType; String get status; String get scheduledAt; int get retryCount; int get maxRetries; String get createdAt; String get updatedAt; String? get cronExpression; String? get executeAfter;
+ String get taskId; String get taskType; String get status; String get scheduledAt; int get retryCount; int get maxRetries; String get createdAt; String get updatedAt; String? get cronExpression; String? get executeAfter; String? get cancelledAt; String? get failedAt; String? get errorMessage;
 /// Create a copy of TaskSummaryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $TaskSummaryDtoCopyWith<TaskSummaryDto> get copyWith => _$TaskSummaryDtoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskSummaryDto&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.retryCount, retryCount) || other.retryCount == retryCount)&&(identical(other.maxRetries, maxRetries) || other.maxRetries == maxRetries)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cronExpression, cronExpression) || other.cronExpression == cronExpression)&&(identical(other.executeAfter, executeAfter) || other.executeAfter == executeAfter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskSummaryDto&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.retryCount, retryCount) || other.retryCount == retryCount)&&(identical(other.maxRetries, maxRetries) || other.maxRetries == maxRetries)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cronExpression, cronExpression) || other.cronExpression == cronExpression)&&(identical(other.executeAfter, executeAfter) || other.executeAfter == executeAfter)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.failedAt, failedAt) || other.failedAt == failedAt)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,taskId,taskType,status,scheduledAt,retryCount,maxRetries,createdAt,updatedAt,cronExpression,executeAfter);
+int get hashCode => Object.hash(runtimeType,taskId,taskType,status,scheduledAt,retryCount,maxRetries,createdAt,updatedAt,cronExpression,executeAfter,cancelledAt,failedAt,errorMessage);
 
 @override
 String toString() {
-  return 'TaskSummaryDto(taskId: $taskId, taskType: $taskType, status: $status, scheduledAt: $scheduledAt, retryCount: $retryCount, maxRetries: $maxRetries, createdAt: $createdAt, updatedAt: $updatedAt, cronExpression: $cronExpression, executeAfter: $executeAfter)';
+  return 'TaskSummaryDto(taskId: $taskId, taskType: $taskType, status: $status, scheduledAt: $scheduledAt, retryCount: $retryCount, maxRetries: $maxRetries, createdAt: $createdAt, updatedAt: $updatedAt, cronExpression: $cronExpression, executeAfter: $executeAfter, cancelledAt: $cancelledAt, failedAt: $failedAt, errorMessage: $errorMessage)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $TaskSummaryDtoCopyWith<$Res>  {
   factory $TaskSummaryDtoCopyWith(TaskSummaryDto value, $Res Function(TaskSummaryDto) _then) = _$TaskSummaryDtoCopyWithImpl;
 @useResult
 $Res call({
- String taskId, String taskType, String status, String scheduledAt, int retryCount, int maxRetries, String createdAt, String updatedAt, String? cronExpression, String? executeAfter
+ String taskId, String taskType, String status, String scheduledAt, int retryCount, int maxRetries, String createdAt, String updatedAt, String? cronExpression, String? executeAfter, String? cancelledAt, String? failedAt, String? errorMessage
 });
 
 
@@ -65,7 +65,7 @@ class _$TaskSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of TaskSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? taskId = null,Object? taskType = null,Object? status = null,Object? scheduledAt = null,Object? retryCount = null,Object? maxRetries = null,Object? createdAt = null,Object? updatedAt = null,Object? cronExpression = freezed,Object? executeAfter = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? taskId = null,Object? taskType = null,Object? status = null,Object? scheduledAt = null,Object? retryCount = null,Object? maxRetries = null,Object? createdAt = null,Object? updatedAt = null,Object? cronExpression = freezed,Object? executeAfter = freezed,Object? cancelledAt = freezed,Object? failedAt = freezed,Object? errorMessage = freezed,}) {
   return _then(_self.copyWith(
 taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
 as String,taskType: null == taskType ? _self.taskType : taskType // ignore: cast_nullable_to_non_nullable
@@ -77,6 +77,9 @@ as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cas
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,cronExpression: freezed == cronExpression ? _self.cronExpression : cronExpression // ignore: cast_nullable_to_non_nullable
 as String?,executeAfter: freezed == executeAfter ? _self.executeAfter : executeAfter // ignore: cast_nullable_to_non_nullable
+as String?,cancelledAt: freezed == cancelledAt ? _self.cancelledAt : cancelledAt // ignore: cast_nullable_to_non_nullable
+as String?,failedAt: freezed == failedAt ? _self.failedAt : failedAt // ignore: cast_nullable_to_non_nullable
+as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -162,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter,  String? cancelledAt,  String? failedAt,  String? errorMessage)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _TaskSummaryDto() when $default != null:
-return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter);case _:
+return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter,_that.cancelledAt,_that.failedAt,_that.errorMessage);case _:
   return orElse();
 
 }
@@ -183,10 +186,10 @@ return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter,  String? cancelledAt,  String? failedAt,  String? errorMessage)  $default,) {final _that = this;
 switch (_that) {
 case _TaskSummaryDto():
-return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter);case _:
+return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter,_that.cancelledAt,_that.failedAt,_that.errorMessage);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +206,10 @@ return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskId,  String taskType,  String status,  String scheduledAt,  int retryCount,  int maxRetries,  String createdAt,  String updatedAt,  String? cronExpression,  String? executeAfter,  String? cancelledAt,  String? failedAt,  String? errorMessage)?  $default,) {final _that = this;
 switch (_that) {
 case _TaskSummaryDto() when $default != null:
-return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter);case _:
+return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that.retryCount,_that.maxRetries,_that.createdAt,_that.updatedAt,_that.cronExpression,_that.executeAfter,_that.cancelledAt,_that.failedAt,_that.errorMessage);case _:
   return null;
 
 }
@@ -218,7 +221,7 @@ return $default(_that.taskId,_that.taskType,_that.status,_that.scheduledAt,_that
 @JsonSerializable()
 
 class _TaskSummaryDto implements TaskSummaryDto {
-  const _TaskSummaryDto({required this.taskId, required this.taskType, required this.status, required this.scheduledAt, required this.retryCount, required this.maxRetries, required this.createdAt, required this.updatedAt, this.cronExpression, this.executeAfter});
+  const _TaskSummaryDto({required this.taskId, required this.taskType, required this.status, required this.scheduledAt, required this.retryCount, required this.maxRetries, required this.createdAt, required this.updatedAt, this.cronExpression, this.executeAfter, this.cancelledAt, this.failedAt, this.errorMessage});
   factory _TaskSummaryDto.fromJson(Map<String, dynamic> json) => _$TaskSummaryDtoFromJson(json);
 
 @override final  String taskId;
@@ -231,6 +234,9 @@ class _TaskSummaryDto implements TaskSummaryDto {
 @override final  String updatedAt;
 @override final  String? cronExpression;
 @override final  String? executeAfter;
+@override final  String? cancelledAt;
+@override final  String? failedAt;
+@override final  String? errorMessage;
 
 /// Create a copy of TaskSummaryDto
 /// with the given fields replaced by the non-null parameter values.
@@ -245,16 +251,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskSummaryDto&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.retryCount, retryCount) || other.retryCount == retryCount)&&(identical(other.maxRetries, maxRetries) || other.maxRetries == maxRetries)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cronExpression, cronExpression) || other.cronExpression == cronExpression)&&(identical(other.executeAfter, executeAfter) || other.executeAfter == executeAfter));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskSummaryDto&&(identical(other.taskId, taskId) || other.taskId == taskId)&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.status, status) || other.status == status)&&(identical(other.scheduledAt, scheduledAt) || other.scheduledAt == scheduledAt)&&(identical(other.retryCount, retryCount) || other.retryCount == retryCount)&&(identical(other.maxRetries, maxRetries) || other.maxRetries == maxRetries)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.cronExpression, cronExpression) || other.cronExpression == cronExpression)&&(identical(other.executeAfter, executeAfter) || other.executeAfter == executeAfter)&&(identical(other.cancelledAt, cancelledAt) || other.cancelledAt == cancelledAt)&&(identical(other.failedAt, failedAt) || other.failedAt == failedAt)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,taskId,taskType,status,scheduledAt,retryCount,maxRetries,createdAt,updatedAt,cronExpression,executeAfter);
+int get hashCode => Object.hash(runtimeType,taskId,taskType,status,scheduledAt,retryCount,maxRetries,createdAt,updatedAt,cronExpression,executeAfter,cancelledAt,failedAt,errorMessage);
 
 @override
 String toString() {
-  return 'TaskSummaryDto(taskId: $taskId, taskType: $taskType, status: $status, scheduledAt: $scheduledAt, retryCount: $retryCount, maxRetries: $maxRetries, createdAt: $createdAt, updatedAt: $updatedAt, cronExpression: $cronExpression, executeAfter: $executeAfter)';
+  return 'TaskSummaryDto(taskId: $taskId, taskType: $taskType, status: $status, scheduledAt: $scheduledAt, retryCount: $retryCount, maxRetries: $maxRetries, createdAt: $createdAt, updatedAt: $updatedAt, cronExpression: $cronExpression, executeAfter: $executeAfter, cancelledAt: $cancelledAt, failedAt: $failedAt, errorMessage: $errorMessage)';
 }
 
 
@@ -265,7 +271,7 @@ abstract mixin class _$TaskSummaryDtoCopyWith<$Res> implements $TaskSummaryDtoCo
   factory _$TaskSummaryDtoCopyWith(_TaskSummaryDto value, $Res Function(_TaskSummaryDto) _then) = __$TaskSummaryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String taskId, String taskType, String status, String scheduledAt, int retryCount, int maxRetries, String createdAt, String updatedAt, String? cronExpression, String? executeAfter
+ String taskId, String taskType, String status, String scheduledAt, int retryCount, int maxRetries, String createdAt, String updatedAt, String? cronExpression, String? executeAfter, String? cancelledAt, String? failedAt, String? errorMessage
 });
 
 
@@ -282,7 +288,7 @@ class __$TaskSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of TaskSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? taskId = null,Object? taskType = null,Object? status = null,Object? scheduledAt = null,Object? retryCount = null,Object? maxRetries = null,Object? createdAt = null,Object? updatedAt = null,Object? cronExpression = freezed,Object? executeAfter = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? taskId = null,Object? taskType = null,Object? status = null,Object? scheduledAt = null,Object? retryCount = null,Object? maxRetries = null,Object? createdAt = null,Object? updatedAt = null,Object? cronExpression = freezed,Object? executeAfter = freezed,Object? cancelledAt = freezed,Object? failedAt = freezed,Object? errorMessage = freezed,}) {
   return _then(_TaskSummaryDto(
 taskId: null == taskId ? _self.taskId : taskId // ignore: cast_nullable_to_non_nullable
 as String,taskType: null == taskType ? _self.taskType : taskType // ignore: cast_nullable_to_non_nullable
@@ -294,6 +300,9 @@ as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cas
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,cronExpression: freezed == cronExpression ? _self.cronExpression : cronExpression // ignore: cast_nullable_to_non_nullable
 as String?,executeAfter: freezed == executeAfter ? _self.executeAfter : executeAfter // ignore: cast_nullable_to_non_nullable
+as String?,cancelledAt: freezed == cancelledAt ? _self.cancelledAt : cancelledAt // ignore: cast_nullable_to_non_nullable
+as String?,failedAt: freezed == failedAt ? _self.failedAt : failedAt // ignore: cast_nullable_to_non_nullable
+as String?,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

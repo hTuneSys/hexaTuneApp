@@ -6,7 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'update_formula_item_quantity_request.freezed.dart';
 part 'update_formula_item_quantity_request.g.dart';
 
-/// Request model for updating a formula item quantity.
+/// Request model for updating a formula item quantity (must be >= 1, max 60).
 @freezed
 abstract class UpdateFormulaItemQuantityRequest
     with _$UpdateFormulaItemQuantityRequest {

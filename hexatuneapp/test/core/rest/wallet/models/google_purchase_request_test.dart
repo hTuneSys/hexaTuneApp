@@ -9,54 +9,45 @@ void main() {
   group('GooglePurchaseRequest', () {
     final fullJson = <String, dynamic>{
       'packageId': 'pkg-001',
-      'productId': 'coins_pack_small',
       'purchaseToken': 'token-abc-123',
     };
 
     test('can be created with required fields', () {
       const result = GooglePurchaseRequest(
         packageId: 'pkg-001',
-        productId: 'coins_pack_small',
         purchaseToken: 'token-abc-123',
       );
       expect(result.packageId, 'pkg-001');
-      expect(result.productId, 'coins_pack_small');
       expect(result.purchaseToken, 'token-abc-123');
     });
 
     test('serializes to JSON correctly', () {
       const result = GooglePurchaseRequest(
         packageId: 'pkg-001',
-        productId: 'coins_pack_small',
         purchaseToken: 'token-abc-123',
       );
       final json = result.toJson();
       expect(json['packageId'], 'pkg-001');
-      expect(json['productId'], 'coins_pack_small');
       expect(json['purchaseToken'], 'token-abc-123');
     });
 
     test('deserializes from JSON correctly', () {
       final result = GooglePurchaseRequest.fromJson(fullJson);
       expect(result.packageId, 'pkg-001');
-      expect(result.productId, 'coins_pack_small');
       expect(result.purchaseToken, 'token-abc-123');
     });
 
     test('equality works correctly', () {
       const a = GooglePurchaseRequest(
         packageId: 'pkg-001',
-        productId: 'coins_pack_small',
         purchaseToken: 'token-abc',
       );
       const b = GooglePurchaseRequest(
         packageId: 'pkg-001',
-        productId: 'coins_pack_small',
         purchaseToken: 'token-abc',
       );
       const c = GooglePurchaseRequest(
         packageId: 'pkg-002',
-        productId: 'coins_pack_large',
         purchaseToken: 'token-xyz',
       );
       expect(a, equals(b));
@@ -66,7 +57,6 @@ void main() {
     test('round-trip serialization preserves data', () {
       const original = GooglePurchaseRequest(
         packageId: 'pkg-001',
-        productId: 'coins_pack_small',
         purchaseToken: 'token-abc-123',
       );
       final roundTripped = GooglePurchaseRequest.fromJson(original.toJson());

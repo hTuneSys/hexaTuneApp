@@ -82,20 +82,25 @@ void main() {
     });
 
     group('linkEmail', () {
-      test('sends POST to /api/v1/auth/providers/email/link', () async {
-        const request = LinkEmailProviderRequest(
-          email: 'user@example.com',
-          password: 'SecurePass123!',
-        );
+      test(
+        'sends POST to /api/v1/auth/providers/email/link and returns OtpSentResponse',
+        () async {
+          const request = LinkEmailProviderRequest(
+            email: 'user@example.com',
+            password: 'SecurePass123!',
+          );
 
-        dioAdapter.onPost(
-          '/api/v1/auth/providers/email/link',
-          (server) => server.reply(204, null),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/providers/email/link',
+            (server) => server.reply(200, {'expiresInSeconds': 300}),
+            data: request.toJson(),
+          );
 
-        await expectLater(repository.linkEmail(request), completes);
-      });
+          final result = await repository.linkEmail(request);
+
+          expect(result.expiresInSeconds, 300);
+        },
+      );
     });
 
     group('linkGoogle', () {

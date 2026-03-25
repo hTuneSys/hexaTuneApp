@@ -20,6 +20,9 @@ abstract class TaskSummaryDto with _$TaskSummaryDto {
     required String updatedAt,
     String? cronExpression,
     String? executeAfter,
+    String? cancelledAt,
+    String? failedAt,
+    String? errorMessage,
   }) = _TaskSummaryDto;
 
   factory TaskSummaryDto.fromJson(Map<String, dynamic> json) =>

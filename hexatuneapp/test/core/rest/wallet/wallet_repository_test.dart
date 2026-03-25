@@ -151,7 +151,6 @@ void main() {
       test('sends POST to google purchase endpoint', () async {
         const request = GooglePurchaseRequest(
           packageId: 'pkg-001',
-          productId: 'coins_pack_small',
           purchaseToken: 'token-xyz',
         );
 

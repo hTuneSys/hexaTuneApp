@@ -15,8 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddFormulaItemEntry {
 
- String get inventoryId; int? get quantity; int? get sortOrder;/// Duration in milliseconds (defaults to 1000 if not provided).
- int? get timeMs;
+ String get inventoryId;/// Quantity (defaults to 1 if not provided, min 1, max 60).
+ int? get quantity;/// Sort order (defaults to 0 if not provided, must be non-negative).
+ int? get sortOrder;
 /// Create a copy of AddFormulaItemEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $AddFormulaItemEntryCopyWith<AddFormulaItemEntry> get copyWith => _$AddFormulaIt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddFormulaItemEntry&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.timeMs, timeMs) || other.timeMs == timeMs));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AddFormulaItemEntry&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,inventoryId,quantity,sortOrder,timeMs);
+int get hashCode => Object.hash(runtimeType,inventoryId,quantity,sortOrder);
 
 @override
 String toString() {
-  return 'AddFormulaItemEntry(inventoryId: $inventoryId, quantity: $quantity, sortOrder: $sortOrder, timeMs: $timeMs)';
+  return 'AddFormulaItemEntry(inventoryId: $inventoryId, quantity: $quantity, sortOrder: $sortOrder)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $AddFormulaItemEntryCopyWith<$Res>  {
   factory $AddFormulaItemEntryCopyWith(AddFormulaItemEntry value, $Res Function(AddFormulaItemEntry) _then) = _$AddFormulaItemEntryCopyWithImpl;
 @useResult
 $Res call({
- String inventoryId, int? quantity, int? sortOrder, int? timeMs
+ String inventoryId, int? quantity, int? sortOrder
 });
 
 
@@ -66,12 +67,11 @@ class _$AddFormulaItemEntryCopyWithImpl<$Res>
 
 /// Create a copy of AddFormulaItemEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? inventoryId = null,Object? quantity = freezed,Object? sortOrder = freezed,Object? timeMs = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? inventoryId = null,Object? quantity = freezed,Object? sortOrder = freezed,}) {
   return _then(_self.copyWith(
 inventoryId: null == inventoryId ? _self.inventoryId : inventoryId // ignore: cast_nullable_to_non_nullable
 as String,quantity: freezed == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as int?,timeMs: freezed == timeMs ? _self.timeMs : timeMs // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
@@ -157,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String inventoryId,  int? quantity,  int? sortOrder,  int? timeMs)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String inventoryId,  int? quantity,  int? sortOrder)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AddFormulaItemEntry() when $default != null:
-return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);case _:
+return $default(_that.inventoryId,_that.quantity,_that.sortOrder);case _:
   return orElse();
 
 }
@@ -178,10 +178,10 @@ return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String inventoryId,  int? quantity,  int? sortOrder,  int? timeMs)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String inventoryId,  int? quantity,  int? sortOrder)  $default,) {final _that = this;
 switch (_that) {
 case _AddFormulaItemEntry():
-return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);case _:
+return $default(_that.inventoryId,_that.quantity,_that.sortOrder);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +198,10 @@ return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String inventoryId,  int? quantity,  int? sortOrder,  int? timeMs)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String inventoryId,  int? quantity,  int? sortOrder)?  $default,) {final _that = this;
 switch (_that) {
 case _AddFormulaItemEntry() when $default != null:
-return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);case _:
+return $default(_that.inventoryId,_that.quantity,_that.sortOrder);case _:
   return null;
 
 }
@@ -213,14 +213,14 @@ return $default(_that.inventoryId,_that.quantity,_that.sortOrder,_that.timeMs);c
 @JsonSerializable()
 
 class _AddFormulaItemEntry implements AddFormulaItemEntry {
-  const _AddFormulaItemEntry({required this.inventoryId, this.quantity, this.sortOrder, this.timeMs});
+  const _AddFormulaItemEntry({required this.inventoryId, this.quantity, this.sortOrder});
   factory _AddFormulaItemEntry.fromJson(Map<String, dynamic> json) => _$AddFormulaItemEntryFromJson(json);
 
 @override final  String inventoryId;
+/// Quantity (defaults to 1 if not provided, min 1, max 60).
 @override final  int? quantity;
+/// Sort order (defaults to 0 if not provided, must be non-negative).
 @override final  int? sortOrder;
-/// Duration in milliseconds (defaults to 1000 if not provided).
-@override final  int? timeMs;
 
 /// Create a copy of AddFormulaItemEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddFormulaItemEntry&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder)&&(identical(other.timeMs, timeMs) || other.timeMs == timeMs));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddFormulaItemEntry&&(identical(other.inventoryId, inventoryId) || other.inventoryId == inventoryId)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.sortOrder, sortOrder) || other.sortOrder == sortOrder));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,inventoryId,quantity,sortOrder,timeMs);
+int get hashCode => Object.hash(runtimeType,inventoryId,quantity,sortOrder);
 
 @override
 String toString() {
-  return 'AddFormulaItemEntry(inventoryId: $inventoryId, quantity: $quantity, sortOrder: $sortOrder, timeMs: $timeMs)';
+  return 'AddFormulaItemEntry(inventoryId: $inventoryId, quantity: $quantity, sortOrder: $sortOrder)';
 }
 
 
@@ -255,7 +255,7 @@ abstract mixin class _$AddFormulaItemEntryCopyWith<$Res> implements $AddFormulaI
   factory _$AddFormulaItemEntryCopyWith(_AddFormulaItemEntry value, $Res Function(_AddFormulaItemEntry) _then) = __$AddFormulaItemEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String inventoryId, int? quantity, int? sortOrder, int? timeMs
+ String inventoryId, int? quantity, int? sortOrder
 });
 
 
@@ -272,12 +272,11 @@ class __$AddFormulaItemEntryCopyWithImpl<$Res>
 
 /// Create a copy of AddFormulaItemEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? inventoryId = null,Object? quantity = freezed,Object? sortOrder = freezed,Object? timeMs = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? inventoryId = null,Object? quantity = freezed,Object? sortOrder = freezed,}) {
   return _then(_AddFormulaItemEntry(
 inventoryId: null == inventoryId ? _self.inventoryId : inventoryId // ignore: cast_nullable_to_non_nullable
 as String,quantity: freezed == quantity ? _self.quantity : quantity // ignore: cast_nullable_to_non_nullable
 as int?,sortOrder: freezed == sortOrder ? _self.sortOrder : sortOrder // ignore: cast_nullable_to_non_nullable
-as int?,timeMs: freezed == timeMs ? _self.timeMs : timeMs // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }

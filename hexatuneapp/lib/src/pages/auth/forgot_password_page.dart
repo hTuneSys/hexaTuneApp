@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
@@ -49,13 +50,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       log.devLog('→ Forgot password: email=$email', category: LogCategory.ui);
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.forgotPassword(ForgotPasswordRequest(email: email));
+      final result = await authRepo.forgotPassword(
+        ForgotPasswordRequest(email: email),
+      );
 
       log.devLog('✓ Reset code sent', category: LogCategory.ui);
 
       if (!mounted) return;
+
+      final otpTimer = getIt<OtpTimerService>();
+      await otpTimer.saveOtpExpiry(
+        OtpFlow.passwordReset,
+        email,
+        result.expiresInSeconds,
+      );
+
       _showInfo(l10n.otpSentTo(email));
 
+      if (!mounted) return;
       context.go(
         '${RouteNames.resetPassword}?email=${Uri.encodeComponent(email)}',
       );

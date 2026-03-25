@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
@@ -40,13 +41,13 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   bool _obscureConfirm = true;
 
   // Resend countdown
-  int _resendSeconds = 30;
+  int _resendSeconds = 0;
   Timer? _resendTimer;
 
   @override
   void initState() {
     super.initState();
-    _startResendTimer();
+    _initTimer();
   }
 
   @override
@@ -57,8 +58,19 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     super.dispose();
   }
 
-  void _startResendTimer() {
-    _resendSeconds = 30;
+  void _initTimer() {
+    final otpTimer = getIt<OtpTimerService>();
+    final remaining = otpTimer.getRemainingSeconds(
+      OtpFlow.passwordReset,
+      widget.email,
+    );
+    _resendSeconds = remaining;
+    if (remaining > 0) {
+      _startCountdown();
+    }
+  }
+
+  void _startCountdown() {
     _resendTimer?.cancel();
     _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (_resendSeconds <= 0) {
@@ -145,17 +157,25 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       );
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.resendPasswordReset(
+      final result = await authRepo.resendPasswordReset(
         ResendPasswordResetRequest(email: widget.email),
       );
 
       log.devLog('✓ Password reset OTP resent', category: LogCategory.ui);
 
-      if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
-        _showMessage(l10n.otpSentTo(widget.email), isError: false);
-        _startResendTimer();
-      }
+      if (!mounted) return;
+      final otpTimer = getIt<OtpTimerService>();
+      await otpTimer.saveOtpExpiry(
+        OtpFlow.passwordReset,
+        widget.email,
+        result.expiresInSeconds,
+      );
+
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      _showMessage(l10n.otpSentTo(widget.email), isError: false);
+      setState(() => _resendSeconds = result.expiresInSeconds);
+      _startCountdown();
     } catch (e) {
       log.devLog('✗ Resend failed: $e', category: LogCategory.ui);
       if (mounted) ApiErrorHandler.handle(context, e);

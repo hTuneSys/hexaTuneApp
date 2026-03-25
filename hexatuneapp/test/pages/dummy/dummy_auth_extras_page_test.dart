@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/forgot_password_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/otp_sent_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/re_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/re_auth_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/refresh_request.dart';
@@ -66,10 +67,12 @@ void main() {
     mockTokenManager = MockTokenManager();
     mockLog = MockLogService();
 
-    when(() => mockAuthRepo.forgotPassword(any())).thenAnswer((_) async {});
+    when(
+      () => mockAuthRepo.forgotPassword(any()),
+    ).thenAnswer((_) async => const OtpSentResponse(expiresInSeconds: 300));
     when(
       () => mockAuthRepo.resendPasswordReset(any()),
-    ).thenAnswer((_) async {});
+    ).thenAnswer((_) async => const OtpSentResponse(expiresInSeconds: 300));
     when(() => mockAuthRepo.resetPassword(any())).thenAnswer((_) async {});
     when(
       () => mockAuthRepo.reAuthenticate(any()),

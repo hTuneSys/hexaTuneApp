@@ -11,15 +11,16 @@ import 'package:hexatuneapp/src/core/rest/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/oauth_login_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/otp_sent_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/re_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/re_auth_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/refresh_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/refresh_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/register_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/resend_password_reset_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/resend_verification_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/verify_email_request.dart';
-import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
@@ -54,7 +55,7 @@ class AuthRepository {
   }
 
   /// POST /api/v1/auth/register
-  Future<AccountResponse> register(CreateAccountRequest request) async {
+  Future<RegisterResponse> register(CreateAccountRequest request) async {
     _logService.debug('POST register', category: LogCategory.network);
     final response = await _dio.post<Map<String, dynamic>>(
       ApiEndpoints.register,
@@ -68,7 +69,7 @@ class AuthRepository {
         message: 'Register response body is null',
       );
     }
-    return AccountResponse.fromJson(data);
+    return RegisterResponse.fromJson(data);
   }
 
   /// DELETE /api/v1/auth/logout
@@ -114,9 +115,21 @@ class AuthRepository {
   }
 
   /// POST /api/v1/auth/forgot-password
-  Future<void> forgotPassword(ForgotPasswordRequest request) async {
+  Future<OtpSentResponse> forgotPassword(ForgotPasswordRequest request) async {
     _logService.debug('POST forgot-password', category: LogCategory.network);
-    await _dio.post(ApiEndpoints.forgotPassword, data: request.toJson());
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.forgotPassword,
+      data: request.toJson(),
+    );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Forgot password response body is null',
+      );
+    }
+    return OtpSentResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/reset-password
@@ -126,12 +139,26 @@ class AuthRepository {
   }
 
   /// POST /api/v1/auth/resend-password-reset
-  Future<void> resendPasswordReset(ResendPasswordResetRequest request) async {
+  Future<OtpSentResponse> resendPasswordReset(
+    ResendPasswordResetRequest request,
+  ) async {
     _logService.debug(
       'POST resend-password-reset',
       category: LogCategory.network,
     );
-    await _dio.post(ApiEndpoints.resendPasswordReset, data: request.toJson());
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.resendPasswordReset,
+      data: request.toJson(),
+    );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Resend password reset response body is null',
+      );
+    }
+    return OtpSentResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/verify-email
@@ -141,12 +168,26 @@ class AuthRepository {
   }
 
   /// POST /api/v1/auth/resend-verification
-  Future<void> resendVerification(ResendVerificationRequest request) async {
+  Future<OtpSentResponse> resendVerification(
+    ResendVerificationRequest request,
+  ) async {
     _logService.debug(
       'POST resend-verification',
       category: LogCategory.network,
     );
-    await _dio.post(ApiEndpoints.resendVerification, data: request.toJson());
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.resendVerification,
+      data: request.toJson(),
+    );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Resend verification response body is null',
+      );
+    }
+    return OtpSentResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/google

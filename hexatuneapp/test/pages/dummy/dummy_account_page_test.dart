@@ -34,6 +34,7 @@ const _testProfile = ProfileResponse(
   displayName: 'Test User',
   avatarUrl: 'https://example.com/avatar.png',
   bio: 'Hello',
+  createdAt: '2025-01-01T00:00:00Z',
   updatedAt: '2025-01-01T00:00:00Z',
 );
 

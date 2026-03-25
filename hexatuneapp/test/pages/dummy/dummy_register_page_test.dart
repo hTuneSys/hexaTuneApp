@@ -7,13 +7,13 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
-import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/create_account_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/apple_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/oauth_login_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/register_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_register_page.dart';
@@ -26,11 +26,13 @@ class MockOAuthService extends Mock implements OAuthService {}
 
 class MockLogService extends Mock implements LogService {}
 
-const _testAccountResponse = AccountResponse(
+const _testRegisterResponse = RegisterResponse(
   id: 'acc-00100',
-  status: 'active',
+  email: 'test@example.com',
+  status: 'pending_verification',
   createdAt: '2025-01-01T00:00:00Z',
   updatedAt: '2025-01-01T00:00:00Z',
+  otpExpiresInSeconds: 300,
 );
 
 const _testOAuthResponse = OAuthLoginResponse(
@@ -71,7 +73,7 @@ void main() {
 
     when(
       () => mockAuthRepo.register(any()),
-    ).thenAnswer((_) async => _testAccountResponse);
+    ).thenAnswer((_) async => _testRegisterResponse);
     when(
       () => mockAuth.loginWithGoogle(any()),
     ).thenAnswer((_) async => _testOAuthResponse);

@@ -47,6 +47,7 @@ void main() {
       'sortOrder': 1,
       'quantity': 10,
       'timeMs': 1000,
+      'createdAt': '2025-01-01T00:00:00Z',
     };
 
     setUp(() {

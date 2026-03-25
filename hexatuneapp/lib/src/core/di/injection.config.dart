@@ -69,6 +69,7 @@ import 'package:hexatuneapp/src/core/rest/task/task_repository.dart' as _i266;
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart'
     as _i957;
 import 'package:hexatuneapp/src/core/router/app_router.dart' as _i877;
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart' as _i810;
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart' as _i148;
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
     as _i325;
@@ -87,6 +88,9 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.singleton<_i810.OtpTimerService>(
+      () => _i810.OtpTimerService(gh<_i148.PreferencesService>()),
+    );
     gh.singleton<_i925.AmbienceService>(
       () => _i925.AmbienceService(
         gh<_i148.PreferencesService>(),

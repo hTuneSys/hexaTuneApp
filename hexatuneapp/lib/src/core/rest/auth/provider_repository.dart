@@ -7,6 +7,7 @@ import 'package:injectable/injectable.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_apple_provider_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_email_provider_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/link_google_provider_request.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/otp_sent_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/provider_response.dart';
 import 'package:hexatuneapp/src/core/config/api_endpoints.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
@@ -34,12 +35,24 @@ class ProviderRepository {
   }
 
   /// POST /api/v1/auth/providers/email/link
-  Future<void> linkEmail(LinkEmailProviderRequest request) async {
+  Future<OtpSentResponse> linkEmail(LinkEmailProviderRequest request) async {
     _logService.debug(
       'POST link email provider',
       category: LogCategory.network,
     );
-    await _dio.post(ApiEndpoints.linkEmailProvider, data: request.toJson());
+    final response = await _dio.post<Map<String, dynamic>>(
+      ApiEndpoints.linkEmailProvider,
+      data: request.toJson(),
+    );
+    final data = response.data;
+    if (data == null) {
+      throw DioException(
+        requestOptions: response.requestOptions,
+        response: response,
+        message: 'Link email provider response body is null',
+      );
+    }
+    return OtpSentResponse.fromJson(data);
   }
 
   /// POST /api/v1/auth/providers/google/link

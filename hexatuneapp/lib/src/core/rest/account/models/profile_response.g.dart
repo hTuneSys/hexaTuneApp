@@ -12,6 +12,7 @@ _ProfileResponse _$ProfileResponseFromJson(Map<String, dynamic> json) =>
       displayName: json['displayName'] as String?,
       avatarUrl: json['avatarUrl'] as String?,
       bio: json['bio'] as String?,
+      createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,
     );
 
@@ -21,5 +22,6 @@ Map<String, dynamic> _$ProfileResponseToJson(_ProfileResponse instance) =>
       'displayName': instance.displayName,
       'avatarUrl': instance.avatarUrl,
       'bio': instance.bio,
+      'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
     };

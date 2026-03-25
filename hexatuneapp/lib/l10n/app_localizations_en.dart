@@ -1118,4 +1118,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorRateLimited => 'Too many requests. Please slow down.';
+
+  @override
+  String get otpExpired => 'Code expired. Tap resend to get a new code.';
+
+  @override
+  String otpExpiresIn(String time) {
+    return 'Code expires in $time';
+  }
 }

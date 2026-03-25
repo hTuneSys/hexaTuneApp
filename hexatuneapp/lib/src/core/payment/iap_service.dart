@@ -232,7 +232,6 @@ class IapService {
         await _walletRepository.purchaseGoogle(
           GooglePurchaseRequest(
             packageId: product.packageId,
-            productId: purchase.productID,
             purchaseToken: purchase.verificationData.serverVerificationData,
           ),
         );

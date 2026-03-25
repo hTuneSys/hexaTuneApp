@@ -53,6 +53,7 @@ const _testFormulaDetail = FormulaDetailResponse(
       sortOrder: 0,
       quantity: 5,
       timeMs: 1000,
+      createdAt: '2025-01-01T00:00:00Z',
     ),
   ],
   createdAt: '2025-01-01T00:00:00Z',

@@ -14,12 +14,13 @@ import 'package:hexatuneapp/src/core/rest/auth/models/google_auth_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/login_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/oauth_login_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/otp_sent_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/refresh_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/refresh_response.dart';
+import 'package:hexatuneapp/src/core/rest/auth/models/register_response.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/resend_password_reset_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/reset_password_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/verify_email_request.dart';
-import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_client.dart';
 
@@ -83,7 +84,7 @@ void main() {
 
     group('register', () {
       test(
-        'sends POST to /api/v1/auth/register and returns AccountResponse',
+        'sends POST to /api/v1/auth/register and returns RegisterResponse',
         () async {
           const request = CreateAccountRequest(
             email: 'new@example.com',
@@ -94,18 +95,22 @@ void main() {
             '/api/v1/auth/register',
             (server) => server.reply(201, {
               'id': 'acc-new',
+              'email': 'new@example.com',
               'status': 'pending_verification',
               'createdAt': '2025-01-01T00:00:00Z',
               'updatedAt': '2025-01-01T00:00:00Z',
+              'otpExpiresInSeconds': 300,
             }),
             data: request.toJson(),
           );
 
           final result = await repository.register(request);
 
-          expect(result, isA<AccountResponse>());
+          expect(result, isA<RegisterResponse>());
           expect(result.id, 'acc-new');
+          expect(result.email, 'new@example.com');
           expect(result.status, 'pending_verification');
+          expect(result.otpExpiresInSeconds, 300);
         },
       );
     });
@@ -148,17 +153,23 @@ void main() {
     });
 
     group('forgotPassword', () {
-      test('sends POST to /api/v1/auth/forgot-password', () async {
-        const request = ForgotPasswordRequest(email: 'user@example.com');
+      test(
+        'sends POST to /api/v1/auth/forgot-password and returns OtpSentResponse',
+        () async {
+          const request = ForgotPasswordRequest(email: 'user@example.com');
 
-        dioAdapter.onPost(
-          '/api/v1/auth/forgot-password',
-          (server) => server.reply(200, null),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/forgot-password',
+            (server) => server.reply(200, {'expiresInSeconds': 300}),
+            data: request.toJson(),
+          );
 
-        await expectLater(repository.forgotPassword(request), completes);
-      });
+          final result = await repository.forgotPassword(request);
+
+          expect(result, isA<OtpSentResponse>());
+          expect(result.expiresInSeconds, 300);
+        },
+      );
     });
 
     group('resetPassword', () {
@@ -180,17 +191,23 @@ void main() {
     });
 
     group('resendPasswordReset', () {
-      test('sends POST to /api/v1/auth/resend-password-reset', () async {
-        const request = ResendPasswordResetRequest(email: 'user@example.com');
+      test(
+        'sends POST to /api/v1/auth/resend-password-reset and returns OtpSentResponse',
+        () async {
+          const request = ResendPasswordResetRequest(email: 'user@example.com');
 
-        dioAdapter.onPost(
-          '/api/v1/auth/resend-password-reset',
-          (server) => server.reply(200, null),
-          data: request.toJson(),
-        );
+          dioAdapter.onPost(
+            '/api/v1/auth/resend-password-reset',
+            (server) => server.reply(200, {'expiresInSeconds': 300}),
+            data: request.toJson(),
+          );
 
-        await expectLater(repository.resendPasswordReset(request), completes);
-      });
+          final result = await repository.resendPasswordReset(request);
+
+          expect(result, isA<OtpSentResponse>());
+          expect(result.expiresInSeconds, 300);
+        },
+      );
     });
 
     group('verifyEmail', () {

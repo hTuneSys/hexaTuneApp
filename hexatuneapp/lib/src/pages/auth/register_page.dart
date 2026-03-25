@@ -6,13 +6,14 @@ import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
-import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/models/create_account_request.dart';
 import 'package:hexatuneapp/src/core/rest/auth/oauth_service.dart';
+import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/social_sign_in_buttons.dart';
@@ -69,15 +70,24 @@ class _RegisterPageState extends State<RegisterPage> {
       log.devLog('→ Register attempt: email=$email', category: LogCategory.ui);
 
       final authRepo = getIt<AuthRepository>();
-      await authRepo.register(
+      final result = await authRepo.register(
         CreateAccountRequest(email: email, password: password),
       );
 
       log.devLog('✓ Register success', category: LogCategory.ui);
 
       if (!mounted) return;
+
+      final otpTimer = getIt<OtpTimerService>();
+      await otpTimer.saveOtpExpiry(
+        OtpFlow.emailVerification,
+        email,
+        result.otpExpiresInSeconds,
+      );
+
       _showMessage(l10n.accountCreatedVerifyEmail, isError: false);
 
+      if (!mounted) return;
       context.go(
         '${RouteNames.verifyEmail}?email=${Uri.encodeComponent(email)}',
       );

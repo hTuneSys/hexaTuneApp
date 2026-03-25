@@ -87,10 +87,11 @@ class FlowRepository {
   }
 
   /// GET /api/v1/flows/{id}/image
-  Future<ImageUrlResponse> getImageUrl(String id) async {
+  Future<ImageUrlResponse> getImageUrl(String id, {String? locale}) async {
     _logService.debug('GET flow image $id', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.flowImage(id),
+      queryParameters: locale != null ? {'locale': locale} : null,
     );
     final data = response.data;
     if (data == null) {

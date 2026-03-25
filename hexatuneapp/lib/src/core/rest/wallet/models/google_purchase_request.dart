@@ -11,7 +11,6 @@ part 'google_purchase_request.g.dart';
 abstract class GooglePurchaseRequest with _$GooglePurchaseRequest {
   const factory GooglePurchaseRequest({
     required String packageId,
-    required String productId,
     required String purchaseToken,
   }) = _GooglePurchaseRequest;
 

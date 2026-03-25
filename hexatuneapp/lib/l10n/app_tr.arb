@@ -497,5 +497,14 @@
   "errorNetwork": "İnternet bağlantısı yok.",
   "errorTimeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
   "errorUnknown": "Beklenmeyen bir hata oluştu.",
-  "errorRateLimited": "Çok fazla istek. Lütfen yavaşlayın."
+  "errorRateLimited": "Çok fazla istek. Lütfen yavaşlayın.",
+  "otpExpired": "Kodun süresi doldu. Yeni kod almak için tekrar gönder'e dokunun.",
+  "otpExpiresIn": "Kodun süresi {time} içinde doluyor",
+  "@otpExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  }
 }

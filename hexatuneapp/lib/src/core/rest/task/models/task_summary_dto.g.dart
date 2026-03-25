@@ -18,6 +18,9 @@ _TaskSummaryDto _$TaskSummaryDtoFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] as String,
       cronExpression: json['cronExpression'] as String?,
       executeAfter: json['executeAfter'] as String?,
+      cancelledAt: json['cancelledAt'] as String?,
+      failedAt: json['failedAt'] as String?,
+      errorMessage: json['errorMessage'] as String?,
     );
 
 Map<String, dynamic> _$TaskSummaryDtoToJson(_TaskSummaryDto instance) =>
@@ -32,4 +35,7 @@ Map<String, dynamic> _$TaskSummaryDtoToJson(_TaskSummaryDto instance) =>
       'updatedAt': instance.updatedAt,
       'cronExpression': instance.cronExpression,
       'executeAfter': instance.executeAfter,
+      'cancelledAt': instance.cancelledAt,
+      'failedAt': instance.failedAt,
+      'errorMessage': instance.errorMessage,
     };

@@ -84,10 +84,11 @@ class StepRepository {
   }
 
   /// GET /api/v1/steps/{id}/image
-  Future<ImageUrlResponse> getImageUrl(String id) async {
+  Future<ImageUrlResponse> getImageUrl(String id, {String? locale}) async {
     _logService.debug('GET step image $id', category: LogCategory.network);
     final response = await _dio.get<Map<String, dynamic>>(
       ApiEndpoints.stepImage(id),
+      queryParameters: locale != null ? {'locale': locale} : null,
     );
     final data = response.data;
     if (data == null) {
