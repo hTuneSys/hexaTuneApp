@@ -262,16 +262,27 @@ class _FormulaListPageState extends State<FormulaListPage> {
             const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.formulaSortTitle),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: _showFilterSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.formulaFilterTitle),
             ),
             const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'formulaAdd',
+              shape: const CircleBorder(),
               onPressed: () async {
                 final created = await context.push<bool>(
                   RouteNames.formulaCreate,

@@ -308,16 +308,27 @@ class _CategoryListPageState extends State<CategoryListPage> {
             const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.categorySortTitle),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: _showFilterSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.categoryFilterTitle),
             ),
             const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'categoryAdd',
+              shape: const CircleBorder(),
               onPressed: () async {
                 final created = await context.push<bool>(
                   RouteNames.categoryCreate,

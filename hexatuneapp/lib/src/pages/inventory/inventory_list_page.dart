@@ -294,16 +294,27 @@ class _InventoryListPageState extends State<InventoryListPage> {
             const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.inventorySortTitle),
             ),
             const SizedBox(width: 8),
             OutlinedButton(
               onPressed: _showFilterSheet,
+              style: OutlinedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
               child: Text(l10n.inventoryFilterTitle),
             ),
             const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'inventoryAdd',
+              shape: const CircleBorder(),
               onPressed: () async {
                 final created = await context.push<bool>(
                   RouteNames.inventoryCreate,

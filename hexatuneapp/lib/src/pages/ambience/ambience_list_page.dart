@@ -251,16 +251,27 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                         const Spacer(),
                         OutlinedButton(
                           onPressed: _showSortSheet,
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                           child: Text(l10n.ambienceSortTitle),
                         ),
                         const SizedBox(width: 8),
                         OutlinedButton(
                           onPressed: _showFilterSheet,
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                           child: Text(l10n.ambienceFilterTitle),
                         ),
                         const SizedBox(width: 8),
                         FloatingActionButton.small(
                           heroTag: 'ambienceAdd',
+                          shape: const CircleBorder(),
                           onPressed: () async {
                             final created = await context.push<bool>(
                               RouteNames.ambienceCreate,
