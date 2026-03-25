@@ -259,32 +259,43 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 24),
 
                 // Email field
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: l10n.emailAddress),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: l10n.emailAddress),
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Password field
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.password,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: l10n.password,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
-                      onPressed: () =>
-                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _login(),
                   ),
-                  obscureText: _obscurePassword,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _login(),
                 ),
 
                 // Forgot Password link
@@ -304,6 +315,7 @@ class _LoginPageState extends State<LoginPage> {
                 FilledButton(
                   onPressed: _isLoading ? null : _login,
                   style: FilledButton.styleFrom(
+                    elevation: 1,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
