@@ -437,12 +437,12 @@ class _DummyDspPageState extends State<DummyDspPage> {
                     color: isSelected
                         ? colorScheme.primaryContainer
                         : colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(12),
                     child: InkWell(
                       onTap: _ambienceLoading || _isPlaying
                           ? null
                           : () => _loadAmbience(config),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(12),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 12,

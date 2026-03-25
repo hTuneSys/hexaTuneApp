@@ -386,7 +386,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: colorScheme.outlineVariant),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
       ),
       clipBehavior: Clip.antiAlias,
       child: Column(

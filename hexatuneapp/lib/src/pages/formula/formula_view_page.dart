@@ -204,7 +204,7 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                                 border: Border.all(
                                   color: theme.colorScheme.outline,
                                 ),
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 '${item.quantity}',

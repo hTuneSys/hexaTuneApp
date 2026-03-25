@@ -426,7 +426,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
               const SizedBox(height: 8),
               InkWell(
                 onTap: _isCategoriesLoading ? null : _showCategoryPicker,
-                borderRadius: BorderRadius.circular(4),
+                borderRadius: BorderRadius.circular(12),
                 child: InputDecorator(
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),

@@ -572,7 +572,7 @@ class _SoundChip extends StatelessWidget {
                       asset.iconAsset.isNotEmpty &&
                           asset.iconAsset.endsWith('.svg')
                       ? ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(12),
                           child: SvgPicture.asset(
                             asset.iconAsset,
                             width: 48,

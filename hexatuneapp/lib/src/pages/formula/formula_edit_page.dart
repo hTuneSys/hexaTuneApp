@@ -436,7 +436,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
                         constraints: const BoxConstraints(maxHeight: 150),
                         decoration: BoxDecoration(
                           border: Border.all(color: theme.colorScheme.outline),
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: ListView.builder(
                           shrinkWrap: true,

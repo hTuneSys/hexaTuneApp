@@ -23,7 +23,7 @@ class PasswordStrengthIndicator extends StatelessWidget {
       children: [
         Expanded(
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(12),
             child: LinearProgressIndicator(
               value: strength,
               minHeight: 6,

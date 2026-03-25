@@ -510,7 +510,7 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
       height: 40,
       decoration: BoxDecoration(
         color: Color.fromARGB(255, r, g, b),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
     );

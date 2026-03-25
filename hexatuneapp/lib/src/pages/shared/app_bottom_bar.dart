@@ -33,7 +33,7 @@ class AppBottomBar extends StatelessWidget {
   static const double _hexSize = 64;
   static const double _barHeight = 64;
   static const double _hexProtrusion = _hexSize / 2;
-  static const double _barRadius = 28;
+  static const double _barRadius = 12;
   static const double _barMargin = 16;
 
   @override

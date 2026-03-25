@@ -543,7 +543,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                     const SizedBox(height: 8),
                     InkWell(
                       onTap: _showCategoryPicker,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(12),
                       child: InputDecorator(
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
