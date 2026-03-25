@@ -97,7 +97,10 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      final nameField = find.widgetWithText(TextFormField, 'Name');
+      final nameField = find.widgetWithText(
+        TextFormField,
+        'Enter category name',
+      );
       expect(nameField, findsOneWidget);
 
       final field = tester.widget<TextFormField>(nameField);

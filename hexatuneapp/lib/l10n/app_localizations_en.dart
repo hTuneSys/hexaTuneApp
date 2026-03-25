@@ -736,7 +736,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categoryName => 'Name';
 
   @override
+  String get categoryNameHint => 'Enter category name';
+
+  @override
   String get categoryDescription => 'Description';
+
+  @override
+  String get categoryDescriptionHint => 'Enter category description';
 
   @override
   String get categoryLabels => 'Labels';

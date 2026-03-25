@@ -72,14 +72,20 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(TextFormField, 'Name'), findsOneWidget);
+      expect(
+        find.widgetWithText(TextFormField, 'Enter category name'),
+        findsOneWidget,
+      );
     });
 
     testWidgets('shows description text field (disabled)', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      final descField = find.widgetWithText(TextFormField, 'Description');
+      final descField = find.widgetWithText(
+        TextFormField,
+        'Enter category description',
+      );
       expect(descField, findsOneWidget);
 
       final field = tester.widget<TextFormField>(descField);
@@ -142,7 +148,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Fill in the name field
-      final nameField = find.widgetWithText(TextFormField, 'Name');
+      final nameField = find.widgetWithText(
+        TextFormField,
+        'Enter category name',
+      );
       await tester.enterText(nameField, 'New Category');
       await tester.pumpAndSettle();
 
@@ -162,7 +171,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Fill in the name field
-      final nameField = find.widgetWithText(TextFormField, 'Name');
+      final nameField = find.widgetWithText(
+        TextFormField,
+        'Enter category name',
+      );
       await tester.enterText(nameField, 'Failing Category');
       await tester.pumpAndSettle();
 

@@ -99,13 +99,15 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              Text(l10n.categoryName, style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
               Material(
                 elevation: 1,
                 borderRadius: BorderRadius.circular(12),
                 color: theme.colorScheme.surfaceContainerLow,
                 child: TextFormField(
                   controller: _nameCtrl,
-                  decoration: InputDecoration(labelText: l10n.categoryName),
+                  decoration: InputDecoration(hintText: l10n.categoryNameHint),
                   validator: (v) => (v == null || v.trim().isEmpty)
                       ? l10n.categoryName
                       : null,
@@ -113,6 +115,8 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 16),
+              Text(l10n.categoryDescription, style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
               Material(
                 elevation: 1,
                 borderRadius: BorderRadius.circular(12),
@@ -120,13 +124,15 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 child: TextFormField(
                   controller: _descCtrl,
                   decoration: InputDecoration(
-                    labelText: l10n.categoryDescription,
+                    hintText: l10n.categoryDescriptionHint,
                   ),
                   maxLines: 3,
                   enabled: false,
                 ),
               ),
               const SizedBox(height: 16),
+              Text(l10n.categoryLabels, style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
               Material(
                 elevation: 1,
                 borderRadius: BorderRadius.circular(12),
@@ -134,7 +140,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 child: TextField(
                   controller: _labelInputCtrl,
                   decoration: InputDecoration(
-                    labelText: l10n.categoryAddLabel,
+                    hintText: l10n.categoryAddLabel,
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.add),
                       onPressed: _addLabel,

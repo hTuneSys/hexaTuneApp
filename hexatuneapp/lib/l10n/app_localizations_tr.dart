@@ -739,7 +739,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get categoryName => 'Ad';
 
   @override
+  String get categoryNameHint => 'Kategori adını girin';
+
+  @override
   String get categoryDescription => 'Açıklama';
+
+  @override
+  String get categoryDescriptionHint => 'Kategori açıklamasını girin';
 
   @override
   String get categoryLabels => 'Etiketler';

@@ -1466,11 +1466,23 @@ abstract class AppLocalizations {
   /// **'Name'**
   String get categoryName;
 
+  /// No description provided for @categoryNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category name'**
+  String get categoryNameHint;
+
   /// No description provided for @categoryDescription.
   ///
   /// In en, this message translates to:
   /// **'Description'**
   String get categoryDescription;
+
+  /// No description provided for @categoryDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter category description'**
+  String get categoryDescriptionHint;
 
   /// No description provided for @categoryLabels.
   ///
