@@ -404,15 +404,10 @@ class _FormulaListTile extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (formula.labels.isNotEmpty)
-              Flexible(
-                child: Text(
-                  formula.labels.join(', '),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.bodySmall,
-                ),
-              ),
+            Text(
+              l10n.formulaInventoryCount(0),
+              style: theme.textTheme.bodySmall,
+            ),
             const SizedBox(width: 4),
             CircleAvatar(
               radius: 18,

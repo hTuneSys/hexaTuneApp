@@ -133,12 +133,11 @@ void main() {
       expect(find.text('Beta Formula'), findsOneWidget);
     });
 
-    testWidgets('shows label text on formula tiles', (tester) async {
+    testWidgets('shows inventory count on formula tiles', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('alpha, test'), findsOneWidget);
-      expect(find.text('beta'), findsOneWidget);
+      expect(find.text('0 Inventory'), findsNWidgets(2));
     });
 
     testWidgets('search icon toggles expanded search field', (tester) async {
