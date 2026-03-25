@@ -121,13 +121,13 @@ void main() {
       expect(googleTapped, isFalse);
     });
 
-    testWidgets('renders two OutlinedButton widgets', (tester) async {
+    testWidgets('renders two FilledButton widgets', (tester) async {
       await tester.pumpWidget(
         _buildApp(onApplePressed: () {}, onGooglePressed: () {}),
       );
       await tester.pumpAndSettle();
 
-      expect(find.byType(OutlinedButton), findsNWidgets(2));
+      expect(find.byType(FilledButton), findsNWidgets(2));
     });
   });
 }

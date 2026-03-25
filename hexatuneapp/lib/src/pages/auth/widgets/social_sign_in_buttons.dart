@@ -45,14 +45,14 @@ class SocialSignInButtons extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: OutlinedButton.icon(
+              child: FilledButton.icon(
                 onPressed: isLoading ? null : onApplePressed,
                 icon: Icon(Icons.apple, color: theme.colorScheme.onSurface),
-                label: Text(
-                  l10n.apple,
-                  style: TextStyle(color: theme.colorScheme.onSurface),
-                ),
-                style: OutlinedButton.styleFrom(
+                label: Text(l10n.apple),
+                style: FilledButton.styleFrom(
+                  elevation: 1,
+                  backgroundColor: theme.colorScheme.surfaceContainerLow,
+                  foregroundColor: theme.colorScheme.onSurface,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -62,7 +62,7 @@ class SocialSignInButtons extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Expanded(
-              child: OutlinedButton.icon(
+              child: FilledButton.icon(
                 onPressed: isLoading ? null : onGooglePressed,
                 icon: Text(
                   'G',
@@ -71,11 +71,11 @@ class SocialSignInButtons extends StatelessWidget {
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-                label: Text(
-                  l10n.google,
-                  style: TextStyle(color: theme.colorScheme.onSurface),
-                ),
-                style: OutlinedButton.styleFrom(
+                label: Text(l10n.google),
+                style: FilledButton.styleFrom(
+                  elevation: 1,
+                  backgroundColor: theme.colorScheme.surfaceContainerLow,
+                  foregroundColor: theme.colorScheme.onSurface,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),

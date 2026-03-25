@@ -173,7 +173,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Google and Apple buttons via SocialSignInButtons
-      expect(find.byType(OutlinedButton), findsNWidgets(2));
+      expect(find.byType(FilledButton), findsNWidgets(3));
     });
 
     testWidgets('can enter text in email field', (tester) async {
