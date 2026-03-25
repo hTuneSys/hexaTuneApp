@@ -400,50 +400,105 @@ class _AmbienceListCard extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
+              CircleAvatar(
+                backgroundColor: colorScheme.primaryContainer,
+                child: Icon(
+                  Icons.landscape_outlined,
+                  color: colorScheme.onPrimaryContainer,
+                ),
+              ),
+              const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(config.name, style: theme.textTheme.titleMedium),
                     const SizedBox(height: 4),
-                    Text(
-                      '${l10n.dspSectionBase}: $baseName',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${l10n.dspSectionBase}: ',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          TextSpan(
+                            text: baseName,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      '${l10n.dspSectionTexture}: '
-                      '$textureCount/${DspConstants.maxTextureLayers}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${l10n.dspSectionTexture}: ',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          TextSpan(
+                            text:
+                                '$textureCount/${DspConstants.maxTextureLayers}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    Text(
-                      '${l10n.dspSectionEvents}: '
-                      '$eventCount/${DspConstants.maxEventSlots}',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: '${l10n.dspSectionEvents}: ',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          TextSpan(
+                            text: '$eventCount/${DspConstants.maxEventSlots}',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'view') onView();
-                  if (value == 'edit') onEdit();
-                },
-                itemBuilder: (ctx) => [
-                  PopupMenuItem(
-                    value: 'view',
-                    child: Text(l10n.ambienceViewMenuItem),
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: colorScheme.surfaceContainerHighest,
+                child: PopupMenuButton<String>(
+                  icon: Icon(
+                    Icons.more_vert,
+                    color: colorScheme.onSurfaceVariant,
+                    size: 20,
                   ),
-                  PopupMenuItem(
-                    value: 'edit',
-                    child: Text(l10n.ambienceEditMenuItem),
-                  ),
-                ],
+                  onSelected: (value) {
+                    if (value == 'view') onView();
+                    if (value == 'edit') onEdit();
+                  },
+                  itemBuilder: (ctx) => [
+                    PopupMenuItem(
+                      value: 'view',
+                      child: Text(l10n.ambienceViewMenuItem),
+                    ),
+                    PopupMenuItem(
+                      value: 'edit',
+                      child: Text(l10n.ambienceEditMenuItem),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

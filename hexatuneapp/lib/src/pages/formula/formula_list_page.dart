@@ -391,31 +391,62 @@ class _FormulaListTile extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return ListTile(
-      leading: Icon(Icons.science, color: theme.colorScheme.primary),
-      title: Text(formula.name),
-      subtitle: formula.labels.isEmpty
-          ? null
-          : Text(
-              formula.labels.join(', '),
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
+    return Card(
+      child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Icon(
+            Icons.science,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
+        title: Text(formula.name),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (formula.labels.isNotEmpty)
+              Flexible(
+                child: Text(
+                  formula.labels.join(', '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
+            const SizedBox(width: 4),
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              child: PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: theme.colorScheme.onSurfaceVariant,
+                  size: 20,
+                ),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit();
+                    case 'view':
+                      onView();
+                  }
+                },
+                itemBuilder: (ctx) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text(l10n.formulaEditMenuItem),
+                  ),
+                  PopupMenuItem(
+                    value: 'view',
+                    child: Text(l10n.formulaViewMenuItem),
+                  ),
+                ],
+              ),
             ),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          switch (value) {
-            case 'edit':
-              onEdit();
-            case 'view':
-              onView();
-          }
-        },
-        itemBuilder: (ctx) => [
-          PopupMenuItem(value: 'edit', child: Text(l10n.formulaEditMenuItem)),
-          PopupMenuItem(value: 'view', child: Text(l10n.formulaViewMenuItem)),
-        ],
+          ],
+        ),
+        onTap: onView,
       ),
-      onTap: onView,
     );
   }
 }

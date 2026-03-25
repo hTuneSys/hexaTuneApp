@@ -441,26 +441,50 @@ class _CategoryListTile extends StatelessWidget {
 
     return Card(
       child: ListTile(
-        leading: Icon(Icons.folder_outlined, color: theme.colorScheme.primary),
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Icon(
+            Icons.folder_outlined,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
         title: Text(category.name),
-        subtitle: Text(l10n.categoryInventoryCount(inventoryCount)),
-        trailing: PopupMenuButton<String>(
-          onSelected: (value) {
-            switch (value) {
-              case 'edit':
-                onEdit();
-              case 'view':
-                onView();
-            }
-          },
-          itemBuilder: (ctx) => [
-            PopupMenuItem(
-              value: 'edit',
-              child: Text(l10n.categoryEdit_menuItem),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.categoryInventoryCount(inventoryCount),
+              style: theme.textTheme.bodySmall,
             ),
-            PopupMenuItem(
-              value: 'view',
-              child: Text(l10n.categoryView_menuItem),
+            const SizedBox(width: 4),
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: theme.colorScheme.surfaceContainerHighest,
+              child: PopupMenuButton<String>(
+                icon: Icon(
+                  Icons.more_vert,
+                  color: theme.colorScheme.onSurfaceVariant,
+                  size: 20,
+                ),
+                onSelected: (value) {
+                  switch (value) {
+                    case 'edit':
+                      onEdit();
+                    case 'view':
+                      onView();
+                  }
+                },
+                itemBuilder: (ctx) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Text(l10n.categoryEdit_menuItem),
+                  ),
+                  PopupMenuItem(
+                    value: 'view',
+                    child: Text(l10n.categoryView_menuItem),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

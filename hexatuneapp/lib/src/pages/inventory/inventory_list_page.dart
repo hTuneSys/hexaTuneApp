@@ -435,42 +435,53 @@ class _CategoryAccordionState extends State<_CategoryAccordion> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return ExpansionTile(
-      initiallyExpanded: true,
-      backgroundColor: theme.colorScheme.surfaceContainerLow,
-      collapsedBackgroundColor: theme.colorScheme.surfaceContainerLow,
-      leading: Icon(Icons.folder_outlined, color: theme.colorScheme.primary),
-      title: Text(
-        widget.categoryName,
-        style: theme.textTheme.titleSmall?.copyWith(
-          color: theme.colorScheme.primary,
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ExpansionTile(
+        initiallyExpanded: true,
+        backgroundColor: theme.colorScheme.surfaceContainerLow,
+        collapsedBackgroundColor: theme.colorScheme.surfaceContainerLow,
+        shape: const RoundedRectangleBorder(side: BorderSide.none),
+        collapsedShape: const RoundedRectangleBorder(side: BorderSide.none),
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Icon(
+            Icons.folder_outlined,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
         ),
-      ),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            l10n.inventoryCount(widget.items.length),
-            style: theme.textTheme.bodySmall,
+        title: Text(
+          widget.categoryName,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: theme.colorScheme.primary,
           ),
-          const SizedBox(width: 4),
-          AnimatedRotation(
-            turns: _expanded ? 0.5 : 0,
-            duration: const Duration(milliseconds: 200),
-            child: const Icon(Icons.expand_more),
-          ),
-        ],
-      ),
-      onExpansionChanged: (val) => setState(() => _expanded = val),
-      children: widget.items
-          .map(
-            (item) => _InventoryListTile(
-              item: item,
-              onEdit: () => widget.onEdit(item),
-              onView: () => widget.onView(item),
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              l10n.inventoryCount(widget.items.length),
+              style: theme.textTheme.bodySmall,
             ),
-          )
-          .toList(),
+            const SizedBox(width: 4),
+            AnimatedRotation(
+              turns: _expanded ? 0.5 : 0,
+              duration: const Duration(milliseconds: 200),
+              child: const Icon(Icons.expand_more),
+            ),
+          ],
+        ),
+        onExpansionChanged: (val) => setState(() => _expanded = val),
+        children: widget.items
+            .map(
+              (item) => _InventoryListTile(
+                item: item,
+                onEdit: () => widget.onEdit(item),
+                onView: () => widget.onView(item),
+              ),
+            )
+            .toList(),
+      ),
     );
   }
 }
@@ -489,31 +500,42 @@ class _InventoryListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return ListTile(
       leading: Icon(
-        item.imageUploaded ? Icons.image_outlined : Icons.description_outlined,
+        Icons.inventory_2_outlined,
+        color: theme.colorScheme.onSurfaceVariant,
       ),
       title: Text(item.name),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          switch (value) {
-            case 'edit':
-              onEdit();
-            case 'view':
-              onView();
-          }
-        },
-        itemBuilder: (ctx) => [
-          PopupMenuItem(
-            value: 'edit',
-            child: Text(l10n.inventoryEdit_menuItem),
+      trailing: CircleAvatar(
+        radius: 18,
+        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+        child: PopupMenuButton<String>(
+          icon: Icon(
+            Icons.more_vert,
+            color: theme.colorScheme.onSurfaceVariant,
+            size: 20,
           ),
-          PopupMenuItem(
-            value: 'view',
-            child: Text(l10n.inventoryView_menuItem),
-          ),
-        ],
+          onSelected: (value) {
+            switch (value) {
+              case 'edit':
+                onEdit();
+              case 'view':
+                onView();
+            }
+          },
+          itemBuilder: (ctx) => [
+            PopupMenuItem(
+              value: 'edit',
+              child: Text(l10n.inventoryEdit_menuItem),
+            ),
+            PopupMenuItem(
+              value: 'view',
+              child: Text(l10n.inventoryView_menuItem),
+            ),
+          ],
+        ),
       ),
       onTap: onView,
     );
