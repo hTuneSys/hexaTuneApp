@@ -30,6 +30,7 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/widgets/mini_harmonizer_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/category/category_list_page.dart';
 import 'package:hexatuneapp/src/pages/category/category_create_page.dart';
 import 'package:hexatuneapp/src/pages/category/category_edit_page.dart';
@@ -100,11 +101,14 @@ class AppRouter {
       ShellRoute(
         builder: (context, state, child) {
           final isHarmonizerPage = state.uri.path == RouteNames.harmonizer;
-          return Column(
-            children: [
-              Expanded(child: child),
-              if (!isHarmonizerPage) const MiniHarmonizerBar(),
-            ],
+          return Scaffold(
+            body: Column(
+              children: [
+                Expanded(child: child),
+                if (!isHarmonizerPage) const MiniHarmonizerBar(),
+              ],
+            ),
+            bottomNavigationBar: const AppBottomBar(),
           );
         },
         routes: [

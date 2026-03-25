@@ -31,8 +31,8 @@ class SplashPage extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 'assets/icon/app_icon.svg',
-                width: 100,
-                height: 100,
+                width: 175,
+                height: 175,
                 colorFilter: ColorFilter.mode(
                   theme.colorScheme.onSurface,
                   BlendMode.srcIn,

@@ -8,7 +8,7 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 
 /// Reusable auth page header showing the app logo and brand name.
 class AuthHeader extends StatelessWidget {
-  const AuthHeader({this.size = 80, super.key});
+  const AuthHeader({this.size = 175, super.key});
 
   final double size;
 
