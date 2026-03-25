@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Edit an existing ambience preset.
 class AmbienceEditPage extends StatefulWidget {
@@ -128,7 +129,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
         context.pop(true);
       }
     } catch (e) {
-      _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _saving = false);
     }

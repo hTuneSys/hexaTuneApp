@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/task/models/create_task_request.dart';
 import 'package:hexatuneapp/src/core/rest/task/models/task_summary_dto.dart';
 import 'package:hexatuneapp/src/core/rest/task/task_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing task workflow endpoints.
 class DummyTasksPage extends StatefulWidget {
@@ -81,7 +82,7 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
       );
     } catch (e) {
       log.devLog('✗ Load tasks failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -169,7 +170,7 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -243,7 +244,7 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showMessage(e.toString(), isError: true);
+        if (mounted) ApiErrorHandler.handle(context, e);
       }
     }
   }
@@ -293,7 +294,7 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

@@ -14,7 +14,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Inventory list page with search, sort, filter, and category-grouped accordion.
 class InventoryListPage extends StatefulWidget {
@@ -120,15 +120,10 @@ class _InventoryListPageState extends State<InventoryListPage> {
       );
     } catch (e) {
       log.devLog('Load inventories failed: $e', category: LogCategory.ui);
-      if (mounted) _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  void _showError(String message) {
-    if (!mounted) return;
-    AppSnackBar.error(context, message: message);
   }
 
   void _showSortSheet() {

@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_re
 import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing the harmonics generation endpoint.
 class DummyHarmonicsPage extends StatefulWidget {
@@ -66,7 +67,7 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
       );
     } catch (e) {
       log.devLog('✗ Load formulas failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -102,7 +103,7 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
       }
     } catch (e) {
       log.devLog('✗ Generate harmonics failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

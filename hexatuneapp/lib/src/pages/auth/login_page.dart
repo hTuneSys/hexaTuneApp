@@ -22,6 +22,7 @@ import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/social_sign_in_buttons.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Login page matching the Figma design.
 class LoginPage extends StatefulWidget {
@@ -87,7 +88,9 @@ class _LoginPageState extends State<LoginPage> {
       await _registerPushToken();
     } catch (e) {
       log.devLog('✗ Login failed: $e', category: LogCategory.ui);
-      _showError(e.toString());
+      if (mounted) {
+        ApiErrorHandler.handle(context, e, email: _emailController.text.trim());
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -124,7 +127,7 @@ class _LoginPageState extends State<LoginPage> {
       log.devLog('→ Google sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Google sign-in failed: $e', category: LogCategory.ui);
-      _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -162,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
       log.devLog('→ Apple sign-in cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Apple sign-in failed: $e', category: LogCategory.ui);
-      _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

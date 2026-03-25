@@ -10,7 +10,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing audit log query endpoint.
 class DummyAuditPage extends StatefulWidget {
@@ -86,7 +86,7 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
       );
     } catch (e) {
       log.devLog('✗ Load audit logs failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -115,15 +115,6 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
       _outcomeFilter = null;
       _severityFilter = null;
     });
-  }
-
-  void _showMessage(String message, {bool isError = false}) {
-    if (!mounted) return;
-    if (isError) {
-      AppSnackBar.error(context, message: message);
-    } else {
-      AppSnackBar.success(context, message: message);
-    }
   }
 
   @override

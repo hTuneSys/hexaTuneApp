@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy register page for testing auth flow — will be replaced with production UI.
 class DummyRegisterPage extends StatefulWidget {
@@ -67,7 +68,7 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       );
     } catch (e) {
       log.devLog('✗ Register failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -100,7 +101,7 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -138,7 +139,7 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
       log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

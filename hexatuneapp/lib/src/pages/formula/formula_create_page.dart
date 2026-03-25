@@ -18,6 +18,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/create_formula_request.
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Local model for inventory items being added to a formula before creation.
 class _PendingItem {
@@ -174,7 +175,7 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Forgot password page — sends OTP reset code to the given email.
 class ForgotPasswordPage extends StatefulWidget {
@@ -60,7 +61,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       );
     } catch (e) {
       log.devLog('✗ Forgot password failed: $e', category: LogCategory.ui);
-      _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

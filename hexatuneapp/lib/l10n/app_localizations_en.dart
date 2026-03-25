@@ -1045,4 +1045,77 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get formulaInventoryDuplicate => 'This inventory is already added';
+
+  @override
+  String get errorUnauthorized => 'Session expired. Please sign in again.';
+
+  @override
+  String get errorForbidden => 'You don\'t have permission for this action.';
+
+  @override
+  String get errorNotFound => 'The requested resource was not found.';
+
+  @override
+  String get errorBadRequest => 'Invalid request. Please check your input.';
+
+  @override
+  String get errorValidationFailed => 'Please check the form and try again.';
+
+  @override
+  String get errorConflict =>
+      'This resource already exists or conflicts with another.';
+
+  @override
+  String get errorInternalError =>
+      'Something went wrong. Please try again later.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Too many attempts. Please wait and try again.';
+
+  @override
+  String get errorAccountLocked => 'Your account has been locked.';
+
+  @override
+  String get errorAccountSuspended => 'Your account has been suspended.';
+
+  @override
+  String get errorEmailNotVerified => 'Please verify your email address.';
+
+  @override
+  String get errorEmailAlreadyExists => 'This email is already registered.';
+
+  @override
+  String get errorEmailAlreadyVerified => 'This email is already verified.';
+
+  @override
+  String get errorProviderAlreadyLinked =>
+      'This provider is already linked to your account.';
+
+  @override
+  String get errorPasswordResetInvalid => 'Invalid or expired reset code.';
+
+  @override
+  String get errorPasswordResetMaxAttempts =>
+      'Maximum reset attempts exceeded. Please request a new code.';
+
+  @override
+  String get errorVerificationInvalid =>
+      'Invalid or expired verification code.';
+
+  @override
+  String get errorVerificationMaxAttempts =>
+      'Maximum verification attempts exceeded. Please request a new code.';
+
+  @override
+  String get errorNetwork => 'No internet connection.';
+
+  @override
+  String get errorTimeout => 'Request timed out. Please try again.';
+
+  @override
+  String get errorUnknown => 'An unexpected error occurred.';
+
+  @override
+  String get errorRateLimited => 'Too many requests. Please slow down.';
 }

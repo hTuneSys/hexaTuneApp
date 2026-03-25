@@ -11,7 +11,7 @@ import 'package:hexatuneapp/src/core/rest/flow/flow_repository.dart';
 import 'package:hexatuneapp/src/core/rest/flow/models/flow_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/models/package_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/package_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing read-only flow endpoints.
 class DummyFlowsPage extends StatefulWidget {
@@ -118,7 +118,7 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
       );
     } catch (e) {
       log.devLog('✗ Load flows failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -178,7 +178,7 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
                   } catch (e) {
                     if (ctx.mounted) {
                       Navigator.pop(ctx);
-                      _showMessage(e.toString(), isError: true);
+                      if (mounted) ApiErrorHandler.handle(context, e);
                     }
                   }
                 },
@@ -194,7 +194,7 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isLoading = false);
-        _showMessage(e.toString(), isError: true);
+        if (mounted) ApiErrorHandler.handle(context, e);
       }
     }
   }
@@ -213,15 +213,6 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
         ],
       ),
     );
-  }
-
-  void _showMessage(String message, {bool isError = false}) {
-    if (!mounted) return;
-    if (isError) {
-      AppSnackBar.error(context, message: message);
-    } else {
-      AppSnackBar.success(context, message: message);
-    }
   }
 
   @override

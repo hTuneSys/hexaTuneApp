@@ -6,29 +6,42 @@
 /// Each variant carries a user-facing [message] and, where applicable,
 /// the HTTP [statusCode], underlying [error], or backend [traceId].
 sealed class ApiException implements Exception {
-  const ApiException({required this.message, this.traceId});
+  const ApiException({required this.message, this.errorType, this.traceId});
 
   final String message;
+
+  /// RFC 7807 error type URI from ProblemDetails (e.g. `not-found`).
+  final String? errorType;
 
   /// Backend trace ID from RFC 7807 ProblemDetails, if available.
   final String? traceId;
 
   /// No network connection.
-  const factory ApiException.network({String message, String? traceId}) =
-      NetworkException;
+  const factory ApiException.network({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = NetworkException;
 
   /// Request timed out.
-  const factory ApiException.timeout({String message, String? traceId}) =
-      TimeoutException;
+  const factory ApiException.timeout({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = TimeoutException;
 
   /// Authentication required (HTTP 401).
-  const factory ApiException.unauthorized({String message, String? traceId}) =
-      UnauthorizedException;
+  const factory ApiException.unauthorized({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = UnauthorizedException;
 
   /// Access denied or special action required (HTTP 403).
   const factory ApiException.forbidden({
     String message,
     String? errorCode,
+    String? errorType,
     String? traceId,
   }) = ForbiddenException;
 
@@ -36,36 +49,51 @@ sealed class ApiException implements Exception {
   const factory ApiException.server({
     String message,
     int? statusCode,
+    String? errorType,
     String? traceId,
   }) = ServerException;
 
   /// Request cancelled by the caller.
-  const factory ApiException.cancelled({String message, String? traceId}) =
-      CancelledException;
+  const factory ApiException.cancelled({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = CancelledException;
 
   /// Bad request with validation errors (HTTP 400/422).
   const factory ApiException.badRequest({
     String message,
     Map<String, dynamic>? errors,
+    String? errorType,
     String? traceId,
   }) = BadRequestException;
 
   /// Resource not found (HTTP 404).
-  const factory ApiException.notFound({String message, String? traceId}) =
-      NotFoundException;
+  const factory ApiException.notFound({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = NotFoundException;
 
   /// Resource conflict (HTTP 409).
-  const factory ApiException.conflict({String message, String? traceId}) =
-      ConflictException;
+  const factory ApiException.conflict({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = ConflictException;
 
   /// Rate limited (HTTP 429).
-  const factory ApiException.rateLimited({String message, String? traceId}) =
-      RateLimitedException;
+  const factory ApiException.rateLimited({
+    String message,
+    String? errorType,
+    String? traceId,
+  }) = RateLimitedException;
 
   /// Catch-all for unmapped errors.
   const factory ApiException.unknown({
     String message,
     Object? error,
+    String? errorType,
     String? traceId,
   }) = UnknownApiException;
 
@@ -76,17 +104,23 @@ sealed class ApiException implements Exception {
 class NetworkException extends ApiException {
   const NetworkException({
     super.message = 'No network connection',
+    super.errorType,
     super.traceId,
   });
 }
 
 class TimeoutException extends ApiException {
-  const TimeoutException({super.message = 'Request timed out', super.traceId});
+  const TimeoutException({
+    super.message = 'Request timed out',
+    super.errorType,
+    super.traceId,
+  });
 }
 
 class UnauthorizedException extends ApiException {
   const UnauthorizedException({
     super.message = 'Authentication required',
+    super.errorType,
     super.traceId,
   });
 }
@@ -95,6 +129,7 @@ class ForbiddenException extends ApiException {
   const ForbiddenException({
     super.message = 'Access denied',
     this.errorCode,
+    super.errorType,
     super.traceId,
   });
 
@@ -107,6 +142,7 @@ class ServerException extends ApiException {
   const ServerException({
     super.message = 'Server error',
     this.statusCode,
+    super.errorType,
     super.traceId,
   });
 
@@ -116,6 +152,7 @@ class ServerException extends ApiException {
 class CancelledException extends ApiException {
   const CancelledException({
     super.message = 'Request cancelled',
+    super.errorType,
     super.traceId,
   });
 }
@@ -124,6 +161,7 @@ class BadRequestException extends ApiException {
   const BadRequestException({
     super.message = 'Bad request',
     this.errors,
+    super.errorType,
     super.traceId,
   });
 
@@ -133,17 +171,23 @@ class BadRequestException extends ApiException {
 class NotFoundException extends ApiException {
   const NotFoundException({
     super.message = 'Resource not found',
+    super.errorType,
     super.traceId,
   });
 }
 
 class ConflictException extends ApiException {
-  const ConflictException({super.message = 'Resource conflict', super.traceId});
+  const ConflictException({
+    super.message = 'Resource conflict',
+    super.errorType,
+    super.traceId,
+  });
 }
 
 class RateLimitedException extends ApiException {
   const RateLimitedException({
     super.message = 'Too many requests',
+    super.errorType,
     super.traceId,
   });
 }
@@ -152,6 +196,7 @@ class UnknownApiException extends ApiException {
   const UnknownApiException({
     super.message = 'An unexpected error occurred',
     this.error,
+    super.errorType,
     super.traceId,
   });
 

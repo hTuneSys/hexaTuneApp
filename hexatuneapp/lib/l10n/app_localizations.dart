@@ -2059,6 +2059,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This inventory is already added'**
   String get formulaInventoryDuplicate;
+
+  /// No description provided for @errorUnauthorized.
+  ///
+  /// In en, this message translates to:
+  /// **'Session expired. Please sign in again.'**
+  String get errorUnauthorized;
+
+  /// No description provided for @errorForbidden.
+  ///
+  /// In en, this message translates to:
+  /// **'You don\'t have permission for this action.'**
+  String get errorForbidden;
+
+  /// No description provided for @errorNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'The requested resource was not found.'**
+  String get errorNotFound;
+
+  /// No description provided for @errorBadRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid request. Please check your input.'**
+  String get errorBadRequest;
+
+  /// No description provided for @errorValidationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check the form and try again.'**
+  String get errorValidationFailed;
+
+  /// No description provided for @errorConflict.
+  ///
+  /// In en, this message translates to:
+  /// **'This resource already exists or conflicts with another.'**
+  String get errorConflict;
+
+  /// No description provided for @errorInternalError.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong. Please try again later.'**
+  String get errorInternalError;
+
+  /// No description provided for @errorTooManyAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait and try again.'**
+  String get errorTooManyAttempts;
+
+  /// No description provided for @errorAccountLocked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been locked.'**
+  String get errorAccountLocked;
+
+  /// No description provided for @errorAccountSuspended.
+  ///
+  /// In en, this message translates to:
+  /// **'Your account has been suspended.'**
+  String get errorAccountSuspended;
+
+  /// No description provided for @errorEmailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Please verify your email address.'**
+  String get errorEmailNotVerified;
+
+  /// No description provided for @errorEmailAlreadyExists.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already registered.'**
+  String get errorEmailAlreadyExists;
+
+  /// No description provided for @errorEmailAlreadyVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'This email is already verified.'**
+  String get errorEmailAlreadyVerified;
+
+  /// No description provided for @errorProviderAlreadyLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'This provider is already linked to your account.'**
+  String get errorProviderAlreadyLinked;
+
+  /// No description provided for @errorPasswordResetInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired reset code.'**
+  String get errorPasswordResetInvalid;
+
+  /// No description provided for @errorPasswordResetMaxAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum reset attempts exceeded. Please request a new code.'**
+  String get errorPasswordResetMaxAttempts;
+
+  /// No description provided for @errorVerificationInvalid.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired verification code.'**
+  String get errorVerificationInvalid;
+
+  /// No description provided for @errorVerificationMaxAttempts.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum verification attempts exceeded. Please request a new code.'**
+  String get errorVerificationMaxAttempts;
+
+  /// No description provided for @errorNetwork.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection.'**
+  String get errorNetwork;
+
+  /// No description provided for @errorTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out. Please try again.'**
+  String get errorTimeout;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred.'**
+  String get errorUnknown;
+
+  /// No description provided for @errorRateLimited.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many requests. Please slow down.'**
+  String get errorRateLimited;
 }
 
 class _AppLocalizationsDelegate

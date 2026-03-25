@@ -474,5 +474,28 @@
       }
     }
   },
-  "formulaInventoryDuplicate": "Bu envanter zaten eklenmiş"
+  "formulaInventoryDuplicate": "Bu envanter zaten eklenmiş",
+
+  "errorUnauthorized": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
+  "errorForbidden": "Bu işlem için yetkiniz bulunmuyor.",
+  "errorNotFound": "İstenen kaynak bulunamadı.",
+  "errorBadRequest": "Geçersiz istek. Lütfen girdinizi kontrol edin.",
+  "errorValidationFailed": "Lütfen formu kontrol edip tekrar deneyin.",
+  "errorConflict": "Bu kaynak zaten mevcut veya başka bir kaynakla çakışıyor.",
+  "errorInternalError": "Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.",
+  "errorTooManyAttempts": "Çok fazla deneme. Lütfen bekleyin ve tekrar deneyin.",
+  "errorAccountLocked": "Hesabınız kilitlendi.",
+  "errorAccountSuspended": "Hesabınız askıya alındı.",
+  "errorEmailNotVerified": "Lütfen e-posta adresinizi doğrulayın.",
+  "errorEmailAlreadyExists": "Bu e-posta adresi zaten kayıtlı.",
+  "errorEmailAlreadyVerified": "Bu e-posta adresi zaten doğrulanmış.",
+  "errorProviderAlreadyLinked": "Bu sağlayıcı zaten hesabınıza bağlı.",
+  "errorPasswordResetInvalid": "Geçersiz veya süresi dolmuş sıfırlama kodu.",
+  "errorPasswordResetMaxAttempts": "Maksimum sıfırlama denemesi aşıldı. Lütfen yeni bir kod isteyin.",
+  "errorVerificationInvalid": "Geçersiz veya süresi dolmuş doğrulama kodu.",
+  "errorVerificationMaxAttempts": "Maksimum doğrulama denemesi aşıldı. Lütfen yeni bir kod isteyin.",
+  "errorNetwork": "İnternet bağlantısı yok.",
+  "errorTimeout": "İstek zaman aşımına uğradı. Lütfen tekrar deneyin.",
+  "errorUnknown": "Beklenmeyen bir hata oluştu.",
+  "errorRateLimited": "Çok fazla istek. Lütfen yavaşlayın."
 }

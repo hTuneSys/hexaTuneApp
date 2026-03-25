@@ -477,5 +477,28 @@
       }
     }
   },
-  "formulaInventoryDuplicate": "This inventory is already added"
+  "formulaInventoryDuplicate": "This inventory is already added",
+
+  "errorUnauthorized": "Session expired. Please sign in again.",
+  "errorForbidden": "You don't have permission for this action.",
+  "errorNotFound": "The requested resource was not found.",
+  "errorBadRequest": "Invalid request. Please check your input.",
+  "errorValidationFailed": "Please check the form and try again.",
+  "errorConflict": "This resource already exists or conflicts with another.",
+  "errorInternalError": "Something went wrong. Please try again later.",
+  "errorTooManyAttempts": "Too many attempts. Please wait and try again.",
+  "errorAccountLocked": "Your account has been locked.",
+  "errorAccountSuspended": "Your account has been suspended.",
+  "errorEmailNotVerified": "Please verify your email address.",
+  "errorEmailAlreadyExists": "This email is already registered.",
+  "errorEmailAlreadyVerified": "This email is already verified.",
+  "errorProviderAlreadyLinked": "This provider is already linked to your account.",
+  "errorPasswordResetInvalid": "Invalid or expired reset code.",
+  "errorPasswordResetMaxAttempts": "Maximum reset attempts exceeded. Please request a new code.",
+  "errorVerificationInvalid": "Invalid or expired verification code.",
+  "errorVerificationMaxAttempts": "Maximum verification attempts exceeded. Please request a new code.",
+  "errorNetwork": "No internet connection.",
+  "errorTimeout": "Request timed out. Please try again.",
+  "errorUnknown": "An unexpected error occurred.",
+  "errorRateLimited": "Too many requests. Please slow down."
 }

@@ -9,7 +9,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/package/models/package_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/package_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing read-only package endpoints.
 class DummyPackagesPage extends StatefulWidget {
@@ -93,7 +93,7 @@ class _DummyPackagesPageState extends State<DummyPackagesPage> {
       );
     } catch (e) {
       log.devLog('✗ Load packages failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -132,7 +132,7 @@ class _DummyPackagesPageState extends State<DummyPackagesPage> {
                 } catch (e) {
                   if (ctx.mounted) {
                     Navigator.pop(ctx);
-                    _showMessage(e.toString(), isError: true);
+                    if (mounted) ApiErrorHandler.handle(context, e);
                   }
                 }
               },
@@ -161,15 +161,6 @@ class _DummyPackagesPageState extends State<DummyPackagesPage> {
         ],
       ),
     );
-  }
-
-  void _showMessage(String message, {bool isError = false}) {
-    if (!mounted) return;
-    if (isError) {
-      AppSnackBar.error(context, message: message);
-    } else {
-      AppSnackBar.success(context, message: message);
-    }
   }
 
   @override

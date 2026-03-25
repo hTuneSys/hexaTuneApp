@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Category list page with search, sort, filter, and pagination.
 class CategoryListPage extends StatefulWidget {
@@ -96,15 +97,10 @@ class _CategoryListPageState extends State<CategoryListPage> {
       );
     } catch (e) {
       log.devLog('Load categories failed: $e', category: LogCategory.ui);
-      if (mounted) _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  void _showError(String message) {
-    if (!mounted) return;
-    AppSnackBar.error(context, message: message);
   }
 
   void _showSuccess(String message) {
@@ -146,7 +142,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showError(e.toString());
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

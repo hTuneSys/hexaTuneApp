@@ -10,7 +10,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Read-only page for viewing an inventory item's details.
 class InventoryViewPage extends StatefulWidget {
@@ -69,7 +69,7 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
         setState(() => _isLoading = false);
       }
     }

@@ -17,6 +17,7 @@ import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/social_sign_in_buttons.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Registration page matching the Figma design.
 class RegisterPage extends StatefulWidget {
@@ -82,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
       );
     } catch (e) {
       log.devLog('✗ Register failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -118,7 +119,7 @@ class _RegisterPageState extends State<RegisterPage> {
       log.devLog('→ Google sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Google sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -155,7 +156,7 @@ class _RegisterPageState extends State<RegisterPage> {
       log.devLog('→ Apple sign-up cancelled', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Apple sign-up failed: $e', category: LogCategory.ui);
-      _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

@@ -18,6 +18,7 @@ import 'package:hexatuneapp/src/pages/auth/widgets/auth_header.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/password_strength_indicator.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Reset password page with OTP verification + new password, matching Figma.
 class ResetPasswordPage extends StatefulWidget {
@@ -123,7 +124,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       context.go(RouteNames.login);
     } catch (e) {
       log.devLog('✗ Reset password failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -157,7 +158,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
       }
     } catch (e) {
       log.devLog('✗ Resend failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isResending = false);
     }

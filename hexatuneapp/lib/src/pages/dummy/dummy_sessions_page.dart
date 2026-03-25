@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/session/models/session_response.dart';
 import 'package:hexatuneapp/src/core/rest/session/session_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing session management endpoints.
 class DummySessionsPage extends StatefulWidget {
@@ -108,7 +109,7 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
         _load();
       }
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -142,7 +143,7 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
       final repo = getIt<SessionRepository>();
       await repo.revokeAll();
     } catch (e) {
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

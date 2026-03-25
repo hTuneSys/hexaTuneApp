@@ -9,7 +9,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/step/models/step_response.dart';
 import 'package:hexatuneapp/src/core/rest/step/step_repository.dart';
-import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing read-only step endpoints.
 class DummyStepsPage extends StatefulWidget {
@@ -93,7 +93,7 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
       );
     } catch (e) {
       log.devLog('✗ Load steps failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -132,7 +132,7 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
                 } catch (e) {
                   if (ctx.mounted) {
                     Navigator.pop(ctx);
-                    _showMessage(e.toString(), isError: true);
+                    if (mounted) ApiErrorHandler.handle(context, e);
                   }
                 }
               },
@@ -161,15 +161,6 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
         ],
       ),
     );
-  }
-
-  void _showMessage(String message, {bool isError = false}) {
-    if (!mounted) return;
-    if (isError) {
-      AppSnackBar.error(context, message: message);
-    } else {
-      AppSnackBar.success(context, message: message);
-    }
   }
 
   @override

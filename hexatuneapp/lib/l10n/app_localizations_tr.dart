@@ -1048,4 +1048,83 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get formulaInventoryDuplicate => 'Bu envanter zaten eklenmiş';
+
+  @override
+  String get errorUnauthorized =>
+      'Oturumunuz sona erdi. Lütfen tekrar giriş yapın.';
+
+  @override
+  String get errorForbidden => 'Bu işlem için yetkiniz bulunmuyor.';
+
+  @override
+  String get errorNotFound => 'İstenen kaynak bulunamadı.';
+
+  @override
+  String get errorBadRequest =>
+      'Geçersiz istek. Lütfen girdinizi kontrol edin.';
+
+  @override
+  String get errorValidationFailed =>
+      'Lütfen formu kontrol edip tekrar deneyin.';
+
+  @override
+  String get errorConflict =>
+      'Bu kaynak zaten mevcut veya başka bir kaynakla çakışıyor.';
+
+  @override
+  String get errorInternalError =>
+      'Bir şeyler ters gitti. Lütfen daha sonra tekrar deneyin.';
+
+  @override
+  String get errorTooManyAttempts =>
+      'Çok fazla deneme. Lütfen bekleyin ve tekrar deneyin.';
+
+  @override
+  String get errorAccountLocked => 'Hesabınız kilitlendi.';
+
+  @override
+  String get errorAccountSuspended => 'Hesabınız askıya alındı.';
+
+  @override
+  String get errorEmailNotVerified => 'Lütfen e-posta adresinizi doğrulayın.';
+
+  @override
+  String get errorEmailAlreadyExists => 'Bu e-posta adresi zaten kayıtlı.';
+
+  @override
+  String get errorEmailAlreadyVerified =>
+      'Bu e-posta adresi zaten doğrulanmış.';
+
+  @override
+  String get errorProviderAlreadyLinked =>
+      'Bu sağlayıcı zaten hesabınıza bağlı.';
+
+  @override
+  String get errorPasswordResetInvalid =>
+      'Geçersiz veya süresi dolmuş sıfırlama kodu.';
+
+  @override
+  String get errorPasswordResetMaxAttempts =>
+      'Maksimum sıfırlama denemesi aşıldı. Lütfen yeni bir kod isteyin.';
+
+  @override
+  String get errorVerificationInvalid =>
+      'Geçersiz veya süresi dolmuş doğrulama kodu.';
+
+  @override
+  String get errorVerificationMaxAttempts =>
+      'Maksimum doğrulama denemesi aşıldı. Lütfen yeni bir kod isteyin.';
+
+  @override
+  String get errorNetwork => 'İnternet bağlantısı yok.';
+
+  @override
+  String get errorTimeout =>
+      'İstek zaman aşımına uğradı. Lütfen tekrar deneyin.';
+
+  @override
+  String get errorUnknown => 'Beklenmeyen bir hata oluştu.';
+
+  @override
+  String get errorRateLimited => 'Çok fazla istek. Lütfen yavaşlayın.';
 }

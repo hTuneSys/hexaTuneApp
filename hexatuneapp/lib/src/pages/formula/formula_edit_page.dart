@@ -21,6 +21,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/update_formula_request.
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Tracks an item in the edit page — either existing or newly added.
 class _EditItem {
@@ -132,7 +133,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
         setState(() => _isLoading = false);
       }
     }
@@ -304,7 +305,7 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

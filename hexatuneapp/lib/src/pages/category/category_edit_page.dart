@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/update_category_request.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Page for editing an existing category.
 class CategoryEditPage extends StatefulWidget {
@@ -67,7 +68,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
         setState(() => _isLoading = false);
       }
     }
@@ -108,7 +109,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -150,7 +151,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

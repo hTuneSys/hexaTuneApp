@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Dummy page for testing account and profile endpoints.
 class DummyAccountPage extends StatefulWidget {
@@ -98,7 +99,7 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
       log.devLog('✓ Profile updated', category: LogCategory.ui);
     } catch (e) {
       log.devLog('✗ Update profile failed: $e', category: LogCategory.ui);
-      if (mounted) _showMessage(e.toString(), isError: true);
+      if (mounted) ApiErrorHandler.handle(context, e);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
+import 'package:hexatuneapp/src/core/network/api_error_type.dart';
 import 'package:hexatuneapp/src/core/network/api_exception.dart';
 import 'package:hexatuneapp/src/core/network/models/problem_details.dart';
 
@@ -64,6 +65,9 @@ class ErrorInterceptor extends Interceptor {
     // Try to parse RFC 7807 ProblemDetails.
     final problem = _tryParseProblemDetails(data);
     final message = problem?.detail ?? _extractMessage(data);
+    final errorType = problem?.type != null
+        ? ApiErrorType.normalize(problem!.type)
+        : null;
 
     switch (statusCode) {
       case 400:
@@ -73,11 +77,13 @@ class ErrorInterceptor extends Interceptor {
         return ApiException.badRequest(
           message: message ?? 'Bad request',
           errors: errors,
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 401:
         return ApiException.unauthorized(
           message: message ?? 'Authentication required',
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 403:
@@ -86,27 +92,32 @@ class ErrorInterceptor extends Interceptor {
             : null;
         return ApiException.forbidden(
           message: message ?? 'Access denied',
-          errorCode: errorCode ?? problem?.type,
+          errorCode: errorCode ?? errorType,
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 404:
         return ApiException.notFound(
           message: message ?? 'Resource not found',
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 409:
         return ApiException.conflict(
           message: message ?? 'Resource conflict',
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 422:
         return ApiException.badRequest(
           message: message ?? 'Validation failed',
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       case 429:
         return ApiException.rateLimited(
           message: message ?? 'Too many requests',
+          errorType: errorType,
           traceId: problem?.traceId,
         );
       default:
@@ -114,11 +125,13 @@ class ErrorInterceptor extends Interceptor {
           return ApiException.server(
             message: message ?? 'Server error',
             statusCode: statusCode,
+            errorType: errorType,
             traceId: problem?.traceId,
           );
         }
         return ApiException.unknown(
           message: message ?? 'Unexpected error ($statusCode)',
+          errorType: errorType,
         );
     }
   }

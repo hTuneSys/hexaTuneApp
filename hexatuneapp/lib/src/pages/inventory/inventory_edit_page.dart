@@ -21,6 +21,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/create_category_reques
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Page for editing an existing inventory item.
 class InventoryEditPage extends StatefulWidget {
@@ -102,7 +103,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
         setState(() => _isLoading = false);
       }
     }
@@ -288,7 +289,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     }
   }
@@ -319,7 +320,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
@@ -361,7 +362,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
       }
     } catch (e) {
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);

@@ -20,6 +20,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 
 /// Page for creating a new inventory item.
 class InventoryCreatePage extends StatefulWidget {
@@ -257,7 +258,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     }
   }
@@ -294,7 +295,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
         category: LogCategory.ui,
       );
       if (mounted) {
-        AppSnackBar.error(context, message: e.toString());
+        ApiErrorHandler.handle(context, e);
       }
     } finally {
       if (mounted) setState(() => _isSubmitting = false);
