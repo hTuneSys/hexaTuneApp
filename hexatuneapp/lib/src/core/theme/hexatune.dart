@@ -355,7 +355,10 @@ class MaterialTheme {
       style: ElevatedButton.styleFrom(elevation: 1),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(elevation: 1, side: BorderSide.none),
+      style: OutlinedButton.styleFrom(
+        elevation: 1,
+        side: BorderSide(color: colorScheme.outline, width: 1),
+      ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(elevation: 1),
