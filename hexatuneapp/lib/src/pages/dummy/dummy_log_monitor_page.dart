@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'package:hexatuneapp/src/core/log/debug_log_buffer.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
 /// Temporary debug page that displays all in-memory log entries captured
@@ -157,9 +158,11 @@ class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
                   )
                 : ListView.builder(
                     controller: _scrollController,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 4,
+                    padding: const EdgeInsets.fromLTRB(
+                      8,
+                      4,
+                      8,
+                      4 + AppBottomBar.scrollPadding,
                     ),
                     itemCount: entries.length,
                     itemBuilder: (context, index) =>

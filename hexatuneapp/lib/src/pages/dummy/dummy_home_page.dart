@@ -154,7 +154,6 @@ class DummyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      extendBody: true,
       appBar: AppBar(
         title: const Text('hexaTune Dev'),
         actions: [
@@ -171,7 +170,12 @@ class DummyHomePage extends StatelessWidget {
         ],
       ),
       body: ListView.separated(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         itemCount: _sections.length,
         separatorBuilder: (_, a) => const SizedBox(height: 8),
         itemBuilder: (ctx, i) {
@@ -187,7 +191,6 @@ class DummyHomePage extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: const AppBottomBar(),
     );
   }
 }

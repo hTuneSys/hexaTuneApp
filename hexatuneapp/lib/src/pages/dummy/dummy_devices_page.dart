@@ -17,6 +17,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/notification/notification_service.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing device and approval endpoints.
 class DummyDevicesPage extends StatefulWidget {
@@ -67,7 +68,12 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Devices & Approvals')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         children: [
           // Push Token
           Text('Push Token', style: theme.textTheme.titleMedium),

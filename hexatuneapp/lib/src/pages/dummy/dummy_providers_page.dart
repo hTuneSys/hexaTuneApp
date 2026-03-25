@@ -16,6 +16,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing provider management endpoints.
 class DummyProvidersPage extends StatefulWidget {
@@ -215,7 +216,12 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
           : _error != null && _providers.isEmpty
           ? Center(child: Text('Error: $_error'))
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               children: [
                 // Current providers list
                 Text(

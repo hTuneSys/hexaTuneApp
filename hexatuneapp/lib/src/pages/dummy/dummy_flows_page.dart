@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/rest/flow/models/flow_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/models/package_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/package_repository.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing read-only flow endpoints.
 class DummyFlowsPage extends StatefulWidget {
@@ -366,7 +367,12 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
           : RefreshIndicator(
               onRefresh: () => _load(),
               child: ListView.builder(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(
+                  8,
+                  8,
+                  8,
+                  8 + AppBottomBar.scrollPadding,
+                ),
                 itemCount: _flows.length + (_hasMore ? 1 : 0),
                 itemBuilder: (ctx, i) {
                   if (i == _flows.length) {

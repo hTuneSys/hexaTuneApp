@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/create_category_request.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Page for creating a new category.
 class CategoryCreatePage extends StatefulWidget {
@@ -87,7 +88,12 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.categoryCreate)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Form(
           key: _formKey,
           child: Column(

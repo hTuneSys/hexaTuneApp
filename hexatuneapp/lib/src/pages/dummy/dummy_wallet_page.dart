@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/payment/iap_service.dart';
 import 'package:hexatuneapp/src/core/payment/models/iap_product.dart';
 import 'package:hexatuneapp/src/core/payment/models/iap_status.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing wallet and in-app purchase flows.
 class DummyWalletPage extends StatefulWidget {
@@ -72,7 +73,12 @@ class _DummyWalletPageState extends State<DummyWalletPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Wallet')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         children: [
           // Balance
           Text('Balance', style: theme.textTheme.titleMedium),

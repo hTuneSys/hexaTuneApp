@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/step/models/step_response.dart';
 import 'package:hexatuneapp/src/core/rest/step/step_repository.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing read-only step endpoints.
 class DummyStepsPage extends StatefulWidget {
@@ -293,7 +294,12 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
           : RefreshIndicator(
               onRefresh: () => _load(),
               child: ListView.builder(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(
+                  8,
+                  8,
+                  8,
+                  8 + AppBottomBar.scrollPadding,
+                ),
                 itemCount: _steps.length + (_hasMore ? 1 : 0),
                 itemBuilder: (ctx, i) {
                   if (i == _steps.length) {

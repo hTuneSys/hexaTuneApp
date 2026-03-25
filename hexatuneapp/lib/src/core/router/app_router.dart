@@ -102,6 +102,7 @@ class AppRouter {
         builder: (context, state, child) {
           final isHarmonizerPage = state.uri.path == RouteNames.harmonizer;
           return Scaffold(
+            extendBody: true,
             body: Column(
               children: [
                 Expanded(child: child),

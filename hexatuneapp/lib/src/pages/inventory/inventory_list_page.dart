@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Inventory list page with search, sort, filter, and category-grouped accordion.
 class InventoryListPage extends StatefulWidget {
@@ -181,7 +182,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   l10n.inventoryFilterTitle,
@@ -290,7 +291,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _searchExpanded = true),
             ),
-            const SizedBox(width: 4),
+            const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
               child: Text(l10n.inventorySortTitle),
@@ -300,7 +301,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
               onPressed: _showFilterSheet,
               child: Text(l10n.inventoryFilterTitle),
             ),
-            const Spacer(),
+            const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'inventoryAdd',
               onPressed: () async {
@@ -357,7 +358,12 @@ class _InventoryListPageState extends State<InventoryListPage> {
         await _load();
       },
       child: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.fromLTRB(
+          0,
+          4,
+          0,
+          4 + AppBottomBar.scrollPadding,
+        ),
         children: [
           ...grouped.entries.map(
             (entry) => _CategoryAccordion(

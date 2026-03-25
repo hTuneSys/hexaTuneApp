@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/cycle_step.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy DSP audio engine page for testing — will be replaced with
 /// production UI.
@@ -260,7 +261,12 @@ class _DummyDspPageState extends State<DummyDspPage> {
       body: !_servicesReady
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

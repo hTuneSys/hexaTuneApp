@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.d
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing the harmonics generation endpoint.
 class DummyHarmonicsPage extends StatefulWidget {
@@ -223,7 +224,12 @@ class _DummyHarmonicsPageState extends State<DummyHarmonicsPage> {
                     ),
                   )
                 : ListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    padding: const EdgeInsets.fromLTRB(
+                      8,
+                      0,
+                      8,
+                      AppBottomBar.scrollPadding,
+                    ),
                     itemCount: _lastResponse!.sequence.length,
                     itemBuilder: (ctx, i) => _buildPacketTile(
                       _lastResponse!.sequence[i],

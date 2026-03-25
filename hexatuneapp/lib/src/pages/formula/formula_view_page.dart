@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_detail_response
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Read-only page for viewing a formula's details and its items.
 class FormulaViewPage extends StatefulWidget {
@@ -88,7 +89,12 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [

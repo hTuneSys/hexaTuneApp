@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Category list page with search, sort, filter, and pagination.
 class CategoryListPage extends StatefulWidget {
@@ -203,7 +204,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   l10n.categoryFilterTitle,
@@ -304,7 +305,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _searchExpanded = true),
             ),
-            const SizedBox(width: 4),
+            const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
               child: Text(l10n.categorySortTitle),
@@ -314,7 +315,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
               onPressed: _showFilterSheet,
               child: Text(l10n.categoryFilterTitle),
             ),
-            const Spacer(),
+            const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'categoryAdd',
               onPressed: () async {
@@ -366,7 +367,12 @@ class _CategoryListPageState extends State<CategoryListPage> {
     return RefreshIndicator(
       onRefresh: () => _load(),
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        padding: const EdgeInsets.fromLTRB(
+          8,
+          4,
+          8,
+          4 + AppBottomBar.scrollPadding,
+        ),
         itemCount: _categories.length + (_hasMore ? 1 : 0),
         itemBuilder: (ctx, i) {
           if (i == _categories.length) {

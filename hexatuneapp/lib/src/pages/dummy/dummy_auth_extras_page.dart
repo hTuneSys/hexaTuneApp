@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing auth extras: forgot/reset password, re-auth, refresh.
 class DummyAuthExtrasPage extends StatefulWidget {
@@ -69,7 +70,12 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Auth Extras')),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         children: [
           // Forgot Password
           Text('Forgot Password', style: theme.textTheme.titleMedium),

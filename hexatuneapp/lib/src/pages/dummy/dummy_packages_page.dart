@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/package/models/package_response.dart';
 import 'package:hexatuneapp/src/core/rest/package/package_repository.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing read-only package endpoints.
 class DummyPackagesPage extends StatefulWidget {
@@ -293,7 +294,12 @@ class _DummyPackagesPageState extends State<DummyPackagesPage> {
           : RefreshIndicator(
               onRefresh: () => _load(),
               child: ListView.builder(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(
+                  8,
+                  8,
+                  8,
+                  8 + AppBottomBar.scrollPadding,
+                ),
                 itemCount: _packages.length + (_hasMore ? 1 : 0),
                 itemBuilder: (ctx, i) {
                   if (i == _packages.length) {

@@ -21,6 +21,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/create_category_reques
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Page for creating a new inventory item.
 class InventoryCreatePage extends StatefulWidget {
@@ -316,7 +317,12 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.inventoryCreate)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Form(
           key: _formKey,
           child: Column(

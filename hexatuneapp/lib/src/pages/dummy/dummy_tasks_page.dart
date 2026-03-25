@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/rest/task/models/task_summary_dto.dart';
 import 'package:hexatuneapp/src/core/rest/task/task_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing task workflow endpoints.
 class DummyTasksPage extends StatefulWidget {
@@ -525,7 +526,12 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
                 : RefreshIndicator(
                     onRefresh: () => _load(),
                     child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.fromLTRB(
+                        8,
+                        8,
+                        8,
+                        8 + AppBottomBar.scrollPadding,
+                      ),
                       itemCount: _tasks.length + (_hasMore ? 1 : 0),
                       itemBuilder: (ctx, i) {
                         if (i == _tasks.length) {

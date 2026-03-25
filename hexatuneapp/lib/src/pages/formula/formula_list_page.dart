@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Formula list page with search, sort, filter, and flat list display.
 class FormulaListPage extends StatefulWidget {
@@ -157,7 +158,7 @@ class _FormulaListPageState extends State<FormulaListPage> {
             padding: const EdgeInsets.all(16),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
                   l10n.formulaFilterTitle,
@@ -258,7 +259,7 @@ class _FormulaListPageState extends State<FormulaListPage> {
               icon: const Icon(Icons.search),
               onPressed: () => setState(() => _searchExpanded = true),
             ),
-            const SizedBox(width: 4),
+            const Spacer(),
             OutlinedButton(
               onPressed: _showSortSheet,
               child: Text(l10n.formulaSortTitle),
@@ -268,7 +269,7 @@ class _FormulaListPageState extends State<FormulaListPage> {
               onPressed: _showFilterSheet,
               child: Text(l10n.formulaFilterTitle),
             ),
-            const Spacer(),
+            const SizedBox(width: 8),
             FloatingActionButton.small(
               heroTag: 'formulaAdd',
               onPressed: () async {
@@ -324,7 +325,12 @@ class _FormulaListPageState extends State<FormulaListPage> {
         await _load();
       },
       child: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.fromLTRB(
+          0,
+          4,
+          0,
+          4 + AppBottomBar.scrollPadding,
+        ),
         itemCount: _formulas.length + (_hasMore ? 1 : 0),
         itemBuilder: (ctx, i) {
           if (i == _formulas.length) {

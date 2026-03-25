@@ -23,6 +23,7 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_request.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing the Harmonizer player.
 ///
@@ -235,7 +236,12 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.harmonizerTitle)),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         children: [
           _buildFormulaSelector(theme, l10n),
           const SizedBox(height: 16),

@@ -10,6 +10,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
 import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Read-only page for viewing a category's details.
 class CategoryViewPage extends StatefulWidget {
@@ -69,7 +70,12 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
               ),
             )
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),

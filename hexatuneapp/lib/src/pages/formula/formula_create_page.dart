@@ -19,6 +19,7 @@ import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Local model for inventory items being added to a formula before creation.
 class _PendingItem {
@@ -190,7 +191,12 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.formulaCreate)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Form(
           key: _formKey,
           child: Column(

@@ -22,6 +22,7 @@ import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Page for editing an existing inventory item.
 class InventoryEditPage extends StatefulWidget {
@@ -385,7 +386,12 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(

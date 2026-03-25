@@ -15,6 +15,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Create a new ambience preset with sound layer selection and gain controls.
 class AmbienceCreatePage extends StatefulWidget {
@@ -212,7 +213,12 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ambienceCreateTitle)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

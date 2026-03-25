@@ -12,6 +12,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing account and profile endpoints.
 class DummyAccountPage extends StatefulWidget {
@@ -144,7 +145,12 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
               ),
             )
           : ListView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               children: [
                 // Account info
                 Text('Account', style: theme.textTheme.titleMedium),

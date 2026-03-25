@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy register page for testing auth flow — will be replaced with production UI.
 class DummyRegisterPage extends StatefulWidget {
@@ -159,7 +160,12 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.fromLTRB(
+            32,
+            32,
+            32,
+            32 + AppBottomBar.scrollPadding,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

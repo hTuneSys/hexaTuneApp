@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing audit log query endpoint.
 class DummyAuditPage extends StatefulWidget {
@@ -336,7 +337,12 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                 : RefreshIndicator(
                     onRefresh: () => _load(),
                     child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
+                      padding: const EdgeInsets.fromLTRB(
+                        8,
+                        8,
+                        8,
+                        8 + AppBottomBar.scrollPadding,
+                      ),
                       itemCount: _logs.length + (_hasMore ? 1 : 0),
                       itemBuilder: (ctx, i) {
                         if (i == _logs.length) {

@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/auth/token_manager.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing tenant membership and switching endpoints.
 class DummyTenantsPage extends StatefulWidget {
@@ -117,7 +118,12 @@ class _DummyTenantsPageState extends State<DummyTenantsPage> {
           : _memberships.isEmpty
           ? const Center(child: Text('No tenant memberships'))
           : ListView.builder(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               itemCount: _memberships.length + (_error != null ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index == _memberships.length && _error != null) {

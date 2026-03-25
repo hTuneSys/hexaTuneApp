@@ -11,6 +11,7 @@ import 'package:hexatuneapp/src/core/rest/session/models/session_response.dart';
 import 'package:hexatuneapp/src/core/rest/session/session_repository.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing session management endpoints.
 class DummySessionsPage extends StatefulWidget {
@@ -241,7 +242,12 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
           : RefreshIndicator(
               onRefresh: () => _load(),
               child: ListView.builder(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(
+                  8,
+                  8,
+                  8,
+                  8 + AppBottomBar.scrollPadding,
+                ),
                 itemCount: _sessions.length + (_hasMore ? 1 : 0),
                 itemBuilder: (ctx, i) {
                   if (i == _sessions.length) {

@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_asset_service.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Production ambience list page with search, sort, filter, and card display.
 class AmbienceListPage extends StatefulWidget {
@@ -201,20 +202,16 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ambienceManagementTitle)),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final created = await context.push<bool>(RouteNames.ambienceCreate);
-          if (created == true && mounted) setState(() {});
-        },
-        child: const Icon(Icons.add),
-      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
                 // Search + Sort + Filter row
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                   child: Row(
                     children: [
                       if (_searchExpanded)
@@ -228,15 +225,18 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                               autofocus: true,
                               decoration: InputDecoration(
                                 hintText: l10n.ambienceSearchHint,
-                                prefixIcon: const Icon(Icons.search),
-                                suffixIcon: IconButton(
-                                  icon: const Icon(Icons.close),
+                                isDense: true,
+                                prefixIcon: IconButton(
+                                  icon: const Icon(Icons.arrow_back),
                                   onPressed: () {
                                     _searchCtrl.clear();
                                     setState(() => _searchExpanded = false);
                                   },
                                 ),
-                                isDense: true,
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.search),
+                                  onPressed: () => setState(() {}),
+                                ),
                               ),
                               onChanged: (_) => setState(() {}),
                             ),
@@ -249,17 +249,27 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                               setState(() => _searchExpanded = true),
                         ),
                         const Spacer(),
+                        OutlinedButton(
+                          onPressed: _showSortSheet,
+                          child: Text(l10n.ambienceSortTitle),
+                        ),
+                        const SizedBox(width: 8),
+                        OutlinedButton(
+                          onPressed: _showFilterSheet,
+                          child: Text(l10n.ambienceFilterTitle),
+                        ),
+                        const SizedBox(width: 8),
+                        FloatingActionButton.small(
+                          heroTag: 'ambienceAdd',
+                          onPressed: () async {
+                            final created = await context.push<bool>(
+                              RouteNames.ambienceCreate,
+                            );
+                            if (created == true && mounted) setState(() {});
+                          },
+                          child: const Icon(Icons.add),
+                        ),
                       ],
-                      const SizedBox(width: 8),
-                      OutlinedButton(
-                        onPressed: _showSortSheet,
-                        child: Text(l10n.ambienceSortTitle),
-                      ),
-                      const SizedBox(width: 8),
-                      OutlinedButton(
-                        onPressed: _showFilterSheet,
-                        child: Text(l10n.ambienceFilterTitle),
-                      ),
                     ],
                   ),
                 ),
@@ -300,7 +310,12 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                             if (mounted) setState(() {});
                           },
                           child: ListView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            padding: const EdgeInsets.fromLTRB(
+                              12,
+                              0,
+                              12,
+                              AppBottomBar.scrollPadding,
+                            ),
                             itemCount: configs.length,
                             itemBuilder: (context, index) {
                               final config = configs[index];

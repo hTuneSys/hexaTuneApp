@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/proto/at_command.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Dummy page for testing the hexaGen hardware device service.
 ///
@@ -301,7 +302,12 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         children: [
           _buildConnectionCard(theme, colorScheme, l10n),
           const SizedBox(height: 12),

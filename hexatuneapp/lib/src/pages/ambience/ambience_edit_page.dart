@@ -16,6 +16,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Edit an existing ambience preset.
 class AmbienceEditPage extends StatefulWidget {
@@ -294,7 +295,12 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ambienceEditTitle)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

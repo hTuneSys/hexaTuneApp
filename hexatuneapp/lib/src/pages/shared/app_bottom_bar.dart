@@ -36,6 +36,11 @@ class AppBottomBar extends StatelessWidget {
   static const double _barRadius = 12;
   static const double _barMargin = 16;
 
+  /// Total height of the bottom bar including hexagon protrusion and margin.
+  /// Use this as bottom padding on scrollable content so the last item
+  /// can be scrolled above the floating bar.
+  static const double scrollPadding = _barHeight + _hexProtrusion + _barMargin;
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;

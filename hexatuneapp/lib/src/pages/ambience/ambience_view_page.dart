@@ -13,6 +13,7 @@ import 'package:hexatuneapp/src/core/dsp/dsp_constants.dart';
 import 'package:hexatuneapp/src/core/dsp/dsp_service.dart';
 import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Read-only view of an ambience preset with playback support.
 class AmbienceViewPage extends StatefulWidget {
@@ -153,7 +154,12 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
     return Scaffold(
       appBar: AppBar(title: Text(l10n.ambienceViewTitle)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(
+          16,
+          16,
+          16,
+          16 + AppBottomBar.scrollPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

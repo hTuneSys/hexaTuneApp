@@ -14,6 +14,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart
 import 'package:hexatuneapp/src/core/rest/category/models/update_category_request.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
 /// Page for editing an existing category.
 class CategoryEditPage extends StatefulWidget {
@@ -168,7 +169,12 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                16,
+                16,
+                16 + AppBottomBar.scrollPadding,
+              ),
               child: Form(
                 key: _formKey,
                 child: Column(
