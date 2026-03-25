@@ -305,7 +305,12 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Name
-            Text(l10n.ambienceNameLabel, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceNameLabel,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             Material(
               elevation: 1,
@@ -319,7 +324,12 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             const SizedBox(height: 24),
 
             // Sound Layers
-            Text(l10n.ambienceSoundLayers, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceSoundLayers,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             _buildSoundSection(
               theme: theme,
@@ -353,7 +363,12 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             const SizedBox(height: 24),
 
             // Sound Settings
-            Text(l10n.ambienceSoundSettings, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceSoundSettings,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             _buildGainSlider(theme, l10n.dspSectionBase, _baseGain, (v) {
               setState(() => _baseGain = v);
@@ -452,7 +467,14 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Expanded(child: Text(title, style: theme.textTheme.titleSmall)),
+            Expanded(
+              child: Text(
+                title,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(

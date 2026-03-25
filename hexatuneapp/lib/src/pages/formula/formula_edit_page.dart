@@ -343,7 +343,12 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(l10n.formulaName, style: theme.textTheme.titleSmall),
+                    Text(
+                      l10n.formulaName,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Material(
                       elevation: 1,
@@ -363,7 +368,9 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
                     const SizedBox(height: 16),
                     Text(
                       l10n.formulaDescription,
-                      style: theme.textTheme.titleSmall,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Material(
@@ -379,7 +386,12 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(l10n.formulaLabels, style: theme.textTheme.titleSmall),
+                    Text(
+                      l10n.formulaLabels,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Material(
                       elevation: 1,
@@ -415,7 +427,9 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
                     const SizedBox(height: 16),
                     Text(
                       l10n.formulaAddInventory,
-                      style: theme.textTheme.titleSmall,
+                      style: theme.textTheme.bodyLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Material(

@@ -99,7 +99,12 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(l10n.categoryName, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.categoryName,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               Material(
                 elevation: 1,
@@ -115,7 +120,12 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(l10n.categoryDescription, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.categoryDescription,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               Material(
                 elevation: 1,
@@ -131,7 +141,12 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(l10n.categoryLabels, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.categoryLabels,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               Material(
                 elevation: 1,

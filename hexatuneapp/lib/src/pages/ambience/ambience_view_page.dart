@@ -164,7 +164,12 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Name
-            Text(l10n.ambienceNameLabel, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceNameLabel,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             Material(
               elevation: 1,
@@ -179,7 +184,12 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
             const SizedBox(height: 24),
 
             // Sound Layers
-            Text(l10n.ambienceSoundLayers, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceSoundLayers,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             _buildReadOnlySection(
               theme: theme,
@@ -212,7 +222,12 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
             const SizedBox(height: 24),
 
             // Sound Settings (read-only)
-            Text(l10n.ambienceSoundSettings, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.ambienceSoundSettings,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             const SizedBox(height: 8),
             _buildReadOnlySlider(theme, l10n.dspSectionBase, config.baseGain),
             _buildReadOnlySlider(
@@ -269,7 +284,14 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
       child: ExpansionTile(
         title: Row(
           children: [
-            Expanded(child: Text(title, style: theme.textTheme.titleSmall)),
+            Expanded(
+              child: Text(
+                title,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(

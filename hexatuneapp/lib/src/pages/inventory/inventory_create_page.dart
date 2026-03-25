@@ -387,7 +387,12 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 24),
-              Text(l10n.inventoryName, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.inventoryName,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               Material(
                 elevation: 1,
@@ -405,7 +410,9 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
               const SizedBox(height: 16),
               Text(
                 l10n.inventoryDescription,
-                style: theme.textTheme.titleSmall,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Material(
@@ -421,7 +428,12 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(l10n.inventoryCategory, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.inventoryCategory,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               InkWell(
                 onTap: _isCategoriesLoading ? null : _showCategoryPicker,
@@ -449,7 +461,12 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(l10n.inventoryLabels, style: theme.textTheme.titleSmall),
+              Text(
+                l10n.inventoryLabels,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 8),
               Material(
                 elevation: 1,
