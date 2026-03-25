@@ -139,8 +139,8 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
                   const SizedBox(height: 24),
                   Text(
                     l10n.inventoryName,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -156,8 +156,8 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.inventoryDescription,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -177,8 +177,8 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.inventoryCategory,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -207,8 +207,8 @@ class _InventoryViewPageState extends State<InventoryViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.inventoryLabels,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),

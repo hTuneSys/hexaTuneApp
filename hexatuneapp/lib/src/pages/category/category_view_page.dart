@@ -81,8 +81,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                 children: [
                   Text(
                     l10n.categoryName,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -98,8 +98,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.categoryDescription,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -117,8 +117,8 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.categoryLabels,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),

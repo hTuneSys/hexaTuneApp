@@ -100,8 +100,8 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                 children: [
                   Text(
                     l10n.formulaName,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -117,8 +117,8 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.formulaDescription,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -136,8 +136,8 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.formulaLabels,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -159,8 +159,8 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                   const SizedBox(height: 16),
                   Text(
                     l10n.formulaAddedInventory,
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: theme.colorScheme.outline,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
