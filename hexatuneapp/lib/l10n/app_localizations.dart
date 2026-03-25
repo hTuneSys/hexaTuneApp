@@ -245,7 +245,7 @@ abstract class AppLocalizations {
   /// No description provided for @enterDigitCodeBelow.
   ///
   /// In en, this message translates to:
-  /// **'Please enter the 8-digit code below.'**
+  /// **'Please enter the 6-digit code below.'**
   String get enterDigitCodeBelow;
 
   /// No description provided for @verify.

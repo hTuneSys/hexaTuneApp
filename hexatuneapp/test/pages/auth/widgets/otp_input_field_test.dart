@@ -9,7 +9,7 @@ import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 Widget _buildApp({
   required ValueChanged<String> onCompleted,
   ValueChanged<String>? onChanged,
-  int length = 8,
+  int length = 6,
 }) {
   return MaterialApp(
     home: Scaffold(
@@ -28,7 +28,7 @@ void main() {
       await tester.pumpWidget(_buildApp(onCompleted: (_) {}));
       await tester.pump();
 
-      expect(find.byType(TextField), findsNWidgets(8));
+      expect(find.byType(TextField), findsNWidgets(6));
     });
 
     testWidgets('renders custom length of text fields', (tester) async {

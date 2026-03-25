@@ -29,7 +29,7 @@
 
   "enterOtpCode": "Enter OTP Code",
   "verificationCodeSentTo": "We have sent a verification code to:",
-  "enterDigitCodeBelow": "Please enter the 8-digit code below.",
+  "enterDigitCodeBelow": "Please enter the 6-digit code below.",
   "verify": "Verify",
   "didntReceiveCode": "Didn't receive the code?",
   "resendIn": "Resend in {time}",

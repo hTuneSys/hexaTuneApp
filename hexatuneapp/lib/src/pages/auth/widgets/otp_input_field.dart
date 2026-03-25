@@ -4,12 +4,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// An 8-digit OTP input field with individual boxes for each digit.
+/// A 6-digit OTP input field with individual boxes for each digit.
 class OtpInputField extends StatefulWidget {
   const OtpInputField({
     required this.onCompleted,
     this.onChanged,
-    this.length = 8,
+    this.length = 6,
     super.key,
   });
 

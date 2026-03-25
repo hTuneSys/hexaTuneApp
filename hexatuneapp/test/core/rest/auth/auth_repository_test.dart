@@ -165,7 +165,7 @@ void main() {
       test('sends POST to /api/v1/auth/reset-password', () async {
         const request = ResetPasswordRequest(
           email: 'user@example.com',
-          code: '12345678',
+          code: '123456',
           newPassword: 'NewSecure123!',
         );
 

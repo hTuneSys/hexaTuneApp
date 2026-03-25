@@ -82,7 +82,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get verificationCodeSentTo => 'We have sent a verification code to:';
 
   @override
-  String get enterDigitCodeBelow => 'Please enter the 8-digit code below.';
+  String get enterDigitCodeBelow => 'Please enter the 6-digit code below.';
 
   @override
   String get verify => 'Verify';

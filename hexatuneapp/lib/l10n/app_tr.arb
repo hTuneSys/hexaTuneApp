@@ -29,7 +29,7 @@
 
   "enterOtpCode": "OTP Kodunu Girin",
   "verificationCodeSentTo": "Doğrulama kodunu gönderdik:",
-  "enterDigitCodeBelow": "Lütfen aşağıdaki 8 haneli kodu girin.",
+  "enterDigitCodeBelow": "Lütfen aşağıdaki 6 haneli kodu girin.",
   "verify": "Doğrula",
   "didntReceiveCode": "Kodu almadınız mı?",
   "resendIn": "{time} sonra tekrar gönder",

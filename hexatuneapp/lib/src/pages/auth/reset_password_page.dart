@@ -81,7 +81,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
   Future<void> _resetPassword() async {
     final l10n = AppLocalizations.of(context)!;
 
-    if (_otpCode.length < 8) {
+    if (_otpCode.length < 6) {
       _showMessage(l10n.otpRequired, isError: true);
       return;
     }

@@ -82,7 +82,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get verificationCodeSentTo => 'Doğrulama kodunu gönderdik:';
 
   @override
-  String get enterDigitCodeBelow => 'Lütfen aşağıdaki 8 haneli kodu girin.';
+  String get enterDigitCodeBelow => 'Lütfen aşağıdaki 6 haneli kodu girin.';
 
   @override
   String get verify => 'Doğrula';

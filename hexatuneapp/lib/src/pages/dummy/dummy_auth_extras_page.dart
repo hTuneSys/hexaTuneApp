@@ -136,11 +136,11 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
             child: TextField(
               controller: _resetCodeCtrl,
               decoration: const InputDecoration(
-                labelText: 'OTP Code (8 digits)',
-                hintText: '12345678',
+                labelText: 'OTP Code (6 digits)',
+                hintText: '123456',
               ),
               keyboardType: TextInputType.number,
-              maxLength: 8,
+              maxLength: 6,
             ),
           ),
           const SizedBox(height: 8),

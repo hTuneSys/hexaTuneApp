@@ -8,7 +8,7 @@ part 'reset_password_request.g.dart';
 
 /// Request body for POST /api/v1/auth/reset-password.
 ///
-/// Uses email + 8-digit OTP code (replaces old token-based flow).
+/// Uses email + 6-digit OTP code (replaces old token-based flow).
 @freezed
 abstract class ResetPasswordRequest with _$ResetPasswordRequest {
   const factory ResetPasswordRequest({
