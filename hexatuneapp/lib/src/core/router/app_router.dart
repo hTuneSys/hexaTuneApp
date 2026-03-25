@@ -23,7 +23,6 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_packages_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_flows_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_steps_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_otp_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_wallet_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_log_monitor_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
@@ -273,15 +272,7 @@ class AppRouter {
             path: RouteNames.steps,
             builder: (context, state) => const DummyStepsPage(),
           ),
-          GoRoute(
-            path: RouteNames.otp,
-            builder: (context, state) {
-              final email = state.uri.queryParameters['email'];
-              return DummyOtpPage(
-                email: (email != null && email.isNotEmpty) ? email : null,
-              );
-            },
-          ),
+
           GoRoute(
             path: RouteNames.wallet,
             builder: (context, state) => const DummyWalletPage(),
