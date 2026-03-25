@@ -32,6 +32,8 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
   final _descCtrl = TextEditingController();
   final _labelInputCtrl = TextEditingController();
   final List<String> _labels = [];
+  final _labelFocusNode = FocusNode();
+  List<String> _availableLabels = [];
   bool _isLoading = true;
   bool _isSubmitting = false;
   CategoryResponse? _category;
@@ -40,14 +42,23 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
   void initState() {
     super.initState();
     _loadCategory();
+    _loadLabels();
   }
 
   @override
   void dispose() {
+    _labelFocusNode.dispose();
     _nameCtrl.dispose();
     _descCtrl.dispose();
     _labelInputCtrl.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadLabels() async {
+    try {
+      final labels = await getIt<CategoryRepository>().listLabels();
+      if (mounted) setState(() => _availableLabels = labels);
+    } catch (_) {}
   }
 
   Future<void> _loadCategory() async {
@@ -231,21 +242,74 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Material(
-                      elevation: 1,
-                      borderRadius: BorderRadius.circular(12),
-                      color: theme.colorScheme.surfaceContainerLow,
-                      child: TextField(
-                        controller: _labelInputCtrl,
-                        decoration: InputDecoration(
-                          hintText: l10n.categoryAddLabel,
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.add),
-                            onPressed: _addLabel,
+                    RawAutocomplete<String>(
+                      textEditingController: _labelInputCtrl,
+                      focusNode: _labelFocusNode,
+                      optionsBuilder: (textEditingValue) {
+                        final filtered = _availableLabels
+                            .where((l) => !_labels.contains(l))
+                            .where(
+                              (l) =>
+                                  textEditingValue.text.isEmpty ||
+                                  l.toLowerCase().contains(
+                                    textEditingValue.text.toLowerCase(),
+                                  ),
+                            )
+                            .toList();
+                        return filtered;
+                      },
+                      onSelected: (String selection) {
+                        if (!_labels.contains(selection)) {
+                          setState(() => _labels.add(selection));
+                        }
+                        _labelInputCtrl.clear();
+                      },
+                      fieldViewBuilder:
+                          (context, controller, focusNode, onFieldSubmitted) {
+                            return Material(
+                              elevation: 1,
+                              borderRadius: BorderRadius.circular(12),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.surfaceContainerLow,
+                              child: TextField(
+                                controller: controller,
+                                focusNode: focusNode,
+                                decoration: InputDecoration(
+                                  hintText: l10n.categoryAddLabel,
+                                  suffixIcon: IconButton(
+                                    icon: const Icon(Icons.add),
+                                    onPressed: _addLabel,
+                                  ),
+                                ),
+                                onSubmitted: (_) => _addLabel(),
+                              ),
+                            );
+                          },
+                      optionsViewBuilder: (context, onSelected, options) {
+                        return Align(
+                          alignment: Alignment.topLeft,
+                          child: Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(12),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxHeight: 200),
+                              child: ListView.builder(
+                                padding: EdgeInsets.zero,
+                                shrinkWrap: true,
+                                itemCount: options.length,
+                                itemBuilder: (context, index) {
+                                  final option = options.elementAt(index);
+                                  return ListTile(
+                                    title: Text(option),
+                                    onTap: () => onSelected(option),
+                                  );
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                        onSubmitted: (_) => _addLabel(),
-                      ),
+                        );
+                      },
                     ),
                     if (_labels.isNotEmpty) ...[
                       const SizedBox(height: 8),
@@ -266,11 +330,11 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                     Row(
                       children: [
                         Expanded(
-                          child: OutlinedButton(
+                          child: FilledButton(
                             onPressed: _isSubmitting ? null : _delete,
-                            style: OutlinedButton.styleFrom(
+                            style: FilledButton.styleFrom(
                               elevation: 1,
-                              foregroundColor: theme.colorScheme.error,
+                              backgroundColor: theme.colorScheme.error,
                               minimumSize: const Size.fromHeight(48),
                             ),
                             child: Text(l10n.delete),
