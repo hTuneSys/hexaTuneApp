@@ -227,24 +227,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 // New Password
                 SizedBox(
                   width: double.infinity,
-                  child: TextField(
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      labelText: l10n.newPassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscurePassword
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
-                        ),
-                        onPressed: () => setState(
-                          () => _obscurePassword = !_obscurePassword,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: theme.colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _passwordController,
+                      decoration: InputDecoration(
+                        labelText: l10n.newPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscurePassword
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscurePassword = !_obscurePassword,
+                          ),
                         ),
                       ),
+                      obscureText: _obscurePassword,
+                      textInputAction: TextInputAction.next,
+                      onChanged: (_) => setState(() {}),
                     ),
-                    obscureText: _obscurePassword,
-                    textInputAction: TextInputAction.next,
-                    onChanged: (_) => setState(() {}),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -256,23 +261,29 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 // Confirm Password
                 SizedBox(
                   width: double.infinity,
-                  child: TextField(
-                    controller: _confirmController,
-                    decoration: InputDecoration(
-                      labelText: l10n.confirmPassword,
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _obscureConfirm
-                              ? Icons.visibility_off_outlined
-                              : Icons.visibility_outlined,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: theme.colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _confirmController,
+                      decoration: InputDecoration(
+                        labelText: l10n.confirmPassword,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureConfirm
+                                ? Icons.visibility_off_outlined
+                                : Icons.visibility_outlined,
+                          ),
+                          onPressed: () => setState(
+                            () => _obscureConfirm = !_obscureConfirm,
+                          ),
                         ),
-                        onPressed: () =>
-                            setState(() => _obscureConfirm = !_obscureConfirm),
                       ),
+                      obscureText: _obscureConfirm,
+                      textInputAction: TextInputAction.done,
+                      onSubmitted: (_) => _resetPassword(),
                     ),
-                    obscureText: _obscureConfirm,
-                    textInputAction: TextInputAction.done,
-                    onSubmitted: (_) => _resetPassword(),
                   ),
                 ),
                 const SizedBox(height: 24),
@@ -283,6 +294,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   child: FilledButton(
                     onPressed: _isLoading ? null : _resetPassword,
                     style: FilledButton.styleFrom(
+                      elevation: 1,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

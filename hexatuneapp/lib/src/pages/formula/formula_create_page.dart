@@ -206,37 +206,52 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
             children: [
               Text(l10n.formulaName, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _nameCtrl,
-                decoration: InputDecoration(hintText: l10n.formulaNameHint),
-                validator: (v) => (v == null || v.trim().isEmpty)
-                    ? l10n.formulaNameRequired
-                    : null,
-                textInputAction: TextInputAction.next,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _nameCtrl,
+                  decoration: InputDecoration(hintText: l10n.formulaNameHint),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? l10n.formulaNameRequired
+                      : null,
+                  textInputAction: TextInputAction.next,
+                ),
               ),
               const SizedBox(height: 16),
               Text(l10n.formulaDescription, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _descCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.formulaDescriptionHint,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _descCtrl,
+                  decoration: InputDecoration(
+                    hintText: l10n.formulaDescriptionHint,
+                  ),
+                  maxLines: 3,
                 ),
-                maxLines: 3,
               ),
               const SizedBox(height: 16),
               Text(l10n.formulaLabels, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextField(
-                controller: _labelInputCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.formulaAddLabel,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addLabel,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _labelInputCtrl,
+                  decoration: InputDecoration(
+                    hintText: l10n.formulaAddLabel,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: _addLabel,
+                    ),
                   ),
+                  onSubmitted: (_) => _addLabel(),
                 ),
-                onSubmitted: (_) => _addLabel(),
               ),
               if (_labels.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -256,13 +271,18 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
               const SizedBox(height: 16),
               Text(l10n.formulaAddInventory, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextField(
-                controller: _inventorySearchCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.formulaSearchInventory,
-                  prefixIcon: const Icon(Icons.search),
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _inventorySearchCtrl,
+                  decoration: InputDecoration(
+                    hintText: l10n.formulaSearchInventory,
+                    prefixIcon: const Icon(Icons.search),
+                  ),
+                  onChanged: _filterInventories,
                 ),
-                onChanged: _filterInventories,
               ),
               if (_showInventorySuggestions)
                 Container(
@@ -323,23 +343,28 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
                         const SizedBox(width: 4),
                         SizedBox(
                           width: 48,
-                          child: TextField(
-                            controller: TextEditingController(
-                              text: '${item.quantity}',
-                            ),
-                            keyboardType: TextInputType.number,
-                            textAlign: TextAlign.center,
-                            decoration: const InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(
-                                horizontal: 4,
-                                vertical: 8,
+                          child: Material(
+                            elevation: 1,
+                            borderRadius: BorderRadius.circular(12),
+                            color: theme.colorScheme.surfaceContainerLow,
+                            child: TextField(
+                              controller: TextEditingController(
+                                text: '${item.quantity}',
                               ),
+                              keyboardType: TextInputType.number,
+                              textAlign: TextAlign.center,
+                              decoration: const InputDecoration(
+                                isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 4,
+                                  vertical: 8,
+                                ),
+                              ),
+                              onChanged: (v) {
+                                final qty = int.tryParse(v);
+                                if (qty != null) _updateQuantity(i, qty);
+                              },
                             ),
-                            onChanged: (v) {
-                              final qty = int.tryParse(v);
-                              if (qty != null) _updateQuantity(i, qty);
-                            },
                           ),
                         ),
                       ],
@@ -351,6 +376,7 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
               FilledButton(
                 onPressed: _isSubmitting ? null : _submit,
                 style: FilledButton.styleFrom(
+                  elevation: 1,
                   minimumSize: const Size.fromHeight(48),
                 ),
                 child: _isSubmitting

@@ -145,6 +145,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
+              elevation: 1,
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
             child: Text(l10n.delete),
@@ -196,34 +197,51 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    TextFormField(
-                      controller: _nameCtrl,
-                      decoration: InputDecoration(labelText: l10n.categoryName),
-                      validator: (v) => (v == null || v.trim().isEmpty)
-                          ? l10n.categoryName
-                          : null,
-                      textInputAction: TextInputAction.next,
-                    ),
-                    const SizedBox(height: 16),
-                    TextFormField(
-                      controller: _descCtrl,
-                      decoration: InputDecoration(
-                        labelText: l10n.categoryDescription,
-                      ),
-                      maxLines: 3,
-                      enabled: false,
-                    ),
-                    const SizedBox(height: 16),
-                    TextField(
-                      controller: _labelInputCtrl,
-                      decoration: InputDecoration(
-                        labelText: l10n.categoryAddLabel,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: _addLabel,
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextFormField(
+                        controller: _nameCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.categoryName,
                         ),
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? l10n.categoryName
+                            : null,
+                        textInputAction: TextInputAction.next,
                       ),
-                      onSubmitted: (_) => _addLabel(),
+                    ),
+                    const SizedBox(height: 16),
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextFormField(
+                        controller: _descCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.categoryDescription,
+                        ),
+                        maxLines: 3,
+                        enabled: false,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextField(
+                        controller: _labelInputCtrl,
+                        decoration: InputDecoration(
+                          labelText: l10n.categoryAddLabel,
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: _addLabel,
+                          ),
+                        ),
+                        onSubmitted: (_) => _addLabel(),
+                      ),
                     ),
                     if (_labels.isNotEmpty) ...[
                       const SizedBox(height: 8),
@@ -247,6 +265,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                           child: OutlinedButton(
                             onPressed: _isSubmitting ? null : _delete,
                             style: OutlinedButton.styleFrom(
+                              elevation: 1,
                               foregroundColor: theme.colorScheme.error,
                               minimumSize: const Size.fromHeight(48),
                             ),
@@ -258,6 +277,7 @@ class _CategoryEditPageState extends State<CategoryEditPage> {
                           child: FilledButton(
                             onPressed: _isSubmitting ? null : _save,
                             style: FilledButton.styleFrom(
+                              elevation: 1,
                               minimumSize: const Size.fromHeight(48),
                             ),
                             child: _isSubmitting

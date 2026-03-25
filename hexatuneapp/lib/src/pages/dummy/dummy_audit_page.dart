@@ -152,14 +152,21 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _searchCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Search',
-                          prefixIcon: Icon(Icons.search),
-                          isDense: true,
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _searchCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Search',
+                            prefixIcon: Icon(Icons.search),
+                            isDense: true,
+                          ),
+                          onSubmitted: (_) => _load(),
                         ),
-                        onSubmitted: (_) => _load(),
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -252,21 +259,35 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _actionCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Action',
-                          isDense: true,
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _actionCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Action',
+                            isDense: true,
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: TextField(
-                        controller: _resourceTypeCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Resource Type',
-                          isDense: true,
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _resourceTypeCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Resource Type',
+                            isDense: true,
+                          ),
                         ),
                       ),
                     ),
@@ -276,11 +297,18 @@ class _DummyAuditPageState extends State<DummyAuditPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _actorTypeCtrl,
-                        decoration: const InputDecoration(
-                          labelText: 'Actor Type',
-                          isDense: true,
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _actorTypeCtrl,
+                          decoration: const InputDecoration(
+                            labelText: 'Actor Type',
+                            isDense: true,
+                          ),
                         ),
                       ),
                     ),

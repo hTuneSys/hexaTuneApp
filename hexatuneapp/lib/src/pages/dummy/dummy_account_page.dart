@@ -198,20 +198,37 @@ class _DummyAccountPageState extends State<DummyAccountPage> {
                 // Update profile form
                 Text('Update Profile', style: theme.textTheme.titleMedium),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _displayNameCtrl,
-                  decoration: const InputDecoration(labelText: 'Display Name'),
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _displayNameCtrl,
+                    decoration: const InputDecoration(
+                      labelText: 'Display Name',
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _avatarUrlCtrl,
-                  decoration: const InputDecoration(labelText: 'Avatar URL'),
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _avatarUrlCtrl,
+                    decoration: const InputDecoration(labelText: 'Avatar URL'),
+                  ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _bioCtrl,
-                  decoration: const InputDecoration(labelText: 'Bio'),
-                  maxLines: 3,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _bioCtrl,
+                    decoration: const InputDecoration(labelText: 'Bio'),
+                    maxLines: 3,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton(

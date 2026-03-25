@@ -101,33 +101,49 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: _nameCtrl,
-                decoration: InputDecoration(labelText: l10n.categoryName),
-                validator: (v) =>
-                    (v == null || v.trim().isEmpty) ? l10n.categoryName : null,
-                textInputAction: TextInputAction.next,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descCtrl,
-                decoration: InputDecoration(
-                  labelText: l10n.categoryDescription,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _nameCtrl,
+                  decoration: InputDecoration(labelText: l10n.categoryName),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? l10n.categoryName
+                      : null,
+                  textInputAction: TextInputAction.next,
                 ),
-                maxLines: 3,
-                enabled: false,
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: _labelInputCtrl,
-                decoration: InputDecoration(
-                  labelText: l10n.categoryAddLabel,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addLabel,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _descCtrl,
+                  decoration: InputDecoration(
+                    labelText: l10n.categoryDescription,
                   ),
+                  maxLines: 3,
+                  enabled: false,
                 ),
-                onSubmitted: (_) => _addLabel(),
+              ),
+              const SizedBox(height: 16),
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _labelInputCtrl,
+                  decoration: InputDecoration(
+                    labelText: l10n.categoryAddLabel,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: _addLabel,
+                    ),
+                  ),
+                  onSubmitted: (_) => _addLabel(),
+                ),
               ),
               if (_labels.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -148,6 +164,7 @@ class _CategoryCreatePageState extends State<CategoryCreatePage> {
               FilledButton(
                 onPressed: _isSubmitting ? null : _submit,
                 style: FilledButton.styleFrom(
+                  elevation: 1,
                   minimumSize: const Size.fromHeight(48),
                 ),
                 child: _isSubmitting

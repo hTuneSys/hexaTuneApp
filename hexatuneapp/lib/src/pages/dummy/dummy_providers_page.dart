@@ -234,16 +234,26 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(labelText: 'Email'),
-                  keyboardType: TextInputType.emailAddress,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                 ),
                 const SizedBox(height: 8),
-                TextField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(labelText: 'Password'),
-                  obscureText: true,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: const InputDecoration(labelText: 'Password'),
+                    obscureText: true,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 ElevatedButton(
@@ -287,12 +297,17 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                 ),
                 if (_showManualGoogle) ...[
                   const SizedBox(height: 8),
-                  TextField(
-                    controller: _googleTokenController,
-                    decoration: const InputDecoration(
-                      labelText: 'Google ID Token',
+                  Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _googleTokenController,
+                      decoration: const InputDecoration(
+                        labelText: 'Google ID Token',
+                      ),
+                      maxLines: 2,
                     ),
-                    maxLines: 2,
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(
@@ -343,12 +358,17 @@ class _DummyProvidersPageState extends State<DummyProvidersPage> {
                 ),
                 if (_showManualApple) ...[
                   const SizedBox(height: 8),
-                  TextField(
-                    controller: _appleTokenController,
-                    decoration: const InputDecoration(
-                      labelText: 'Apple ID Token',
+                  Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _appleTokenController,
+                      decoration: const InputDecoration(
+                        labelText: 'Apple ID Token',
+                      ),
+                      maxLines: 2,
                     ),
-                    maxLines: 2,
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(

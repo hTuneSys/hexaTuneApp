@@ -224,9 +224,14 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
             // Name
             Text(l10n.ambienceNameLabel, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
-            TextField(
-              controller: _nameCtrl,
-              decoration: InputDecoration(hintText: l10n.ambienceNameHint),
+            Material(
+              elevation: 1,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surfaceContainerLow,
+              child: TextField(
+                controller: _nameCtrl,
+                decoration: InputDecoration(hintText: l10n.ambienceNameHint),
+              ),
             ),
             const SizedBox(height: 24),
 

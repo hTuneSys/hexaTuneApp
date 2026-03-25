@@ -136,6 +136,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
+              elevation: 1,
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
             child: Text(l10n.delete),
@@ -282,28 +283,33 @@ class _CategoryListPageState extends State<CategoryListPage> {
         children: [
           if (_searchExpanded)
             Expanded(
-              child: TextField(
-                controller: _searchCtrl,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.categorySearchHint,
-                  isDense: true,
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      setState(() {
-                        _searchExpanded = false;
-                        _searchCtrl.clear();
-                      });
-                      _load();
-                    },
+              child: Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _searchCtrl,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: l10n.categorySearchHint,
+                    isDense: true,
+                    prefixIcon: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        setState(() {
+                          _searchExpanded = false;
+                          _searchCtrl.clear();
+                        });
+                        _load();
+                      },
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () => _load(),
+                    ),
                   ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => _load(),
-                  ),
+                  onSubmitted: (_) => _load(),
                 ),
-                onSubmitted: (_) => _load(),
               ),
             )
           else ...[

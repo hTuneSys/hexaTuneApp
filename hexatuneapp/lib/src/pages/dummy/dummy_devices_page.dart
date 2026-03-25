@@ -125,9 +125,14 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
           // Request Approval
           Text('Device Approval', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          TextField(
-            controller: _operationTypeCtrl,
-            decoration: const InputDecoration(labelText: 'Operation Type'),
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _operationTypeCtrl,
+              decoration: const InputDecoration(labelText: 'Operation Type'),
+            ),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
@@ -154,9 +159,16 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
           // Approval actions
           Text('Approval Actions', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          TextField(
-            controller: _approvalIdCtrl,
-            decoration: const InputDecoration(labelText: 'Approval Request ID'),
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _approvalIdCtrl,
+              decoration: const InputDecoration(
+                labelText: 'Approval Request ID',
+              ),
+            ),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -239,9 +251,14 @@ class _DummyDevicesPageState extends State<DummyDevicesPage> {
                   }),
           ),
           const SizedBox(height: 8),
-          TextField(
-            controller: _deviceIdCtrl,
-            decoration: const InputDecoration(labelText: 'Device ID (UUID)'),
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _deviceIdCtrl,
+              decoration: const InputDecoration(labelText: 'Device ID (UUID)'),
+            ),
           ),
           const SizedBox(height: 8),
           OutlinedButton.icon(

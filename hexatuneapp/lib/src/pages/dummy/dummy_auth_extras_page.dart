@@ -74,9 +74,14 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           // Forgot Password
           Text('Forgot Password', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          TextField(
-            controller: _forgotEmailCtrl,
-            decoration: const InputDecoration(labelText: 'Email'),
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _forgotEmailCtrl,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
@@ -113,26 +118,41 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           // Reset Password (OTP-based)
           Text('Reset Password', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          TextField(
-            controller: _resetEmailCtrl,
-            decoration: const InputDecoration(labelText: 'Email'),
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 8),
-          TextField(
-            controller: _resetCodeCtrl,
-            decoration: const InputDecoration(
-              labelText: 'OTP Code (8 digits)',
-              hintText: '12345678',
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _resetEmailCtrl,
+              decoration: const InputDecoration(labelText: 'Email'),
+              keyboardType: TextInputType.emailAddress,
             ),
-            keyboardType: TextInputType.number,
-            maxLength: 8,
           ),
           const SizedBox(height: 8),
-          TextField(
-            controller: _resetPasswordCtrl,
-            decoration: const InputDecoration(labelText: 'New Password'),
-            obscureText: true,
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _resetCodeCtrl,
+              decoration: const InputDecoration(
+                labelText: 'OTP Code (8 digits)',
+                hintText: '12345678',
+              ),
+              keyboardType: TextInputType.number,
+              maxLength: 8,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _resetPasswordCtrl,
+              decoration: const InputDecoration(labelText: 'New Password'),
+              obscureText: true,
+            ),
           ),
           const SizedBox(height: 8),
           ElevatedButton(
@@ -156,10 +176,15 @@ class _DummyAuthExtrasPageState extends State<DummyAuthExtrasPage> {
           // Re-Authenticate
           Text('Re-Authenticate', style: theme.textTheme.titleMedium),
           const SizedBox(height: 8),
-          TextField(
-            controller: _reAuthPasswordCtrl,
-            decoration: const InputDecoration(labelText: 'Current Password'),
-            obscureText: true,
+          Material(
+            elevation: 1,
+            borderRadius: BorderRadius.circular(12),
+            color: theme.colorScheme.surfaceContainerLow,
+            child: TextField(
+              controller: _reAuthPasswordCtrl,
+              decoration: const InputDecoration(labelText: 'Current Password'),
+              obscureText: true,
+            ),
           ),
           const SizedBox(height: 8),
           ElevatedButton(

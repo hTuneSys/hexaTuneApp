@@ -172,21 +172,26 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: addNewCtrl,
-                          decoration: InputDecoration(
-                            hintText: l10n.inventoryCategoryAddNew,
-                            isDense: true,
+                        child: Material(
+                          elevation: 1,
+                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                          child: TextField(
+                            controller: addNewCtrl,
+                            decoration: InputDecoration(
+                              hintText: l10n.inventoryCategoryAddNew,
+                              isDense: true,
+                            ),
+                            onSubmitted: (_) async {
+                              final name = addNewCtrl.text.trim();
+                              if (name.isEmpty) return;
+                              await _createCategoryInline(
+                                name,
+                                ctx,
+                                setSheetState,
+                              );
+                            },
                           ),
-                          onSubmitted: (_) async {
-                            final name = addNewCtrl.text.trim();
-                            if (name.isEmpty) return;
-                            await _createCategoryInline(
-                              name,
-                              ctx,
-                              setSheetState,
-                            );
-                          },
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -395,13 +400,18 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
               const SizedBox(height: 24),
               Text(l10n.inventoryName, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _nameCtrl,
-                decoration: InputDecoration(hintText: l10n.inventoryNameHint),
-                validator: (v) => (v == null || v.trim().isEmpty)
-                    ? l10n.inventoryNameRequired
-                    : null,
-                textInputAction: TextInputAction.next,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _nameCtrl,
+                  decoration: InputDecoration(hintText: l10n.inventoryNameHint),
+                  validator: (v) => (v == null || v.trim().isEmpty)
+                      ? l10n.inventoryNameRequired
+                      : null,
+                  textInputAction: TextInputAction.next,
+                ),
               ),
               const SizedBox(height: 16),
               Text(
@@ -409,12 +419,17 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
                 style: theme.textTheme.titleSmall,
               ),
               const SizedBox(height: 8),
-              TextFormField(
-                controller: _descCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.inventoryDescriptionHint,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextFormField(
+                  controller: _descCtrl,
+                  decoration: InputDecoration(
+                    hintText: l10n.inventoryDescriptionHint,
+                  ),
+                  maxLines: 3,
                 ),
-                maxLines: 3,
               ),
               const SizedBox(height: 16),
               Text(l10n.inventoryCategory, style: theme.textTheme.titleSmall),
@@ -447,16 +462,21 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
               const SizedBox(height: 16),
               Text(l10n.inventoryLabels, style: theme.textTheme.titleSmall),
               const SizedBox(height: 8),
-              TextField(
-                controller: _labelInputCtrl,
-                decoration: InputDecoration(
-                  hintText: l10n.inventoryAddLabel,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.add),
-                    onPressed: _addLabel,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _labelInputCtrl,
+                  decoration: InputDecoration(
+                    hintText: l10n.inventoryAddLabel,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.add),
+                      onPressed: _addLabel,
+                    ),
                   ),
+                  onSubmitted: (_) => _addLabel(),
                 ),
-                onSubmitted: (_) => _addLabel(),
               ),
               if (_labels.isNotEmpty) ...[
                 const SizedBox(height: 8),
@@ -477,6 +497,7 @@ class _InventoryCreatePageState extends State<InventoryCreatePage> {
               FilledButton(
                 onPressed: _isSubmitting ? null : _submit,
                 style: FilledButton.styleFrom(
+                  elevation: 1,
                   minimumSize: const Size.fromHeight(48),
                 ),
                 child: _isSubmitting

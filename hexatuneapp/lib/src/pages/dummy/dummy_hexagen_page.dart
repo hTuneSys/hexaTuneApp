@@ -490,11 +490,16 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
     String label,
     ColorScheme colorScheme,
   ) {
-    return TextField(
-      controller: ctrl,
-      keyboardType: TextInputType.number,
-      decoration: InputDecoration(labelText: label, hintText: '0–255'),
-      onChanged: (_) => setState(() {}),
+    return Material(
+      elevation: 1,
+      borderRadius: BorderRadius.circular(12),
+      color: colorScheme.surfaceContainerLow,
+      child: TextField(
+        controller: ctrl,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(labelText: label, hintText: '0–255'),
+        onChanged: (_) => setState(() {}),
+      ),
     );
   }
 
@@ -587,23 +592,33 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _newFreqCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: l10n.hexagenFreqHz,
-                      isDense: true,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: theme.colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _newFreqCtrl,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: l10n.hexagenFreqHz,
+                        isDense: true,
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: TextField(
-                    controller: _newDurationCtrl,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      labelText: l10n.hexagenDurationMs,
-                      isDense: true,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: theme.colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _newDurationCtrl,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        labelText: l10n.hexagenDurationMs,
+                        isDense: true,
+                      ),
                     ),
                   ),
                 ),

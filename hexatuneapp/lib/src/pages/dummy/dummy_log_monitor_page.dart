@@ -193,17 +193,22 @@ class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
       child: Row(
         children: [
           Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                hintText: 'Search logs...',
-                prefixIcon: Icon(Icons.search),
-                isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
+            child: Material(
+              elevation: 1,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surfaceContainerLow,
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Search logs...',
+                  prefixIcon: Icon(Icons.search),
+                  isDense: true,
+                  contentPadding: EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
                 ),
+                onChanged: (value) => setState(() => _searchQuery = value),
               ),
-              onChanged: (value) => setState(() => _searchQuery = value),
             ),
           ),
           const SizedBox(width: 8),

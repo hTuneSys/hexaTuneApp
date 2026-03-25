@@ -265,28 +265,33 @@ class _InventoryListPageState extends State<InventoryListPage> {
         children: [
           if (_searchExpanded)
             Expanded(
-              child: TextField(
-                controller: _searchCtrl,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.inventorySearchHint,
-                  isDense: true,
-                  prefixIcon: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () {
-                      setState(() {
-                        _searchExpanded = false;
-                        _searchCtrl.clear();
-                      });
-                      _load();
-                    },
+              child: Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: theme.colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _searchCtrl,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                    hintText: l10n.inventorySearchHint,
+                    isDense: true,
+                    prefixIcon: IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        setState(() {
+                          _searchExpanded = false;
+                          _searchCtrl.clear();
+                        });
+                        _load();
+                      },
+                    ),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.search),
+                      onPressed: () => _load(),
+                    ),
                   ),
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    onPressed: () => _load(),
-                  ),
+                  onSubmitted: (_) => _load(),
                 ),
-                onSubmitted: (_) => _load(),
               ),
             )
           else ...[

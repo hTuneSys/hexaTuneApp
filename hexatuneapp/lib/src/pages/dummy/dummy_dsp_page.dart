@@ -552,17 +552,22 @@ class _DummyDspPageState extends State<DummyDspPage> {
     String hint, {
     bool enabled = true,
   }) {
-    return TextField(
-      controller: ctrl,
-      enabled: enabled,
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
-      decoration: InputDecoration(
-        hintText: hint,
-        isDense: true,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 10,
+    return Material(
+      elevation: 1,
+      borderRadius: BorderRadius.circular(12),
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
+      child: TextField(
+        controller: ctrl,
+        enabled: enabled,
+        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d.]'))],
+        decoration: InputDecoration(
+          hintText: hint,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 12,
+            vertical: 10,
+          ),
         ),
       ),
     );
@@ -627,7 +632,10 @@ class _DummyDspPageState extends State<DummyDspPage> {
               onPressed: _isStopping ? null : _stop,
               icon: const Icon(Icons.stop, size: 24),
               label: Text(l10n.dspStop, style: theme.textTheme.titleSmall),
-              style: FilledButton.styleFrom(backgroundColor: colorScheme.error),
+              style: FilledButton.styleFrom(
+                elevation: 1,
+                backgroundColor: colorScheme.error,
+              ),
             ),
           ),
         ),

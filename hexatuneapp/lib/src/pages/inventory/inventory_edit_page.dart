@@ -208,21 +208,26 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                   Row(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: addNewCtrl,
-                          decoration: InputDecoration(
-                            hintText: l10n.inventoryCategoryAddNew,
-                            isDense: true,
+                        child: Material(
+                          elevation: 1,
+                          borderRadius: BorderRadius.circular(12),
+                          color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                          child: TextField(
+                            controller: addNewCtrl,
+                            decoration: InputDecoration(
+                              hintText: l10n.inventoryCategoryAddNew,
+                              isDense: true,
+                            ),
+                            onSubmitted: (_) async {
+                              final name = addNewCtrl.text.trim();
+                              if (name.isEmpty) return;
+                              await _createCategoryInline(
+                                name,
+                                ctx,
+                                setSheetState,
+                              );
+                            },
                           ),
-                          onSubmitted: (_) async {
-                            final name = addNewCtrl.text.trim();
-                            if (name.isEmpty) return;
-                            await _createCategoryInline(
-                              name,
-                              ctx,
-                              setSheetState,
-                            );
-                          },
                         ),
                       ),
                       const SizedBox(width: 8),
@@ -356,6 +361,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
+              elevation: 1,
               backgroundColor: Theme.of(ctx).colorScheme.error,
             ),
             child: Text(l10n.delete),
@@ -509,15 +515,20 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                     const SizedBox(height: 24),
                     Text(l10n.inventoryName, style: theme.textTheme.titleSmall),
                     const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _nameCtrl,
-                      decoration: InputDecoration(
-                        hintText: l10n.inventoryNameHint,
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextFormField(
+                        controller: _nameCtrl,
+                        decoration: InputDecoration(
+                          hintText: l10n.inventoryNameHint,
+                        ),
+                        validator: (v) => (v == null || v.trim().isEmpty)
+                            ? l10n.inventoryNameRequired
+                            : null,
+                        textInputAction: TextInputAction.next,
                       ),
-                      validator: (v) => (v == null || v.trim().isEmpty)
-                          ? l10n.inventoryNameRequired
-                          : null,
-                      textInputAction: TextInputAction.next,
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -525,12 +536,17 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
-                    TextFormField(
-                      controller: _descCtrl,
-                      decoration: InputDecoration(
-                        hintText: l10n.inventoryDescriptionHint,
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextFormField(
+                        controller: _descCtrl,
+                        decoration: InputDecoration(
+                          hintText: l10n.inventoryDescriptionHint,
+                        ),
+                        maxLines: 3,
                       ),
-                      maxLines: 3,
                     ),
                     const SizedBox(height: 16),
                     Text(
@@ -570,16 +586,21 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                       style: theme.textTheme.titleSmall,
                     ),
                     const SizedBox(height: 8),
-                    TextField(
-                      controller: _labelInputCtrl,
-                      decoration: InputDecoration(
-                        hintText: l10n.inventoryAddLabel,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: _addLabel,
+                    Material(
+                      elevation: 1,
+                      borderRadius: BorderRadius.circular(12),
+                      color: theme.colorScheme.surfaceContainerLow,
+                      child: TextField(
+                        controller: _labelInputCtrl,
+                        decoration: InputDecoration(
+                          hintText: l10n.inventoryAddLabel,
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.add),
+                            onPressed: _addLabel,
+                          ),
                         ),
+                        onSubmitted: (_) => _addLabel(),
                       ),
-                      onSubmitted: (_) => _addLabel(),
                     ),
                     if (_labels.isNotEmpty) ...[
                       const SizedBox(height: 8),
@@ -603,6 +624,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                           child: FilledButton(
                             onPressed: _isSubmitting ? null : _delete,
                             style: FilledButton.styleFrom(
+                              elevation: 1,
                               backgroundColor: theme.colorScheme.error,
                               minimumSize: const Size.fromHeight(48),
                             ),
@@ -614,6 +636,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
                           child: FilledButton(
                             onPressed: _isSubmitting ? null : _save,
                             style: FilledButton.styleFrom(
+                              elevation: 1,
                               minimumSize: const Size.fromHeight(48),
                             ),
                             child: _isSubmitting

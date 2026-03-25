@@ -195,17 +195,24 @@ class _DummyStepsPageState extends State<DummyStepsPage> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _searchCtrl,
-                        decoration: InputDecoration(
-                          hintText: 'Search steps…',
-                          isDense: true,
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.search),
-                            onPressed: () => _load(),
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _searchCtrl,
+                          decoration: InputDecoration(
+                            hintText: 'Search steps…',
+                            isDense: true,
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () => _load(),
+                            ),
                           ),
+                          onSubmitted: (_) => _load(),
                         ),
-                        onSubmitted: (_) => _load(),
                       ),
                     ),
                     const SizedBox(width: 8),

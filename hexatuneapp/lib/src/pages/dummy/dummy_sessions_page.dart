@@ -187,14 +187,19 @@ class _DummySessionsPageState extends State<DummySessionsPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: const InputDecoration(
-                      labelText: 'Search',
-                      prefixIcon: Icon(Icons.search),
-                      isDense: true,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        labelText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        isDense: true,
+                      ),
+                      onSubmitted: (_) => _load(),
                     ),
-                    onSubmitted: (_) => _load(),
                   ),
                 ),
                 const SizedBox(width: 8),

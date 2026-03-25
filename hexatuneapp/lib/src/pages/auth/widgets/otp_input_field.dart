@@ -93,21 +93,26 @@ class OtpInputFieldState extends State<OtpInputField> {
           child: KeyboardListener(
             focusNode: FocusNode(),
             onKeyEvent: (event) => _onKeyEvent(index, event),
-            child: TextField(
-              controller: _controllers[index],
-              focusNode: _focusNodes[index],
-              textAlign: TextAlign.center,
-              keyboardType: TextInputType.number,
-              maxLength: 1,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w600,
+            child: Material(
+              elevation: 1,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surfaceContainerLow,
+              child: TextField(
+                controller: _controllers[index],
+                focusNode: _focusNodes[index],
+                textAlign: TextAlign.center,
+                keyboardType: TextInputType.number,
+                maxLength: 1,
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+                decoration: InputDecoration(
+                  counterText: '',
+                  contentPadding: const EdgeInsets.symmetric(vertical: 8),
+                ),
+                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                onChanged: (value) => _onChanged(index, value),
               ),
-              decoration: InputDecoration(
-                counterText: '',
-                contentPadding: const EdgeInsets.symmetric(vertical: 8),
-              ),
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: (value) => _onChanged(index, value),
             ),
           ),
         );

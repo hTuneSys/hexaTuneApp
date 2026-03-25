@@ -219,22 +219,27 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
                     children: [
                       if (_searchExpanded)
                         Expanded(
-                          child: TextField(
-                            controller: _searchCtrl,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              hintText: l10n.ambienceSearchHint,
-                              prefixIcon: const Icon(Icons.search),
-                              suffixIcon: IconButton(
-                                icon: const Icon(Icons.close),
-                                onPressed: () {
-                                  _searchCtrl.clear();
-                                  setState(() => _searchExpanded = false);
-                                },
+                          child: Material(
+                            elevation: 1,
+                            borderRadius: BorderRadius.circular(12),
+                            color: theme.colorScheme.surfaceContainerLow,
+                            child: TextField(
+                              controller: _searchCtrl,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: l10n.ambienceSearchHint,
+                                prefixIcon: const Icon(Icons.search),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    _searchCtrl.clear();
+                                    setState(() => _searchExpanded = false);
+                                  },
+                                ),
+                                isDense: true,
                               ),
-                              isDense: true,
+                              onChanged: (_) => setState(() {}),
                             ),
-                            onChanged: (_) => setState(() {}),
                           ),
                         )
                       else ...[

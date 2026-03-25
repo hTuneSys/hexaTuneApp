@@ -244,17 +244,22 @@ class _DummyFlowsPageState extends State<DummyFlowsPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                TextField(
-                  controller: _searchCtrl,
-                  decoration: InputDecoration(
-                    hintText: 'Search flows…',
-                    isDense: true,
-                    suffixIcon: IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () => _load(),
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _searchCtrl,
+                    decoration: InputDecoration(
+                      hintText: 'Search flows…',
+                      isDense: true,
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.search),
+                        onPressed: () => _load(),
+                      ),
                     ),
+                    onSubmitted: (_) => _load(),
                   ),
-                  onSubmitted: (_) => _load(),
                 ),
                 const SizedBox(height: 8),
                 Row(

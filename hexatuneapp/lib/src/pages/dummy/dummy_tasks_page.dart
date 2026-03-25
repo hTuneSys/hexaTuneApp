@@ -98,23 +98,38 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              TextField(
-                controller: typeCtrl,
-                decoration: const InputDecoration(labelText: 'Task Type *'),
-              ),
-              const SizedBox(height: 8),
-              TextField(
-                controller: payloadCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Payload (JSON) *',
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: typeCtrl,
+                  decoration: const InputDecoration(labelText: 'Task Type *'),
                 ),
-                maxLines: 4,
               ),
               const SizedBox(height: 8),
-              TextField(
-                controller: cronCtrl,
-                decoration: const InputDecoration(
-                  labelText: 'Cron Expression (optional)',
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: payloadCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Payload (JSON) *',
+                  ),
+                  maxLines: 4,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: cronCtrl,
+                  decoration: const InputDecoration(
+                    labelText: 'Cron Expression (optional)',
+                  ),
                 ),
               ),
             ],
@@ -238,9 +253,14 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Cancel Task'),
-        content: TextField(
-          controller: reasonCtrl,
-          decoration: const InputDecoration(labelText: 'Reason (optional)'),
+        content: Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(ctx).colorScheme.surfaceContainerLow,
+          child: TextField(
+            controller: reasonCtrl,
+            decoration: const InputDecoration(labelText: 'Reason (optional)'),
+          ),
         ),
         actions: [
           TextButton(
@@ -331,25 +351,35 @@ class _DummyTasksPageState extends State<DummyTasksPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: const InputDecoration(
-                      labelText: 'Search',
-                      prefixIcon: Icon(Icons.search),
-                      isDense: true,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _searchController,
+                      decoration: const InputDecoration(
+                        labelText: 'Search',
+                        prefixIcon: Icon(Icons.search),
+                        isDense: true,
+                      ),
+                      onSubmitted: (_) => _load(),
                     ),
-                    onSubmitted: (_) => _load(),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: TextField(
-                    controller: _taskTypeController,
-                    decoration: const InputDecoration(
-                      labelText: 'Task Type',
-                      isDense: true,
+                  child: Material(
+                    elevation: 1,
+                    borderRadius: BorderRadius.circular(12),
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: TextField(
+                      controller: _taskTypeController,
+                      decoration: const InputDecoration(
+                        labelText: 'Task Type',
+                        isDense: true,
+                      ),
+                      onSubmitted: (_) => _load(),
                     ),
-                    onSubmitted: (_) => _load(),
                   ),
                 ),
                 const SizedBox(width: 8),

@@ -226,6 +226,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   child: FilledButton(
                     onPressed: _isLoading ? null : _verify,
                     style: FilledButton.styleFrom(
+                      elevation: 1,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

@@ -164,10 +164,15 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
             // Name
             Text(l10n.ambienceNameLabel, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
-            TextField(
-              controller: TextEditingController(text: config.name),
-              readOnly: true,
-              decoration: const InputDecoration(),
+            Material(
+              elevation: 1,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surfaceContainerLow,
+              child: TextField(
+                controller: TextEditingController(text: config.name),
+                readOnly: true,
+                decoration: const InputDecoration(),
+              ),
             ),
             const SizedBox(height: 24),
 

@@ -171,19 +171,29 @@ class _DummyRegisterPageState extends State<DummyRegisterPage> {
               const SizedBox(height: 48),
 
               // — Email registration —
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                ),
               ),
               const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(labelText: 'Password'),
-                obscureText: true,
-                textInputAction: TextInputAction.done,
-                onSubmitted: (_) => _register(),
+              Material(
+                elevation: 1,
+                borderRadius: BorderRadius.circular(12),
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                child: TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  onSubmitted: (_) => _register(),
+                ),
               ),
               const SizedBox(height: 24),
               SizedBox(

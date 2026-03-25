@@ -150,6 +150,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
             style: FilledButton.styleFrom(
+              elevation: 1,
               backgroundColor: Theme.of(context).colorScheme.error,
             ),
             child: Text(l10n.dspAmbienceDelete),
@@ -307,9 +308,14 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             // Name
             Text(l10n.ambienceNameLabel, style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),
-            TextField(
-              controller: _nameCtrl,
-              decoration: InputDecoration(hintText: l10n.ambienceNameHint),
+            Material(
+              elevation: 1,
+              borderRadius: BorderRadius.circular(12),
+              color: theme.colorScheme.surfaceContainerLow,
+              child: TextField(
+                controller: _nameCtrl,
+                decoration: InputDecoration(hintText: l10n.ambienceNameHint),
+              ),
             ),
             const SizedBox(height: 24),
 
@@ -396,6 +402,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
                     child: FilledButton(
                       onPressed: _delete,
                       style: FilledButton.styleFrom(
+                        elevation: 1,
                         backgroundColor: colorScheme.error,
                         foregroundColor: colorScheme.onError,
                       ),

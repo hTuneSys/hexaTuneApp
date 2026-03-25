@@ -217,32 +217,43 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 24),
 
                 // Email
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: l10n.emailAddress),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: l10n.emailAddress),
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                  ),
                 ),
                 const SizedBox(height: 16),
 
                 // Password
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.password,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      labelText: l10n.password,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                        onPressed: () => setState(
+                          () => _obscurePassword = !_obscurePassword,
+                        ),
                       ),
-                      onPressed: () =>
-                          setState(() => _obscurePassword = !_obscurePassword),
                     ),
+                    obscureText: _obscurePassword,
+                    textInputAction: TextInputAction.next,
+                    onChanged: (_) => setState(() {}),
                   ),
-                  obscureText: _obscurePassword,
-                  textInputAction: TextInputAction.next,
-                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 8),
 
@@ -251,23 +262,28 @@ class _RegisterPageState extends State<RegisterPage> {
                 const SizedBox(height: 16),
 
                 // Confirm password
-                TextField(
-                  controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                    labelText: l10n.confirmPassword,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _obscureConfirm
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                      labelText: l10n.confirmPassword,
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirm
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                        ),
+                        onPressed: () =>
+                            setState(() => _obscureConfirm = !_obscureConfirm),
                       ),
-                      onPressed: () =>
-                          setState(() => _obscureConfirm = !_obscureConfirm),
                     ),
+                    obscureText: _obscureConfirm,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _register(),
                   ),
-                  obscureText: _obscureConfirm,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _register(),
                 ),
                 const SizedBox(height: 24),
 
@@ -275,6 +291,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 FilledButton(
                   onPressed: _isLoading ? null : _register,
                   style: FilledButton.styleFrom(
+                    elevation: 1,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

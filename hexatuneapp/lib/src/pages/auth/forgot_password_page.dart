@@ -122,12 +122,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 const SizedBox(height: 40),
 
                 // Email field
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(labelText: l10n.emailAddress),
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.done,
-                  onSubmitted: (_) => _sendResetCode(),
+                Material(
+                  elevation: 1,
+                  borderRadius: BorderRadius.circular(12),
+                  color: theme.colorScheme.surfaceContainerLow,
+                  child: TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(labelText: l10n.emailAddress),
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _sendResetCode(),
+                  ),
                 ),
                 const SizedBox(height: 24),
 
@@ -135,6 +140,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 FilledButton(
                   onPressed: _isLoading ? null : _sendResetCode,
                   style: FilledButton.styleFrom(
+                    elevation: 1,
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
