@@ -45,6 +45,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
   void _openPinSheet() async {
     await showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (ctx) => WorkspacePinSheet(pinService: _pinService),
     );

@@ -90,6 +90,7 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) {
         final options = [
           (_SortMode.name, l10n.ambienceSortByName),
@@ -135,6 +136,7 @@ class _AmbienceListPageState extends State<AmbienceListPage> {
     final baseAssets = _assetService.assetsForLayer('base');
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) {
         final allSelected = _filterBase == null;
         return SafeArea(

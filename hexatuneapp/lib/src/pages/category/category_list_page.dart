@@ -160,6 +160,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
     ];
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -198,6 +199,7 @@ class _CategoryListPageState extends State<CategoryListPage> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) => SafeArea(
           child: Padding(

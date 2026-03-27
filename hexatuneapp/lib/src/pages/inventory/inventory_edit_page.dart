@@ -150,6 +150,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
     final l10n = AppLocalizations.of(context)!;
     showModalBottomSheet<void>(
       context: context,
+      useRootNavigator: true,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -193,6 +194,7 @@ class _InventoryEditPageState extends State<InventoryEditPage> {
 
     final result = await showModalBottomSheet<String>(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       builder: (ctx) => StatefulBuilder(
         builder: (ctx, setSheetState) {

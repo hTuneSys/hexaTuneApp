@@ -175,7 +175,7 @@
           "Providers"
         ],
         "summary": "`GET /api/v1/accounts/me/providers` — List authentication providers",
-        "description": "Returns all authentication providers linked to the current account.\nAccount ID is derived from the access token — users can only list their own providers.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `200`  | Provider list | `Vec<ProviderResponse>` | — |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on authentication failure or service error.",
+        "description": "Returns all authentication providers linked to the current account.\nAccount ID is derived from the access token — users can only list their own providers.\n\nEach provider includes an `emailVerified` boolean indicating whether the\nprovider's email address has been verified. OAuth providers (Google, Apple)\nare always considered verified. Email providers reflect the actual\nverification status stored in the database.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `200`  | Provider list | `Vec<ProviderResponse>` | — |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on authentication failure or service error.",
         "operationId": "list_providers",
         "responses": {
           "200": {
@@ -7251,6 +7251,7 @@
         "description": "Response containing linked provider data",
         "required": [
           "providerType",
+          "emailVerified",
           "linkedAt"
         ],
         "properties": {
@@ -7260,6 +7261,10 @@
               "null"
             ],
             "description": "Email address associated with the provider, if available"
+          },
+          "emailVerified": {
+            "type": "boolean",
+            "description": "Whether the provider's email has been verified.\n\nAlways `true` for OAuth providers (Google, Apple).\nFor email providers, reflects the actual verification status."
           },
           "linkedAt": {
             "type": "string",
