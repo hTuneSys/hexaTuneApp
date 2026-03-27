@@ -1,3 +1,11 @@
+## [1.8.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.8.0...v1.8.1) (2026-03-27)
+
+
+### Bug Fixes
+
+* **ci:** pin Xcode to 26.3 to avoid RC missing iOS SDK ([37eb577](https://github.com/hTuneSys/hexaTuneApp/commit/37eb57784dfb12a85a1a894fb6b4d7a707de4fc1)), closes [actions/runner-images#13842](https://github.com/actions/runner-images/issues/13842)
+* **l10n:** correct ambiance typos to ambience ([07d2aaf](https://github.com/hTuneSys/hexaTuneApp/commit/07d2aaf77e848165e2e9fcd425c3b19195473b59))
+
 # [1.8.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.7.0...v1.8.0) (2026-03-27)
 
 
