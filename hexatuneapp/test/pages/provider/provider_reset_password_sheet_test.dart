@@ -89,10 +89,7 @@ void main() {
     await getIt.reset();
   });
 
-  Future<void> openSheet(
-    WidgetTester tester, {
-    VoidCallback? onSuccess,
-  }) async {
+  Future<void> openSheet(WidgetTester tester, {VoidCallback? onSuccess}) async {
     await tester.pumpWidget(_buildApp(onSuccess: onSuccess));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Open Sheet'));

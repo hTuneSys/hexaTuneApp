@@ -84,8 +84,8 @@ class DummyHomePage extends StatelessWidget {
     ),
     _NavItem(
       icon: Icons.play_circle_outline,
-      title: 'Harmonizer Player',
-      subtitle: 'Multi-mode frequency generation player',
+      title: 'Harmonizer',
+      subtitle: 'Multi-mode harmonic generator',
       route: RouteNames.harmonizer,
     ),
     _NavItem(

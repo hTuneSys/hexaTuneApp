@@ -39,6 +39,7 @@ dependencies:
   storybook_flutter: any
   flutter_midi_command: ^0.5.0
   shared_preferences: ^2.3.3
+  audio_service: ^0.18.15
   flutter_launcher_icons: "^0.14.4"
 
   # The following adds the Cupertino Icons font to your application.

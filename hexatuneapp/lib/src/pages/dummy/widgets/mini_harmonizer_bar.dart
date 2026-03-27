@@ -10,8 +10,8 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_state.dart';
 
-/// A compact mini-player bar that shows at the bottom of the screen
-/// when the harmonizer is playing and the user navigates away from
+/// A compact mini-harmonizer bar that shows at the bottom of the screen
+/// when the harmonizer is harmonizing and the user navigates away from
 /// the harmonizer page.
 class MiniHarmonizerBar extends StatefulWidget {
   const MiniHarmonizerBar({super.key});

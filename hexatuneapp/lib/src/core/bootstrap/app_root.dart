@@ -3,12 +3,17 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:audio_service/audio_service.dart';
+
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/app_bootstrap.dart';
 import 'package:hexatuneapp/src/core/bootstrap/bootstrap_step.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
+import 'package:hexatuneapp/src/core/harmonizer/hexatune_audio_handler.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
 import 'package:hexatuneapp/src/core/theme/hexatune.dart';
 import 'package:hexatuneapp/src/app.dart';
 import 'package:hexatuneapp/src/pages/auth/splash_page.dart';
@@ -76,6 +81,9 @@ class _AppRootState extends State<AppRoot> {
 
     // Steps 1–N: Service bootstrap (indices shifted by 1 for DI).
     try {
+      // Initialize audio service (one-isolate mode) before other services.
+      await _initAudioService();
+
       await AppBootstrap.initialize(
         onProgress: (stepIndex, status, [error]) {
           _updateStep(stepIndex + 1, status, error);
@@ -101,6 +109,35 @@ class _AppRootState extends State<AppRoot> {
       _steps.value = _buildInitialSteps();
     });
     _runBootstrap();
+  }
+
+  /// Initializes the [AudioService] in one-isolate mode and registers the
+  /// [HexaTuneAudioHandler] singleton.  Non-fatal — the app works without it.
+  Future<void> _initAudioService() async {
+    try {
+      final handler = await AudioService.init(
+        builder: () => HexaTuneAudioHandler(
+          getIt<HarmonizerService>(),
+          getIt<PreferencesService>(),
+          getIt<LogService>(),
+        ),
+        config: const AudioServiceConfig(
+          androidNotificationChannelId: 'com.hexatune.audio',
+          androidNotificationChannelName: 'HexaTune Audio',
+          androidNotificationOngoing: true,
+          androidStopForegroundOnPause: true,
+        ),
+      );
+      getIt.registerSingleton<HexaTuneAudioHandler>(
+        handler,
+        dispose: (h) => h.dispose(),
+      );
+    } catch (e) {
+      getIt<LogService>().warning(
+        'AudioService init failed: $e',
+        category: LogCategory.app,
+      );
+    }
   }
 
   @override
