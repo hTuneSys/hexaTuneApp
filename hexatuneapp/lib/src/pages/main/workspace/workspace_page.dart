@@ -71,11 +71,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
             children: [
               _buildHeader(l10n, theme, colorScheme),
               const SizedBox(height: 16),
-              _buildPinnedCard(l10n, theme, colorScheme),
-              const SizedBox(height: 16),
-              _buildQuickAdd(l10n, theme, colorScheme),
-              const SizedBox(height: 16),
-              _buildStats(l10n, theme, colorScheme),
+              _buildMainCard(l10n, theme, colorScheme),
               const SizedBox(height: 24),
               _buildNavGrid(l10n, theme, colorScheme),
               const SizedBox(height: 24),
@@ -127,7 +123,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
     );
   }
 
-  Widget _buildPinnedCard(
+  Widget _buildMainCard(
     AppLocalizations l10n,
     ThemeData theme,
     ColorScheme colorScheme,
@@ -141,6 +137,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Pinned formulas header
             Row(
               children: [
                 Icon(
@@ -152,7 +149,9 @@ class _WorkspacePageState extends State<WorkspacePage> {
                 Expanded(
                   child: Text(
                     l10n.workspacePinnedFormulas,
-                    style: theme.textTheme.titleSmall,
+                    style: theme.textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 TextButton(
@@ -185,8 +184,149 @@ class _WorkspacePageState extends State<WorkspacePage> {
                       _buildPinnedItem(pins[i], theme, colorScheme),
                 ),
               ),
+            const Divider(height: 24),
+            // Quick add section
+            Row(
+              children: [
+                Icon(Icons.add, size: 18, color: colorScheme.onSurfaceVariant),
+                const SizedBox(width: 6),
+                Text(
+                  l10n.workspaceQuickAdd,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: ActionChip(
+                    label: Text(l10n.workspaceInventory),
+                    onPressed: () => context.push(RouteNames.inventoryCreate),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ActionChip(
+                    label: Text(l10n.workspaceCategory),
+                    onPressed: () => context.push(RouteNames.categoryCreate),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ActionChip(
+                    label: Text(l10n.workspaceFormula),
+                    onPressed: () => context.push(RouteNames.formulaCreate),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ActionChip(
+                    label: Text(l10n.workspaceAmbience),
+                    onPressed: () => context.push(RouteNames.ambienceCreate),
+                  ),
+                ),
+              ],
+            ),
+            const Divider(height: 24),
+            // Stats section
+            Row(
+              children: [
+                Icon(
+                  Icons.bar_chart_rounded,
+                  size: 18,
+                  color: colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  l10n.workspaceStats,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    l10n.workspaceCategory,
+                    0,
+                    theme,
+                    colorScheme,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _buildStatItem(
+                    l10n.workspaceInventory,
+                    0,
+                    theme,
+                    colorScheme,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatItem(
+                    l10n.workspaceFormula,
+                    0,
+                    theme,
+                    colorScheme,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: _buildStatItem(
+                    l10n.workspaceAmbience,
+                    0,
+                    theme,
+                    colorScheme,
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildStatItem(
+    String label,
+    int count,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLow,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        children: [
+          Text(
+            '$count',
+            style: theme.textTheme.titleMedium?.copyWith(
+              color: colorScheme.primary,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Flexible(
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -231,106 +371,6 @@ class _WorkspacePageState extends State<WorkspacePage> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildQuickAdd(
-    AppLocalizations l10n,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(Icons.add, size: 18, color: colorScheme.onSurfaceVariant),
-            const SizedBox(width: 6),
-            Text(l10n.workspaceQuickAdd, style: theme.textTheme.titleSmall),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            ActionChip(
-              label: Text(l10n.workspaceInventory),
-              onPressed: () => context.push(RouteNames.inventoryCreate),
-            ),
-            ActionChip(
-              label: Text(l10n.workspaceCategory),
-              onPressed: () => context.push(RouteNames.categoryCreate),
-            ),
-            ActionChip(
-              label: Text(l10n.workspaceFormula),
-              onPressed: () => context.push(RouteNames.formulaCreate),
-            ),
-            ActionChip(
-              label: Text(l10n.workspaceAmbience),
-              onPressed: () => context.push(RouteNames.ambienceCreate),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStats(
-    AppLocalizations l10n,
-    ThemeData theme,
-    ColorScheme colorScheme,
-  ) {
-    final stats = <(String, int)>[
-      (l10n.workspaceInventory, 0),
-      (l10n.workspaceCategory, 0),
-      (l10n.workspaceFormula, 0),
-      (l10n.workspaceAmbience, 0),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              Icons.bar_chart_rounded,
-              size: 18,
-              color: colorScheme.onSurfaceVariant,
-            ),
-            const SizedBox(width: 6),
-            Text(l10n.workspaceStats, style: theme.textTheme.titleSmall),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            for (var i = 0; i < stats.length; i++) ...[
-              if (i > 0) const SizedBox(width: 16),
-              Expanded(
-                child: Row(
-                  children: [
-                    Text(
-                      '${stats[i].$2}',
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        stats[i].$1,
-                        style: theme.textTheme.bodySmall,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ],
-        ),
-      ],
     );
   }
 
@@ -397,29 +437,37 @@ class _WorkspacePageState extends State<WorkspacePage> {
           children: [
             Icon(Icons.history, size: 18, color: colorScheme.onSurfaceVariant),
             const SizedBox(width: 6),
-            Text(l10n.workspaceRecentlyUsed, style: theme.textTheme.titleSmall),
+            Text(
+              l10n.workspaceRecentlyUsed,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 8),
-        ListView.builder(
+        ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: _recentCount,
+          separatorBuilder: (_, _) => const SizedBox(height: 4),
           itemBuilder: (ctx, i) {
             final name = 'Formula ${i + 1}';
-            return ListTile(
-              title: Text(name, style: theme.textTheme.bodyMedium),
-              trailing: IconButton(
-                icon: Icon(
-                  Icons.play_arrow_rounded,
-                  color: colorScheme.onSurfaceVariant,
+            return Card(
+              child: ListTile(
+                title: Text(name, style: theme.textTheme.bodyMedium),
+                trailing: IconButton(
+                  icon: Icon(
+                    Icons.play_arrow_rounded,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                  onPressed: () {
+                    getIt<LogService>().devLog(
+                      'Play recently used formula tapped: $name',
+                      category: LogCategory.ui,
+                    );
+                  },
                 ),
-                onPressed: () {
-                  getIt<LogService>().devLog(
-                    'Play recently used formula tapped: $name',
-                    category: LogCategory.ui,
-                  );
-                },
               ),
             );
           },

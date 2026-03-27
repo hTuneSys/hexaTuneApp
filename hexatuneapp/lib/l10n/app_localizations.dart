@@ -851,25 +851,25 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceManagementTitle.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance Management'**
+  /// **'Ambience Management'**
   String get ambienceManagementTitle;
 
   /// No description provided for @ambienceCreateTitle.
   ///
   /// In en, this message translates to:
-  /// **'Create Ambiance'**
+  /// **'Create Ambience'**
   String get ambienceCreateTitle;
 
   /// No description provided for @ambienceEditTitle.
   ///
   /// In en, this message translates to:
-  /// **'Edit Ambiance'**
+  /// **'Edit Ambience'**
   String get ambienceEditTitle;
 
   /// No description provided for @ambienceViewTitle.
   ///
   /// In en, this message translates to:
-  /// **'View Ambiance'**
+  /// **'View Ambience'**
   String get ambienceViewTitle;
 
   /// No description provided for @ambienceEmptyTitle.
@@ -887,7 +887,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceDeleteConfirmTitle.
   ///
   /// In en, this message translates to:
-  /// **'Delete Ambiance'**
+  /// **'Delete Ambience'**
   String get ambienceDeleteConfirmTitle;
 
   /// No description provided for @ambienceDeleteConfirmMessage.
@@ -953,19 +953,19 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceCreated.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance created successfully.'**
+  /// **'Ambience created successfully.'**
   String get ambienceCreated;
 
   /// No description provided for @ambienceUpdated.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance updated successfully.'**
+  /// **'Ambience updated successfully.'**
   String get ambienceUpdated;
 
   /// No description provided for @ambienceDeleted.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance deleted.'**
+  /// **'Ambience deleted.'**
   String get ambienceDeleted;
 
   /// No description provided for @ambienceNameRequired.
@@ -1013,7 +1013,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceNotFound.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance not found.'**
+  /// **'Ambience not found.'**
   String get ambienceNotFound;
 
   /// No description provided for @hexagenTitle.
@@ -2267,7 +2267,7 @@ abstract class AppLocalizations {
   /// No description provided for @workspaceAmbience.
   ///
   /// In en, this message translates to:
-  /// **'Ambiance'**
+  /// **'Ambience'**
   String get workspaceAmbience;
 
   /// No description provided for @workspaceRecentlyUsed.

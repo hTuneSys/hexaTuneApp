@@ -160,7 +160,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Ambiance not found.'), findsOneWidget);
+      expect(find.text('Ambience not found.'), findsOneWidget);
     });
 
     testWidgets('shows app bar with edit title', (tester) async {
@@ -170,7 +170,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(AppBar),
-          matching: find.text('Edit Ambiance'),
+          matching: find.text('Edit Ambience'),
         ),
         findsOneWidget,
       );
@@ -222,7 +222,7 @@ void main() {
       await tester.tap(deleteBtn);
       await tester.pumpAndSettle();
 
-      expect(find.text('Delete Ambiance'), findsOneWidget);
+      expect(find.text('Delete Ambience'), findsOneWidget);
       expect(find.text('Cancel'), findsOneWidget);
     });
 

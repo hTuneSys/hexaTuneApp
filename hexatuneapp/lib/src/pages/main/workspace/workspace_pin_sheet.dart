@@ -185,15 +185,20 @@ class _WorkspacePinSheetState extends State<WorkspacePinSheet> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
-                        controller: _searchCtrl,
-                        decoration: InputDecoration(
-                          hintText: l10n.workspaceSearchToPin,
-                          prefixIcon: const Icon(Icons.search),
-                          isDense: true,
+                      child: Material(
+                        elevation: 1,
+                        borderRadius: BorderRadius.circular(12),
+                        color: colorScheme.surfaceContainerLow,
+                        child: TextField(
+                          controller: _searchCtrl,
+                          decoration: InputDecoration(
+                            hintText: l10n.workspaceSearchToPin,
+                            prefixIcon: const Icon(Icons.search),
+                            isDense: true,
+                          ),
+                          onSubmitted: _search,
+                          textInputAction: TextInputAction.search,
                         ),
-                        onSubmitted: _search,
-                        textInputAction: TextInputAction.search,
                       ),
                     ),
                     const SizedBox(width: 8),

@@ -123,7 +123,7 @@ void main() {
       expect(find.text('Inventory'), findsWidgets);
       expect(find.text('Category'), findsWidgets);
       expect(find.text('Formula'), findsWidgets);
-      expect(find.text('Ambiance'), findsWidgets);
+      expect(find.text('Ambience'), findsWidgets);
     });
 
     testWidgets('displays stats section with zero counts', (tester) async {

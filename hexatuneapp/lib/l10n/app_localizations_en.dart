@@ -406,16 +406,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dspAmbienceManage => 'Manage';
 
   @override
-  String get ambienceManagementTitle => 'Ambiance Management';
+  String get ambienceManagementTitle => 'Ambience Management';
 
   @override
-  String get ambienceCreateTitle => 'Create Ambiance';
+  String get ambienceCreateTitle => 'Create Ambience';
 
   @override
-  String get ambienceEditTitle => 'Edit Ambiance';
+  String get ambienceEditTitle => 'Edit Ambience';
 
   @override
-  String get ambienceViewTitle => 'View Ambiance';
+  String get ambienceViewTitle => 'View Ambience';
 
   @override
   String get ambienceEmptyTitle => 'No ambiance yet.';
@@ -425,7 +425,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'Press the + button to add your first item.';
 
   @override
-  String get ambienceDeleteConfirmTitle => 'Delete Ambiance';
+  String get ambienceDeleteConfirmTitle => 'Delete Ambience';
 
   @override
   String ambienceDeleteConfirmMessage(String name) {
@@ -460,13 +460,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceNoBase => 'None';
 
   @override
-  String get ambienceCreated => 'Ambiance created successfully.';
+  String get ambienceCreated => 'Ambience created successfully.';
 
   @override
-  String get ambienceUpdated => 'Ambiance updated successfully.';
+  String get ambienceUpdated => 'Ambience updated successfully.';
 
   @override
-  String get ambienceDeleted => 'Ambiance deleted.';
+  String get ambienceDeleted => 'Ambience deleted.';
 
   @override
   String get ambienceNameRequired => 'Name is required.';
@@ -490,7 +490,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceEditMenuItem => 'Edit';
 
   @override
-  String get ambienceNotFound => 'Ambiance not found.';
+  String get ambienceNotFound => 'Ambience not found.';
 
   @override
   String get hexagenTitle => 'hexaGen Device';
@@ -1158,7 +1158,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workspaceFormula => 'Formula';
 
   @override
-  String get workspaceAmbience => 'Ambiance';
+  String get workspaceAmbience => 'Ambience';
 
   @override
   String get workspaceRecentlyUsed => 'Recently Used';

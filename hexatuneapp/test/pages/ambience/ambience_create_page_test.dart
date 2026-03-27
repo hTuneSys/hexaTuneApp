@@ -141,7 +141,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(AppBar),
-          matching: find.text('Create Ambiance'),
+          matching: find.text('Create Ambience'),
         ),
         findsOneWidget,
       );
@@ -205,7 +205,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(
-        find.widgetWithText(FilledButton, 'Create Ambiance'),
+        find.widgetWithText(FilledButton, 'Create Ambience'),
         findsOneWidget,
       );
     });
@@ -214,7 +214,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      final createBtn = find.widgetWithText(FilledButton, 'Create Ambiance');
+      final createBtn = find.widgetWithText(FilledButton, 'Create Ambience');
       await tester.ensureVisible(createBtn);
       await tester.pumpAndSettle();
       await tester.tap(createBtn);
@@ -243,7 +243,7 @@ void main() {
       await tester.enterText(find.byType(TextField), 'My Ambience');
       await tester.pumpAndSettle();
 
-      final createBtn = find.widgetWithText(FilledButton, 'Create Ambiance');
+      final createBtn = find.widgetWithText(FilledButton, 'Create Ambience');
       await tester.ensureVisible(createBtn);
       await tester.pumpAndSettle();
       await tester.tap(createBtn);
