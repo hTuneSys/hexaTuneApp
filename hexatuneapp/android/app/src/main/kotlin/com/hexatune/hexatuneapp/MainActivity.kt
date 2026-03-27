@@ -11,7 +11,7 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private var audioDeviceDetector: AudioDeviceDetector? = null
-    private val dspAudioService = DspAudioService()
+    private lateinit var dspAudioService: DspAudioService
     private val dspDecoder = DspAudioDecoder()
     private val dspDecodeCache = HashMap<String, DspAudioDecoder.DecodedAudio>()
 
@@ -24,6 +24,7 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        dspAudioService = DspAudioService(this)
         createNotificationChannel()
         setupAudioDeviceDetector()
         setupDspAudioChannel()

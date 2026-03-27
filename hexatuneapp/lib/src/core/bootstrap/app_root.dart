@@ -124,8 +124,7 @@ class _AppRootState extends State<AppRoot> {
         config: const AudioServiceConfig(
           androidNotificationChannelId: 'com.hexatune.audio',
           androidNotificationChannelName: 'HexaTune Audio',
-          androidNotificationOngoing: true,
-          androidStopForegroundOnPause: true,
+          androidStopForegroundOnPause: false,
         ),
       );
       getIt.registerSingleton<HexaTuneAudioHandler>(

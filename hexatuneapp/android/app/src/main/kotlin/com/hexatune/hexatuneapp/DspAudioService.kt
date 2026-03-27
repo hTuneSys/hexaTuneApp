@@ -3,20 +3,33 @@
 
 package com.hexatune.hexatuneapp
 
+import android.content.Context
 import android.media.AudioAttributes
+import android.media.AudioFocusRequest
 import android.media.AudioFormat
+import android.media.AudioManager
 import android.media.AudioTrack
+import android.os.Build
+import android.os.PowerManager
 import android.util.Log
 import kotlin.math.abs
 import kotlin.math.max
 
-class DspAudioService {
+class DspAudioService(private val context: Context) {
     private var audioTrack: AudioTrack? = null
     private var renderThread: Thread? = null
     @Volatile private var isPlaying = false
     private var enginePtr: Long = 0
     @Volatile var totalFramesRendered: Long = 0
         private set
+
+    private var audioFocusRequest: AudioFocusRequest? = null
+    private var wakeLock: PowerManager.WakeLock? = null
+
+    private val audioAttributes: AudioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_MEDIA)
+        .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+        .build()
 
     companion object {
         private const val TAG = "HTD"
@@ -29,6 +42,9 @@ class DspAudioService {
         enginePtr = enginePointer
         totalFramesRendered = 0
 
+        requestAudioFocus()
+        acquireWakeLock()
+
         val minBufSize = AudioTrack.getMinBufferSize(
             sampleRate,
             AudioFormat.CHANNEL_OUT_STEREO,
@@ -38,12 +54,7 @@ class DspAudioService {
         Log.i(TAG, "AudioTrack setup: sampleRate=$sampleRate, minBufSize=$minBufSize, enginePtr=0x${enginePointer.toULong().toString(16)}")
 
         audioTrack = AudioTrack.Builder()
-            .setAudioAttributes(
-                AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_MEDIA)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                    .build()
-            )
+            .setAudioAttributes(audioAttributes)
             .setAudioFormat(
                 AudioFormat.Builder()
                     .setSampleRate(sampleRate)
@@ -117,5 +128,54 @@ class DspAudioService {
         audioTrack?.release()
         audioTrack = null
         enginePtr = 0
+        releaseWakeLock()
+        abandonAudioFocus()
+    }
+
+    private fun requestAudioFocus() {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(audioAttributes)
+                .setOnAudioFocusChangeListener { focusChange ->
+                    Log.d(TAG, "Audio focus changed: $focusChange")
+                }
+                .build()
+            val result = audioManager.requestAudioFocus(audioFocusRequest!!)
+            Log.i(TAG, "Audio focus request result: $result")
+        } else {
+            @Suppress("DEPRECATION")
+            audioManager.requestAudioFocus(
+                { focusChange -> Log.d(TAG, "Audio focus changed: $focusChange") },
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
+        }
+    }
+
+    private fun abandonAudioFocus() {
+        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
+            audioFocusRequest = null
+        }
+        Log.i(TAG, "Audio focus abandoned")
+    }
+
+    private fun acquireWakeLock() {
+        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        wakeLock = powerManager.newWakeLock(
+            PowerManager.PARTIAL_WAKE_LOCK,
+            "hexatune:dsp_render"
+        ).apply { acquire() }
+        Log.i(TAG, "Wake lock acquired")
+    }
+
+    private fun releaseWakeLock() {
+        wakeLock?.let {
+            if (it.isHeld) it.release()
+            wakeLock = null
+        }
+        Log.i(TAG, "Wake lock released")
     }
 }
