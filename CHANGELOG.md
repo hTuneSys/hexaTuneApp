@@ -1,3 +1,18 @@
+# [1.8.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.7.0...v1.8.0) (2026-03-27)
+
+
+### Bug Fixes
+
+* **dsp:** add audio focus and wake lock for background playback ([2d71002](https://github.com/hTuneSys/hexaTuneApp/commit/2d71002915b3688668807c033f91d1f39fe8e8f4))
+* **dsp:** move AudioTrack render into Android foreground Service ([4c177e1](https://github.com/hTuneSys/hexaTuneApp/commit/4c177e1eaad276ebd5d373aa488e2b98ee6f0c6a))
+* **ui:** ensure bottom sheets render above floating bottom bar ([4d9a4d4](https://github.com/hTuneSys/hexaTuneApp/commit/4d9a4d40bac07955e3a4a41115cb53b650f56d0d))
+
+
+### Features
+
+* **harmonizer:** add background audio service with lock screen controls ([078cff1](https://github.com/hTuneSys/hexaTuneApp/commit/078cff16157338f77627dfe097288b396d58a3d2))
+* **provider:** add provider management page with settings and reset password ([0635912](https://github.com/hTuneSys/hexaTuneApp/commit/0635912978b5ac853ca83b63358bf1cea53775a0))
+
 # [1.7.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.6...v1.7.0) (2026-03-27)
 
 
