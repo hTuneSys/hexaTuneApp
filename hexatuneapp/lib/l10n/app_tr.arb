@@ -508,5 +508,19 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "workspaceTitle": "Çalışma Alanınız",
+  "workspacePinnedFormulas": "Sabitlenmiş Formüller",
+  "workspacePinnedEdit": "Düzenle",
+  "workspaceQuickAdd": "Hızlı Ekle",
+  "workspaceStats": "İstatistikler",
+  "workspaceInventory": "Envanter",
+  "workspaceCategory": "Kategori",
+  "workspaceFormula": "Formül",
+  "workspaceAmbience": "Ambiyans",
+  "workspaceRecentlyUsed": "Son Kullanılanlar",
+  "workspaceSearchToPin": "Sabitlemek için ara",
+  "workspaceNoPinnedFormulas": "Sabitlenmiş formül yok",
+  "workspaceNoRecentlyUsed": "Son kullanılan formül yok"
 }

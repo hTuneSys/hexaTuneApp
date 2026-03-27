@@ -511,5 +511,19 @@
         "type": "String"
       }
     }
-  }
+  },
+
+  "workspaceTitle": "Your Workspace",
+  "workspacePinnedFormulas": "Pinned Formulas",
+  "workspacePinnedEdit": "Edit",
+  "workspaceQuickAdd": "Quick Add",
+  "workspaceStats": "Stats",
+  "workspaceInventory": "Inventory",
+  "workspaceCategory": "Category",
+  "workspaceFormula": "Formula",
+  "workspaceAmbience": "Ambiance",
+  "workspaceRecentlyUsed": "Recently Used",
+  "workspaceSearchToPin": "Search to pin",
+  "workspaceNoPinnedFormulas": "No pinned formulas",
+  "workspaceNoRecentlyUsed": "No recently used formulas"
 }

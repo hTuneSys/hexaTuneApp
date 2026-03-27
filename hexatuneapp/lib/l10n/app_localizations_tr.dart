@@ -1142,4 +1142,43 @@ class AppLocalizationsTr extends AppLocalizations {
   String otpExpiresIn(String time) {
     return 'Kodun süresi $time içinde doluyor';
   }
+
+  @override
+  String get workspaceTitle => 'Çalışma Alanınız';
+
+  @override
+  String get workspacePinnedFormulas => 'Sabitlenmiş Formüller';
+
+  @override
+  String get workspacePinnedEdit => 'Düzenle';
+
+  @override
+  String get workspaceQuickAdd => 'Hızlı Ekle';
+
+  @override
+  String get workspaceStats => 'İstatistikler';
+
+  @override
+  String get workspaceInventory => 'Envanter';
+
+  @override
+  String get workspaceCategory => 'Kategori';
+
+  @override
+  String get workspaceFormula => 'Formül';
+
+  @override
+  String get workspaceAmbience => 'Ambiyans';
+
+  @override
+  String get workspaceRecentlyUsed => 'Son Kullanılanlar';
+
+  @override
+  String get workspaceSearchToPin => 'Sabitlemek için ara';
+
+  @override
+  String get workspaceNoPinnedFormulas => 'Sabitlenmiş formül yok';
+
+  @override
+  String get workspaceNoRecentlyUsed => 'Son kullanılan formül yok';
 }

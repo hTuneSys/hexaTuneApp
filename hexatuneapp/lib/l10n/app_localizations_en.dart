@@ -1132,4 +1132,43 @@ class AppLocalizationsEn extends AppLocalizations {
   String otpExpiresIn(String time) {
     return 'Code expires in $time';
   }
+
+  @override
+  String get workspaceTitle => 'Your Workspace';
+
+  @override
+  String get workspacePinnedFormulas => 'Pinned Formulas';
+
+  @override
+  String get workspacePinnedEdit => 'Edit';
+
+  @override
+  String get workspaceQuickAdd => 'Quick Add';
+
+  @override
+  String get workspaceStats => 'Stats';
+
+  @override
+  String get workspaceInventory => 'Inventory';
+
+  @override
+  String get workspaceCategory => 'Category';
+
+  @override
+  String get workspaceFormula => 'Formula';
+
+  @override
+  String get workspaceAmbience => 'Ambiance';
+
+  @override
+  String get workspaceRecentlyUsed => 'Recently Used';
+
+  @override
+  String get workspaceSearchToPin => 'Search to pin';
+
+  @override
+  String get workspaceNoPinnedFormulas => 'No pinned formulas';
+
+  @override
+  String get workspaceNoRecentlyUsed => 'No recently used formulas';
 }

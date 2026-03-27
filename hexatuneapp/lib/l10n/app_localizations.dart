@@ -2215,6 +2215,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Code expires in {time}'**
   String otpExpiresIn(String time);
+
+  /// No description provided for @workspaceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Workspace'**
+  String get workspaceTitle;
+
+  /// No description provided for @workspacePinnedFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'Pinned Formulas'**
+  String get workspacePinnedFormulas;
+
+  /// No description provided for @workspacePinnedEdit.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get workspacePinnedEdit;
+
+  /// No description provided for @workspaceQuickAdd.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick Add'**
+  String get workspaceQuickAdd;
+
+  /// No description provided for @workspaceStats.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get workspaceStats;
+
+  /// No description provided for @workspaceInventory.
+  ///
+  /// In en, this message translates to:
+  /// **'Inventory'**
+  String get workspaceInventory;
+
+  /// No description provided for @workspaceCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get workspaceCategory;
+
+  /// No description provided for @workspaceFormula.
+  ///
+  /// In en, this message translates to:
+  /// **'Formula'**
+  String get workspaceFormula;
+
+  /// No description provided for @workspaceAmbience.
+  ///
+  /// In en, this message translates to:
+  /// **'Ambiance'**
+  String get workspaceAmbience;
+
+  /// No description provided for @workspaceRecentlyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Used'**
+  String get workspaceRecentlyUsed;
+
+  /// No description provided for @workspaceSearchToPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Search to pin'**
+  String get workspaceSearchToPin;
+
+  /// No description provided for @workspaceNoPinnedFormulas.
+  ///
+  /// In en, this message translates to:
+  /// **'No pinned formulas'**
+  String get workspaceNoPinnedFormulas;
+
+  /// No description provided for @workspaceNoRecentlyUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'No recently used formulas'**
+  String get workspaceNoRecentlyUsed;
 }
 
 class _AppLocalizationsDelegate

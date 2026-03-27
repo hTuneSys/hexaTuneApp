@@ -53,6 +53,7 @@ import 'package:hexatuneapp/src/pages/ambience/ambience_list_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_create_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_edit_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_view_page.dart';
+import 'package:hexatuneapp/src/pages/main/workspace/workspace_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -109,7 +110,16 @@ class AppRouter {
                 if (!isHarmonizerPage) const MiniHarmonizerBar(),
               ],
             ),
-            bottomNavigationBar: const AppBottomBar(),
+            bottomNavigationBar: AppBottomBar(
+              onItemTapped: (index) {
+                switch (index) {
+                  case 2:
+                    context.go(RouteNames.workspace);
+                  default:
+                    break;
+                }
+              },
+            ),
           );
         },
         routes: [
@@ -285,6 +295,10 @@ class AppRouter {
           GoRoute(
             path: RouteNames.logMonitor,
             builder: (context, state) => const DummyLogMonitorPage(),
+          ),
+          GoRoute(
+            path: RouteNames.workspace,
+            builder: (context, state) => const WorkspacePage(),
           ),
         ],
       ),

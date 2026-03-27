@@ -73,6 +73,8 @@ import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart' as _i810;
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart' as _i148;
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
     as _i325;
+import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart'
+    as _i1021;
 import 'package:injectable/injectable.dart' as _i526;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -93,6 +95,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i925.AmbienceService>(
       () => _i925.AmbienceService(
+        gh<_i148.PreferencesService>(),
+        gh<_i571.LogService>(),
+      ),
+    );
+    gh.singleton<_i1021.WorkspacePinService>(
+      () => _i1021.WorkspacePinService(
         gh<_i148.PreferencesService>(),
         gh<_i571.LogService>(),
       ),
