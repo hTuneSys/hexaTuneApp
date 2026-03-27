@@ -1,3 +1,29 @@
+# [1.7.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.6...v1.7.0) (2026-03-27)
+
+
+### Bug Fixes
+
+* **auth:** add sign-in link to forgot password page ([48d4599](https://github.com/hTuneSys/hexaTuneApp/commit/48d4599fadaf6389786a7a3f0c0c68be12ec792c))
+* **inventory:** add image picker to create and edit pages ([73e9546](https://github.com/hTuneSys/hexaTuneApp/commit/73e9546a8f774189a240cb1f59aec2f4f868f8c0))
+* **inventory:** load existing images via presigned URL in view and edit pages ([98a7c90](https://github.com/hTuneSys/hexaTuneApp/commit/98a7c906eee523a3280c4190667c7b27562484fa))
+* **ui:** correct hexagon rotation to flat-top orientation ([2779f4c](https://github.com/hTuneSys/hexaTuneApp/commit/2779f4c0c9ba7a1c2bd5c46a8b4b15df01b37e99))
+
+
+### Features
+
+* **ambience:** add production ambience pages with list/create/edit/view ([6eb9195](https://github.com/hTuneSys/hexaTuneApp/commit/6eb9195d9a6d85d0cdd027810221a3f7524d48a5))
+* **api:** migrate to new OpenAPI — OTP timer, new schemas, model updates ([a5ba1db](https://github.com/hTuneSys/hexaTuneApp/commit/a5ba1db1eaad1c0d4c6d5d6618e4eab9b5b6266e))
+* **category:** add production category pages with list/create/edit/view ([417a949](https://github.com/hTuneSys/hexaTuneApp/commit/417a94977e699330db1531df216a53e0a3abb0dc))
+* **error:** integrate API error type URIs with localized messages ([2f2e4f5](https://github.com/hTuneSys/hexaTuneApp/commit/2f2e4f52b9bdc6bf1202e9daacc8f156556924f3))
+* **formula:** add production formula pages with list/create/edit/view ([fbb9f56](https://github.com/hTuneSys/hexaTuneApp/commit/fbb9f565b80f4e8c996bd3e5d130d3375979a6de))
+* **inventory:** add production inventory pages with list/create/edit/view ([0f4b022](https://github.com/hTuneSys/hexaTuneApp/commit/0f4b0223b3eca3805e017e48a809fc377e99c43f))
+* **router:** wire bottom bar home button to home route ([93f2569](https://github.com/hTuneSys/hexaTuneApp/commit/93f2569d3b745d83b16cbbde7095e04dd1feddd0))
+* **ui:** add AppSnackBar widget and replace all raw SnackBar calls ([f5750ca](https://github.com/hTuneSys/hexaTuneApp/commit/f5750ca80546f59b4df36e3466fc71f6a2248b60))
+* **ui:** add shared bottom navigation bar with center FAB ([25363f0](https://github.com/hTuneSys/hexaTuneApp/commit/25363f0c99489bb83c6596b6d6bf0b6ce66b5b4d))
+* **ui:** autocomplete labels, shadow category picker, fix delete button ([f69645b](https://github.com/hTuneSys/hexaTuneApp/commit/f69645b534ef96ff48898cee551e2fef36dacca1))
+* **ui:** resize auth icons to 175 and add bottom bar to shell ([33b57c5](https://github.com/hTuneSys/hexaTuneApp/commit/33b57c5f4a20738416d3e2c919cf39a73b2a629a))
+* **workspace:** add workspace page with pinned formulas and navigation ([065109c](https://github.com/hTuneSys/hexaTuneApp/commit/065109c42a54875a450cb9adc8e63f064c2039a0))
+
 ## [1.6.6](https://github.com/hTuneSys/hexaTuneApp/compare/v1.6.5...v1.6.6) (2026-03-23)
 
 
