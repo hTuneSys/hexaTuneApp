@@ -63,4 +63,6 @@ class RouteNames {
   static const String wallet = '/dev/wallet';
   static const String logMonitor = '/dev/log-monitor';
   static const String workspace = '/workspace';
+  static const String settings = '/settings';
+  static const String providerManagement = '/settings/providers';
 }

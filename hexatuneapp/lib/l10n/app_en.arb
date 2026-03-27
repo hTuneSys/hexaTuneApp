@@ -513,6 +513,49 @@
     }
   },
 
+  "settingsTitle": "Settings",
+  "settingsLinkedAccounts": "Linked Accounts",
+  "settingsLinkedAccountsSubtitle": "Manage your authentication providers",
+
+  "providerTitle": "Linked Accounts",
+  "providerEmailSection": "Email",
+  "providerGoogleSection": "Google",
+  "providerAppleSection": "Apple",
+  "providerLinkedAt": "Linked {date}",
+  "@providerLinkedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "providerLinkWithEmail": "Link with Email",
+  "providerLinkWithGoogle": "Link with Google",
+  "providerLinkWithApple": "Link with Apple",
+  "providerUnlink": "Unlink",
+  "providerResetPassword": "Reset Password",
+  "providerEmailHint": "Email address",
+  "providerPasswordHint": "Password",
+  "providerEmailRequired": "Email is required",
+  "providerPasswordRequired": "Password is required",
+  "providerEmailLinked": "Email provider linked",
+  "providerGoogleLinked": "Google account linked",
+  "providerAppleLinked": "Apple account linked",
+  "providerUnlinked": "Provider unlinked",
+  "providerUnlinkConfirm": "Are you sure you want to unlink this provider?",
+  "providerUnlinkCancel": "Cancel",
+  "providerUnlinkConfirmAction": "Unlink",
+  "providerVerifyEmail": "Verify your email",
+  "providerVerifyEmailSubtitle": "Enter the verification code sent to your email",
+  "providerResetPasswordTitle": "Reset Password",
+  "providerResetPasswordSubtitle": "Enter the code sent to your email and set a new password",
+  "providerPasswordResetSuccess": "Password reset successfully",
+  "providerOAuthCancelled": "Sign-in was cancelled",
+  "providerOAuthNotAvailable": "Apple Sign-In is only available on iOS and macOS",
+  "providerNotLinked": "Not linked",
+  "providerEmailVerified": "Verified",
+  "providerEmailNotVerified": "Not verified",
+
   "workspaceTitle": "Your Workspace",
   "workspacePinnedFormulas": "Pinned Formulas",
   "workspacePinnedEdit": "Edit",

@@ -2216,6 +2216,210 @@ abstract class AppLocalizations {
   /// **'Code expires in {time}'**
   String otpExpiresIn(String time);
 
+  /// No description provided for @settingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsLinkedAccounts.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked Accounts'**
+  String get settingsLinkedAccounts;
+
+  /// No description provided for @settingsLinkedAccountsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your authentication providers'**
+  String get settingsLinkedAccountsSubtitle;
+
+  /// No description provided for @providerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked Accounts'**
+  String get providerTitle;
+
+  /// No description provided for @providerEmailSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get providerEmailSection;
+
+  /// No description provided for @providerGoogleSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Google'**
+  String get providerGoogleSection;
+
+  /// No description provided for @providerAppleSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple'**
+  String get providerAppleSection;
+
+  /// No description provided for @providerLinkedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Linked {date}'**
+  String providerLinkedAt(String date);
+
+  /// No description provided for @providerLinkWithEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Link with Email'**
+  String get providerLinkWithEmail;
+
+  /// No description provided for @providerLinkWithGoogle.
+  ///
+  /// In en, this message translates to:
+  /// **'Link with Google'**
+  String get providerLinkWithGoogle;
+
+  /// No description provided for @providerLinkWithApple.
+  ///
+  /// In en, this message translates to:
+  /// **'Link with Apple'**
+  String get providerLinkWithApple;
+
+  /// No description provided for @providerUnlink.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get providerUnlink;
+
+  /// No description provided for @providerResetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get providerResetPassword;
+
+  /// No description provided for @providerEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Email address'**
+  String get providerEmailHint;
+
+  /// No description provided for @providerPasswordHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get providerPasswordHint;
+
+  /// No description provided for @providerEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get providerEmailRequired;
+
+  /// No description provided for @providerPasswordRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is required'**
+  String get providerPasswordRequired;
+
+  /// No description provided for @providerEmailLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Email provider linked'**
+  String get providerEmailLinked;
+
+  /// No description provided for @providerGoogleLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Google account linked'**
+  String get providerGoogleLinked;
+
+  /// No description provided for @providerAppleLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple account linked'**
+  String get providerAppleLinked;
+
+  /// No description provided for @providerUnlinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Provider unlinked'**
+  String get providerUnlinked;
+
+  /// No description provided for @providerUnlinkConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to unlink this provider?'**
+  String get providerUnlinkConfirm;
+
+  /// No description provided for @providerUnlinkCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get providerUnlinkCancel;
+
+  /// No description provided for @providerUnlinkConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlink'**
+  String get providerUnlinkConfirmAction;
+
+  /// No description provided for @providerVerifyEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify your email'**
+  String get providerVerifyEmail;
+
+  /// No description provided for @providerVerifyEmailSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the verification code sent to your email'**
+  String get providerVerifyEmailSubtitle;
+
+  /// No description provided for @providerResetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get providerResetPasswordTitle;
+
+  /// No description provided for @providerResetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the code sent to your email and set a new password'**
+  String get providerResetPasswordSubtitle;
+
+  /// No description provided for @providerPasswordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully'**
+  String get providerPasswordResetSuccess;
+
+  /// No description provided for @providerOAuthCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign-in was cancelled'**
+  String get providerOAuthCancelled;
+
+  /// No description provided for @providerOAuthNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Apple Sign-In is only available on iOS and macOS'**
+  String get providerOAuthNotAvailable;
+
+  /// No description provided for @providerNotLinked.
+  ///
+  /// In en, this message translates to:
+  /// **'Not linked'**
+  String get providerNotLinked;
+
+  /// No description provided for @providerEmailVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified'**
+  String get providerEmailVerified;
+
+  /// No description provided for @providerEmailNotVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not verified'**
+  String get providerEmailNotVerified;
+
   /// No description provided for @workspaceTitle.
   ///
   /// In en, this message translates to:

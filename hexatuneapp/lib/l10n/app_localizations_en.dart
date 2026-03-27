@@ -1134,6 +1134,115 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get settingsTitle => 'Settings';
+
+  @override
+  String get settingsLinkedAccounts => 'Linked Accounts';
+
+  @override
+  String get settingsLinkedAccountsSubtitle =>
+      'Manage your authentication providers';
+
+  @override
+  String get providerTitle => 'Linked Accounts';
+
+  @override
+  String get providerEmailSection => 'Email';
+
+  @override
+  String get providerGoogleSection => 'Google';
+
+  @override
+  String get providerAppleSection => 'Apple';
+
+  @override
+  String providerLinkedAt(String date) {
+    return 'Linked $date';
+  }
+
+  @override
+  String get providerLinkWithEmail => 'Link with Email';
+
+  @override
+  String get providerLinkWithGoogle => 'Link with Google';
+
+  @override
+  String get providerLinkWithApple => 'Link with Apple';
+
+  @override
+  String get providerUnlink => 'Unlink';
+
+  @override
+  String get providerResetPassword => 'Reset Password';
+
+  @override
+  String get providerEmailHint => 'Email address';
+
+  @override
+  String get providerPasswordHint => 'Password';
+
+  @override
+  String get providerEmailRequired => 'Email is required';
+
+  @override
+  String get providerPasswordRequired => 'Password is required';
+
+  @override
+  String get providerEmailLinked => 'Email provider linked';
+
+  @override
+  String get providerGoogleLinked => 'Google account linked';
+
+  @override
+  String get providerAppleLinked => 'Apple account linked';
+
+  @override
+  String get providerUnlinked => 'Provider unlinked';
+
+  @override
+  String get providerUnlinkConfirm =>
+      'Are you sure you want to unlink this provider?';
+
+  @override
+  String get providerUnlinkCancel => 'Cancel';
+
+  @override
+  String get providerUnlinkConfirmAction => 'Unlink';
+
+  @override
+  String get providerVerifyEmail => 'Verify your email';
+
+  @override
+  String get providerVerifyEmailSubtitle =>
+      'Enter the verification code sent to your email';
+
+  @override
+  String get providerResetPasswordTitle => 'Reset Password';
+
+  @override
+  String get providerResetPasswordSubtitle =>
+      'Enter the code sent to your email and set a new password';
+
+  @override
+  String get providerPasswordResetSuccess => 'Password reset successfully';
+
+  @override
+  String get providerOAuthCancelled => 'Sign-in was cancelled';
+
+  @override
+  String get providerOAuthNotAvailable =>
+      'Apple Sign-In is only available on iOS and macOS';
+
+  @override
+  String get providerNotLinked => 'Not linked';
+
+  @override
+  String get providerEmailVerified => 'Verified';
+
+  @override
+  String get providerEmailNotVerified => 'Not verified';
+
+  @override
   String get workspaceTitle => 'Your Workspace';
 
   @override

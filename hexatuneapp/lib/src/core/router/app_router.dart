@@ -51,6 +51,8 @@ import 'package:hexatuneapp/src/pages/ambience/ambience_create_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_edit_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_view_page.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_page.dart';
+import 'package:hexatuneapp/src/pages/main/settings/settings_page.dart';
+import 'package:hexatuneapp/src/pages/provider/provider_page.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -114,6 +116,8 @@ class AppRouter {
                     context.go(RouteNames.home);
                   case 2:
                     context.go(RouteNames.workspace);
+                  case 3:
+                    context.go(RouteNames.settings);
                   default:
                     break;
                 }
@@ -285,6 +289,14 @@ class AppRouter {
           GoRoute(
             path: RouteNames.workspace,
             builder: (context, state) => const WorkspacePage(),
+          ),
+          GoRoute(
+            path: RouteNames.settings,
+            builder: (context, state) => const SettingsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.providerManagement,
+            builder: (context, state) => const ProviderPage(),
           ),
         ],
       ),

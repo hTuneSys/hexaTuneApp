@@ -1144,6 +1144,115 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get settingsTitle => 'Ayarlar';
+
+  @override
+  String get settingsLinkedAccounts => 'Bağlı Hesaplar';
+
+  @override
+  String get settingsLinkedAccountsSubtitle =>
+      'Kimlik doğrulama sağlayıcılarınızı yönetin';
+
+  @override
+  String get providerTitle => 'Bağlı Hesaplar';
+
+  @override
+  String get providerEmailSection => 'E-posta';
+
+  @override
+  String get providerGoogleSection => 'Google';
+
+  @override
+  String get providerAppleSection => 'Apple';
+
+  @override
+  String providerLinkedAt(String date) {
+    return 'Bağlanma tarihi: $date';
+  }
+
+  @override
+  String get providerLinkWithEmail => 'E-posta ile Bağla';
+
+  @override
+  String get providerLinkWithGoogle => 'Google ile Bağla';
+
+  @override
+  String get providerLinkWithApple => 'Apple ile Bağla';
+
+  @override
+  String get providerUnlink => 'Bağlantıyı Kaldır';
+
+  @override
+  String get providerResetPassword => 'Şifre Sıfırla';
+
+  @override
+  String get providerEmailHint => 'E-posta adresi';
+
+  @override
+  String get providerPasswordHint => 'Şifre';
+
+  @override
+  String get providerEmailRequired => 'E-posta gereklidir';
+
+  @override
+  String get providerPasswordRequired => 'Şifre gereklidir';
+
+  @override
+  String get providerEmailLinked => 'E-posta sağlayıcısı bağlandı';
+
+  @override
+  String get providerGoogleLinked => 'Google hesabı bağlandı';
+
+  @override
+  String get providerAppleLinked => 'Apple hesabı bağlandı';
+
+  @override
+  String get providerUnlinked => 'Sağlayıcı bağlantısı kaldırıldı';
+
+  @override
+  String get providerUnlinkConfirm =>
+      'Bu sağlayıcının bağlantısını kaldırmak istediğinizden emin misiniz?';
+
+  @override
+  String get providerUnlinkCancel => 'İptal';
+
+  @override
+  String get providerUnlinkConfirmAction => 'Bağlantıyı Kaldır';
+
+  @override
+  String get providerVerifyEmail => 'E-postanızı doğrulayın';
+
+  @override
+  String get providerVerifyEmailSubtitle =>
+      'E-postanıza gönderilen doğrulama kodunu girin';
+
+  @override
+  String get providerResetPasswordTitle => 'Şifre Sıfırla';
+
+  @override
+  String get providerResetPasswordSubtitle =>
+      'E-postanıza gönderilen kodu girin ve yeni şifre belirleyin';
+
+  @override
+  String get providerPasswordResetSuccess => 'Şifre başarıyla sıfırlandı';
+
+  @override
+  String get providerOAuthCancelled => 'Oturum açma iptal edildi';
+
+  @override
+  String get providerOAuthNotAvailable =>
+      'Apple ile oturum açma yalnızca iOS ve macOS\'ta kullanılabilir';
+
+  @override
+  String get providerNotLinked => 'Bağlı değil';
+
+  @override
+  String get providerEmailVerified => 'Doğrulanmış';
+
+  @override
+  String get providerEmailNotVerified => 'Doğrulanmamış';
+
+  @override
   String get workspaceTitle => 'Çalışma Alanınız';
 
   @override

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ProviderResponse {
 
- String get providerType; String get linkedAt; String? get email;
+ String get providerType; String get linkedAt; String? get email; bool? get emailVerified;
 /// Create a copy of ProviderResponse
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ProviderResponseCopyWith<ProviderResponse> get copyWith => _$ProviderResponseCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProviderResponse&&(identical(other.providerType, providerType) || other.providerType == providerType)&&(identical(other.linkedAt, linkedAt) || other.linkedAt == linkedAt)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProviderResponse&&(identical(other.providerType, providerType) || other.providerType == providerType)&&(identical(other.linkedAt, linkedAt) || other.linkedAt == linkedAt)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,providerType,linkedAt,email);
+int get hashCode => Object.hash(runtimeType,providerType,linkedAt,email,emailVerified);
 
 @override
 String toString() {
-  return 'ProviderResponse(providerType: $providerType, linkedAt: $linkedAt, email: $email)';
+  return 'ProviderResponse(providerType: $providerType, linkedAt: $linkedAt, email: $email, emailVerified: $emailVerified)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ProviderResponseCopyWith<$Res>  {
   factory $ProviderResponseCopyWith(ProviderResponse value, $Res Function(ProviderResponse) _then) = _$ProviderResponseCopyWithImpl;
 @useResult
 $Res call({
- String providerType, String linkedAt, String? email
+ String providerType, String linkedAt, String? email, bool? emailVerified
 });
 
 
@@ -65,12 +65,13 @@ class _$ProviderResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProviderResponse
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? providerType = null,Object? linkedAt = null,Object? email = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? providerType = null,Object? linkedAt = null,Object? email = freezed,Object? emailVerified = freezed,}) {
   return _then(_self.copyWith(
 providerType: null == providerType ? _self.providerType : providerType // ignore: cast_nullable_to_non_nullable
 as String,linkedAt: null == linkedAt ? _self.linkedAt : linkedAt // ignore: cast_nullable_to_non_nullable
 as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,emailVerified: freezed == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String providerType,  String linkedAt,  String? email)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String providerType,  String linkedAt,  String? email,  bool? emailVerified)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ProviderResponse() when $default != null:
-return $default(_that.providerType,_that.linkedAt,_that.email);case _:
+return $default(_that.providerType,_that.linkedAt,_that.email,_that.emailVerified);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.providerType,_that.linkedAt,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String providerType,  String linkedAt,  String? email)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String providerType,  String linkedAt,  String? email,  bool? emailVerified)  $default,) {final _that = this;
 switch (_that) {
 case _ProviderResponse():
-return $default(_that.providerType,_that.linkedAt,_that.email);case _:
+return $default(_that.providerType,_that.linkedAt,_that.email,_that.emailVerified);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.providerType,_that.linkedAt,_that.email);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String providerType,  String linkedAt,  String? email)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String providerType,  String linkedAt,  String? email,  bool? emailVerified)?  $default,) {final _that = this;
 switch (_that) {
 case _ProviderResponse() when $default != null:
-return $default(_that.providerType,_that.linkedAt,_that.email);case _:
+return $default(_that.providerType,_that.linkedAt,_that.email,_that.emailVerified);case _:
   return null;
 
 }
@@ -211,12 +212,13 @@ return $default(_that.providerType,_that.linkedAt,_that.email);case _:
 @JsonSerializable()
 
 class _ProviderResponse implements ProviderResponse {
-  const _ProviderResponse({required this.providerType, required this.linkedAt, this.email});
+  const _ProviderResponse({required this.providerType, required this.linkedAt, this.email, this.emailVerified});
   factory _ProviderResponse.fromJson(Map<String, dynamic> json) => _$ProviderResponseFromJson(json);
 
 @override final  String providerType;
 @override final  String linkedAt;
 @override final  String? email;
+@override final  bool? emailVerified;
 
 /// Create a copy of ProviderResponse
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProviderResponse&&(identical(other.providerType, providerType) || other.providerType == providerType)&&(identical(other.linkedAt, linkedAt) || other.linkedAt == linkedAt)&&(identical(other.email, email) || other.email == email));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProviderResponse&&(identical(other.providerType, providerType) || other.providerType == providerType)&&(identical(other.linkedAt, linkedAt) || other.linkedAt == linkedAt)&&(identical(other.email, email) || other.email == email)&&(identical(other.emailVerified, emailVerified) || other.emailVerified == emailVerified));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,providerType,linkedAt,email);
+int get hashCode => Object.hash(runtimeType,providerType,linkedAt,email,emailVerified);
 
 @override
 String toString() {
-  return 'ProviderResponse(providerType: $providerType, linkedAt: $linkedAt, email: $email)';
+  return 'ProviderResponse(providerType: $providerType, linkedAt: $linkedAt, email: $email, emailVerified: $emailVerified)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$ProviderResponseCopyWith<$Res> implements $ProviderRespon
   factory _$ProviderResponseCopyWith(_ProviderResponse value, $Res Function(_ProviderResponse) _then) = __$ProviderResponseCopyWithImpl;
 @override @useResult
 $Res call({
- String providerType, String linkedAt, String? email
+ String providerType, String linkedAt, String? email, bool? emailVerified
 });
 
 
@@ -268,12 +270,13 @@ class __$ProviderResponseCopyWithImpl<$Res>
 
 /// Create a copy of ProviderResponse
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? providerType = null,Object? linkedAt = null,Object? email = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? providerType = null,Object? linkedAt = null,Object? email = freezed,Object? emailVerified = freezed,}) {
   return _then(_ProviderResponse(
 providerType: null == providerType ? _self.providerType : providerType // ignore: cast_nullable_to_non_nullable
 as String,linkedAt: null == linkedAt ? _self.linkedAt : linkedAt // ignore: cast_nullable_to_non_nullable
 as String,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,emailVerified: freezed == emailVerified ? _self.emailVerified : emailVerified // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 

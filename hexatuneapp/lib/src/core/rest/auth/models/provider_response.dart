@@ -13,6 +13,7 @@ abstract class ProviderResponse with _$ProviderResponse {
     required String providerType,
     required String linkedAt,
     String? email,
+    bool? emailVerified,
   }) = _ProviderResponse;
 
   factory ProviderResponse.fromJson(Map<String, dynamic> json) =>

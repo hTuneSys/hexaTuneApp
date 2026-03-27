@@ -11,6 +11,7 @@ _ProviderResponse _$ProviderResponseFromJson(Map<String, dynamic> json) =>
       providerType: json['providerType'] as String,
       linkedAt: json['linkedAt'] as String,
       email: json['email'] as String?,
+      emailVerified: json['emailVerified'] as bool?,
     );
 
 Map<String, dynamic> _$ProviderResponseToJson(_ProviderResponse instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$ProviderResponseToJson(_ProviderResponse instance) =>
       'providerType': instance.providerType,
       'linkedAt': instance.linkedAt,
       'email': instance.email,
+      'emailVerified': instance.emailVerified,
     };

@@ -510,6 +510,49 @@
     }
   },
 
+  "settingsTitle": "Ayarlar",
+  "settingsLinkedAccounts": "Bağlı Hesaplar",
+  "settingsLinkedAccountsSubtitle": "Kimlik doğrulama sağlayıcılarınızı yönetin",
+
+  "providerTitle": "Bağlı Hesaplar",
+  "providerEmailSection": "E-posta",
+  "providerGoogleSection": "Google",
+  "providerAppleSection": "Apple",
+  "providerLinkedAt": "Bağlanma tarihi: {date}",
+  "@providerLinkedAt": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "providerLinkWithEmail": "E-posta ile Bağla",
+  "providerLinkWithGoogle": "Google ile Bağla",
+  "providerLinkWithApple": "Apple ile Bağla",
+  "providerUnlink": "Bağlantıyı Kaldır",
+  "providerResetPassword": "Şifre Sıfırla",
+  "providerEmailHint": "E-posta adresi",
+  "providerPasswordHint": "Şifre",
+  "providerEmailRequired": "E-posta gereklidir",
+  "providerPasswordRequired": "Şifre gereklidir",
+  "providerEmailLinked": "E-posta sağlayıcısı bağlandı",
+  "providerGoogleLinked": "Google hesabı bağlandı",
+  "providerAppleLinked": "Apple hesabı bağlandı",
+  "providerUnlinked": "Sağlayıcı bağlantısı kaldırıldı",
+  "providerUnlinkConfirm": "Bu sağlayıcının bağlantısını kaldırmak istediğinizden emin misiniz?",
+  "providerUnlinkCancel": "İptal",
+  "providerUnlinkConfirmAction": "Bağlantıyı Kaldır",
+  "providerVerifyEmail": "E-postanızı doğrulayın",
+  "providerVerifyEmailSubtitle": "E-postanıza gönderilen doğrulama kodunu girin",
+  "providerResetPasswordTitle": "Şifre Sıfırla",
+  "providerResetPasswordSubtitle": "E-postanıza gönderilen kodu girin ve yeni şifre belirleyin",
+  "providerPasswordResetSuccess": "Şifre başarıyla sıfırlandı",
+  "providerOAuthCancelled": "Oturum açma iptal edildi",
+  "providerOAuthNotAvailable": "Apple ile oturum açma yalnızca iOS ve macOS'ta kullanılabilir",
+  "providerNotLinked": "Bağlı değil",
+  "providerEmailVerified": "Doğrulanmış",
+  "providerEmailNotVerified": "Doğrulanmamış",
+
   "workspaceTitle": "Çalışma Alanınız",
   "workspacePinnedFormulas": "Sabitlenmiş Formüller",
   "workspacePinnedEdit": "Düzenle",
