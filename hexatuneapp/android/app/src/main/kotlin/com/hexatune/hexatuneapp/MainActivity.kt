@@ -2,16 +2,17 @@ package com.hexatune.hexatuneapp
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.core.content.ContextCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private var audioDeviceDetector: AudioDeviceDetector? = null
-    private lateinit var dspAudioService: DspAudioService
     private val dspDecoder = DspAudioDecoder()
     private val dspDecodeCache = HashMap<String, DspAudioDecoder.DecodedAudio>()
 
@@ -24,7 +25,6 @@ class MainActivity : FlutterActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        dspAudioService = DspAudioService(this)
         createNotificationChannel()
         setupAudioDeviceDetector()
         setupDspAudioChannel()
@@ -33,7 +33,6 @@ class MainActivity : FlutterActivity() {
     override fun onDestroy() {
         audioDeviceDetector?.stop()
         audioDeviceDetector = null
-        dspAudioService.stop()
         super.onDestroy()
     }
 
@@ -63,11 +62,16 @@ class MainActivity : FlutterActivity() {
                     "startAudio" -> {
                         val sampleRate = call.argument<Int>("sampleRate") ?: 48000
                         val enginePtr = call.argument<Number>("enginePtr")?.toLong() ?: 0L
-                        dspAudioService.start(sampleRate, enginePtr)
+                        val intent = Intent(this@MainActivity, DspAudioService::class.java).apply {
+                            action = DspAudioService.ACTION_START
+                            putExtra(DspAudioService.EXTRA_SAMPLE_RATE, sampleRate)
+                            putExtra(DspAudioService.EXTRA_ENGINE_PTR, enginePtr)
+                        }
+                        ContextCompat.startForegroundService(this@MainActivity, intent)
                         result.success(null)
                     }
                     "stopAudio" -> {
-                        dspAudioService.stop()
+                        stopService(Intent(this@MainActivity, DspAudioService::class.java))
                         result.success(null)
                     }
 

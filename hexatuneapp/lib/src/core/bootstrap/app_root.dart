@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:audio_session/audio_session.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/bootstrap/app_bootstrap.dart';
@@ -13,6 +14,7 @@ import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
 import 'package:hexatuneapp/src/core/harmonizer/hexatune_audio_handler.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/permission/permission_service.dart';
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
 import 'package:hexatuneapp/src/core/theme/hexatune.dart';
 import 'package:hexatuneapp/src/app.dart';
@@ -81,6 +83,13 @@ class _AppRootState extends State<AppRoot> {
 
     // Steps 1–N: Service bootstrap (indices shifted by 1 for DI).
     try {
+      // Request notification permission (required for Android 13+ foreground
+      // service notification visibility).
+      await _requestNotificationPermission();
+
+      // Configure audio session for music playback.
+      await _configureAudioSession();
+
       // Initialize audio service (one-isolate mode) before other services.
       await _initAudioService();
 
@@ -111,6 +120,47 @@ class _AppRootState extends State<AppRoot> {
     _runBootstrap();
   }
 
+  /// Requests the `POST_NOTIFICATIONS` runtime permission on Android 13+.
+  ///
+  /// Without this, the foreground service notification is invisible and some
+  /// devices may not keep the service alive. Non-fatal — the app works without
+  /// it but background playback may be unreliable.
+  Future<void> _requestNotificationPermission() async {
+    try {
+      final log = getIt<LogService>();
+      final result = await getIt<PermissionService>().requestNotification();
+      log.info(
+        'Notification permission result: ${result.name}',
+        category: LogCategory.permission,
+      );
+    } catch (e) {
+      getIt<LogService>().warning(
+        'Notification permission request failed: $e',
+        category: LogCategory.permission,
+      );
+    }
+  }
+
+  /// Configures the [AudioSession] for music playback.
+  ///
+  /// Tells the OS this app plays long-form audio, enabling proper audio focus
+  /// management and interruption handling (e.g. phone calls, other media apps).
+  Future<void> _configureAudioSession() async {
+    try {
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.music());
+      getIt<LogService>().info(
+        'AudioSession configured for music playback',
+        category: LogCategory.dsp,
+      );
+    } catch (e) {
+      getIt<LogService>().warning(
+        'AudioSession configuration failed: $e',
+        category: LogCategory.dsp,
+      );
+    }
+  }
+
   /// Initializes the [AudioService] in one-isolate mode and registers the
   /// [HexaTuneAudioHandler] singleton.  Non-fatal — the app works without it.
   Future<void> _initAudioService() async {
@@ -130,6 +180,11 @@ class _AppRootState extends State<AppRoot> {
       getIt.registerSingleton<HexaTuneAudioHandler>(
         handler,
         dispose: (h) => h.dispose(),
+      );
+
+      getIt<LogService>().info(
+        'AudioService initialized successfully',
+        category: LogCategory.dsp,
       );
     } catch (e) {
       getIt<LogService>().warning(

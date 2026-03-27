@@ -21,6 +21,11 @@ import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
 /// Subscribes to [HarmonizerService.state] and maps each [HarmonizerState]
 /// to [PlaybackState] + [MediaItem] for the platform media session.
 ///
+/// **Important**: Maps [HarmonizerStatus.idle] to
+/// [AudioProcessingState.completed] (not `.idle`) so that `audio_service` does
+/// not call `_stop()` on the Android [AudioService], which would destroy the
+/// foreground service and make subsequent plays fail silently.
+///
 /// Lock screen commands:
 /// - **play** → resume last formula from [PreferencesService]
 /// - **stop** → graceful stop (waits for cycle completion)
@@ -31,6 +36,10 @@ import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
 class HexaTuneAudioHandler extends BaseAudioHandler {
   HexaTuneAudioHandler(this._harmonizer, this._prefs, this._log) {
     _stateSubscription = _harmonizer.state.listen(_onStateChanged);
+    _log.info(
+      'AudioHandler: created, listening to harmonizer state',
+      category: LogCategory.dsp,
+    );
   }
 
   final HarmonizerService _harmonizer;
@@ -89,6 +98,14 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
   // ---------------------------------------------------------------------------
 
   void _onStateChanged(HarmonizerState state) {
+    if (state.status != _previousStatus) {
+      _log.info(
+        'AudioHandler: state ${_previousStatus?.name ?? "null"}'
+        ' → ${state.status.name}',
+        category: LogCategory.dsp,
+      );
+    }
+
     _publishPlaybackState(state);
     _publishMediaItem(state);
     _writeWidgetState(state);
@@ -144,9 +161,17 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
     };
   }
 
+  /// Maps [HarmonizerStatus] to [AudioProcessingState].
+  ///
+  /// **Note**: [HarmonizerStatus.idle] is mapped to
+  /// [AudioProcessingState.completed] instead of `.idle`. Sending `.idle`
+  /// causes `audio_service` to call `AudioService._stop()` which destroys
+  /// the Android foreground service. Using `.completed` signals playback
+  /// ended without tearing down the service, so the next play can still
+  /// trigger `startForeground()`.
   AudioProcessingState _mapProcessingState(HarmonizerStatus status) {
     return switch (status) {
-      HarmonizerStatus.idle => AudioProcessingState.idle,
+      HarmonizerStatus.idle => AudioProcessingState.completed,
       HarmonizerStatus.preparing => AudioProcessingState.loading,
       HarmonizerStatus.playing => AudioProcessingState.ready,
       HarmonizerStatus.stopping => AudioProcessingState.ready,

@@ -127,12 +127,12 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('state mapping', () {
-    test('idle state maps to AudioProcessingState.idle', () async {
+    test('idle state maps to AudioProcessingState.completed', () async {
       mockHarmonizer.emitState(idleState);
       await Future<void>.delayed(Duration.zero);
 
       final ps = handler.playbackState.value;
-      expect(ps.processingState, AudioProcessingState.idle);
+      expect(ps.processingState, AudioProcessingState.completed);
       expect(ps.playing, isFalse);
       expect(ps.controls, isEmpty);
     });

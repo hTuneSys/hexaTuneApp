@@ -3,19 +3,28 @@
 
 package com.hexatune.hexatuneapp
 
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Context
+import android.content.Intent
 import android.media.AudioAttributes
 import android.media.AudioFocusRequest
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
 import android.os.Build
+import android.os.IBinder
 import android.os.PowerManager
 import android.util.Log
+import androidx.core.app.NotificationCompat
 import kotlin.math.abs
 import kotlin.math.max
 
-class DspAudioService(private val context: Context) {
+class DspAudioService : Service() {
     private var audioTrack: AudioTrack? = null
     private var renderThread: Thread? = null
     @Volatile private var isPlaying = false
@@ -35,10 +44,61 @@ class DspAudioService(private val context: Context) {
         private const val TAG = "HTD"
         private const val FRAMES_PER_BUFFER = 1024
         private const val LOG_INTERVAL_FRAMES = 48000L
+        private const val NOTIFICATION_ID = 1125
+        private const val CHANNEL_ID = "hexatune_dsp_render"
+
+        const val ACTION_START = "com.hexatune.dsp.ACTION_START"
+        const val ACTION_STOP = "com.hexatune.dsp.ACTION_STOP"
+        const val EXTRA_SAMPLE_RATE = "sampleRate"
+        const val EXTRA_ENGINE_PTR = "enginePtr"
     }
 
-    fun start(sampleRate: Int, enginePointer: Long) {
-        if (isPlaying) return
+    override fun onCreate() {
+        super.onCreate()
+        Log.i(TAG, "DspAudioService created")
+        ensureNotificationChannel()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        when (intent?.action) {
+            ACTION_START -> {
+                val sampleRate = intent.getIntExtra(EXTRA_SAMPLE_RATE, 48000)
+                val ptr = intent.getLongExtra(EXTRA_ENGINE_PTR, 0L)
+                Log.i(TAG, "Service START: rate=$sampleRate ptr=0x${ptr.toULong().toString(16)}")
+                startForeground(NOTIFICATION_ID, buildNotification())
+                startPlayback(sampleRate, ptr)
+            }
+            ACTION_STOP -> {
+                Log.i(TAG, "Service STOP requested")
+                stopPlayback()
+                stopSelf()
+            }
+            else -> {
+                Log.w(TAG, "Service started without action, stopping")
+                startForeground(NOTIFICATION_ID, buildNotification())
+                stopSelf()
+            }
+        }
+        return START_NOT_STICKY
+    }
+
+    override fun onDestroy() {
+        Log.i(TAG, "DspAudioService destroying, frames=$totalFramesRendered")
+        stopPlayback()
+        super.onDestroy()
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    // -------------------------------------------------------------------------
+    // Playback
+    // -------------------------------------------------------------------------
+
+    private fun startPlayback(sampleRate: Int, enginePointer: Long) {
+        if (isPlaying) {
+            Log.w(TAG, "startPlayback ignored: already playing")
+            return
+        }
         enginePtr = enginePointer
         totalFramesRendered = 0
 
@@ -51,7 +111,7 @@ class DspAudioService(private val context: Context) {
             AudioFormat.ENCODING_PCM_FLOAT
         )
 
-        Log.i(TAG, "AudioTrack setup: sampleRate=$sampleRate, minBufSize=$minBufSize, enginePtr=0x${enginePointer.toULong().toString(16)}")
+        Log.i(TAG, "AudioTrack: rate=$sampleRate minBuf=$minBufSize ptr=0x${enginePointer.toULong().toString(16)}")
 
         audioTrack = AudioTrack.Builder()
             .setAudioAttributes(audioAttributes)
@@ -76,7 +136,7 @@ class DspAudioService(private val context: Context) {
             var renderCallCount = 0L
             val startTimeNs = System.nanoTime()
 
-            Log.i(TAG, "Render thread started")
+            Log.i(TAG, "Render thread started (Service-owned)")
 
             while (isPlaying) {
                 val result = DspNativeAudioBridge.nativeRender(enginePtr, buffer, FRAMES_PER_BUFFER)
@@ -117,8 +177,9 @@ class DspAudioService(private val context: Context) {
         renderThread?.start()
     }
 
-    fun stop() {
-        Log.i(TAG, "Stop requested: rendered $totalFramesRendered frames")
+    private fun stopPlayback() {
+        if (!isPlaying && renderThread == null) return
+        Log.i(TAG, "Stop playback: rendered $totalFramesRendered frames")
         isPlaying = false
         renderThread?.join(1000)
         renderThread = null
@@ -132,8 +193,12 @@ class DspAudioService(private val context: Context) {
         abandonAudioFocus()
     }
 
+    // -------------------------------------------------------------------------
+    // Audio focus
+    // -------------------------------------------------------------------------
+
     private fun requestAudioFocus() {
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                 .setAudioAttributes(audioAttributes)
@@ -154,7 +219,7 @@ class DspAudioService(private val context: Context) {
     }
 
     private fun abandonAudioFocus() {
-        val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest?.let { audioManager.abandonAudioFocusRequest(it) }
             audioFocusRequest = null
@@ -162,8 +227,13 @@ class DspAudioService(private val context: Context) {
         Log.i(TAG, "Audio focus abandoned")
     }
 
+    // -------------------------------------------------------------------------
+    // Wake lock
+    // -------------------------------------------------------------------------
+
+    @SuppressLint("WakelockTimeout")
     private fun acquireWakeLock() {
-        val powerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         wakeLock = powerManager.newWakeLock(
             PowerManager.PARTIAL_WAKE_LOCK,
             "hexatune:dsp_render"
@@ -177,5 +247,44 @@ class DspAudioService(private val context: Context) {
             wakeLock = null
         }
         Log.i(TAG, "Wake lock released")
+    }
+
+    // -------------------------------------------------------------------------
+    // Notification
+    // -------------------------------------------------------------------------
+
+    private fun ensureNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                CHANNEL_ID,
+                "HexaTune Audio Engine",
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = "Audio rendering engine"
+                setShowBadge(false)
+            }
+            val nm = getSystemService(NotificationManager::class.java)
+            nm?.createNotificationChannel(channel)
+        }
+    }
+
+    private fun buildNotification(): Notification {
+        val launchIntent = packageManager.getLaunchIntentForPackage(packageName)
+        val pendingIntent = if (launchIntent != null) {
+            PendingIntent.getActivity(
+                this, 0, launchIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        } else null
+
+        return NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle("HexaTune")
+            .setContentText("Audio engine running")
+            .setSmallIcon(android.R.drawable.ic_media_play)
+            .setOngoing(true)
+            .setSilent(true)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setContentIntent(pendingIntent)
+            .build()
     }
 }
