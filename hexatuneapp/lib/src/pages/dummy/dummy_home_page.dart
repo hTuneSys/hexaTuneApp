@@ -53,24 +53,6 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.tenants,
     ),
     _NavItem(
-      icon: Icons.category,
-      title: 'Categories',
-      subtitle: 'Category management',
-      route: RouteNames.categoryList,
-    ),
-    _NavItem(
-      icon: Icons.inventory_2,
-      title: 'Inventories',
-      subtitle: 'Inventory management',
-      route: RouteNames.inventoryList,
-    ),
-    _NavItem(
-      icon: Icons.science,
-      title: 'Formulas',
-      subtitle: 'Formula management',
-      route: RouteNames.formulaList,
-    ),
-    _NavItem(
       icon: Icons.task,
       title: 'Tasks',
       subtitle: 'Create, status, cancel',
@@ -95,12 +77,6 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.dsp,
     ),
     _NavItem(
-      icon: Icons.landscape,
-      title: 'Ambience Presets',
-      subtitle: 'Create and manage sound ambiences',
-      route: RouteNames.ambienceList,
-    ),
-    _NavItem(
       icon: Icons.cable,
       title: 'hexaGen Device',
       subtitle: 'Hardware connection, RGB, freq sweep, operations',
@@ -111,24 +87,6 @@ class DummyHomePage extends StatelessWidget {
       title: 'Harmonizer Player',
       subtitle: 'Multi-mode frequency generation player',
       route: RouteNames.harmonizer,
-    ),
-    _NavItem(
-      icon: Icons.inventory_2,
-      title: 'Packages',
-      subtitle: 'Browse packages (read-only)',
-      route: RouteNames.packages,
-    ),
-    _NavItem(
-      icon: Icons.account_tree,
-      title: 'Flows',
-      subtitle: 'Browse flows with steps (read-only)',
-      route: RouteNames.flows,
-    ),
-    _NavItem(
-      icon: Icons.directions_walk,
-      title: 'Steps',
-      subtitle: 'Browse steps (read-only)',
-      route: RouteNames.steps,
     ),
     _NavItem(
       icon: Icons.verified_user,
