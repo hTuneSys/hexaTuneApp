@@ -8,8 +8,8 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.d
 
 part 'harmonizer_state.freezed.dart';
 
-/// Possible statuses for the harmonizer player.
-enum HarmonizerStatus { idle, preparing, playing, stopping, error }
+/// Possible statuses for the harmonizer.
+enum HarmonizerStatus { idle, preparing, harmonizing, stopping, error }
 
 /// Immutable snapshot of the harmonizer's current state.
 @freezed
@@ -33,7 +33,7 @@ abstract class HarmonizerState with _$HarmonizerState {
     /// Current infinite-loop cycle number (0-based).
     @Default(0) int currentCycle,
 
-    /// Index of the step currently playing within the cycle.
+    /// Index of the step currently harmonizing within the cycle.
     @Default(0) int currentStepIndex,
 
     /// Total duration of one full cycle (excluding one-shot after first).

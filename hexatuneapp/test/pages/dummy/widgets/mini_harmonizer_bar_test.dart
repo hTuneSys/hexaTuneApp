@@ -66,10 +66,12 @@ void main() {
       expect(find.byIcon(Icons.stop), findsNothing);
     });
 
-    testWidgets('shows stop button and timers when playing', (tester) async {
+    testWidgets('shows stop button and timers when harmonizing', (
+      tester,
+    ) async {
       when(() => mockHarmonizer.currentState).thenReturn(
         const HarmonizerState(
-          status: HarmonizerStatus.playing,
+          status: HarmonizerStatus.harmonizing,
           isFirstCycle: true,
           firstCycleDuration: Duration(minutes: 5),
           remainingInCycle: Duration(minutes: 3, seconds: 10),
@@ -102,7 +104,7 @@ void main() {
     testWidgets('updates timers from stream', (tester) async {
       when(() => mockHarmonizer.currentState).thenReturn(
         const HarmonizerState(
-          status: HarmonizerStatus.playing,
+          status: HarmonizerStatus.harmonizing,
           isFirstCycle: false,
           totalCycleDuration: Duration(minutes: 2),
           remainingInCycle: Duration(minutes: 1, seconds: 30),
@@ -118,7 +120,7 @@ void main() {
       // Emit updated state.
       ctrl.add(
         const HarmonizerState(
-          status: HarmonizerStatus.playing,
+          status: HarmonizerStatus.harmonizing,
           isFirstCycle: false,
           totalCycleDuration: Duration(minutes: 2),
           remainingInCycle: Duration(minutes: 0, seconds: 45),
@@ -132,7 +134,7 @@ void main() {
     testWidgets('stop button calls stopGraceful', (tester) async {
       when(
         () => mockHarmonizer.currentState,
-      ).thenReturn(const HarmonizerState(status: HarmonizerStatus.playing));
+      ).thenReturn(const HarmonizerState(status: HarmonizerStatus.harmonizing));
 
       await tester.pumpWidget(_buildApp(child: const MiniHarmonizerBar()));
       await tester.pump();

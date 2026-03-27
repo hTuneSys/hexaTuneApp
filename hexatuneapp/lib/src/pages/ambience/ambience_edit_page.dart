@@ -41,8 +41,8 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
 
   bool _isLoading = true;
   bool _saving = false;
-  bool _isPlaying = false;
-  bool _isLoadingPlayback = false;
+  bool _isRendering = false;
+  bool _isLoadingPreview = false;
 
   late final AmbienceService _ambienceService;
   late final DspAssetService _assetService;
@@ -83,7 +83,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
 
   @override
   void dispose() {
-    if (_isPlaying) _dspService.stop();
+    if (_isRendering) _dspService.stop();
     _dspService.clearAllLayers();
     _nameCtrl.dispose();
     super.dispose();
@@ -109,7 +109,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
       return;
     }
 
-    if (_isPlaying) await _stop();
+    if (_isRendering) await _stop();
 
     setState(() => _saving = true);
     try {
@@ -161,7 +161,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
     );
 
     if (confirmed == true) {
-      if (_isPlaying) await _stop();
+      if (_isRendering) await _stop();
       await _ambienceService.delete(widget.ambienceId);
       if (mounted) {
         AppSnackBar.success(context, message: l10n.ambienceDeleted);
@@ -171,11 +171,11 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
   }
 
   Future<void> _play() async {
-    if (_isPlaying || _isLoadingPlayback || !_hasLayers) return;
-    setState(() => _isLoadingPlayback = true);
+    if (_isRendering || _isLoadingPreview || !_hasLayers) return;
+    setState(() => _isLoadingPreview = true);
 
     try {
-      if (_dspService.isPlaying) await _dspService.stop();
+      if (_dspService.isRendering) await _dspService.stop();
       await _dspService.clearAllLayers();
 
       if (_selectedBase != null) {
@@ -224,19 +224,19 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
         return;
       }
 
-      if (mounted) setState(() => _isPlaying = true);
+      if (mounted) setState(() => _isRendering = true);
     } catch (e) {
       _showError('Playback error: $e');
     } finally {
-      if (mounted) setState(() => _isLoadingPlayback = false);
+      if (mounted) setState(() => _isLoadingPreview = false);
     }
   }
 
   Future<void> _stop() async {
-    if (!_isPlaying) return;
+    if (!_isRendering) return;
     await _dspService.stop();
     await _dspService.clearAllLayers();
-    if (mounted) setState(() => _isPlaying = false);
+    if (mounted) setState(() => _isRendering = false);
   }
 
   void _onBaseTapped(AudioAsset asset) {
@@ -372,19 +372,19 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             const SizedBox(height: 8),
             _buildGainSlider(theme, l10n.dspSectionBase, _baseGain, (v) {
               setState(() => _baseGain = v);
-              if (_isPlaying) _dspService.setBaseGain(v);
+              if (_isRendering) _dspService.setBaseGain(v);
             }),
             _buildGainSlider(theme, l10n.dspSectionTexture, _textureGain, (v) {
               setState(() => _textureGain = v);
-              if (_isPlaying) _dspService.setTextureGain(v);
+              if (_isRendering) _dspService.setTextureGain(v);
             }),
             _buildGainSlider(theme, l10n.dspSectionEvents, _eventGain, (v) {
               setState(() => _eventGain = v);
-              if (_isPlaying) _dspService.setEventGain(v);
+              if (_isRendering) _dspService.setEventGain(v);
             }),
             _buildGainSlider(theme, l10n.ambienceMaster, _masterGain, (v) {
               setState(() => _masterGain = v);
-              if (_isPlaying) _dspService.setMasterGain(v);
+              if (_isRendering) _dspService.setMasterGain(v);
             }),
             const SizedBox(height: 16),
 
@@ -392,17 +392,17 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             SizedBox(
               height: 48,
               child: OutlinedButton.icon(
-                onPressed: _isPlaying
+                onPressed: _isRendering
                     ? _stop
-                    : (_hasLayers && !_isLoadingPlayback ? _play : null),
-                icon: _isLoadingPlayback
+                    : (_hasLayers && !_isLoadingPreview ? _play : null),
+                icon: _isLoadingPreview
                     ? const SizedBox(
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
-                label: Text(_isPlaying ? l10n.dspStop : l10n.dspPlay),
+                    : Icon(_isRendering ? Icons.stop : Icons.play_arrow),
+                label: Text(_isRendering ? l10n.dspStop : l10n.dspPlay),
               ),
             ),
             const SizedBox(height: 16),

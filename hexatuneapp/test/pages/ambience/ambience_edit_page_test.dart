@@ -124,7 +124,7 @@ void main() {
       final type = inv.positionalArguments[0] as String;
       return _testAssets.where((a) => a.layerType == type).toList();
     });
-    when(() => mockDspService.isPlaying).thenReturn(false);
+    when(() => mockDspService.isRendering).thenReturn(false);
     when(() => mockDspService.stop()).thenAnswer((_) async {});
     when(() => mockDspService.clearAllLayers()).thenAnswer((_) async {});
 

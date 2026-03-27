@@ -11,7 +11,7 @@ import AVFoundation
 class DspAudioService {
     private var audioEngine: AVAudioEngine?
     private var enginePtr: UInt = 0
-    private var isPlaying = false
+    private var isRendering = false
     private var totalFramesRendered: UInt64 = 0
     /// Pre-allocated buffer for interleaved DSP output (deinterleaved into
     /// AVAudioEngine's non-interleaved buffers in the render callback).
@@ -25,7 +25,7 @@ class DspAudioService {
     }
 
     func start(sampleRate: Int, enginePointer: UInt) {
-        guard !isPlaying else { return }
+        guard !isRendering else { return }
         enginePtr = enginePointer
         totalFramesRendered = 0
 
@@ -42,7 +42,7 @@ class DspAudioService {
         )!
 
         let srcNode = AVAudioSourceNode { [weak self] _, _, frameCount, audioBufferList -> OSStatus in
-            guard let self = self, self.isPlaying,
+            guard let self = self, self.isRendering,
                   let tmpBuf = self.interleavedBuffer else {
                 let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
                 for buffer in ablPointer {
@@ -89,17 +89,17 @@ class DspAudioService {
             try AVAudioSession.sharedInstance().setActive(true)
             try engine.start()
             audioEngine = engine
-            isPlaying = true
+            isRendering = true
             NSLog("[\(DspAudioService.tag)] Audio engine started (sampleRate=\(sampleRate))")
         } catch {
             NSLog("[\(DspAudioService.tag)] Audio engine start failed: \(error)")
-            isPlaying = false
+            isRendering = false
         }
     }
 
     func stop() {
-        guard isPlaying else { return }
-        isPlaying = false
+        guard isRendering else { return }
+        isRendering = false
 
         audioEngine?.stop()
         audioEngine = nil

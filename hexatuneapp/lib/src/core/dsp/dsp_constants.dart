@@ -68,10 +68,10 @@ class DspConstants {
   /// Maximum interval between event triggers in milliseconds.
   static const int defaultEventMaxIntervalMs = 8000;
 
-  /// Minimum event playback volume.
+  /// Minimum event rendering volume.
   static const double defaultEventVolumeMin = 0.3;
 
-  /// Maximum event playback volume.
+  /// Maximum event rendering volume.
   static const double defaultEventVolumeMax = 0.8;
 
   /// Minimum stereo pan (-1.0 = full left).
@@ -100,7 +100,7 @@ class DspConstants {
 
   // --- Status logging ---
 
-  /// Interval for status logging during playback.
+  /// Interval for status logging during rendering.
   static const Duration logInterval = Duration(seconds: 3);
 }
 

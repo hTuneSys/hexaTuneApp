@@ -27,7 +27,7 @@ import kotlin.math.max
 class DspAudioService : Service() {
     private var audioTrack: AudioTrack? = null
     private var renderThread: Thread? = null
-    @Volatile private var isPlaying = false
+    @Volatile private var isRendering = false
     private var enginePtr: Long = 0
     @Volatile var totalFramesRendered: Long = 0
         private set
@@ -66,11 +66,11 @@ class DspAudioService : Service() {
                 val ptr = intent.getLongExtra(EXTRA_ENGINE_PTR, 0L)
                 Log.i(TAG, "Service START: rate=$sampleRate ptr=0x${ptr.toULong().toString(16)}")
                 startForeground(NOTIFICATION_ID, buildNotification())
-                startPlayback(sampleRate, ptr)
+                startRendering(sampleRate, ptr)
             }
             ACTION_STOP -> {
                 Log.i(TAG, "Service STOP requested")
-                stopPlayback()
+                stopRendering()
                 stopSelf()
             }
             else -> {
@@ -84,19 +84,19 @@ class DspAudioService : Service() {
 
     override fun onDestroy() {
         Log.i(TAG, "DspAudioService destroying, frames=$totalFramesRendered")
-        stopPlayback()
+        stopRendering()
         super.onDestroy()
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     // -------------------------------------------------------------------------
-    // Playback
+    // Rendering
     // -------------------------------------------------------------------------
 
-    private fun startPlayback(sampleRate: Int, enginePointer: Long) {
-        if (isPlaying) {
-            Log.w(TAG, "startPlayback ignored: already playing")
+    private fun startRendering(sampleRate: Int, enginePointer: Long) {
+        if (isRendering) {
+            Log.w(TAG, "startRendering ignored: already rendering")
             return
         }
         enginePtr = enginePointer
@@ -126,7 +126,7 @@ class DspAudioService : Service() {
             .setTransferMode(AudioTrack.MODE_STREAM)
             .build()
 
-        isPlaying = true
+        isRendering = true
         audioTrack?.play()
 
         renderThread = Thread({
@@ -138,7 +138,7 @@ class DspAudioService : Service() {
 
             Log.i(TAG, "Render thread started (Service-owned)")
 
-            while (isPlaying) {
+            while (isRendering) {
                 val result = DspNativeAudioBridge.nativeRender(enginePtr, buffer, FRAMES_PER_BUFFER)
                 if (result != 0) {
                     Log.e(TAG, "Render error code=$result at frame=$totalFramesRendered")
@@ -177,10 +177,10 @@ class DspAudioService : Service() {
         renderThread?.start()
     }
 
-    private fun stopPlayback() {
-        if (!isPlaying && renderThread == null) return
-        Log.i(TAG, "Stop playback: rendered $totalFramesRendered frames")
-        isPlaying = false
+    private fun stopRendering() {
+        if (!isRendering && renderThread == null) return
+        Log.i(TAG, "Stop rendering: rendered $totalFramesRendered frames")
+        isRendering = false
         renderThread?.join(1000)
         renderThread = null
         try {

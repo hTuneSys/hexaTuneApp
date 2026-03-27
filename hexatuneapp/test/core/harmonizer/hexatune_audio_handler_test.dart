@@ -51,8 +51,8 @@ void main() {
     HarmonicPacketDto(value: 528, durationMs: 15000, isOneShot: true),
   ];
 
-  const playingState = HarmonizerState(
-    status: HarmonizerStatus.playing,
+  const harmonizingState = HarmonizerState(
+    status: HarmonizerStatus.harmonizing,
     activeType: GenerationType.monaural,
     formulaId: 'formula-123',
     sequence: testPackets,
@@ -148,9 +148,9 @@ void main() {
     });
 
     test(
-      'playing state maps to AudioProcessingState.ready with controls',
+      'harmonizing state maps to AudioProcessingState.ready with controls',
       () async {
-        mockHarmonizer.emitState(playingState);
+        mockHarmonizer.emitState(harmonizingState);
         await Future<void>.delayed(Duration.zero);
 
         final ps = handler.playbackState.value;
@@ -185,7 +185,7 @@ void main() {
     });
 
     test('updatePosition reflects elapsed time', () async {
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       final ps = handler.playbackState.value;
@@ -195,7 +195,7 @@ void main() {
 
     test('updatePosition is zero when remaining exceeds total', () async {
       const oddState = HarmonizerState(
-        status: HarmonizerStatus.playing,
+        status: HarmonizerStatus.harmonizing,
         activeType: GenerationType.monaural,
         totalCycleDuration: Duration(seconds: 10),
         firstCycleDuration: Duration(seconds: 10),
@@ -215,8 +215,8 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('mediaItem', () {
-    test('publishes MediaItem when playing', () async {
-      mockHarmonizer.emitState(playingState);
+    test('publishes MediaItem when harmonizing', () async {
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       final item = handler.mediaItem.value;
@@ -246,7 +246,7 @@ void main() {
     });
 
     test('clears MediaItem on idle', () async {
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
       expect(handler.mediaItem.value, isNotNull);
 
@@ -263,7 +263,7 @@ void main() {
 
     test('uses looping duration for non-first cycle', () async {
       const loopState = HarmonizerState(
-        status: HarmonizerStatus.playing,
+        status: HarmonizerStatus.harmonizing,
         activeType: GenerationType.monaural,
         formulaId: 'f1',
         totalCycleDuration: Duration(seconds: 30),
@@ -278,7 +278,7 @@ void main() {
     });
 
     test('handles null activeType and formulaId gracefully', () async {
-      const minState = HarmonizerState(status: HarmonizerStatus.playing);
+      const minState = HarmonizerState(status: HarmonizerStatus.harmonizing);
       mockHarmonizer.emitState(minState);
       await Future<void>.delayed(Duration.zero);
 
@@ -294,7 +294,7 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('commands', () {
-    test('play() loads last config and calls harmonizer.play', () async {
+    test('play() loads last config and calls harmonizer.harmonize', () async {
       final configJson = jsonEncode({
         'type': 'monaural',
         'ambienceId': 'amb-1',
@@ -305,11 +305,13 @@ void main() {
       when(
         () => mockPrefs.getString(HexaTuneAudioHandler.lastConfigKey),
       ).thenReturn(configJson);
-      when(() => mockHarmonizer.play(any())).thenAnswer((_) async => null);
+      when(() => mockHarmonizer.harmonize(any())).thenAnswer((_) async => null);
 
       await handler.play();
 
-      final captured = verify(() => mockHarmonizer.play(captureAny())).captured;
+      final captured = verify(
+        () => mockHarmonizer.harmonize(captureAny()),
+      ).captured;
       expect(captured, hasLength(1));
 
       final config = captured.first as HarmonizerConfig;
@@ -320,22 +322,22 @@ void main() {
       expect(config.steps.first.value, 440);
     });
 
-    test('play() with no saved config is a no-op', () async {
+    test('harmonize() with no saved config is a no-op', () async {
       when(
         () => mockPrefs.getString(HexaTuneAudioHandler.lastConfigKey),
       ).thenReturn(null);
 
       await handler.play();
-      verifyNever(() => mockHarmonizer.play(any()));
+      verifyNever(() => mockHarmonizer.harmonize(any()));
     });
 
-    test('play() with corrupt JSON is a no-op', () async {
+    test('harmonize() with corrupt JSON is a no-op', () async {
       when(
         () => mockPrefs.getString(HexaTuneAudioHandler.lastConfigKey),
       ).thenReturn('{invalid json');
 
       await handler.play();
-      verifyNever(() => mockHarmonizer.play(any()));
+      verifyNever(() => mockHarmonizer.harmonize(any()));
     });
 
     test('stop() calls harmonizer.stopGraceful', () async {
@@ -364,11 +366,11 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('last session persistence', () {
-    test('saves config on transition to playing', () async {
+    test('saves config on transition to harmonizing', () async {
       mockHarmonizer.emitState(preparingState);
       await Future<void>.delayed(Duration.zero);
 
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       final captured = verify(
@@ -385,13 +387,15 @@ void main() {
       expect(saved['steps'], hasLength(2));
     });
 
-    test('does not save again when already playing', () async {
-      mockHarmonizer.emitState(playingState);
+    test('does not save again when already harmonizing', () async {
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
-      // Emit another playing state (countdown tick).
+      // Emit another harmonizing state (countdown tick).
       mockHarmonizer.emitState(
-        playingState.copyWith(remainingInCycle: const Duration(seconds: 19)),
+        harmonizingState.copyWith(
+          remainingInCycle: const Duration(seconds: 19),
+        ),
       );
       await Future<void>.delayed(Duration.zero);
 
@@ -401,14 +405,14 @@ void main() {
       ).called(1);
     });
 
-    test('saves again after stop and re-play', () async {
-      mockHarmonizer.emitState(playingState);
+    test('saves again after stop and re-harmonize', () async {
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       mockHarmonizer.emitState(idleState);
       await Future<void>.delayed(Duration.zero);
 
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
@@ -418,7 +422,7 @@ void main() {
 
     test('does not save when sequence is empty', () async {
       const emptySeqState = HarmonizerState(
-        status: HarmonizerStatus.playing,
+        status: HarmonizerStatus.harmonizing,
         activeType: GenerationType.monaural,
         sequence: [],
       );
@@ -436,35 +440,44 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('widget state', () {
-    test('writes isPlaying=true when playing', () async {
-      mockHarmonizer.emitState(playingState);
+    test('writes isHarmonizing=true when harmonizing', () async {
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
-        () => mockPrefs.setBool(HexaTuneAudioHandler.widgetIsPlayingKey, true),
+        () => mockPrefs.setBool(
+          HexaTuneAudioHandler.widgetIsHarmonizingKey,
+          true,
+        ),
       ).called(1);
     });
 
-    test('writes isPlaying=true when stopping', () async {
+    test('writes isHarmonizing=true when stopping', () async {
       mockHarmonizer.emitState(stoppingState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
-        () => mockPrefs.setBool(HexaTuneAudioHandler.widgetIsPlayingKey, true),
+        () => mockPrefs.setBool(
+          HexaTuneAudioHandler.widgetIsHarmonizingKey,
+          true,
+        ),
       ).called(1);
     });
 
-    test('writes isPlaying=false when idle', () async {
+    test('writes isHarmonizing=false when idle', () async {
       mockHarmonizer.emitState(idleState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
-        () => mockPrefs.setBool(HexaTuneAudioHandler.widgetIsPlayingKey, false),
+        () => mockPrefs.setBool(
+          HexaTuneAudioHandler.widgetIsHarmonizingKey,
+          false,
+        ),
       ).called(1);
     });
 
     test('writes formula name and generation type', () async {
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
@@ -482,7 +495,7 @@ void main() {
     });
 
     test('writes remaining seconds', () async {
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       verify(
@@ -519,7 +532,7 @@ void main() {
       handler.dispose();
 
       // Emitting after dispose should not cause errors.
-      mockHarmonizer.emitState(playingState);
+      mockHarmonizer.emitState(harmonizingState);
       await Future<void>.delayed(Duration.zero);
 
       // playbackState should not have been updated after dispose.

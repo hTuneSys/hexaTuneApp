@@ -18,7 +18,7 @@ abstract class HarmonizerConfig with _$HarmonizerConfig {
     /// Optional ambience config ID (monaural / binaural only).
     String? ambienceId,
 
-    /// The harmonic packet sequence to play (from API response).
+    /// The harmonic packet sequence to harmonize (from API response).
     required List<HarmonicPacketDto> steps,
 
     /// The formula ID that generated this sequence (for UI state restoration).

@@ -83,7 +83,7 @@ void main() {
     when(() => mockAmbienceService.configs).thenReturn([_testAmbienceConfig]);
 
     // DspService stubs
-    when(() => mockDspService.isPlaying).thenReturn(false);
+    when(() => mockDspService.isRendering).thenReturn(false);
     when(() => mockDspService.setBinauralGain(any())).thenReturn(null);
     when(() => mockDspService.setBaseGain(any())).thenReturn(null);
     when(() => mockDspService.setTextureGain(any())).thenReturn(null);
@@ -178,7 +178,7 @@ void main() {
       expect(find.text('Test Ambience'), findsOneWidget);
     });
 
-    testWidgets('shows play button', (tester) async {
+    testWidgets('shows harmonize button', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 

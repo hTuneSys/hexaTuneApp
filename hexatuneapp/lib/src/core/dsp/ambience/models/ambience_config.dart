@@ -9,7 +9,7 @@ part 'ambience_config.g.dart';
 /// A saved ambience configuration combining sound layers and gain levels.
 ///
 /// Each ambience is a user-created preset that can be loaded into the DSP
-/// engine for playback. It stores references to audio assets by their
+/// engine for rendering. It stores references to audio assets by their
 /// catalog IDs rather than full asset paths.
 @freezed
 abstract class AmbienceConfig with _$AmbienceConfig {

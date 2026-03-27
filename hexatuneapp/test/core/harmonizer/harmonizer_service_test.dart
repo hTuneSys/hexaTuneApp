@@ -137,7 +137,7 @@ void main() {
   group('initial state', () {
     test('starts idle', () {
       expect(service.currentState.status, HarmonizerStatus.idle);
-      expect(service.isPlaying, isFalse);
+      expect(service.isHarmonizing, isFalse);
     });
 
     test('state stream emits default', () async {
@@ -150,11 +150,11 @@ void main() {
     });
   });
 
-  group('play', () {
+  group('harmonize', () {
     test('rejects empty steps', () async {
       const config = HarmonizerConfig(type: GenerationType.monaural, steps: []);
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNotNull);
       expect(error, contains('No harmonic packets'));
     });
@@ -165,7 +165,7 @@ void main() {
         steps: testPackets,
       );
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNotNull);
       expect(error, contains('not yet supported'));
     });
@@ -178,7 +178,7 @@ void main() {
         steps: testPackets,
       );
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNotNull);
       expect(error, contains('Headphones'));
     });
@@ -191,52 +191,58 @@ void main() {
         steps: testPackets,
       );
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNotNull);
       expect(error, contains('hexaGen'));
     });
 
-    test('emits preparing then playing on successful monaural play', () async {
-      when(
-        () => mockDsp.updateBinauralConfig(
-          binauralEnabled: any(named: 'binauralEnabled'),
-          cycleSteps: any(named: 'cycleSteps'),
-        ),
-      ).thenReturn(true);
-      when(() => mockDsp.start()).thenAnswer((_) async => null);
+    test(
+      'emits preparing then harmonizing on successful monaural harmonize',
+      () async {
+        when(
+          () => mockDsp.updateBinauralConfig(
+            binauralEnabled: any(named: 'binauralEnabled'),
+            cycleSteps: any(named: 'cycleSteps'),
+          ),
+        ).thenReturn(true);
+        when(() => mockDsp.start()).thenAnswer((_) async => null);
 
-      final states = <HarmonizerState>[];
-      final sub = service.state.listen(states.add);
-      addTearDown(sub.cancel);
+        final states = <HarmonizerState>[];
+        final sub = service.state.listen(states.add);
+        addTearDown(sub.cancel);
 
-      const config = HarmonizerConfig(
-        type: GenerationType.monaural,
-        steps: testPackets,
-        formulaId: 'formula-abc',
-      );
+        const config = HarmonizerConfig(
+          type: GenerationType.monaural,
+          steps: testPackets,
+          formulaId: 'formula-abc',
+        );
 
-      final error = await service.play(config);
-      expect(error, isNull);
+        final error = await service.harmonize(config);
+        expect(error, isNull);
 
-      // Allow microtasks from the broadcast stream to complete.
-      await Future<void>.delayed(Duration.zero);
+        // Allow microtasks from the broadcast stream to complete.
+        await Future<void>.delayed(Duration.zero);
 
-      expect(states.any((s) => s.status == HarmonizerStatus.preparing), isTrue);
-      expect(states.last.status, HarmonizerStatus.playing);
-      expect(states.last.activeType, GenerationType.monaural);
-      expect(states.last.sequence, testPackets);
-      expect(states.last.formulaId, 'formula-abc');
+        expect(
+          states.any((s) => s.status == HarmonizerStatus.preparing),
+          isTrue,
+        );
+        expect(states.last.status, HarmonizerStatus.harmonizing);
+        expect(states.last.activeType, GenerationType.monaural);
+        expect(states.last.sequence, testPackets);
+        expect(states.last.formulaId, 'formula-abc');
 
-      // Verify DSP was configured with 220 Hz carrier and AM mode.
-      verify(
-        () => mockDsp.updateBinauralConfig(
-          binauralEnabled: false,
-          cycleSteps: any(named: 'cycleSteps'),
-        ),
-      ).called(1);
-    });
+        // Verify DSP was configured with 220 Hz carrier and AM mode.
+        verify(
+          () => mockDsp.updateBinauralConfig(
+            binauralEnabled: false,
+            cycleSteps: any(named: 'cycleSteps'),
+          ),
+        ).called(1);
+      },
+    );
 
-    test('binaural play configures DSP with binaural enabled', () async {
+    test('binaural harmonize configures DSP with binaural enabled', () async {
       when(() => mockHeadset.isConnected).thenReturn(true);
       when(
         () => mockDsp.updateBinauralConfig(
@@ -251,7 +257,7 @@ void main() {
         steps: testPackets,
       );
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNull);
 
       verify(
@@ -262,7 +268,7 @@ void main() {
       ).called(1);
     });
 
-    test('rejects play when already playing', () async {
+    test('rejects harmonize when already harmonizing', () async {
       when(
         () => mockDsp.updateBinauralConfig(
           binauralEnabled: any(named: 'binauralEnabled'),
@@ -276,8 +282,8 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
-      final error = await service.play(config);
+      await service.harmonize(config);
+      final error = await service.harmonize(config);
       expect(error, 'Harmonizer is already active');
     });
 
@@ -295,7 +301,7 @@ void main() {
         steps: testPackets,
       );
 
-      final error = await service.play(config);
+      final error = await service.harmonize(config);
       expect(error, isNotNull);
       expect(service.currentState.status, HarmonizerStatus.error);
     });
@@ -317,7 +323,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
       await service.stopGraceful();
 
       // Backend stop fires asynchronously — give microtasks time to complete.
@@ -346,7 +352,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
       await service.stopImmediate();
 
       verify(() => mockDsp.stop()).called(1);
@@ -381,7 +387,7 @@ void main() {
           steps: testPackets, // 30000ms normal + 15000ms oneshot
         );
 
-        await service.play(config);
+        await service.harmonize(config);
 
         final state = service.currentState;
         expect(state.firstCycleDuration, const Duration(milliseconds: 45000));
@@ -422,7 +428,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
 
       // Reset invocations from play to isolate changeAmbience calls.
       clearInteractions(mockDsp);
@@ -437,33 +443,36 @@ void main() {
       verify(() => mockDsp.clearEvent(any())).called(4);
     });
 
-    test('updates ambienceId in state when changed during playback', () async {
-      when(
-        () => mockDsp.updateBinauralConfig(
-          binauralEnabled: any(named: 'binauralEnabled'),
-          cycleSteps: any(named: 'cycleSteps'),
-        ),
-      ).thenReturn(true);
-      when(() => mockDsp.start()).thenAnswer((_) async => null);
+    test(
+      'updates ambienceId in state when changed during harmonizing',
+      () async {
+        when(
+          () => mockDsp.updateBinauralConfig(
+            binauralEnabled: any(named: 'binauralEnabled'),
+            cycleSteps: any(named: 'cycleSteps'),
+          ),
+        ).thenReturn(true);
+        when(() => mockDsp.start()).thenAnswer((_) async => null);
 
-      const config = HarmonizerConfig(
-        type: GenerationType.monaural,
-        steps: testPackets,
-        ambienceId: 'original',
-      );
+        const config = HarmonizerConfig(
+          type: GenerationType.monaural,
+          steps: testPackets,
+          ambienceId: 'original',
+        );
 
-      await service.play(config);
-      expect(service.currentState.ambienceId, 'original');
+        await service.harmonize(config);
+        expect(service.currentState.ambienceId, 'original');
 
-      // Clear invocations; we only care about state update.
-      clearInteractions(mockDsp);
-      when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
-      when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
-      when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
+        // Clear invocations; we only care about state update.
+        clearInteractions(mockDsp);
+        when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
+        when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});
+        when(() => mockDsp.clearEvent(any())).thenAnswer((_) async {});
 
-      await service.changeAmbience(null);
-      expect(service.currentState.ambienceId, isNull);
-    });
+        await service.changeAmbience(null);
+        expect(service.currentState.ambienceId, isNull);
+      },
+    );
 
     test('is ignored for magnetic type', () async {
       when(() => mockHexagen.isConnected).thenReturn(true);
@@ -483,7 +492,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
 
       clearInteractions(mockDsp);
       await service.changeAmbience(null);
@@ -509,7 +518,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
       await service.stopImmediate();
 
       verify(() => mockDsp.stop()).called(1);
@@ -532,7 +541,7 @@ void main() {
         steps: testPackets,
       );
 
-      await service.play(config);
+      await service.harmonize(config);
       await service.stopGraceful();
       expect(service.currentState.status, HarmonizerStatus.stopping);
 
@@ -572,7 +581,7 @@ void main() {
         ambienceId: 'amb-1',
       );
 
-      await service.play(config);
+      await service.harmonize(config);
 
       verify(() => mockAsset.discover()).called(1);
     });
@@ -617,7 +626,7 @@ void main() {
         ambienceId: 'amb-1',
       );
 
-      await service.play(config);
+      await service.harmonize(config);
 
       verifyNever(() => mockAsset.discover());
     });
@@ -677,7 +686,7 @@ void main() {
         ambienceId: 'amb-1',
       );
 
-      await service.play(config);
+      await service.harmonize(config);
 
       verify(
         () => mockDsp.loadBase('assets/audio/ambience/base/forest.ogg'),

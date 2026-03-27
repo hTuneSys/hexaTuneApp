@@ -15,7 +15,7 @@ import 'package:hexatuneapp/src/core/dsp/models/dsp_state.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 
-/// Manages the DSP engine lifecycle and multi-layer audio playback.
+/// Manages the DSP engine lifecycle and multi-layer audio rendering.
 ///
 /// Supports pre-loading: the engine is initialized lazily on the first layer
 /// selection; layers are loaded in the background. [start] simply starts the
@@ -53,7 +53,7 @@ class DspService {
   double _binauralGain = DspConstants.defaultBinauralGain;
   double _masterGain = DspConstants.defaultMasterGain;
 
-  bool _isPlaying = false;
+  bool _isRendering = false;
   bool _isInitialized = false;
   bool _isInitializing = false;
   bool _baseLoaded = false;
@@ -68,7 +68,7 @@ class DspService {
   /// State changes as a broadcast stream.
   Stream<DspState> get state => _stateController.stream;
 
-  bool get isPlaying => _isPlaying;
+  bool get isRendering => _isRendering;
   bool get isInitialized => _isInitialized;
   bool get isBaseLoaded => _baseLoaded;
   int get engineAddress => _engine?.address ?? 0;
@@ -81,7 +81,7 @@ class DspService {
   void _emitState() {
     final newState = DspState(
       isInitialized: _isInitialized,
-      isPlaying: _isPlaying,
+      isRendering: _isRendering,
       isBaseLoaded: _baseLoaded,
       carrierFrequency: _carrierFreq,
       binauralEnabled: _binaural,
@@ -458,7 +458,7 @@ class DspService {
   // --- Concurrency guard for stop ---
   bool _stopping = false;
 
-  /// Start audio playback. Engine must be initialized and layers pre-loaded.
+  /// Start audio rendering. Engine must be initialized and layers pre-loaded.
   Future<String?> start() async {
     final initErr = await ensureInitialized();
     if (initErr != null) return initErr;
@@ -499,17 +499,17 @@ class DspService {
       return 'startAudio platform error: ${e.message}';
     }
 
-    _isPlaying = true;
+    _isRendering = true;
     _startTime = DateTime.now();
     _startLogTimer();
-    _logService.info('DSP engine playing', category: LogCategory.dsp);
+    _logService.info('DSP engine rendering', category: LogCategory.dsp);
     _emitState();
     return null;
   }
 
-  /// Stop audio playback immediately.
+  /// Stop audio rendering immediately.
   Future<void> stop() async {
-    if (!_isPlaying || _stopping) return;
+    if (!_isRendering || _stopping) return;
     _stopping = true;
     try {
       _logTimer?.cancel();
@@ -535,7 +535,7 @@ class DspService {
         _bindings.htdEngineStop(_engine!);
       }
 
-      _isPlaying = false;
+      _isRendering = false;
       _startTime = null;
       _emitState();
     } finally {
@@ -545,7 +545,7 @@ class DspService {
 
   /// Graceful stop: finish current cycle iteration, then stop automatically.
   Future<void> stopGraceful() async {
-    if (!_isPlaying || _stopping) return;
+    if (!_isRendering || _stopping) return;
     if (_engine == null || _engine == nullptr) return;
     _stopping = true;
     try {
@@ -587,7 +587,7 @@ class DspService {
         );
       }
 
-      _isPlaying = false;
+      _isRendering = false;
       _startTime = null;
       _emitState();
     } finally {
@@ -651,7 +651,7 @@ class DspService {
   void _disposeEngine() {
     _logTimer?.cancel();
     _logTimer = null;
-    _isPlaying = false;
+    _isRendering = false;
     _isInitialized = false;
     _baseLoaded = false;
     _startTime = null;
@@ -690,7 +690,7 @@ class DspService {
   void _startLogTimer() {
     _logTimer?.cancel();
     _logTimer = Timer.periodic(DspConstants.logInterval, (_) {
-      if (!_isPlaying || _startTime == null) return;
+      if (!_isRendering || _startTime == null) return;
       final elapsed =
           DateTime.now().difference(_startTime!).inMilliseconds / 1000.0;
       final cycleInfo = _computeCycleState(elapsed);

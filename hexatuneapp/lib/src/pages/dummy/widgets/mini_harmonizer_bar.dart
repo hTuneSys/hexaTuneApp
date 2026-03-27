@@ -50,13 +50,13 @@ class _MiniHarmonizerBarState extends State<MiniHarmonizerBar>
     _sub = _harmonizer.state.listen((s) {
       if (!mounted) return;
       final wasPlaying =
-          _state.status == HarmonizerStatus.playing ||
+          _state.status == HarmonizerStatus.harmonizing ||
           _state.status == HarmonizerStatus.stopping;
       final isIdle = s.status == HarmonizerStatus.idle;
 
       setState(() => _state = s);
 
-      // Trigger fade-out when transitioning from playing/stopping to idle.
+      // Trigger fade-out when transitioning from harmonizing/stopping to idle.
       if (wasPlaying && isIdle && !_fadingOut) {
         _fadingOut = true;
         _fadeController.forward();
@@ -75,7 +75,7 @@ class _MiniHarmonizerBarState extends State<MiniHarmonizerBar>
   @override
   Widget build(BuildContext context) {
     final isVisible =
-        _state.status == HarmonizerStatus.playing ||
+        _state.status == HarmonizerStatus.harmonizing ||
         _state.status == HarmonizerStatus.stopping ||
         _fadingOut;
 

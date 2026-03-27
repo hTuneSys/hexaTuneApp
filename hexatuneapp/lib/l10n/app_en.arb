@@ -117,12 +117,12 @@
     }
   },
   "dspNoSelection": "Tap to select",
-  "dspPlay": "PLAY",
+  "dspPlay": "HARMONIZE",
   "dspStop": "STOP",
   "dspGraceful": "GRACEFUL",
   "dspLoading": "LOADING...",
   "dspFinishing": "FINISHING...",
-  "dspPlaying": "Playing...",
+  "dspPlaying": "Harmonizing...",
   "dspStopped": "Stopped",
   "dspGracefullyStopped": "Gracefully stopped",
   "dspFinishingCycle": "Finishing cycle...",
@@ -281,7 +281,7 @@
     }
   },
 
-  "harmonizerTitle": "Harmonizer Player",
+  "harmonizerTitle": "Harmonizer",
   "harmonizerSelectFormula": "Select a formula",
   "harmonizerNoFormulas": "No formulas available",
   "harmonizerFormulaLabel": "Formula",
@@ -295,10 +295,10 @@
   "harmonizerHexagenRequired": "Please connect a hexaGen device for magnetic mode",
   "harmonizerSelectAmbience": "Select ambience (optional)",
   "harmonizerNoAmbience": "No ambience",
-  "harmonizerPlay": "Play",
+  "harmonizerPlay": "Harmonize",
   "harmonizerStop": "Stop",
   "harmonizerPreparing": "Preparing...",
-  "harmonizerPlaying": "Playing",
+  "harmonizerPlaying": "Harmonizing",
   "harmonizerStopping": "Stopping...",
   "harmonizerError": "Error: {message}",
   "@harmonizerError": {

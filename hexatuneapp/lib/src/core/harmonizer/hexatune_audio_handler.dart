@@ -56,7 +56,7 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
   static const lastConfigKey = 'harmonizer_last_config';
 
   // Widget state keys.
-  static const widgetIsPlayingKey = 'widget_is_playing';
+  static const widgetIsHarmonizingKey = 'widget_is_harmonizing';
   static const widgetFormulaNameKey = 'widget_formula_name';
   static const widgetGenerationTypeKey = 'widget_generation_type';
   static const widgetRemainingSecondsKey = 'widget_remaining_seconds';
@@ -67,7 +67,10 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
 
   @override
   Future<void> play() async {
-    _log.info('AudioHandler: play (resume last)', category: LogCategory.dsp);
+    _log.info(
+      'AudioHandler: harmonize (resume last)',
+      category: LogCategory.dsp,
+    );
     final config = _loadLastConfig();
     if (config == null) {
       _log.warning(
@@ -76,7 +79,7 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
       );
       return;
     }
-    await _harmonizer.play(config);
+    await _harmonizer.harmonize(config);
   }
 
   @override
@@ -110,9 +113,9 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
     _publishMediaItem(state);
     _writeWidgetState(state);
 
-    // Persist config once on transition to playing.
-    if (state.status == HarmonizerStatus.playing &&
-        _previousStatus != HarmonizerStatus.playing) {
+    // Persist config once on transition to harmonizing.
+    if (state.status == HarmonizerStatus.harmonizing &&
+        _previousStatus != HarmonizerStatus.harmonizing) {
       _saveLastConfig(state);
     }
     _previousStatus = state.status;
@@ -125,7 +128,7 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
         systemActions: const {MediaAction.stop},
         processingState: _mapProcessingState(state.status),
         playing:
-            state.status == HarmonizerStatus.playing ||
+            state.status == HarmonizerStatus.harmonizing ||
             state.status == HarmonizerStatus.stopping,
         updatePosition: _elapsed(state),
       ),
@@ -142,7 +145,7 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
 
   List<MediaControl> _controlsForStatus(HarmonizerStatus status) {
     return switch (status) {
-      HarmonizerStatus.playing => [
+      HarmonizerStatus.harmonizing => [
         MediaControl.stop,
         const MediaControl(
           androidIcon: 'drawable/audio_service_stop',
@@ -166,21 +169,21 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
   /// **Note**: [HarmonizerStatus.idle] is mapped to
   /// [AudioProcessingState.completed] instead of `.idle`. Sending `.idle`
   /// causes `audio_service` to call `AudioService._stop()` which destroys
-  /// the Android foreground service. Using `.completed` signals playback
-  /// ended without tearing down the service, so the next play can still
+  /// the Android foreground service. Using `.completed` signals rendering
+  /// ended without tearing down the service, so the next harmonize can still
   /// trigger `startForeground()`.
   AudioProcessingState _mapProcessingState(HarmonizerStatus status) {
     return switch (status) {
       HarmonizerStatus.idle => AudioProcessingState.completed,
       HarmonizerStatus.preparing => AudioProcessingState.loading,
-      HarmonizerStatus.playing => AudioProcessingState.ready,
+      HarmonizerStatus.harmonizing => AudioProcessingState.ready,
       HarmonizerStatus.stopping => AudioProcessingState.ready,
       HarmonizerStatus.error => AudioProcessingState.error,
     };
   }
 
   void _publishMediaItem(HarmonizerState state) {
-    if (state.status == HarmonizerStatus.playing ||
+    if (state.status == HarmonizerStatus.harmonizing ||
         state.status == HarmonizerStatus.stopping ||
         state.status == HarmonizerStatus.preparing) {
       final typeName = state.activeType?.name ?? 'Unknown';
@@ -247,14 +250,14 @@ class HexaTuneAudioHandler extends BaseAudioHandler {
   }
 
   // ---------------------------------------------------------------------------
-  // Widget state (passive "now playing" for future home screen widget)
+  // Widget state (passive "now harmonizing" for future home screen widget)
   // ---------------------------------------------------------------------------
 
   void _writeWidgetState(HarmonizerState state) {
-    final isPlaying =
-        state.status == HarmonizerStatus.playing ||
+    final isHarmonizing =
+        state.status == HarmonizerStatus.harmonizing ||
         state.status == HarmonizerStatus.stopping;
-    _prefs.setBool(widgetIsPlayingKey, isPlaying);
+    _prefs.setBool(widgetIsHarmonizingKey, isHarmonizing);
     _prefs.setString(widgetFormulaNameKey, state.formulaId ?? '');
     _prefs.setString(widgetGenerationTypeKey, state.activeType?.name ?? '');
     _prefs.setInt(widgetRemainingSecondsKey, state.remainingInCycle.inSeconds);

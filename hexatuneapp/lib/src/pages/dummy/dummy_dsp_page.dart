@@ -20,7 +20,7 @@ import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 /// production UI.
 ///
 /// Sound layer selection has been moved to the Ambience Presets page.
-/// This page loads a saved ambience and handles playback, gain, and
+/// This page loads a saved ambience and handles rendering, gain, and
 /// binaural configuration.
 class DummyDspPage extends StatefulWidget {
   const DummyDspPage({super.key});
@@ -47,7 +47,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   double _binauralGain = DspConstants.defaultBinauralGain;
 
-  bool _isPlaying = false;
+  bool _isRendering = false;
   bool _isStopping = false;
   String? _statusMessage;
   bool _servicesReady = false;
@@ -81,7 +81,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
   // ---------------------------------------------------------------------------
 
   Future<void> _loadAmbience(AmbienceConfig config) async {
-    if (_ambienceLoading || _isPlaying) return;
+    if (_ambienceLoading || _isRendering) return;
 
     setState(() {
       _selectedAmbience = config;
@@ -168,7 +168,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   Future<void> _play() async {
     // If no ambience is selected, ensure previous layers are cleared so only
-    // binaural/monaural tones play.
+    // binaural/monaural tones render.
     if (_selectedAmbience == null && _dspService.isBaseLoaded) {
       await _dspService.clearBase();
     }
@@ -195,7 +195,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     if (!mounted) return;
     final l10n = AppLocalizations.of(context)!;
     setState(() {
-      _isPlaying = true;
+      _isRendering = true;
       _statusMessage = l10n.dspPlaying;
     });
   }
@@ -205,7 +205,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     if (!mounted) return;
     final l10n = AppLocalizations.of(context)!;
     setState(() {
-      _isPlaying = false;
+      _isRendering = false;
       _isStopping = false;
       _statusMessage = l10n.dspStopped;
     });
@@ -221,7 +221,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     await _dspService.stopGraceful();
     if (!mounted) return;
     setState(() {
-      _isPlaying = false;
+      _isRendering = false;
       _isStopping = false;
       _statusMessage = l10n.dspGracefullyStopped;
     });
@@ -302,7 +302,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                       style: theme.textTheme.bodySmall,
                     ),
                     value: _binauralEnabled,
-                    onChanged: _isPlaying
+                    onChanged: _isRendering
                         ? null
                         : (val) => setState(() => _binauralEnabled = val),
                     dense: true,
@@ -322,7 +322,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                             child: _buildNumberField(
                               step.deltaCtrl,
                               l10n.dspDeltaHz,
-                              enabled: !_isPlaying,
+                              enabled: !_isRendering,
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -330,14 +330,14 @@ class _DummyDspPageState extends State<DummyDspPage> {
                             child: _buildNumberField(
                               step.durationCtrl,
                               l10n.dspDurationS,
-                              enabled: !_isPlaying,
+                              enabled: !_isRendering,
                             ),
                           ),
                           SizedBox(
                             width: 32,
                             child: Checkbox(
                               value: step.oneshot,
-                              onChanged: _isPlaying
+                              onChanged: _isRendering
                                   ? null
                                   : (val) => setState(
                                       () => step.oneshot = val ?? false,
@@ -347,7 +347,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                               visualDensity: VisualDensity.compact,
                             ),
                           ),
-                          if (!_isPlaying && _cycleSteps.length > 1)
+                          if (!_isRendering && _cycleSteps.length > 1)
                             IconButton(
                               icon: Icon(
                                 Icons.remove_circle,
@@ -360,7 +360,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                       ),
                     );
                   }),
-                  if (!_isPlaying)
+                  if (!_isRendering)
                     TextButton.icon(
                       onPressed: _addCycleStep,
                       icon: const Icon(Icons.add, size: 18),
@@ -412,7 +412,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                   icon: const Icon(Icons.settings, size: 16),
                   label: Text(l10n.dspAmbienceManage),
                 ),
-                if (_selectedAmbience != null && !_isPlaying)
+                if (_selectedAmbience != null && !_isRendering)
                   IconButton(
                     onPressed: () async {
                       await _dspService.clearBase();
@@ -445,7 +445,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                         : colorScheme.surfaceContainerHighest,
                     borderRadius: BorderRadius.circular(12),
                     child: InkWell(
-                      onTap: _ambienceLoading || _isPlaying
+                      onTap: _ambienceLoading || _isRendering
                           ? null
                           : () => _loadAmbience(config),
                       borderRadius: BorderRadius.circular(12),
@@ -528,7 +528,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
 
   Widget _buildStatusCard(ThemeData theme, ColorScheme colorScheme) {
     return Card(
-      color: _isPlaying
+      color: _isRendering
           ? colorScheme.primaryContainer
           : colorScheme.surfaceContainerHighest,
       child: Padding(
@@ -536,7 +536,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
         child: Text(
           _statusMessage!,
           style: theme.textTheme.titleSmall?.copyWith(
-            color: _isPlaying
+            color: _isRendering
                 ? colorScheme.onPrimaryContainer
                 : colorScheme.onSurfaceVariant,
           ),
@@ -610,7 +610,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     ColorScheme colorScheme,
     AppLocalizations l10n,
   ) {
-    if (!_isPlaying) {
+    if (!_isRendering) {
       return SizedBox(
         height: 56,
         child: FilledButton.icon(

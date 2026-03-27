@@ -43,7 +43,9 @@ void main() {
       expect(find.byIcon(Icons.settings_outlined), findsOneWidget);
     });
 
-    testWidgets('displays play icon in the center hex button', (tester) async {
+    testWidgets('displays harmonize icon in the center hex button', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildApp());
 
       expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);

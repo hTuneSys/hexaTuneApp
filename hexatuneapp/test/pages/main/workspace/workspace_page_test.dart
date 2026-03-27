@@ -152,7 +152,7 @@ void main() {
       expect(find.text('Formula 1'), findsOneWidget);
     });
 
-    testWidgets('recently used items have play icons', (tester) async {
+    testWidgets('recently used items have harmonize icons', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 

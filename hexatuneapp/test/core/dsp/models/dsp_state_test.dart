@@ -11,7 +11,7 @@ void main() {
     test('default constructor provides correct defaults', () {
       const state = DspState();
       expect(state.isInitialized, isFalse);
-      expect(state.isPlaying, isFalse);
+      expect(state.isRendering, isFalse);
       expect(state.isBaseLoaded, isFalse);
       expect(state.carrierFrequency, DspConstants.carrierFrequency);
       expect(state.binauralEnabled, isTrue);
@@ -37,7 +37,7 @@ void main() {
     test('can be created with custom values', () {
       const state = DspState(
         isInitialized: true,
-        isPlaying: true,
+        isRendering: true,
         isBaseLoaded: true,
         carrierFrequency: 440.0,
         binauralEnabled: false,
@@ -48,7 +48,7 @@ void main() {
         masterGain: 0.9,
       );
       expect(state.isInitialized, isTrue);
-      expect(state.isPlaying, isTrue);
+      expect(state.isRendering, isTrue);
       expect(state.isBaseLoaded, isTrue);
       expect(state.carrierFrequency, 440.0);
       expect(state.binauralEnabled, isFalse);
@@ -60,22 +60,22 @@ void main() {
     });
 
     test('equality works correctly', () {
-      const a = DspState(isPlaying: true, baseGain: 0.5);
-      const b = DspState(isPlaying: true, baseGain: 0.5);
+      const a = DspState(isRendering: true, baseGain: 0.5);
+      const b = DspState(isRendering: true, baseGain: 0.5);
       expect(a, equals(b));
     });
 
     test('inequality when fields differ', () {
-      const a = DspState(isPlaying: true);
-      const b = DspState(isPlaying: false);
+      const a = DspState(isRendering: true);
+      const b = DspState(isRendering: false);
       expect(a, isNot(equals(b)));
     });
 
     test('copyWith creates modified copy', () {
       const original = DspState(isInitialized: true, baseGain: 0.6);
-      final modified = original.copyWith(isPlaying: true);
+      final modified = original.copyWith(isRendering: true);
       expect(modified.isInitialized, isTrue);
-      expect(modified.isPlaying, isTrue);
+      expect(modified.isRendering, isTrue);
       expect(modified.baseGain, 0.6);
     });
 
@@ -99,7 +99,7 @@ void main() {
     });
 
     test('toString produces readable output', () {
-      const state = DspState(isPlaying: true);
+      const state = DspState(isRendering: true);
       final str = state.toString();
       expect(str, contains('DspState'));
     });

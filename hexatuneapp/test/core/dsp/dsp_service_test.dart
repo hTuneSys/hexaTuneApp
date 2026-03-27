@@ -36,7 +36,7 @@ void main() {
       test('initial state is idle', () {
         const state = DspState();
         expect(state.isInitialized, isFalse);
-        expect(state.isPlaying, isFalse);
+        expect(state.isRendering, isFalse);
         expect(state.isBaseLoaded, isFalse);
         expect(state.hasError, isFalse);
       });
@@ -44,16 +44,16 @@ void main() {
       test('state can transition to initialized', () {
         final state = const DspState().copyWith(isInitialized: true);
         expect(state.isInitialized, isTrue);
-        expect(state.isPlaying, isFalse);
+        expect(state.isRendering, isFalse);
       });
 
-      test('state can transition to playing', () {
+      test('state can transition to rendering', () {
         final state = const DspState().copyWith(
           isInitialized: true,
-          isPlaying: true,
+          isRendering: true,
           isBaseLoaded: true,
         );
-        expect(state.isPlaying, isTrue);
+        expect(state.isRendering, isTrue);
         expect(state.isBaseLoaded, isTrue);
       });
 

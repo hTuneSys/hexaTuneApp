@@ -16,7 +16,7 @@ mixin _$DspState {
 
 /// Whether the DSP engine has been initialized.
  bool get isInitialized;/// Whether audio is currently playing.
- bool get isPlaying;/// Whether a base layer has been loaded.
+ bool get isRendering;/// Whether a base layer has been loaded.
  bool get isBaseLoaded;/// Fixed carrier frequency in Hz (220 Hz, not configurable).
  double get carrierFrequency;/// Whether binaural mode is enabled (vs AM mono).
  bool get binauralEnabled;/// Current base gain (0.0–1.0).
@@ -36,16 +36,16 @@ $DspStateCopyWith<DspState> get copyWith => _$DspStateCopyWithImpl<DspState>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DspState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.isBaseLoaded, isBaseLoaded) || other.isBaseLoaded == isBaseLoaded)&&(identical(other.carrierFrequency, carrierFrequency) || other.carrierFrequency == carrierFrequency)&&(identical(other.binauralEnabled, binauralEnabled) || other.binauralEnabled == binauralEnabled)&&(identical(other.baseGain, baseGain) || other.baseGain == baseGain)&&(identical(other.textureGain, textureGain) || other.textureGain == textureGain)&&(identical(other.eventGain, eventGain) || other.eventGain == eventGain)&&(identical(other.binauralGain, binauralGain) || other.binauralGain == binauralGain)&&(identical(other.masterGain, masterGain) || other.masterGain == masterGain)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DspState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.isRendering, isRendering) || other.isRendering == isRendering)&&(identical(other.isBaseLoaded, isBaseLoaded) || other.isBaseLoaded == isBaseLoaded)&&(identical(other.carrierFrequency, carrierFrequency) || other.carrierFrequency == carrierFrequency)&&(identical(other.binauralEnabled, binauralEnabled) || other.binauralEnabled == binauralEnabled)&&(identical(other.baseGain, baseGain) || other.baseGain == baseGain)&&(identical(other.textureGain, textureGain) || other.textureGain == textureGain)&&(identical(other.eventGain, eventGain) || other.eventGain == eventGain)&&(identical(other.binauralGain, binauralGain) || other.binauralGain == binauralGain)&&(identical(other.masterGain, masterGain) || other.masterGain == masterGain)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isInitialized,isPlaying,isBaseLoaded,carrierFrequency,binauralEnabled,baseGain,textureGain,eventGain,binauralGain,masterGain,error);
+int get hashCode => Object.hash(runtimeType,isInitialized,isRendering,isBaseLoaded,carrierFrequency,binauralEnabled,baseGain,textureGain,eventGain,binauralGain,masterGain,error);
 
 @override
 String toString() {
-  return 'DspState(isInitialized: $isInitialized, isPlaying: $isPlaying, isBaseLoaded: $isBaseLoaded, carrierFrequency: $carrierFrequency, binauralEnabled: $binauralEnabled, baseGain: $baseGain, textureGain: $textureGain, eventGain: $eventGain, binauralGain: $binauralGain, masterGain: $masterGain, error: $error)';
+  return 'DspState(isInitialized: $isInitialized, isRendering: $isRendering, isBaseLoaded: $isBaseLoaded, carrierFrequency: $carrierFrequency, binauralEnabled: $binauralEnabled, baseGain: $baseGain, textureGain: $textureGain, eventGain: $eventGain, binauralGain: $binauralGain, masterGain: $masterGain, error: $error)';
 }
 
 
@@ -56,7 +56,7 @@ abstract mixin class $DspStateCopyWith<$Res>  {
   factory $DspStateCopyWith(DspState value, $Res Function(DspState) _then) = _$DspStateCopyWithImpl;
 @useResult
 $Res call({
- bool isInitialized, bool isPlaying, bool isBaseLoaded, double carrierFrequency, bool binauralEnabled, double baseGain, double textureGain, double eventGain, double binauralGain, double masterGain, String? error
+ bool isInitialized, bool isRendering, bool isBaseLoaded, double carrierFrequency, bool binauralEnabled, double baseGain, double textureGain, double eventGain, double binauralGain, double masterGain, String? error
 });
 
 
@@ -73,10 +73,10 @@ class _$DspStateCopyWithImpl<$Res>
 
 /// Create a copy of DspState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isInitialized = null,Object? isPlaying = null,Object? isBaseLoaded = null,Object? carrierFrequency = null,Object? binauralEnabled = null,Object? baseGain = null,Object? textureGain = null,Object? eventGain = null,Object? binauralGain = null,Object? masterGain = null,Object? error = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isInitialized = null,Object? isRendering = null,Object? isBaseLoaded = null,Object? carrierFrequency = null,Object? binauralEnabled = null,Object? baseGain = null,Object? textureGain = null,Object? eventGain = null,Object? binauralGain = null,Object? masterGain = null,Object? error = freezed,}) {
   return _then(_self.copyWith(
 isInitialized: null == isInitialized ? _self.isInitialized : isInitialized // ignore: cast_nullable_to_non_nullable
-as bool,isPlaying: null == isPlaying ? _self.isPlaying : isPlaying // ignore: cast_nullable_to_non_nullable
+as bool,isRendering: null == isRendering ? _self.isRendering : isRendering // ignore: cast_nullable_to_non_nullable
 as bool,isBaseLoaded: null == isBaseLoaded ? _self.isBaseLoaded : isBaseLoaded // ignore: cast_nullable_to_non_nullable
 as bool,carrierFrequency: null == carrierFrequency ? _self.carrierFrequency : carrierFrequency // ignore: cast_nullable_to_non_nullable
 as double,binauralEnabled: null == binauralEnabled ? _self.binauralEnabled : binauralEnabled // ignore: cast_nullable_to_non_nullable
@@ -171,10 +171,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isInitialized,  bool isPlaying,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isInitialized,  bool isRendering,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _DspState() when $default != null:
-return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
+return $default(_that.isInitialized,_that.isRendering,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
   return orElse();
 
 }
@@ -192,10 +192,10 @@ return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.car
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isInitialized,  bool isPlaying,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isInitialized,  bool isRendering,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)  $default,) {final _that = this;
 switch (_that) {
 case _DspState():
-return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
+return $default(_that.isInitialized,_that.isRendering,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +212,10 @@ return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.car
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isInitialized,  bool isPlaying,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isInitialized,  bool isRendering,  bool isBaseLoaded,  double carrierFrequency,  bool binauralEnabled,  double baseGain,  double textureGain,  double eventGain,  double binauralGain,  double masterGain,  String? error)?  $default,) {final _that = this;
 switch (_that) {
 case _DspState() when $default != null:
-return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
+return $default(_that.isInitialized,_that.isRendering,_that.isBaseLoaded,_that.carrierFrequency,_that.binauralEnabled,_that.baseGain,_that.textureGain,_that.eventGain,_that.binauralGain,_that.masterGain,_that.error);case _:
   return null;
 
 }
@@ -227,13 +227,13 @@ return $default(_that.isInitialized,_that.isPlaying,_that.isBaseLoaded,_that.car
 
 
 class _DspState extends DspState {
-  const _DspState({this.isInitialized = false, this.isPlaying = false, this.isBaseLoaded = false, this.carrierFrequency = 220.0, this.binauralEnabled = true, this.baseGain = 0.6, this.textureGain = 0.3, this.eventGain = 0.4, this.binauralGain = 0.15, this.masterGain = 1.0, this.error}): super._();
+  const _DspState({this.isInitialized = false, this.isRendering = false, this.isBaseLoaded = false, this.carrierFrequency = 220.0, this.binauralEnabled = true, this.baseGain = 0.6, this.textureGain = 0.3, this.eventGain = 0.4, this.binauralGain = 0.15, this.masterGain = 1.0, this.error}): super._();
   
 
 /// Whether the DSP engine has been initialized.
 @override@JsonKey() final  bool isInitialized;
 /// Whether audio is currently playing.
-@override@JsonKey() final  bool isPlaying;
+@override@JsonKey() final  bool isRendering;
 /// Whether a base layer has been loaded.
 @override@JsonKey() final  bool isBaseLoaded;
 /// Fixed carrier frequency in Hz (220 Hz, not configurable).
@@ -263,16 +263,16 @@ _$DspStateCopyWith<_DspState> get copyWith => __$DspStateCopyWithImpl<_DspState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DspState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.isPlaying, isPlaying) || other.isPlaying == isPlaying)&&(identical(other.isBaseLoaded, isBaseLoaded) || other.isBaseLoaded == isBaseLoaded)&&(identical(other.carrierFrequency, carrierFrequency) || other.carrierFrequency == carrierFrequency)&&(identical(other.binauralEnabled, binauralEnabled) || other.binauralEnabled == binauralEnabled)&&(identical(other.baseGain, baseGain) || other.baseGain == baseGain)&&(identical(other.textureGain, textureGain) || other.textureGain == textureGain)&&(identical(other.eventGain, eventGain) || other.eventGain == eventGain)&&(identical(other.binauralGain, binauralGain) || other.binauralGain == binauralGain)&&(identical(other.masterGain, masterGain) || other.masterGain == masterGain)&&(identical(other.error, error) || other.error == error));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DspState&&(identical(other.isInitialized, isInitialized) || other.isInitialized == isInitialized)&&(identical(other.isRendering, isRendering) || other.isRendering == isRendering)&&(identical(other.isBaseLoaded, isBaseLoaded) || other.isBaseLoaded == isBaseLoaded)&&(identical(other.carrierFrequency, carrierFrequency) || other.carrierFrequency == carrierFrequency)&&(identical(other.binauralEnabled, binauralEnabled) || other.binauralEnabled == binauralEnabled)&&(identical(other.baseGain, baseGain) || other.baseGain == baseGain)&&(identical(other.textureGain, textureGain) || other.textureGain == textureGain)&&(identical(other.eventGain, eventGain) || other.eventGain == eventGain)&&(identical(other.binauralGain, binauralGain) || other.binauralGain == binauralGain)&&(identical(other.masterGain, masterGain) || other.masterGain == masterGain)&&(identical(other.error, error) || other.error == error));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isInitialized,isPlaying,isBaseLoaded,carrierFrequency,binauralEnabled,baseGain,textureGain,eventGain,binauralGain,masterGain,error);
+int get hashCode => Object.hash(runtimeType,isInitialized,isRendering,isBaseLoaded,carrierFrequency,binauralEnabled,baseGain,textureGain,eventGain,binauralGain,masterGain,error);
 
 @override
 String toString() {
-  return 'DspState(isInitialized: $isInitialized, isPlaying: $isPlaying, isBaseLoaded: $isBaseLoaded, carrierFrequency: $carrierFrequency, binauralEnabled: $binauralEnabled, baseGain: $baseGain, textureGain: $textureGain, eventGain: $eventGain, binauralGain: $binauralGain, masterGain: $masterGain, error: $error)';
+  return 'DspState(isInitialized: $isInitialized, isRendering: $isRendering, isBaseLoaded: $isBaseLoaded, carrierFrequency: $carrierFrequency, binauralEnabled: $binauralEnabled, baseGain: $baseGain, textureGain: $textureGain, eventGain: $eventGain, binauralGain: $binauralGain, masterGain: $masterGain, error: $error)';
 }
 
 
@@ -283,7 +283,7 @@ abstract mixin class _$DspStateCopyWith<$Res> implements $DspStateCopyWith<$Res>
   factory _$DspStateCopyWith(_DspState value, $Res Function(_DspState) _then) = __$DspStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isInitialized, bool isPlaying, bool isBaseLoaded, double carrierFrequency, bool binauralEnabled, double baseGain, double textureGain, double eventGain, double binauralGain, double masterGain, String? error
+ bool isInitialized, bool isRendering, bool isBaseLoaded, double carrierFrequency, bool binauralEnabled, double baseGain, double textureGain, double eventGain, double binauralGain, double masterGain, String? error
 });
 
 
@@ -300,10 +300,10 @@ class __$DspStateCopyWithImpl<$Res>
 
 /// Create a copy of DspState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isInitialized = null,Object? isPlaying = null,Object? isBaseLoaded = null,Object? carrierFrequency = null,Object? binauralEnabled = null,Object? baseGain = null,Object? textureGain = null,Object? eventGain = null,Object? binauralGain = null,Object? masterGain = null,Object? error = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isInitialized = null,Object? isRendering = null,Object? isBaseLoaded = null,Object? carrierFrequency = null,Object? binauralEnabled = null,Object? baseGain = null,Object? textureGain = null,Object? eventGain = null,Object? binauralGain = null,Object? masterGain = null,Object? error = freezed,}) {
   return _then(_DspState(
 isInitialized: null == isInitialized ? _self.isInitialized : isInitialized // ignore: cast_nullable_to_non_nullable
-as bool,isPlaying: null == isPlaying ? _self.isPlaying : isPlaying // ignore: cast_nullable_to_non_nullable
+as bool,isRendering: null == isRendering ? _self.isRendering : isRendering // ignore: cast_nullable_to_non_nullable
 as bool,isBaseLoaded: null == isBaseLoaded ? _self.isBaseLoaded : isBaseLoaded // ignore: cast_nullable_to_non_nullable
 as bool,carrierFrequency: null == carrierFrequency ? _self.carrierFrequency : carrierFrequency // ignore: cast_nullable_to_non_nullable
 as double,binauralEnabled: null == binauralEnabled ? _self.binauralEnabled : binauralEnabled // ignore: cast_nullable_to_non_nullable

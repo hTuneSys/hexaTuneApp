@@ -277,7 +277,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dspNoSelection => 'Tap to select';
 
   @override
-  String get dspPlay => 'PLAY';
+  String get dspPlay => 'HARMONIZE';
 
   @override
   String get dspStop => 'STOP';
@@ -292,7 +292,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dspFinishing => 'FINISHING...';
 
   @override
-  String get dspPlaying => 'Playing...';
+  String get dspPlaying => 'Harmonizing...';
 
   @override
   String get dspStopped => 'Stopped';
@@ -626,7 +626,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get harmonizerTitle => 'Harmonizer Player';
+  String get harmonizerTitle => 'Harmonizer';
 
   @override
   String get harmonizerSelectFormula => 'Select a formula';
@@ -670,7 +670,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerNoAmbience => 'No ambience';
 
   @override
-  String get harmonizerPlay => 'Play';
+  String get harmonizerPlay => 'Harmonize';
 
   @override
   String get harmonizerStop => 'Stop';
@@ -679,7 +679,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerPreparing => 'Preparing...';
 
   @override
-  String get harmonizerPlaying => 'Playing';
+  String get harmonizerPlaying => 'Harmonizing';
 
   @override
   String get harmonizerStopping => 'Stopping...';

@@ -87,7 +87,7 @@ class _AppRootState extends State<AppRoot> {
       // service notification visibility).
       await _requestNotificationPermission();
 
-      // Configure audio session for music playback.
+      // Configure audio session for music rendering.
       await _configureAudioSession();
 
       // Initialize audio service (one-isolate mode) before other services.
@@ -124,7 +124,7 @@ class _AppRootState extends State<AppRoot> {
   ///
   /// Without this, the foreground service notification is invisible and some
   /// devices may not keep the service alive. Non-fatal — the app works without
-  /// it but background playback may be unreliable.
+  /// it but background rendering may be unreliable.
   Future<void> _requestNotificationPermission() async {
     try {
       final log = getIt<LogService>();
@@ -141,7 +141,7 @@ class _AppRootState extends State<AppRoot> {
     }
   }
 
-  /// Configures the [AudioSession] for music playback.
+  /// Configures the [AudioSession] for music rendering.
   ///
   /// Tells the OS this app plays long-form audio, enabling proper audio focus
   /// management and interruption handling (e.g. phone calls, other media apps).
@@ -150,7 +150,7 @@ class _AppRootState extends State<AppRoot> {
       final session = await AudioSession.instance;
       await session.configure(const AudioSessionConfiguration.music());
       getIt<LogService>().info(
-        'AudioSession configured for music playback',
+        'AudioSession configured for music rendering',
         category: LogCategory.dsp,
       );
     } catch (e) {

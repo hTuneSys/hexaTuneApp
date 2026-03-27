@@ -28,9 +28,9 @@ void main() {
 
     test('copyWith preserves unchanged fields', () {
       const state = HarmonizerState();
-      final updated = state.copyWith(status: HarmonizerStatus.playing);
+      final updated = state.copyWith(status: HarmonizerStatus.harmonizing);
 
-      expect(updated.status, HarmonizerStatus.playing);
+      expect(updated.status, HarmonizerStatus.harmonizing);
       expect(updated.activeType, isNull);
       expect(updated.sequence, isEmpty);
     });
@@ -43,7 +43,7 @@ void main() {
 
       final state = const HarmonizerState().copyWith(
         activeType: GenerationType.binaural,
-        status: HarmonizerStatus.playing,
+        status: HarmonizerStatus.harmonizing,
         ambienceId: 'test-ambience',
         formulaId: 'formula-42',
         sequence: packets,
@@ -57,7 +57,7 @@ void main() {
       );
 
       expect(state.activeType, GenerationType.binaural);
-      expect(state.status, HarmonizerStatus.playing);
+      expect(state.status, HarmonizerStatus.harmonizing);
       expect(state.ambienceId, 'test-ambience');
       expect(state.formulaId, 'formula-42');
       expect(state.sequence.length, 2);
@@ -84,7 +84,7 @@ void main() {
       const b = HarmonizerState();
       expect(a, equals(b));
 
-      final c = a.copyWith(status: HarmonizerStatus.playing);
+      final c = a.copyWith(status: HarmonizerStatus.harmonizing);
       expect(a, isNot(equals(c)));
     });
   });
@@ -94,7 +94,7 @@ void main() {
       expect(HarmonizerStatus.values, hasLength(5));
       expect(HarmonizerStatus.values, contains(HarmonizerStatus.idle));
       expect(HarmonizerStatus.values, contains(HarmonizerStatus.preparing));
-      expect(HarmonizerStatus.values, contains(HarmonizerStatus.playing));
+      expect(HarmonizerStatus.values, contains(HarmonizerStatus.harmonizing));
       expect(HarmonizerStatus.values, contains(HarmonizerStatus.stopping));
       expect(HarmonizerStatus.values, contains(HarmonizerStatus.error));
     });

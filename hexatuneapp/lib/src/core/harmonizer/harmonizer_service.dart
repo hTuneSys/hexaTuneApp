@@ -64,8 +64,9 @@ class HarmonizerService {
   /// Current state snapshot.
   HarmonizerState get currentState => _currentState;
 
-  /// Whether the harmonizer is actively playing.
-  bool get isPlaying => _currentState.status == HarmonizerStatus.playing;
+  /// Whether the harmonizer is actively harmonizing.
+  bool get isHarmonizing =>
+      _currentState.status == HarmonizerStatus.harmonizing;
 
   /// Validates hardware prerequisites for the given [type].
   HarmonizerValidation validatePrerequisites(GenerationType type) {
@@ -79,11 +80,11 @@ class HarmonizerService {
     return HarmonizerValidation.valid;
   }
 
-  /// Starts playback with the given [config].
+  /// Starts harmonizing with the given [config].
   ///
   /// Returns `null` on success, or an error message string on failure.
-  Future<String?> play(HarmonizerConfig config) async {
-    if (_currentState.status == HarmonizerStatus.playing ||
+  Future<String?> harmonize(HarmonizerConfig config) async {
+    if (_currentState.status == HarmonizerStatus.harmonizing ||
         _currentState.status == HarmonizerStatus.preparing) {
       return 'Harmonizer is already active';
     }
@@ -98,7 +99,7 @@ class HarmonizerService {
     }
 
     _logService.info(
-      'Harmonizer play: type=${config.type.name}, '
+      'Harmonizer harmonize: type=${config.type.name}, '
       'steps=${config.steps.length}, ambience=${config.ambienceId ?? "none"}',
       category: LogCategory.dsp,
     );
@@ -140,12 +141,14 @@ class HarmonizerService {
       _playStartTime = DateTime.now();
       _startTimeTracker();
 
-      _updateState(_currentState.copyWith(status: HarmonizerStatus.playing));
+      _updateState(
+        _currentState.copyWith(status: HarmonizerStatus.harmonizing),
+      );
 
       return null;
     } catch (e, st) {
       _logService.error(
-        'Harmonizer play failed: $e',
+        'Harmonizer start failed: $e',
         category: LogCategory.dsp,
         exception: e,
         stackTrace: st,
@@ -168,7 +171,7 @@ class HarmonizerService {
   /// state, and the device is sent a RESET.  The play button stays disabled
   /// until the HexaGen device reconnects.
   Future<void> stopGraceful() async {
-    if (_currentState.status != HarmonizerStatus.playing) return;
+    if (_currentState.status != HarmonizerStatus.harmonizing) return;
 
     _logService.info(
       'Harmonizer graceful stop requested',
@@ -240,9 +243,9 @@ class HarmonizerService {
     }
   }
 
-  /// Immediately stops all playback without waiting for cycle completion.
+  /// Immediately stops all rendering without waiting for cycle completion.
   Future<void> stopImmediate() async {
-    if (_currentState.status != HarmonizerStatus.playing &&
+    if (_currentState.status != HarmonizerStatus.harmonizing &&
         _currentState.status != HarmonizerStatus.stopping) {
       return;
     }
@@ -385,13 +388,13 @@ class HarmonizerService {
     }
   }
 
-  /// Changes ambience while playing. Pass `null` to remove ambience.
+  /// Changes ambience while harmonizing. Pass `null` to remove ambience.
   ///
-  /// If the harmonizer is not in a DSP-playback state (monaural/binaural),
-  /// or is not currently playing, this method does nothing.
+  /// If the harmonizer is not in a DSP-rendering state (monaural/binaural),
+  /// or is not currently harmonizing, this method does nothing.
   Future<void> changeAmbience(String? ambienceId) async {
     final status = _currentState.status;
-    if (status != HarmonizerStatus.playing &&
+    if (status != HarmonizerStatus.harmonizing &&
         status != HarmonizerStatus.preparing) {
       return;
     }
@@ -405,7 +408,7 @@ class HarmonizerService {
     if (ambienceId == null) {
       await _clearAllAmbienceLayers();
       _logService.info(
-        'Ambience cleared during playback',
+        'Ambience cleared during harmonizing',
         category: LogCategory.dsp,
       );
     } else {
@@ -474,8 +477,8 @@ class HarmonizerService {
     _timeTracker = Timer.periodic(const Duration(seconds: 1), (_) {
       final status = _currentState.status;
 
-      // Only run while playing or stopping (countdown to zero).
-      if (status != HarmonizerStatus.playing &&
+      // Only run while harmonizing or stopping (countdown to zero).
+      if (status != HarmonizerStatus.harmonizing &&
           status != HarmonizerStatus.stopping) {
         _timeTracker?.cancel();
         return;

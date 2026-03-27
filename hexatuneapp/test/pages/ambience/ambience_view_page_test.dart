@@ -124,7 +124,7 @@ void main() {
       final type = inv.positionalArguments[0] as String;
       return _testAssets.where((a) => a.layerType == type).toList();
     });
-    when(() => mockDspService.isPlaying).thenReturn(false);
+    when(() => mockDspService.isRendering).thenReturn(false);
     when(() => mockDspService.stop()).thenAnswer((_) async {});
     when(() => mockDspService.clearAllLayers()).thenAnswer((_) async {});
 
@@ -208,11 +208,11 @@ void main() {
       expect(find.text('Sound Settings'), findsOneWidget);
     });
 
-    testWidgets('shows play button', (tester) async {
+    testWidgets('shows harmonize button', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('PLAY'), findsOneWidget);
+      expect(find.text('HARMONIZE'), findsOneWidget);
       expect(find.byIcon(Icons.play_arrow), findsOneWidget);
     });
 

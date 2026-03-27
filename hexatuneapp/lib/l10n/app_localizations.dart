@@ -617,7 +617,7 @@ abstract class AppLocalizations {
   /// No description provided for @dspPlay.
   ///
   /// In en, this message translates to:
-  /// **'PLAY'**
+  /// **'HARMONIZE'**
   String get dspPlay;
 
   /// No description provided for @dspStop.
@@ -647,7 +647,7 @@ abstract class AppLocalizations {
   /// No description provided for @dspPlaying.
   ///
   /// In en, this message translates to:
-  /// **'Playing...'**
+  /// **'Harmonizing...'**
   String get dspPlaying;
 
   /// No description provided for @dspStopped.
@@ -1265,7 +1265,7 @@ abstract class AppLocalizations {
   /// No description provided for @harmonizerTitle.
   ///
   /// In en, this message translates to:
-  /// **'Harmonizer Player'**
+  /// **'Harmonizer'**
   String get harmonizerTitle;
 
   /// No description provided for @harmonizerSelectFormula.
@@ -1349,7 +1349,7 @@ abstract class AppLocalizations {
   /// No description provided for @harmonizerPlay.
   ///
   /// In en, this message translates to:
-  /// **'Play'**
+  /// **'Harmonize'**
   String get harmonizerPlay;
 
   /// No description provided for @harmonizerStop.
@@ -1367,7 +1367,7 @@ abstract class AppLocalizations {
   /// No description provided for @harmonizerPlaying.
   ///
   /// In en, this message translates to:
-  /// **'Playing'**
+  /// **'Harmonizing'**
   String get harmonizerPlaying;
 
   /// No description provided for @harmonizerStopping.

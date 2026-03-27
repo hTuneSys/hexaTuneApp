@@ -12,8 +12,8 @@ abstract class DspState with _$DspState {
     /// Whether the DSP engine has been initialized.
     @Default(false) bool isInitialized,
 
-    /// Whether audio is currently playing.
-    @Default(false) bool isPlaying,
+    /// Whether audio is currently rendering.
+    @Default(false) bool isRendering,
 
     /// Whether a base layer has been loaded.
     @Default(false) bool isBaseLoaded,
@@ -39,7 +39,7 @@ abstract class DspState with _$DspState {
     /// Current master gain (0.0–1.0).
     @Default(1.0) double masterGain,
 
-    /// Error message if initialization or playback failed.
+    /// Error message if initialization or rendering failed.
     String? error,
   }) = _DspState;
 

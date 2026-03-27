@@ -119,7 +119,7 @@ void main() {
       return _testAssets.where((a) => a.layerType == type).toList();
     });
     when(() => mockAssetService.allAssets).thenReturn(_testAssets);
-    when(() => mockDspService.isPlaying).thenReturn(false);
+    when(() => mockDspService.isRendering).thenReturn(false);
     when(() => mockDspService.stop()).thenAnswer((_) async {});
     when(() => mockDspService.clearAllLayers()).thenAnswer((_) async {});
 
@@ -184,16 +184,16 @@ void main() {
       expect(find.byType(Slider), findsNWidgets(4));
     });
 
-    testWidgets('shows play button disabled when no layers selected', (
+    testWidgets('shows harmonize button disabled when no layers selected', (
       tester,
     ) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('PLAY'), findsOneWidget);
+      expect(find.text('HARMONIZE'), findsOneWidget);
 
       final playFinder = find.ancestor(
-        of: find.text('PLAY'),
+        of: find.text('HARMONIZE'),
         matching: find.byType(OutlinedButton),
       );
       final playButton = tester.widget<OutlinedButton>(playFinder);

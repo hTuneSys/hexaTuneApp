@@ -3,7 +3,7 @@
 
 /// Prerequisite validation result for a generation type.
 enum HarmonizerValidation {
-  /// All prerequisites are met — playback can start.
+  /// All prerequisites are met — harmonizing can start.
   valid,
 
   /// Headphones must be connected (binaural mode).

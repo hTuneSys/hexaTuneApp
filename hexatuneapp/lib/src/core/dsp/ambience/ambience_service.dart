@@ -15,7 +15,7 @@ import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
 /// Manages locally-stored ambience presets (CRUD).
 ///
 /// Each ambience is a combination of sound layer selections and gain
-/// settings that can be loaded into the DSP engine for playback.
+/// settings that can be loaded into the DSP engine for rendering.
 /// Data is persisted via [PreferencesService] as a JSON string.
 @singleton
 class AmbienceService {

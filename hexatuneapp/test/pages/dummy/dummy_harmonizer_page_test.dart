@@ -153,7 +153,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Harmonizer Player'), findsOneWidget);
+      expect(find.text('Harmonizer'), findsOneWidget);
     });
 
     testWidgets('shows formula selector with formulas', (tester) async {
@@ -352,7 +352,7 @@ void main() {
   // -------------------------------------------------------------------------
 
   group('HarmonizerPlayerWidget controls', () {
-    testWidgets('shows play button initially', (tester) async {
+    testWidgets('shows harmonize button initially', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
@@ -374,25 +374,25 @@ void main() {
       expect(find.text('Remaining'), findsOneWidget);
     });
 
-    testWidgets('shows stop button when playing', (tester) async {
+    testWidgets('shows stop button when harmonizing', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       harmonizerCtrl.add(
-        const HarmonizerState(status: HarmonizerStatus.playing),
+        const HarmonizerState(status: HarmonizerStatus.harmonizing),
       );
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.stop_rounded), findsOneWidget);
     });
 
-    testWidgets('shows duration when playing', (tester) async {
+    testWidgets('shows duration when harmonizing', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       harmonizerCtrl.add(
         const HarmonizerState(
-          status: HarmonizerStatus.playing,
+          status: HarmonizerStatus.harmonizing,
           isFirstCycle: false,
           totalCycleDuration: Duration(minutes: 5, seconds: 30),
           remainingInCycle: Duration(minutes: 3, seconds: 15),
@@ -548,45 +548,46 @@ void main() {
       expect(find.text('Ocean Breeze'), findsWidgets);
     });
 
-    testWidgets('play button calls onPlay when canPlay is true', (
-      tester,
-    ) async {
-      var playCalled = false;
+    testWidgets(
+      'harmonize button calls onHarmonize when canHarmonize is true',
+      (tester) async {
+        var playCalled = false;
 
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: false,
-                  generating: false,
-                  canPlay: true,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () => playCalled = true,
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
+        await tester.pumpWidget(
+          _buildApp(
+            child: Scaffold(
+              body: ListView(
+                children: [
+                  HarmonizerPlayerWidget(
+                    selectedType: GenerationType.monaural,
+                    harmonizerState: const HarmonizerState(),
+                    headsetConnected: false,
+                    hexagenConnected: false,
+                    selectedAmbience: null,
+                    ambienceConfigs: const [],
+                    isActive: false,
+                    generating: false,
+                    canPlay: true,
+                    onTypeChanged: (_) {},
+                    onAmbienceChanged: (_) {},
+                    onPlay: () => playCalled = true,
+                    onStopGraceful: () {},
+                    onImmediateStart: () {},
+                    onImmediateEnd: () {},
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-      await tester.pumpAndSettle();
+        );
+        await tester.pumpAndSettle();
 
-      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
-      await tester.pumpAndSettle();
+        await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+        await tester.pumpAndSettle();
 
-      expect(playCalled, isTrue);
-    });
+        expect(playCalled, isTrue);
+      },
+    );
 
     testWidgets('stop button calls onStopGraceful', (tester) async {
       var stopCalled = false;
@@ -599,7 +600,7 @@ void main() {
                 HarmonizerPlayerWidget(
                   selectedType: GenerationType.monaural,
                   harmonizerState: const HarmonizerState(
-                    status: HarmonizerStatus.playing,
+                    status: HarmonizerStatus.harmonizing,
                   ),
                   headsetConnected: false,
                   hexagenConnected: false,

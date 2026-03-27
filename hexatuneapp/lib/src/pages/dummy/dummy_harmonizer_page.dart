@@ -25,10 +25,10 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_re
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
-/// Dummy page for testing the Harmonizer player.
+/// Dummy page for testing the Harmonizer.
 ///
 /// Formula selection sits above the [HarmonizerPlayerWidget] which contains
-/// the tabbed type selector, ambience/warning area, and play/stop controls
+/// the tabbed type selector, ambience/warning area, and harmonize/stop controls
 /// inside a single bordered container.
 class DummyHarmonizerPage extends StatefulWidget {
   const DummyHarmonizerPage({super.key});
@@ -182,7 +182,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
         formulaId: _selectedFormula!.id,
       );
 
-      final error = await _harmonizer.play(config);
+      final error = await _harmonizer.harmonize(config);
       if (error != null && mounted) {
         AppSnackBar.success(context, message: error);
       }
@@ -218,8 +218,8 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
 
   void _onAmbienceChanged(AmbienceConfig? config) {
     setState(() => _selectedAmbience = config);
-    // If playing, immediately switch ambience in the harmonizer.
-    if (_harmonizerState.status == HarmonizerStatus.playing) {
+    // If harmonizing, immediately switch ambience in the harmonizer.
+    if (_harmonizerState.status == HarmonizerStatus.harmonizing) {
       _harmonizer.changeAmbience(config?.id);
     }
   }
@@ -324,7 +324,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
   // ---------------------------------------------------------------------------
 
   bool get _isActive =>
-      _harmonizerState.status == HarmonizerStatus.playing ||
+      _harmonizerState.status == HarmonizerStatus.harmonizing ||
       _harmonizerState.status == HarmonizerStatus.preparing ||
       _harmonizerState.status == HarmonizerStatus.stopping ||
       _generating;
@@ -342,8 +342,8 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
 // HarmonizerPlayerWidget — single bordered container with tabs + controls
 // =============================================================================
 
-/// A standalone player widget with tabbed type selection, ambience/warning
-/// area, and play/stop controls inside a single rounded container.
+/// A standalone harmonizer widget with tabbed type selection, ambience/warning
+/// area, and harmonize/stop controls inside a single rounded container.
 class HarmonizerPlayerWidget extends StatelessWidget {
   const HarmonizerPlayerWidget({
     required this.selectedType,
@@ -407,7 +407,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
 
           Divider(height: 1, color: colorScheme.outlineVariant),
 
-          // --- Bottom half: timer + play/stop ---
+          // --- Bottom half: timer + harmonize/stop ---
           _buildControls(theme, l10n, colorScheme),
         ],
       ),
@@ -570,8 +570,8 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     AppLocalizations l10n,
     ColorScheme colorScheme,
   ) {
-    final isPlaying =
-        harmonizerState.status == HarmonizerStatus.playing ||
+    final isHarmonizing =
+        harmonizerState.status == HarmonizerStatus.harmonizing ||
         harmonizerState.status == HarmonizerStatus.stopping;
 
     return Padding(
@@ -599,7 +599,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isPlaying
+                      isHarmonizing
                           ? _formatDuration(
                               harmonizerState.isFirstCycle
                                   ? harmonizerState.firstCycleDuration
@@ -615,7 +615,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
               ),
 
               // Center: Play / Stop button
-              _buildCenterButton(theme, l10n, colorScheme, isPlaying),
+              _buildCenterButton(theme, l10n, colorScheme, isHarmonizing),
 
               // Right: Remaining
               Expanded(
@@ -636,7 +636,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      isPlaying
+                      isHarmonizing
                           ? _formatDuration(harmonizerState.remainingInCycle)
                           : '--:--',
                       style: theme.textTheme.headlineMedium?.copyWith(
@@ -671,7 +671,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
     ThemeData theme,
     AppLocalizations l10n,
     ColorScheme colorScheme,
-    bool isPlaying,
+    bool isHarmonizing,
   ) {
     const double size = 64;
     final isStopping = harmonizerState.status == HarmonizerStatus.stopping;
@@ -693,7 +693,7 @@ class HarmonizerPlayerWidget extends StatelessWidget {
       );
     }
 
-    if (isPlaying) {
+    if (isHarmonizing) {
       return GestureDetector(
         onLongPressStart: (_) => onImmediateStart(),
         onLongPressEnd: (_) => onImmediateEnd(),

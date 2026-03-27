@@ -15,7 +15,7 @@ import 'package:hexatuneapp/src/core/dsp/models/audio_asset.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
-/// Read-only view of an ambience preset with playback support.
+/// Read-only view of an ambience preset with harmonizing support.
 class AmbienceViewPage extends StatefulWidget {
   const AmbienceViewPage({super.key, required this.ambienceId});
 
@@ -27,8 +27,8 @@ class AmbienceViewPage extends StatefulWidget {
 
 class _AmbienceViewPageState extends State<AmbienceViewPage> {
   bool _isLoading = true;
-  bool _isPlaying = false;
-  bool _isLoadingPlayback = false;
+  bool _isRendering = false;
+  bool _isLoadingPreview = false;
 
   late final AmbienceService _ambienceService;
   late final DspAssetService _assetService;
@@ -54,7 +54,7 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
 
   @override
   void dispose() {
-    if (_isPlaying) _dspService.stop();
+    if (_isRendering) _dspService.stop();
     _dspService.clearAllLayers();
     super.dispose();
   }
@@ -68,11 +68,11 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
 
   Future<void> _play() async {
     final config = _config;
-    if (_isPlaying || _isLoadingPlayback || config == null) return;
-    setState(() => _isLoadingPlayback = true);
+    if (_isRendering || _isLoadingPreview || config == null) return;
+    setState(() => _isLoadingPreview = true);
 
     try {
-      if (_dspService.isPlaying) await _dspService.stop();
+      if (_dspService.isRendering) await _dspService.stop();
       await _dspService.clearAllLayers();
 
       if (config.baseAssetId != null) {
@@ -109,19 +109,19 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
         return;
       }
 
-      if (mounted) setState(() => _isPlaying = true);
+      if (mounted) setState(() => _isRendering = true);
     } catch (e) {
       _showError('Playback error: $e');
     } finally {
-      if (mounted) setState(() => _isLoadingPlayback = false);
+      if (mounted) setState(() => _isLoadingPreview = false);
     }
   }
 
   Future<void> _stop() async {
-    if (!_isPlaying) return;
+    if (!_isRendering) return;
     await _dspService.stop();
     await _dspService.clearAllLayers();
-    if (mounted) setState(() => _isPlaying = false);
+    if (mounted) setState(() => _isRendering = false);
   }
 
   void _showError(String msg) {
@@ -247,17 +247,17 @@ class _AmbienceViewPageState extends State<AmbienceViewPage> {
             SizedBox(
               height: 48,
               child: OutlinedButton.icon(
-                onPressed: _isPlaying
+                onPressed: _isRendering
                     ? _stop
-                    : (!_isLoadingPlayback ? _play : null),
-                icon: _isLoadingPlayback
+                    : (!_isLoadingPreview ? _play : null),
+                icon: _isLoadingPreview
                     ? const SizedBox(
                         width: 18,
                         height: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Icon(_isPlaying ? Icons.stop : Icons.play_arrow),
-                label: Text(_isPlaying ? l10n.dspStop : l10n.dspPlay),
+                    : Icon(_isRendering ? Icons.stop : Icons.play_arrow),
+                label: Text(_isRendering ? l10n.dspStop : l10n.dspPlay),
               ),
             ),
             const SizedBox(height: 16),

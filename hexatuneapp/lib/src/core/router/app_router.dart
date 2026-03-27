@@ -97,7 +97,7 @@ class AppRouter {
           return ResetPasswordPage(email: email);
         },
       ),
-      // --- Dummy / dev pages share a shell with a persistent mini-player ---
+      // --- Dummy / dev pages share a shell with a persistent mini-harmonizer ---
       ShellRoute(
         builder: (context, state, child) {
           final isHarmonizerPage = state.uri.path == RouteNames.harmonizer;
