@@ -113,6 +113,8 @@ class AppRouter {
             bottomNavigationBar: AppBottomBar(
               onItemTapped: (index) {
                 switch (index) {
+                  case 0:
+                    context.go(RouteNames.home);
                   case 2:
                     context.go(RouteNames.workspace);
                   default:
