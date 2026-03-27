@@ -418,7 +418,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceViewTitle => 'View Ambience';
 
   @override
-  String get ambienceEmptyTitle => 'No ambiance yet.';
+  String get ambienceEmptyTitle => 'No ambience yet.';
 
   @override
   String get ambienceEmptySubtitle =>
@@ -454,7 +454,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceNameLabel => 'Name';
 
   @override
-  String get ambienceNameHint => 'Enter ambiance name';
+  String get ambienceNameHint => 'Enter ambience name';
 
   @override
   String get ambienceNoBase => 'None';
@@ -472,7 +472,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ambienceNameRequired => 'Name is required.';
 
   @override
-  String get ambienceSearchHint => 'Search ambiances...';
+  String get ambienceSearchHint => 'Search ambiences...';
 
   @override
   String get ambienceSortTitle => 'Sort';

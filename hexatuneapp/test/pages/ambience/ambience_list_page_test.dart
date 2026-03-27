@@ -152,7 +152,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.landscape_outlined), findsOneWidget);
-      expect(find.text('No ambiance yet.'), findsOneWidget);
+      expect(find.text('No ambience yet.'), findsOneWidget);
     });
 
     testWidgets('shows FAB for creating ambience', (tester) async {

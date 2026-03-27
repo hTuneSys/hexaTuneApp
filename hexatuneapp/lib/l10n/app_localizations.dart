@@ -875,7 +875,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceEmptyTitle.
   ///
   /// In en, this message translates to:
-  /// **'No ambiance yet.'**
+  /// **'No ambience yet.'**
   String get ambienceEmptyTitle;
 
   /// No description provided for @ambienceEmptySubtitle.
@@ -941,7 +941,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Enter ambiance name'**
+  /// **'Enter ambience name'**
   String get ambienceNameHint;
 
   /// No description provided for @ambienceNoBase.
@@ -977,7 +977,7 @@ abstract class AppLocalizations {
   /// No description provided for @ambienceSearchHint.
   ///
   /// In en, this message translates to:
-  /// **'Search ambiances...'**
+  /// **'Search ambiences...'**
   String get ambienceSearchHint;
 
   /// No description provided for @ambienceSortTitle.
