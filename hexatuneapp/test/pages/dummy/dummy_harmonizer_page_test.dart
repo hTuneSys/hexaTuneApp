@@ -355,7 +355,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner_rounded), findsOneWidget);
     });
 
     testWidgets('shows --:-- for both timers when idle', (tester) async {

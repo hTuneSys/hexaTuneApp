@@ -156,7 +156,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.play_arrow_rounded), findsWidgets);
+      expect(find.byIcon(Icons.join_inner_rounded), findsWidgets);
     });
 
     testWidgets('Edit button opens bottom sheet', (tester) async {

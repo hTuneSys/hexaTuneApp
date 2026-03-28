@@ -213,7 +213,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('HARMONIZE'), findsOneWidget);
-      expect(find.byIcon(Icons.play_arrow), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner), findsOneWidget);
     });
 
     testWidgets('sliders are disabled', (tester) async {

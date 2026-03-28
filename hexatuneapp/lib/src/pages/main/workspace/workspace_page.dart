@@ -351,7 +351,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
             ),
             child: IconButton(
               icon: Icon(
-                Icons.play_arrow_rounded,
+                Icons.join_inner_rounded,
                 color: colorScheme.onSurfaceVariant,
               ),
               onPressed: () {
@@ -459,7 +459,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
                 title: Text(name, style: theme.textTheme.bodyMedium),
                 trailing: IconButton(
                   icon: Icon(
-                    Icons.play_arrow_rounded,
+                    Icons.join_inner_rounded,
                     color: colorScheme.onSurfaceVariant,
                   ),
                   onPressed: () {

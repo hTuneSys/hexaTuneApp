@@ -109,7 +109,7 @@ class AppBottomBar extends StatelessWidget {
                   strokeColor: colorScheme.primary,
                   onPressed: onCenterTapped ?? () {},
                   child: Icon(
-                    Icons.play_arrow_rounded,
+                    Icons.join_inner_rounded,
                     color: colorScheme.primary,
                     size: 28,
                   ),

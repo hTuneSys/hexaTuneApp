@@ -401,7 +401,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
                         height: 18,
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
-                    : Icon(_isRendering ? Icons.stop : Icons.play_arrow),
+                    : Icon(_isRendering ? Icons.stop : Icons.join_inner),
                 label: Text(_isRendering ? l10n.dspStop : l10n.dspPlay),
               ),
             ),

@@ -663,7 +663,7 @@ class _DummyHexagenPageState extends State<DummyHexagenPage> {
                             height: 16,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Icon(Icons.play_arrow),
+                        : const Icon(Icons.join_inner),
                     label: Text(
                       _isRunning
                           ? l10n.hexagenOpRunning

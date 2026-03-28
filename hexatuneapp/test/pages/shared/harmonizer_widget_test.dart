@@ -102,7 +102,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner_rounded), findsOneWidget);
     });
 
     testWidgets('shows stop button when harmonizing', (tester) async {
@@ -290,7 +290,7 @@ void main() {
         );
         await tester.pumpAndSettle();
 
-        await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+        await tester.tap(find.byIcon(Icons.join_inner_rounded));
         await tester.pumpAndSettle();
 
         expect(harmonizeCalled, isTrue);

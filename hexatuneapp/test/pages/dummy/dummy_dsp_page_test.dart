@@ -182,7 +182,7 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.play_arrow), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner), findsOneWidget);
     });
 
     testWidgets('handles service init error gracefully', (tester) async {

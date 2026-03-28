@@ -83,7 +83,7 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.hexagen,
     ),
     _NavItem(
-      icon: Icons.play_circle_outline,
+      icon: Icons.join_inner,
       title: 'Harmonizer',
       subtitle: 'Multi-mode harmonic generator',
       route: RouteNames.harmonizer,

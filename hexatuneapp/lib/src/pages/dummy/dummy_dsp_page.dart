@@ -621,7 +621,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                   height: 24,
                   child: CircularProgressIndicator(strokeWidth: 2),
                 )
-              : const Icon(Icons.play_arrow, size: 28),
+              : const Icon(Icons.join_inner, size: 28),
           label: Text(
             _ambienceLoading ? l10n.dspLoading : l10n.dspPlay,
             style: theme.textTheme.titleMedium,

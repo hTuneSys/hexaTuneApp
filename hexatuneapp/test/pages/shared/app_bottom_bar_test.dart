@@ -48,7 +48,7 @@ void main() {
     ) async {
       await tester.pumpWidget(_buildApp());
 
-      expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner_rounded), findsOneWidget);
     });
 
     testWidgets('fires onItemTapped with correct index for each button', (
@@ -71,7 +71,7 @@ void main() {
       var tapped = false;
       await tester.pumpWidget(_buildApp(onCenterTapped: () => tapped = true));
 
-      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+      await tester.tap(find.byIcon(Icons.join_inner_rounded));
       expect(tapped, isTrue);
     });
 
@@ -84,7 +84,7 @@ void main() {
       await tester.tap(find.byIcon(Icons.newspaper_outlined));
       await tester.tap(find.byIcon(Icons.workspaces_outlined));
       await tester.tap(find.byIcon(Icons.settings_outlined));
-      await tester.tap(find.byIcon(Icons.play_arrow_rounded));
+      await tester.tap(find.byIcon(Icons.join_inner_rounded));
     });
 
     testWidgets('bar floats with padding from edges', (tester) async {

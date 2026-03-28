@@ -392,7 +392,7 @@ class HarmonizerWidget extends StatelessWidget {
       ),
       child: IconButton(
         icon: Icon(
-          Icons.play_arrow_rounded,
+          Icons.join_inner_rounded,
           color: canHarmonize
               ? colorScheme.onPrimary
               : colorScheme.onSurface.withAlpha(97),

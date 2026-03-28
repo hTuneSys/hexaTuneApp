@@ -140,7 +140,7 @@ class _WorkspacePinSheetState extends State<WorkspacePinSheet> {
                                   children: [
                                     Center(
                                       child: Icon(
-                                        Icons.play_arrow_rounded,
+                                        Icons.join_inner_rounded,
                                         color: colorScheme.onSurfaceVariant,
                                       ),
                                     ),

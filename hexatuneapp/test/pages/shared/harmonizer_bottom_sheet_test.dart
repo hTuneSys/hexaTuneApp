@@ -221,7 +221,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Initially idle — harmonize button visible
-      expect(find.byIcon(Icons.play_arrow_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.join_inner_rounded), findsOneWidget);
 
       // Switch to harmonizing
       harmonizerCtrl.add(
