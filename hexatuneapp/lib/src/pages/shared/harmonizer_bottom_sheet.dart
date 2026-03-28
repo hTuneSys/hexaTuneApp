@@ -23,22 +23,31 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_request.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
-import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_widget.dart';
 
-/// Dummy page for testing the Harmonizer.
-///
-/// Formula selection sits above the [HarmonizerWidget] which contains
-/// the tabbed type selector, ambience/warning area, and harmonize/stop controls
-/// inside a single bordered container.
-class DummyHarmonizerPage extends StatefulWidget {
-  const DummyHarmonizerPage({super.key});
-
-  @override
-  State<DummyHarmonizerPage> createState() => _DummyHarmonizerPageState();
+/// Opens a modal bottom sheet containing the [HarmonizerWidget] with full
+/// state management for formula selection, harmonize/stop controls, and
+/// hardware status monitoring.
+void showHarmonizerSheet(BuildContext context) {
+  showModalBottomSheet<void>(
+    context: context,
+    useRootNavigator: true,
+    isScrollControlled: true,
+    builder: (ctx) => const _HarmonizerSheetContent(),
+  );
 }
 
-class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
+/// Stateful wrapper that provides [HarmonizerWidget] with all required
+/// services and reactive state management.
+class _HarmonizerSheetContent extends StatefulWidget {
+  const _HarmonizerSheetContent();
+
+  @override
+  State<_HarmonizerSheetContent> createState() =>
+      _HarmonizerSheetContentState();
+}
+
+class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   late final HarmonizerService _harmonizer;
   late final AmbienceService _ambienceService;
   late final HeadsetService _headsetService;
@@ -75,7 +84,6 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     _headsetConnected = _headsetService.isConnected;
     _hexagenConnected = _hexagenService.isConnected;
 
-    // Restore generation type from active session immediately.
     _harmonizerState = _harmonizer.currentState;
     if (_harmonizerState.status != HarmonizerStatus.idle) {
       _selectedType = _harmonizerState.activeType ?? GenerationType.monaural;
@@ -130,7 +138,6 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     }
   }
 
-  /// Restores [_selectedFormula] from the active harmonizer session.
   void _restoreFormulaFromState() {
     final formulaId = _harmonizerState.formulaId;
     if (formulaId == null) return;
@@ -144,7 +151,6 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     }
   }
 
-  /// Restores [_selectedAmbience] from the active harmonizer session.
   void _restoreAmbienceFromState() {
     final ambienceId = _harmonizerState.ambienceId;
     if (ambienceId == null) return;
@@ -154,10 +160,10 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Play / Stop
+  // Harmonize / Stop
   // ---------------------------------------------------------------------------
 
-  Future<void> _play() async {
+  Future<void> _harmonize() async {
     if (_selectedFormula == null) return;
 
     setState(() => _generating = true);
@@ -219,10 +225,27 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
 
   void _onAmbienceChanged(AmbienceConfig? config) {
     setState(() => _selectedAmbience = config);
-    // If harmonizing, immediately switch ambience in the harmonizer.
     if (_harmonizerState.status == HarmonizerStatus.harmonizing) {
       _harmonizer.changeAmbience(config?.id);
     }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Helpers
+  // ---------------------------------------------------------------------------
+
+  bool get _isActive =>
+      _harmonizerState.status == HarmonizerStatus.harmonizing ||
+      _harmonizerState.status == HarmonizerStatus.preparing ||
+      _harmonizerState.status == HarmonizerStatus.stopping ||
+      _generating;
+
+  bool get _canHarmonize {
+    if (_isActive) return false;
+    if (_selectedFormula == null) return false;
+
+    final validation = _harmonizer.validatePrerequisites(_selectedType);
+    return validation == HarmonizerValidation.valid;
   }
 
   // ---------------------------------------------------------------------------
@@ -234,43 +257,36 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.harmonizerTitle)),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          16,
-          16,
-          16,
-          16 + AppBottomBar.scrollPadding,
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildFormulaSelector(theme, l10n),
+            const SizedBox(height: 16),
+            HarmonizerWidget(
+              selectedType: _selectedType,
+              harmonizerState: _harmonizerState,
+              headsetConnected: _headsetConnected,
+              hexagenConnected: _hexagenConnected,
+              selectedAmbience: _selectedAmbience,
+              ambienceConfigs: _ambienceService.configs,
+              isActive: _isActive,
+              generating: _generating,
+              canHarmonize: _canHarmonize,
+              onTypeChanged: (type) => setState(() => _selectedType = type),
+              onAmbienceChanged: _onAmbienceChanged,
+              onHarmonize: _harmonize,
+              onStopGraceful: _stopGraceful,
+              onImmediateStart: _startImmediateTimer,
+              onImmediateEnd: _cancelImmediateTimer,
+            ),
+          ],
         ),
-        children: [
-          _buildFormulaSelector(theme, l10n),
-          const SizedBox(height: 16),
-          HarmonizerWidget(
-            selectedType: _selectedType,
-            harmonizerState: _harmonizerState,
-            headsetConnected: _headsetConnected,
-            hexagenConnected: _hexagenConnected,
-            selectedAmbience: _selectedAmbience,
-            ambienceConfigs: _ambienceService.configs,
-            isActive: _isActive,
-            generating: _generating,
-            canHarmonize: _canPlay,
-            onTypeChanged: (type) => setState(() => _selectedType = type),
-            onAmbienceChanged: _onAmbienceChanged,
-            onHarmonize: _play,
-            onStopGraceful: _stopGraceful,
-            onImmediateStart: _startImmediateTimer,
-            onImmediateEnd: _cancelImmediateTimer,
-          ),
-        ],
       ),
     );
   }
-
-  // ---------------------------------------------------------------------------
-  // Formula Selector
-  // ---------------------------------------------------------------------------
 
   Widget _buildFormulaSelector(ThemeData theme, AppLocalizations l10n) {
     if (_formulasLoading) {
@@ -318,23 +334,5 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
         ),
       ),
     );
-  }
-
-  // ---------------------------------------------------------------------------
-  // Helpers
-  // ---------------------------------------------------------------------------
-
-  bool get _isActive =>
-      _harmonizerState.status == HarmonizerStatus.harmonizing ||
-      _harmonizerState.status == HarmonizerStatus.preparing ||
-      _harmonizerState.status == HarmonizerStatus.stopping ||
-      _generating;
-
-  bool get _canPlay {
-    if (_isActive) return false;
-    if (_selectedFormula == null) return false;
-
-    final validation = _harmonizer.validatePrerequisites(_selectedType);
-    return validation == HarmonizerValidation.valid;
   }
 }

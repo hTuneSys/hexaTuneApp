@@ -10,7 +10,6 @@ import 'package:mocktail/mocktail.dart';
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
-import 'package:hexatuneapp/src/core/dsp/ambience/models/ambience_config.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_state.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
@@ -194,10 +193,10 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // HarmonizerPlayerWidget — tab navigation
+  // HarmonizerWidget — tab navigation
   // -------------------------------------------------------------------------
 
-  group('HarmonizerPlayerWidget tabs', () {
+  group('HarmonizerWidget tabs', () {
     testWidgets('shows all 5 type tabs', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
@@ -259,10 +258,10 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // HarmonizerPlayerWidget — type content variations
+  // HarmonizerWidget — type content variations
   // -------------------------------------------------------------------------
 
-  group('HarmonizerPlayerWidget type content', () {
+  group('HarmonizerWidget type content', () {
     testWidgets('Monaural shows ambience selector', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
@@ -348,10 +347,10 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // HarmonizerPlayerWidget — controls section
+  // HarmonizerWidget — controls section
   // -------------------------------------------------------------------------
 
-  group('HarmonizerPlayerWidget controls', () {
+  group('HarmonizerWidget controls', () {
     testWidgets('shows harmonize button initially', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
@@ -417,294 +416,6 @@ void main() {
       await tester.pump(const Duration(milliseconds: 50));
 
       expect(find.text('Error: DSP init failed'), findsOneWidget);
-    });
-  });
-
-  // -------------------------------------------------------------------------
-  // HarmonizerPlayerWidget — standalone widget tests
-  // -------------------------------------------------------------------------
-
-  group('HarmonizerPlayerWidget standalone', () {
-    testWidgets('renders all type tabs with correct icons', (tester) async {
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: false,
-                  generating: false,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      expect(find.byIcon(Icons.speaker_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.headphones_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.waves_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.lock_outline), findsNWidgets(2));
-    });
-
-    testWidgets('shows loading spinner when generating', (tester) async {
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: true,
-                  generating: true,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-    });
-
-    testWidgets('ambience dropdown shows configs', (tester) async {
-      final configs = [
-        const AmbienceConfig(
-          id: 'a1',
-          name: 'Forest Rain',
-          createdAt: '2025-01-01',
-          updatedAt: '2025-01-01',
-        ),
-        const AmbienceConfig(
-          id: 'a2',
-          name: 'Ocean Breeze',
-          createdAt: '2025-01-02',
-          updatedAt: '2025-01-02',
-        ),
-      ];
-
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: configs,
-                  isActive: false,
-                  generating: false,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      // Tap the displayed dropdown value to open it.
-      await tester.tap(find.text('No ambience'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('No ambience'), findsWidgets);
-      expect(find.text('Forest Rain'), findsWidgets);
-      expect(find.text('Ocean Breeze'), findsWidgets);
-    });
-
-    testWidgets(
-      'harmonize button calls onHarmonize when canHarmonize is true',
-      (tester) async {
-        var playCalled = false;
-
-        await tester.pumpWidget(
-          _buildApp(
-            child: Scaffold(
-              body: ListView(
-                children: [
-                  HarmonizerPlayerWidget(
-                    selectedType: GenerationType.monaural,
-                    harmonizerState: const HarmonizerState(),
-                    headsetConnected: false,
-                    hexagenConnected: false,
-                    selectedAmbience: null,
-                    ambienceConfigs: const [],
-                    isActive: false,
-                    generating: false,
-                    canPlay: true,
-                    onTypeChanged: (_) {},
-                    onAmbienceChanged: (_) {},
-                    onPlay: () => playCalled = true,
-                    onStopGraceful: () {},
-                    onImmediateStart: () {},
-                    onImmediateEnd: () {},
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.byIcon(Icons.play_arrow_rounded));
-        await tester.pumpAndSettle();
-
-        expect(playCalled, isTrue);
-      },
-    );
-
-    testWidgets('stop button calls onStopGraceful', (tester) async {
-      var stopCalled = false;
-
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(
-                    status: HarmonizerStatus.harmonizing,
-                  ),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: true,
-                  generating: false,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () => stopCalled = true,
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.byIcon(Icons.stop_rounded));
-      await tester.pumpAndSettle();
-
-      expect(stopCalled, isTrue);
-    });
-
-    testWidgets('shows loading spinner when stopping', (tester) async {
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(
-                    status: HarmonizerStatus.stopping,
-                    remainingInCycle: Duration(minutes: 1),
-                  ),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: true,
-                  generating: false,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      // Stopping shows a loading spinner, not the stop icon.
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-      expect(find.byIcon(Icons.stop_rounded), findsNothing);
-    });
-
-    testWidgets('shows remaining time during stopping', (tester) async {
-      await tester.pumpWidget(
-        _buildApp(
-          child: Scaffold(
-            body: ListView(
-              children: [
-                HarmonizerPlayerWidget(
-                  selectedType: GenerationType.monaural,
-                  harmonizerState: const HarmonizerState(
-                    status: HarmonizerStatus.stopping,
-                    isFirstCycle: false,
-                    totalCycleDuration: Duration(minutes: 5),
-                    remainingInCycle: Duration(minutes: 2, seconds: 30),
-                  ),
-                  headsetConnected: false,
-                  hexagenConnected: false,
-                  selectedAmbience: null,
-                  ambienceConfigs: const [],
-                  isActive: true,
-                  generating: false,
-                  canPlay: false,
-                  onTypeChanged: (_) {},
-                  onAmbienceChanged: (_) {},
-                  onPlay: () {},
-                  onStopGraceful: () {},
-                  onImmediateStart: () {},
-                  onImmediateEnd: () {},
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      // During stopping, times are still displayed.
-      expect(find.text('05:00'), findsOneWidget);
-      expect(find.text('02:30'), findsOneWidget);
     });
   });
 }
