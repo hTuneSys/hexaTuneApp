@@ -1,3 +1,23 @@
+# [1.10.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.9.0...v1.10.0) (2026-03-28)
+
+
+### Bug Fixes
+
+* **harmonizer:** increase magnetic completion wait timeout from 10s to 60s ([c3e1d04](https://github.com/hTuneSys/hexaTuneApp/commit/c3e1d04bdb1dd0a2c30e6a97c56e348baeba33bf))
+* **harmonizer:** persist repeat selection in state and set segment radius to 12 ([f62c403](https://github.com/hTuneSys/hexaTuneApp/commit/f62c40390538e621cfb90c41a3f5f873638d8fdf))
+* **workspace:** allow content to scroll behind bottom bar ([cd8023a](https://github.com/hTuneSys/hexaTuneApp/commit/cd8023acc1342e5d2c654fd3b55602b51170a924))
+* **workspace:** prevent load() from overwriting in-memory history entries ([7ad8974](https://github.com/hTuneSys/hexaTuneApp/commit/7ad8974cb4f094328bd5d4af32b14fd3debbb860))
+
+
+### Features
+
+* **harmonizer:** add repeat cycle selector with auto-stop and control locking ([b635695](https://github.com/hTuneSys/hexaTuneApp/commit/b635695315f1fd904c45d9515c278efb1fe3fb6d))
+* **harmonizer:** add total countdown timer and rename remaining to cycle remaining ([f3c2306](https://github.com/hTuneSys/hexaTuneApp/commit/f3c23061fd4fc83c6e1d9d89d4735df9c83d00f3))
+* **harmonizer:** integrate hexaTuneProto v0.1.3 with STOP commands and completion tracking ([4240b12](https://github.com/hTuneSys/hexaTuneApp/commit/4240b126e23a70c900b62fdf1c15ba4ebb22745f))
+* **ui:** add hexagon progress fill indicator during harmonization ([6be6931](https://github.com/hTuneSys/hexaTuneApp/commit/6be6931ff1368d47b6dc8b843f198a49797c2148))
+* **workspace:** add harmonize history with recently used cards ([797d3b4](https://github.com/hTuneSys/hexaTuneApp/commit/797d3b4b175ee8663f1ef9655679ec23ec68e571))
+* **workspace:** show ambience name in history cards ([487d5bc](https://github.com/hTuneSys/hexaTuneApp/commit/487d5bc7f750f401e97fb8d9708f2ba083311eff))
+
 # [1.9.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.8.1...v1.9.0) (2026-03-28)
 
 
