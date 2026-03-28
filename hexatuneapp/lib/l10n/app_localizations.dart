@@ -1820,6 +1820,12 @@ abstract class AppLocalizations {
   /// **'{count} Inventory'**
   String inventoryCount(int count);
 
+  /// No description provided for @inventorySelectedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected Inventory'**
+  String get inventorySelectedTitle;
+
   /// No description provided for @inventoryCategoryAddNew.
   ///
   /// In en, this message translates to:

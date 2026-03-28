@@ -31,6 +31,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
   final List<String> _availableLabels = [];
   final Set<String> _selectedLabels = {};
   final Map<String, String> _categoryNames = {};
+  final List<InventoryResponse> _selectedInventories = [];
   String _sortValue = '';
   String? _nextCursor;
   bool _hasMore = false;
@@ -246,6 +247,7 @@ class _InventoryListPageState extends State<InventoryListPage> {
         children: [
           _buildToolbar(l10n, theme),
           const Divider(height: 1),
+          if (_selectedInventories.isNotEmpty) _buildSelectedBar(l10n, theme),
           Expanded(child: _buildBody(l10n, theme)),
         ],
       ),
@@ -335,6 +337,27 @@ class _InventoryListPageState extends State<InventoryListPage> {
     );
   }
 
+  Widget _buildSelectedBar(AppLocalizations l10n, ThemeData theme) {
+    return SizedBox(
+      height: 52,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        itemCount: _selectedInventories.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          final inv = _selectedInventories[index];
+          return Chip(
+            label: Text(inv.name),
+            onDeleted: () {
+              setState(() => _selectedInventories.remove(inv));
+            },
+          );
+        },
+      ),
+    );
+  }
+
   Widget _buildBody(AppLocalizations l10n, ThemeData theme) {
     if (_isLoading && _items.isEmpty) {
       return const Center(child: CircularProgressIndicator());
@@ -394,6 +417,11 @@ class _InventoryListPageState extends State<InventoryListPage> {
               },
               onView: (item) =>
                   context.push(RouteNames.inventoryViewFor(item.id)),
+              onSelect: (item) {
+                if (!_selectedInventories.any((i) => i.id == item.id)) {
+                  setState(() => _selectedInventories.add(item));
+                }
+              },
             ),
           ),
           if (_hasMore)
@@ -418,12 +446,14 @@ class _CategoryAccordion extends StatefulWidget {
     required this.items,
     required this.onEdit,
     required this.onView,
+    required this.onSelect,
   });
 
   final String categoryName;
   final List<InventoryResponse> items;
   final void Function(InventoryResponse) onEdit;
   final void Function(InventoryResponse) onView;
+  final void Function(InventoryResponse) onSelect;
 
   @override
   State<_CategoryAccordion> createState() => _CategoryAccordionState();
@@ -480,6 +510,7 @@ class _CategoryAccordionState extends State<_CategoryAccordion> {
                 item: item,
                 onEdit: () => widget.onEdit(item),
                 onView: () => widget.onView(item),
+                onSelect: () => widget.onSelect(item),
               ),
             )
             .toList(),
@@ -493,11 +524,13 @@ class _InventoryListTile extends StatelessWidget {
     required this.item,
     required this.onEdit,
     required this.onView,
+    required this.onSelect,
   });
 
   final InventoryResponse item;
   final VoidCallback onEdit;
   final VoidCallback onView;
+  final VoidCallback onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -510,34 +543,43 @@ class _InventoryListTile extends StatelessWidget {
         color: theme.colorScheme.onSurfaceVariant,
       ),
       title: Text(item.name),
-      trailing: CircleAvatar(
-        radius: 18,
-        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        child: PopupMenuButton<String>(
-          icon: Icon(
-            Icons.more_vert,
-            color: theme.colorScheme.onSurfaceVariant,
-            size: 20,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: Icon(Icons.join_inner, color: theme.colorScheme.primary),
+            onPressed: onSelect,
           ),
-          onSelected: (value) {
-            switch (value) {
-              case 'edit':
-                onEdit();
-              case 'view':
-                onView();
-            }
-          },
-          itemBuilder: (ctx) => [
-            PopupMenuItem(
-              value: 'edit',
-              child: Text(l10n.inventoryEdit_menuItem),
+          CircleAvatar(
+            radius: 18,
+            backgroundColor: theme.colorScheme.surfaceContainerHighest,
+            child: PopupMenuButton<String>(
+              icon: Icon(
+                Icons.more_vert,
+                color: theme.colorScheme.onSurfaceVariant,
+                size: 20,
+              ),
+              onSelected: (value) {
+                switch (value) {
+                  case 'edit':
+                    onEdit();
+                  case 'view':
+                    onView();
+                }
+              },
+              itemBuilder: (ctx) => [
+                PopupMenuItem(
+                  value: 'edit',
+                  child: Text(l10n.inventoryEdit_menuItem),
+                ),
+                PopupMenuItem(
+                  value: 'view',
+                  child: Text(l10n.inventoryView_menuItem),
+                ),
+              ],
             ),
-            PopupMenuItem(
-              value: 'view',
-              child: Text(l10n.inventoryView_menuItem),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
       onTap: onView,
     );

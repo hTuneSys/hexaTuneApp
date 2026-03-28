@@ -924,6 +924,9 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get inventorySelectedTitle => 'Seçili Envanter';
+
+  @override
   String get inventoryCategoryAddNew => 'Yeni Ekle';
 
   @override

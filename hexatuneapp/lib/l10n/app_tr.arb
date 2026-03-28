@@ -413,6 +413,7 @@
       }
     }
   },
+  "inventorySelectedTitle": "Seçili Envanter",
   "inventoryCategoryAddNew": "Yeni Ekle",
   "inventoryCategoryRequired": "Kategori gereklidir",
   "inventoryNameRequired": "İsim gereklidir",

@@ -416,6 +416,7 @@
       }
     }
   },
+  "inventorySelectedTitle": "Selected Inventory",
   "inventoryCategoryAddNew": "Add New",
   "inventoryCategoryRequired": "Category is required",
   "inventoryNameRequired": "Name is required",

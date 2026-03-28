@@ -262,5 +262,64 @@ void main() {
 
       expect(find.textContaining('Inventory'), findsWidgets);
     });
+
+    testWidgets('join_inner button is shown for each inventory item', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.join_inner), findsNWidgets(2));
+    });
+
+    testWidgets('tapping join_inner button adds inventory to selected bar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Chip), findsNothing);
+
+      final joinButtons = find.byIcon(Icons.join_inner);
+      await tester.tap(joinButtons.first);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Chip), findsOneWidget);
+      expect(find.text('Alpha Inventory'), findsNWidgets(2));
+    });
+
+    testWidgets(
+      'tapping join_inner button twice does not duplicate selection',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        final joinButtons = find.byIcon(Icons.join_inner);
+        await tester.tap(joinButtons.first);
+        await tester.pumpAndSettle();
+        await tester.tap(joinButtons.first);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(Chip), findsOneWidget);
+      },
+    );
+
+    testWidgets('chip delete removes inventory from selected bar', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      final joinButtons = find.byIcon(Icons.join_inner);
+      await tester.tap(joinButtons.first);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Chip), findsOneWidget);
+
+      await tester.tap(find.byIcon(Icons.cancel));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(Chip), findsNothing);
+    });
   });
 }
