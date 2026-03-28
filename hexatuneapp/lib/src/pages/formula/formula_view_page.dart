@@ -10,10 +10,13 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_detail_response.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
 /// Read-only page for viewing a formula's details and its items.
 class FormulaViewPage extends StatefulWidget {
@@ -220,7 +223,17 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                   const SizedBox(height: 24),
                   FilledButton.icon(
                     onPressed: () {
-                      // TODO: trigger harmonize for this formula
+                      final formula = FormulaResponse(
+                        id: _formula!.id,
+                        name: _formula!.name,
+                        labels: _formula!.labels,
+                        createdAt: _formula!.createdAt,
+                        updatedAt: _formula!.updatedAt,
+                      );
+                      showHarmonizerSheet(
+                        context,
+                        source: FormulaSource(formula: formula),
+                      );
                     },
                     icon: const Icon(Icons.join_inner),
                     label: Text(l10n.harmonizerHarmonize),

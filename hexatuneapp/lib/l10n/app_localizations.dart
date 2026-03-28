@@ -1823,7 +1823,7 @@ abstract class AppLocalizations {
   /// No description provided for @inventorySelectedTitle.
   ///
   /// In en, this message translates to:
-  /// **'Selected Inventory'**
+  /// **'Selected Inventories'**
   String get inventorySelectedTitle;
 
   /// No description provided for @inventoryCategoryAddNew.

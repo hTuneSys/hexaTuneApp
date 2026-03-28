@@ -15,6 +15,8 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
 /// Formula list page with search, sort, filter, and flat list display.
 class FormulaListPage extends StatefulWidget {
@@ -409,7 +411,10 @@ class _FormulaListTile extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.join_inner, color: theme.colorScheme.primary),
               onPressed: () {
-                // TODO: trigger harmonize for this formula
+                showHarmonizerSheet(
+                  context,
+                  source: FormulaSource(formula: formula),
+                );
               },
               tooltip: l10n.harmonizerHarmonize,
               visualDensity: VisualDensity.compact,

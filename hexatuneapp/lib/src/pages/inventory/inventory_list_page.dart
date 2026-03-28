@@ -16,6 +16,8 @@ import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.da
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
 /// Inventory list page with search, sort, filter, and category-grouped accordion.
 class InventoryListPage extends StatefulWidget {
@@ -338,23 +340,54 @@ class _InventoryListPageState extends State<InventoryListPage> {
   }
 
   Widget _buildSelectedBar(AppLocalizations l10n, ThemeData theme) {
-    return SizedBox(
-      height: 52,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        itemCount: _selectedInventories.length,
-        separatorBuilder: (_, _) => const SizedBox(width: 8),
-        itemBuilder: (context, index) {
-          final inv = _selectedInventories[index];
-          return Chip(
-            label: Text(inv.name),
-            onDeleted: () {
-              setState(() => _selectedInventories.remove(inv));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l10n.inventorySelectedTitle,
+                  style: theme.textTheme.labelLarge,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.join_inner, color: theme.colorScheme.primary),
+                onPressed: () {
+                  showHarmonizerSheet(
+                    context,
+                    source: InventorySource(
+                      inventories: List.unmodifiable(_selectedInventories),
+                    ),
+                  );
+                },
+                tooltip: l10n.harmonizerHarmonize,
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 44,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: _selectedInventories.length,
+            separatorBuilder: (_, _) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final inv = _selectedInventories[index];
+              return Chip(
+                label: Text(inv.name),
+                onDeleted: () {
+                  setState(() => _selectedInventories.remove(inv));
+                },
+              );
             },
-          );
-        },
-      ),
+          ),
+        ),
+      ],
     );
   }
 

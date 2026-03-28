@@ -16,6 +16,7 @@ import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/pages/formula/formula_list_page.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 
 class MockFormulaRepository extends Mock implements FormulaRepository {}
 
@@ -79,6 +80,9 @@ void main() {
     getIt.allowReassignment = true;
     getIt.registerSingleton<FormulaRepository>(mockRepo);
     getIt.registerSingleton<LogService>(mockLog);
+    getIt.registerLazySingleton<HarmonizeSourceHolder>(
+      () => HarmonizeSourceHolder(),
+    );
   });
 
   tearDown(() async {

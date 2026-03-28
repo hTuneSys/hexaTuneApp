@@ -18,6 +18,7 @@ import 'package:hexatuneapp/src/core/rest/category/models/category_response.dart
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/inventory/inventory_list_page.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 
 class MockInventoryRepository extends Mock implements InventoryRepository {}
 
@@ -116,6 +117,9 @@ void main() {
     getIt.registerSingleton<InventoryRepository>(mockRepo);
     getIt.registerSingleton<CategoryRepository>(mockCatRepo);
     getIt.registerSingleton<LogService>(mockLog);
+    getIt.registerLazySingleton<HarmonizeSourceHolder>(
+      () => HarmonizeSourceHolder(),
+    );
   });
 
   tearDown(() async {
@@ -294,10 +298,14 @@ void main() {
         await tester.pumpWidget(_buildApp());
         await tester.pumpAndSettle();
 
-        final joinButtons = find.byIcon(Icons.join_inner);
-        await tester.tap(joinButtons.first);
+        // Find join_inner buttons inside list tiles only
+        final tileJoinButtons = find.descendant(
+          of: find.byType(ListTile),
+          matching: find.byIcon(Icons.join_inner),
+        );
+        await tester.tap(tileJoinButtons.first);
         await tester.pumpAndSettle();
-        await tester.tap(joinButtons.first);
+        await tester.tap(tileJoinButtons.first);
         await tester.pumpAndSettle();
 
         expect(find.byType(Chip), findsOneWidget);
@@ -321,5 +329,21 @@ void main() {
 
       expect(find.byType(Chip), findsNothing);
     });
+
+    testWidgets(
+      'selected bar shows title and harmonize button when items selected',
+      (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        final joinButtons = find.byIcon(Icons.join_inner);
+        await tester.tap(joinButtons.first);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Selected Inventories'), findsOneWidget);
+        // 2 join_inner from list tiles + 1 from selected bar
+        expect(find.byIcon(Icons.join_inner), findsNWidgets(3));
+      },
+    );
   });
 }

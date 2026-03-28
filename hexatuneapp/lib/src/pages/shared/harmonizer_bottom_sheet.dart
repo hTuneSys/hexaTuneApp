@@ -22,13 +22,22 @@ import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/models/generate_harmonics_request.dart';
+import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_widget.dart';
 
 /// Opens a modal bottom sheet containing the [HarmonizerWidget] with full
-/// state management for formula selection, harmonize/stop controls, and
-/// hardware status monitoring.
-void showHarmonizerSheet(BuildContext context) {
+/// state management for harmonize/stop controls and hardware status monitoring.
+///
+/// If [source] is provided, it is set as the current harmonize source
+/// (e.g. from formula or inventory pages). If omitted (center hexagon button),
+/// the sheet opens with the last set source.
+void showHarmonizerSheet(BuildContext context, {HarmonizeSource? source}) {
+  if (source != null) {
+    getIt<HarmonizeSourceHolder>().source = source;
+  }
   showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
@@ -52,24 +61,31 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   late final AmbienceService _ambienceService;
   late final HeadsetService _headsetService;
   late final HexagenService _hexagenService;
-  late final FormulaRepository _formulaRepo;
   late final HarmonicsRepository _harmonicsRepo;
+  late final HarmonizeSourceHolder _sourceHolder;
+
+  // Only used when no source is pre-selected (hexagon open with no prior state)
+  late final FormulaRepository _formulaRepo;
 
   StreamSubscription<HarmonizerState>? _harmonizerSub;
   StreamSubscription<HeadsetState>? _headsetSub;
   StreamSubscription<HexagenState>? _hexagenSub;
 
   GenerationType _selectedType = GenerationType.monaural;
-  FormulaResponse? _selectedFormula;
   AmbienceConfig? _selectedAmbience;
 
+  // Formula dropdown state (only when source is null)
   List<FormulaResponse> _formulas = [];
-  bool _formulasLoading = true;
+  bool _formulasLoading = false;
+  FormulaResponse? _dropdownFormula;
+
   bool _generating = false;
 
   HarmonizerState _harmonizerState = const HarmonizerState();
   bool _headsetConnected = false;
   bool _hexagenConnected = false;
+
+  HarmonizeSource? get _source => _sourceHolder.source;
 
   @override
   void initState() {
@@ -78,8 +94,9 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
     _ambienceService = getIt<AmbienceService>();
     _headsetService = getIt<HeadsetService>();
     _hexagenService = getIt<HexagenService>();
-    _formulaRepo = getIt<FormulaRepository>();
     _harmonicsRepo = getIt<HarmonicsRepository>();
+    _sourceHolder = getIt<HarmonizeSourceHolder>();
+    _formulaRepo = getIt<FormulaRepository>();
 
     _headsetConnected = _headsetService.isConnected;
     _hexagenConnected = _hexagenService.isConnected;
@@ -101,7 +118,11 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
       if (mounted) setState(() => _hexagenConnected = s.isConnected);
     });
 
-    _loadFormulas();
+    // Only load formulas if no source is set (hexagon open without prior state)
+    if (_source == null) {
+      _formulasLoading = true;
+      _loadFormulas();
+    }
     _loadAmbiences();
   }
 
@@ -145,7 +166,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
 
     for (final f in _formulas) {
       if (f.id == formulaId) {
-        _selectedFormula = f;
+        _dropdownFormula = f;
         return;
       }
     }
@@ -164,7 +185,29 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   // ---------------------------------------------------------------------------
 
   Future<void> _harmonize() async {
-    if (_selectedFormula == null) return;
+    final source = _source;
+
+    // Determine request params based on source type
+    final String sourceType;
+    final String sourceId;
+    final List<String>? inventoryIds;
+
+    if (source is FormulaSource) {
+      sourceType = 'Formula';
+      sourceId = source.formula.id;
+      inventoryIds = null;
+    } else if (source is InventorySource) {
+      sourceType = 'Inventory';
+      sourceId = 'inventory-session';
+      inventoryIds = source.inventories.map((i) => i.id).toList();
+    } else if (source == null && _dropdownFormula != null) {
+      // Fallback: formula selected from dropdown (no pre-set source)
+      sourceType = 'Formula';
+      sourceId = _dropdownFormula!.id;
+      inventoryIds = null;
+    } else {
+      return;
+    }
 
     setState(() => _generating = true);
 
@@ -172,8 +215,9 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
       final response = await _harmonicsRepo.generate(
         GenerateHarmonicsRequest(
           generationType: _selectedType.apiValue,
-          sourceType: 'Formula',
-          sourceId: _selectedFormula!.id,
+          sourceType: sourceType,
+          sourceId: sourceId,
+          inventoryIds: inventoryIds,
         ),
       );
 
@@ -182,11 +226,15 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
 
       if (response.sequence.isEmpty) return;
 
+      final formulaId = source is FormulaSource
+          ? source.formula.id
+          : (source == null ? _dropdownFormula?.id : null);
+
       final config = HarmonizerConfig(
         type: _selectedType,
         ambienceId: _selectedAmbience?.id,
         steps: response.sequence,
-        formulaId: _selectedFormula!.id,
+        formulaId: formulaId,
       );
 
       final error = await _harmonizer.harmonize(config);
@@ -242,7 +290,14 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
 
   bool get _canHarmonize {
     if (_isActive) return false;
-    if (_selectedFormula == null) return false;
+
+    final source = _source;
+    final hasSource =
+        source is FormulaSource ||
+        (source is InventorySource && source.inventories.isNotEmpty) ||
+        (source == null && _dropdownFormula != null);
+
+    if (!hasSource) return false;
 
     final validation = _harmonizer.validatePrerequisites(_selectedType);
     return validation == HarmonizerValidation.valid;
@@ -263,7 +318,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _buildFormulaSelector(theme, l10n),
+            _buildSourceDisplay(theme, l10n),
             const SizedBox(height: 16),
             HarmonizerWidget(
               selectedType: _selectedType,
@@ -281,6 +336,90 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
               onStopGraceful: _stopGraceful,
               onImmediateStart: _startImmediateTimer,
               onImmediateEnd: _cancelImmediateTimer,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Builds the source display based on the current source type.
+  Widget _buildSourceDisplay(ThemeData theme, AppLocalizations l10n) {
+    final source = _source;
+
+    if (source is FormulaSource) {
+      return _buildFormulaDisplay(theme, l10n, source.formula);
+    }
+
+    if (source is InventorySource) {
+      return _buildInventoryDisplay(theme, l10n, source.inventories);
+    }
+
+    // No source set — show formula dropdown (backward compat)
+    return _buildFormulaSelector(theme, l10n);
+  }
+
+  Widget _buildFormulaDisplay(
+    ThemeData theme,
+    AppLocalizations l10n,
+    FormulaResponse formula,
+  ) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Icon(Icons.science_outlined, color: theme.colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    l10n.harmonizerFormulaLabel,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(formula.name, style: theme.textTheme.titleSmall),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInventoryDisplay(
+    ThemeData theme,
+    AppLocalizations l10n,
+    List<InventoryResponse> inventories,
+  ) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.inventorySelectedTitle,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 36,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: inventories.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, index) {
+                  return Chip(label: Text(inventories[index].name));
+                },
+              ),
             ),
           ],
         ),
@@ -315,7 +454,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<FormulaResponse?>(
-              value: _selectedFormula,
+              value: _dropdownFormula,
               hint: Text(l10n.harmonizerSelectFormula),
               isExpanded: true,
               items: _formulas
@@ -328,7 +467,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
                   .toList(),
               onChanged: _isActive
                   ? null
-                  : (f) => setState(() => _selectedFormula = f),
+                  : (f) => setState(() => _dropdownFormula = f),
             ),
           ),
         ),

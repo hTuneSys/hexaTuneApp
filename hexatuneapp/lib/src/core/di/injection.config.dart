@@ -75,6 +75,8 @@ import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
     as _i325;
 import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart'
     as _i1021;
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart'
+    as _i1036;
 import 'package:injectable/injectable.dart' as _i526;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -90,6 +92,9 @@ extension GetItInjectableX on _i174.GetIt {
       final i = _i148.PreferencesService();
       return i.init().then((_) => i);
     }, preResolve: true);
+    gh.lazySingleton<_i1036.HarmonizeSourceHolder>(
+      () => _i1036.HarmonizeSourceHolder(),
+    );
     gh.singleton<_i810.OtpTimerService>(
       () => _i810.OtpTimerService(gh<_i148.PreferencesService>()),
     );

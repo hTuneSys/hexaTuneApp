@@ -921,7 +921,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get inventorySelectedTitle => 'Selected Inventory';
+  String get inventorySelectedTitle => 'Selected Inventories';
 
   @override
   String get inventoryCategoryAddNew => 'Add New';

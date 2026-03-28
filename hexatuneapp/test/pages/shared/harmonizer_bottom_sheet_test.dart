@@ -23,6 +23,9 @@ import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
 import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
+import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_widget.dart';
 
@@ -56,13 +59,34 @@ const _testFormulas = [
   ),
 ];
 
+const _testInventories = [
+  InventoryResponse(
+    id: 'inv1',
+    name: 'Bass Drum',
+    categoryId: 'cat1',
+    labels: [],
+    imageUploaded: false,
+    createdAt: '2025-01-01',
+    updatedAt: '2025-01-01',
+  ),
+  InventoryResponse(
+    id: 'inv2',
+    name: 'Snare',
+    categoryId: 'cat1',
+    labels: [],
+    imageUploaded: false,
+    createdAt: '2025-01-01',
+    updatedAt: '2025-01-01',
+  ),
+];
+
 const _emptyPagination = PaginationMeta(
   hasMore: false,
   limit: 20,
   nextCursor: null,
 );
 
-Widget _buildApp() {
+Widget _buildApp({HarmonizeSource? source}) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,
@@ -70,7 +94,7 @@ Widget _buildApp() {
     home: Builder(
       builder: (context) => Scaffold(
         body: ElevatedButton(
-          onPressed: () => showHarmonizerSheet(context),
+          onPressed: () => showHarmonizerSheet(context, source: source),
           child: const Text('Open'),
         ),
       ),
@@ -135,6 +159,9 @@ void main() {
     getIt.registerSingleton<HexagenService>(mockHexagen);
     getIt.registerSingleton<FormulaRepository>(mockFormulaRepo);
     getIt.registerSingleton<HarmonicsRepository>(mockHarmonicsRepo);
+    getIt.registerLazySingleton<HarmonizeSourceHolder>(
+      () => HarmonizeSourceHolder(),
+    );
   });
 
   tearDown(() async {
@@ -230,6 +257,78 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byIcon(Icons.stop_rounded), findsOneWidget);
+    });
+
+    testWidgets('shows read-only formula display for FormulaSource', (
+      tester,
+    ) async {
+      final source = FormulaSource(formula: _testFormulas[0]);
+      await tester.pumpWidget(_buildApp(source: source));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      // Should show formula name read-only, no dropdown
+      expect(find.text('Alpha Wave'), findsOneWidget);
+      expect(find.byType(DropdownButton<FormulaResponse?>), findsNothing);
+      expect(find.byIcon(Icons.science_outlined), findsOneWidget);
+    });
+
+    testWidgets(
+      'does not load formulas from repo when FormulaSource is provided',
+      (tester) async {
+        final source = FormulaSource(formula: _testFormulas[0]);
+        await tester.pumpWidget(_buildApp(source: source));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('Open'));
+        await tester.pumpAndSettle();
+
+        verifyNever(() => mockFormulaRepo.list());
+      },
+    );
+
+    testWidgets('shows inventory chips for InventorySource', (tester) async {
+      const source = InventorySource(inventories: _testInventories);
+      await tester.pumpWidget(_buildApp(source: source));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Bass Drum'), findsOneWidget);
+      expect(find.text('Snare'), findsOneWidget);
+      expect(find.byType(Chip), findsNWidgets(2));
+      expect(find.byType(DropdownButton<FormulaResponse?>), findsNothing);
+    });
+
+    testWidgets('shows dropdown when no source is set', (tester) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      // Dropdown should be visible
+      expect(find.text('Select a formula'), findsOneWidget);
+    });
+
+    testWidgets('persists source in holder across sheet open/close', (
+      tester,
+    ) async {
+      final source = FormulaSource(formula: _testFormulas[0]);
+      await tester.pumpWidget(_buildApp(source: source));
+      await tester.pumpAndSettle();
+
+      // Open sheet
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Alpha Wave'), findsOneWidget);
+
+      final holder = getIt<HarmonizeSourceHolder>();
+      expect(holder.source, isA<FormulaSource>());
     });
   });
 }
