@@ -2765,7 +2765,7 @@
           "Formula Items"
         ],
         "summary": "`POST /api/v1/formulas/{formula_id}/items` — Add items to a formula",
-        "description": "Adds one or more inventory items to a formula. Each inventory item can appear\nonly once in a formula. The total quantity (sum of all item quantities) across\nthe formula must not exceed 60.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `formula_id` | `Uuid` | Formula identifier |\n\n# Request Body\n\n[`AddFormulaItemsRequest`] — List of items to add with optional quantity and sort order.\n\n| Field | Default | Constraints |\n|-------|---------|-------------|\n| `quantity` | `1` | 1–60 |\n| `sort_order` | `0` | ≥ 0 |\n| `time_ms` | `35000` | ≥ 1 |\n\n# Business Rules\n\n- Each `inventory_id` may appear only once per formula (duplicates return 409).\n- The total quantity across **all** items in the formula must not exceed **60**.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Items added | `Vec<`[`FormulaItemResponse`]`>` | — |\n| `400`  | Invalid input or total quantity exceeds 60 | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `404`  | Formula not found | [`ProblemDetails`] | `not-found` |\n| `409`  | Item already in formula | [`ProblemDetails`] | `conflict` |\n| `422`  | Validation failed | [`ProblemDetails`] | `validation-failed` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] if the formula is not found, items conflict, or\nthe total quantity would exceed the maximum of 60.",
+        "description": "Adds one or more inventory items to a formula. Each inventory item can appear\nonly once in a formula. A formula may contain at most **10** unique inventory\nitems. The total quantity (sum of all item quantities) across the formula must\nnot exceed **30**.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `formula_id` | `Uuid` | Formula identifier |\n\n# Request Body\n\n[`AddFormulaItemsRequest`] — List of items to add with optional quantity and sort order.\n\n| Field | Default | Constraints |\n|-------|---------|-------------|\n| `quantity` | `1` | 1–30 |\n| `sort_order` | `0` | ≥ 0 |\n| `time_ms` | `35000` | ≥ 1 |\n\n# Business Rules\n\n- Each `inventory_id` may appear only once per formula (duplicates return 409).\n- A formula may contain at most **10** unique inventory items.\n- The total quantity across **all** items in the formula must not exceed **30**.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Items added | `Vec<`[`FormulaItemResponse`]`>` | — |\n| `400`  | Invalid input, unique item limit (10) exceeded, or total quantity exceeds 30 | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `404`  | Formula or inventory not found | [`ProblemDetails`] | `not-found` |\n| `409`  | Item already in formula | [`ProblemDetails`] | `conflict` |\n| `422`  | Validation failed | [`ProblemDetails`] | `validation-failed` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] if the formula is not found, items conflict,\nthe unique item limit (10) would be exceeded, or the total quantity would\nexceed the maximum of 30.",
         "operationId": "add_items_to_formula",
         "parameters": [
           {
@@ -2793,7 +2793,7 @@
             "description": "Items added"
           },
           "400": {
-            "description": "Invalid input",
+            "description": "Invalid input, unique item limit or total quantity exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -2803,7 +2803,7 @@
             }
           },
           "404": {
-            "description": "Formula not found",
+            "description": "Formula or inventory not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -2965,7 +2965,7 @@
           "Formula Items"
         ],
         "summary": "`PATCH /api/v1/formulas/{formula_id}/items/{item_id}` — Update formula item quantity",
-        "description": "Updates the quantity of a formula item. The total quantity (sum of all item\nquantities) across the formula must not exceed 60 after the update.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `formula_id` | `Uuid` | Formula identifier (for route context) |\n| `item_id`    | `Uuid` | Formula item identifier |\n\n# Request Body\n\n[`UpdateFormulaItemQuantityRequest`] — New quantity value.\n\n# Business Rules\n\n- The total quantity across **all** items in the formula must not exceed **60**.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `200`  | Item updated | [`FormulaItemResponse`] | — |\n| `400`  | Invalid quantity or total quantity exceeds 60 | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `404`  | Not found | [`ProblemDetails`] | `not-found` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] if the item is not found, quantity is invalid,\nor the total quantity would exceed the maximum of 60.",
+        "description": "Updates the quantity of a formula item. The total quantity (sum of all item\nquantities) across the formula must not exceed 30 after the update.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Path Parameters\n\n| Parameter | Type | Description |\n|-----------|------|-------------|\n| `formula_id` | `Uuid` | Formula identifier (for route context) |\n| `item_id`    | `Uuid` | Formula item identifier |\n\n# Request Body\n\n[`UpdateFormulaItemQuantityRequest`] — New quantity value.\n\n# Business Rules\n\n- The total quantity across **all** items in the formula must not exceed **30**.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `200`  | Item updated | [`FormulaItemResponse`] | — |\n| `400`  | Invalid quantity or total quantity exceeds 30 | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `404`  | Formula or item not found | [`ProblemDetails`] | `not-found` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] if the item is not found, quantity is invalid,\nor the total quantity would exceed the maximum of 30.",
         "operationId": "update_item_quantity",
         "parameters": [
           {
@@ -3009,7 +3009,7 @@
             }
           },
           "400": {
-            "description": "Invalid quantity",
+            "description": "Invalid quantity or total quantity exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -3019,7 +3019,7 @@
             }
           },
           "404": {
-            "description": "Not found",
+            "description": "Formula or item not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3195,7 +3195,7 @@
           "Harmonics"
         ],
         "summary": "`POST /api/v1/harmonics/generate` — Generate harmonic packet sequence",
-        "description": "Generates a structured packet sequence based on the generation type,\nsource type, and source identifier. For Photonic/Quantal generation types,\nreturns an empty sequence.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — Generation type, source type, source ID,\nand optionally inventory IDs for Inventory source.\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `generationType` | `String` | Yes | One of: Monaural, Binaural, Magnetic, Photonic, Quantal |\n| `sourceType` | `String` | Yes | One of: Flow, Formula, Inventory |\n| `sourceId` | `Uuid` | Yes | Formula/Flow ID, or client tracking UUID for Inventory |\n| `inventoryIds` | `Vec<Uuid>` | Inventory only | Direct inventory IDs (max 10, duplicates deduplicated) |\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] | — |\n| `400`  | Invalid input or missing inventoryIds | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `403`  | Insufficient permissions | [`ProblemDetails`] | `forbidden` |\n| `404`  | Formula or flow not found | [`ProblemDetails`] | `not-found` |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] | `conflict` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule violations.",
+        "description": "Generates a structured packet sequence based on the generation type,\nsource type, and source identifier. For Photonic/Quantal generation types,\nreturns an empty sequence.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — Generation type, source type, source ID,\nand optionally inventory IDs for Inventory source.\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `generationType` | `String` | Yes | One of: Monaural, Binaural, Magnetic, Photonic, Quantal |\n| `sourceType` | `String` | Yes | One of: Flow, Formula, Inventory |\n| `sourceId` | `Uuid` | Yes | Formula/Flow ID, or client tracking UUID for Inventory |\n| `inventoryIds` | `Vec<Uuid>` | Inventory only | Direct inventory IDs (max 10, duplicates deduplicated) |\n\n# Business Rules\n\n- When `sourceType` is `Inventory`, the `inventoryIds` field is required.\n- The number of unique inventory IDs (across all source types) must not exceed **10**.\n- Duplicate inventory IDs in the request are silently deduplicated.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] | — |\n| `400`  | Invalid input, missing inventoryIds, or too many inventory IDs (max 10) | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `403`  | Insufficient permissions | [`ProblemDetails`] | `forbidden` |\n| `404`  | Formula or flow not found | [`ProblemDetails`] | `not-found` |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] | `conflict` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule\nviolations. Specifically returns 400 if `inventoryIds` is missing for\nInventory source or if the resolved inventory count exceeds the configured\nmaximum (10).",
         "operationId": "generate_harmonics",
         "requestBody": {
           "content": {
@@ -3219,7 +3219,7 @@
             }
           },
           "400": {
-            "description": "Invalid input",
+            "description": "Invalid input, missing inventoryIds, or too many inventory IDs (max 10)",
             "content": {
               "application/json": {
                 "schema": {
@@ -4927,7 +4927,7 @@
       },
       "AddFormulaItemEntry": {
         "type": "object",
-        "description": "Single entry for adding an item to a formula.\n\nThe total quantity across all items in a formula must not exceed 60.",
+        "description": "Single entry for adding an item to a formula.\n\nThe total quantity across all items in a formula must not exceed 30.\nA formula may contain at most 10 unique inventory items.",
         "required": [
           "inventoryId"
         ],
@@ -4942,7 +4942,7 @@
               "null"
             ],
             "format": "int32",
-            "description": "Quantity (defaults to 1 if not provided, min 1, max 60).\n\nA single item's quantity is capped at 60 — the formula-wide maximum."
+            "description": "Quantity (defaults to 1 if not provided, min 1, max 30).\n\nA single item's quantity is capped at 30 — the formula-wide maximum."
           },
           "sortOrder": {
             "type": [
@@ -8088,7 +8088,7 @@
           "quantity": {
             "type": "integer",
             "format": "int32",
-            "description": "New quantity (must be >= 1, max 60 — formula-wide limit)."
+            "description": "New quantity (must be >= 1, max 30 — formula-wide limit)."
           }
         }
       },
