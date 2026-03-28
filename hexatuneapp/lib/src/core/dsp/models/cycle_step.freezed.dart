@@ -16,7 +16,7 @@ mixin _$CycleStep {
 
 /// Frequency offset in Hz from the carrier frequency.
  double get frequencyDelta;/// Duration of this step in seconds.
- double get durationSeconds;/// If true, this step plays only in the first cycle iteration.
+ double get durationSeconds;/// If true, this step runs only in the first cycle iteration.
  bool get oneshot;
 /// Create a copy of CycleStep
 /// with the given fields replaced by the non-null parameter values.
@@ -218,7 +218,7 @@ class _CycleStep implements CycleStep {
 @override final  double frequencyDelta;
 /// Duration of this step in seconds.
 @override final  double durationSeconds;
-/// If true, this step plays only in the first cycle iteration.
+/// If true, this step runs only in the first cycle iteration.
 @override@JsonKey() final  bool oneshot;
 
 /// Create a copy of CycleStep

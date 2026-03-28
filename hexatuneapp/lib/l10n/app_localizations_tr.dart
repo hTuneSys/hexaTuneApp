@@ -277,7 +277,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dspNoSelection => 'Seçmek için dokunun';
 
   @override
-  String get dspPlay => 'OYNAT';
+  String get dspHarmonize => 'OYNAT';
 
   @override
   String get dspStop => 'DURDUR';
@@ -292,7 +292,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dspFinishing => 'BİTİRİLİYOR...';
 
   @override
-  String get dspPlaying => 'Çalıyor...';
+  String get dspHarmonizing => 'Çalıyor...';
 
   @override
   String get dspStopped => 'Durduruldu';
@@ -671,7 +671,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerNoAmbience => 'Ambiyans yok';
 
   @override
-  String get harmonizerPlay => 'Oynat';
+  String get harmonizerHarmonize => 'Oynat';
 
   @override
   String get harmonizerStop => 'Durdur';
@@ -680,7 +680,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerPreparing => 'Hazırlanıyor...';
 
   @override
-  String get harmonizerPlaying => 'Oynuyor';
+  String get harmonizerHarmonizing => 'Oynuyor';
 
   @override
   String get harmonizerStopping => 'Durduruluyor...';

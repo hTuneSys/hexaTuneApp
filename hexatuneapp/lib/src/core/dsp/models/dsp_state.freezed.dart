@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 mixin _$DspState {
 
 /// Whether the DSP engine has been initialized.
- bool get isInitialized;/// Whether audio is currently playing.
+ bool get isInitialized;/// Whether audio is currently rendering.
  bool get isRendering;/// Whether a base layer has been loaded.
  bool get isBaseLoaded;/// Fixed carrier frequency in Hz (220 Hz, not configurable).
  double get carrierFrequency;/// Whether binaural mode is enabled (vs AM mono).
@@ -24,7 +24,7 @@ mixin _$DspState {
  double get textureGain;/// Current event gain (0.0–1.0).
  double get eventGain;/// Current binaural gain (0.0–1.0).
  double get binauralGain;/// Current master gain (0.0–1.0).
- double get masterGain;/// Error message if initialization or playback failed.
+ double get masterGain;/// Error message if initialization or rendering failed.
  String? get error;
 /// Create a copy of DspState
 /// with the given fields replaced by the non-null parameter values.
@@ -232,7 +232,7 @@ class _DspState extends DspState {
 
 /// Whether the DSP engine has been initialized.
 @override@JsonKey() final  bool isInitialized;
-/// Whether audio is currently playing.
+/// Whether audio is currently rendering.
 @override@JsonKey() final  bool isRendering;
 /// Whether a base layer has been loaded.
 @override@JsonKey() final  bool isBaseLoaded;
@@ -250,7 +250,7 @@ class _DspState extends DspState {
 @override@JsonKey() final  double binauralGain;
 /// Current master gain (0.0–1.0).
 @override@JsonKey() final  double masterGain;
-/// Error message if initialization or playback failed.
+/// Error message if initialization or rendering failed.
 @override final  String? error;
 
 /// Create a copy of DspState

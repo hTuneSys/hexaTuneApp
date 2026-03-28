@@ -614,11 +614,11 @@ abstract class AppLocalizations {
   /// **'Tap to select'**
   String get dspNoSelection;
 
-  /// No description provided for @dspPlay.
+  /// No description provided for @dspHarmonize.
   ///
   /// In en, this message translates to:
   /// **'HARMONIZE'**
-  String get dspPlay;
+  String get dspHarmonize;
 
   /// No description provided for @dspStop.
   ///
@@ -644,11 +644,11 @@ abstract class AppLocalizations {
   /// **'FINISHING...'**
   String get dspFinishing;
 
-  /// No description provided for @dspPlaying.
+  /// No description provided for @dspHarmonizing.
   ///
   /// In en, this message translates to:
   /// **'Harmonizing...'**
-  String get dspPlaying;
+  String get dspHarmonizing;
 
   /// No description provided for @dspStopped.
   ///
@@ -1346,11 +1346,11 @@ abstract class AppLocalizations {
   /// **'No ambience'**
   String get harmonizerNoAmbience;
 
-  /// No description provided for @harmonizerPlay.
+  /// No description provided for @harmonizerHarmonize.
   ///
   /// In en, this message translates to:
   /// **'Harmonize'**
-  String get harmonizerPlay;
+  String get harmonizerHarmonize;
 
   /// No description provided for @harmonizerStop.
   ///
@@ -1364,11 +1364,11 @@ abstract class AppLocalizations {
   /// **'Preparing...'**
   String get harmonizerPreparing;
 
-  /// No description provided for @harmonizerPlaying.
+  /// No description provided for @harmonizerHarmonizing.
   ///
   /// In en, this message translates to:
   /// **'Harmonizing'**
-  String get harmonizerPlaying;
+  String get harmonizerHarmonizing;
 
   /// No description provided for @harmonizerStopping.
   ///

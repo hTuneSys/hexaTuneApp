@@ -356,7 +356,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
               ),
               onPressed: () {
                 getIt<LogService>().devLog(
-                  'Play pinned formula tapped: ${pin.id}',
+                  'Harmonize pinned formula tapped: ${pin.id}',
                   category: LogCategory.ui,
                 );
               },
@@ -464,7 +464,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
                   ),
                   onPressed: () {
                     getIt<LogService>().devLog(
-                      'Play recently used formula tapped: $name',
+                      'Harmonize recently used formula tapped: $name',
                       category: LogCategory.ui,
                     );
                   },

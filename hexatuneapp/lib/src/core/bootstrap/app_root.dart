@@ -143,7 +143,7 @@ class _AppRootState extends State<AppRoot> {
 
   /// Configures the [AudioSession] for music rendering.
   ///
-  /// Tells the OS this app plays long-form audio, enabling proper audio focus
+  /// Tells the OS this app harmonizes long-form audio, enabling proper audio focus
   /// management and interruption handling (e.g. phone calls, other media apps).
   Future<void> _configureAudioSession() async {
     try {

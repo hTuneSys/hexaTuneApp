@@ -163,10 +163,10 @@ class _DummyDspPageState extends State<DummyDspPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Play / Stop
+  // Harmonize / Stop
   // ---------------------------------------------------------------------------
 
-  Future<void> _play() async {
+  Future<void> _harmonize() async {
     // If no ambience is selected, ensure previous layers are cleared so only
     // binaural/monaural tones render.
     if (_selectedAmbience == null && _dspService.isBaseLoaded) {
@@ -196,7 +196,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     final l10n = AppLocalizations.of(context)!;
     setState(() {
       _isRendering = true;
-      _statusMessage = l10n.dspPlaying;
+      _statusMessage = l10n.dspHarmonizing;
     });
   }
 
@@ -368,8 +368,8 @@ class _DummyDspPageState extends State<DummyDspPage> {
                     ),
                   const SizedBox(height: 24),
 
-                  // Play / Stop
-                  _buildPlayStopButtons(theme, colorScheme, l10n),
+                  // Harmonize / Stop
+                  _buildHarmonizeStopButtons(theme, colorScheme, l10n),
                   const SizedBox(height: 24),
                 ],
               ),
@@ -605,7 +605,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
     );
   }
 
-  Widget _buildPlayStopButtons(
+  Widget _buildHarmonizeStopButtons(
     ThemeData theme,
     ColorScheme colorScheme,
     AppLocalizations l10n,
@@ -614,7 +614,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
       return SizedBox(
         height: 56,
         child: FilledButton.icon(
-          onPressed: _ambienceLoading ? null : _play,
+          onPressed: _ambienceLoading ? null : _harmonize,
           icon: _ambienceLoading
               ? const SizedBox(
                   width: 24,
@@ -623,7 +623,7 @@ class _DummyDspPageState extends State<DummyDspPage> {
                 )
               : const Icon(Icons.join_inner, size: 28),
           label: Text(
-            _ambienceLoading ? l10n.dspLoading : l10n.dspPlay,
+            _ambienceLoading ? l10n.dspLoading : l10n.dspHarmonize,
             style: theme.textTheme.titleMedium,
           ),
         ),

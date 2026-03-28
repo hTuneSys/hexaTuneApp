@@ -17,7 +17,7 @@ mixin _$HarmonicPacketDto {
 
 /// The harmonic value for this packet.
  int get value;/// Duration in milliseconds.
- int get durationMs;/// Whether this packet plays only once (in the first cycle).
+ int get durationMs;/// Whether this packet runs only once (in the first cycle).
  bool get isOneShot;
 /// Create a copy of HarmonicPacketDto
 /// with the given fields replaced by the non-null parameter values.
@@ -221,7 +221,7 @@ class _HarmonicPacketDto implements HarmonicPacketDto {
 @override final  int value;
 /// Duration in milliseconds.
 @override final  int durationMs;
-/// Whether this packet plays only once (in the first cycle).
+/// Whether this packet runs only once (in the first cycle).
 @override final  bool isOneShot;
 
 /// Create a copy of HarmonicPacketDto

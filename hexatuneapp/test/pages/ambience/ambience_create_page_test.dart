@@ -192,12 +192,12 @@ void main() {
 
       expect(find.text('HARMONIZE'), findsOneWidget);
 
-      final playFinder = find.ancestor(
+      final harmonizeFinder = find.ancestor(
         of: find.text('HARMONIZE'),
         matching: find.byType(OutlinedButton),
       );
-      final playButton = tester.widget<OutlinedButton>(playFinder);
-      expect(playButton.onPressed, isNull);
+      final harmonizeButton = tester.widget<OutlinedButton>(harmonizeFinder);
+      expect(harmonizeButton.onPressed, isNull);
     });
 
     testWidgets('shows create button', (tester) async {

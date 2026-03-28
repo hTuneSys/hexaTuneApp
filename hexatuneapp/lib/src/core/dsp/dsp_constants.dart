@@ -50,7 +50,7 @@ class DspConstants {
 
   /// Fixed carrier / LO frequency in Hz for all DSP modes.
   ///
-  /// Monaural: single channel plays at this frequency + delta.
+  /// Monaural: single channel outputs at this frequency + delta.
   /// Binaural: left ear = this frequency, right ear = this + delta.
   static const double carrierFrequency = 220.0;
 

@@ -154,10 +154,10 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
   }
 
   // ---------------------------------------------------------------------------
-  // Play / Stop
+  // Harmonize / Stop
   // ---------------------------------------------------------------------------
 
-  Future<void> _play() async {
+  Future<void> _harmonize() async {
     if (_selectedFormula == null) return;
 
     setState(() => _generating = true);
@@ -255,10 +255,10 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
             ambienceConfigs: _ambienceService.configs,
             isActive: _isActive,
             generating: _generating,
-            canHarmonize: _canPlay,
+            canHarmonize: _canHarmonize,
             onTypeChanged: (type) => setState(() => _selectedType = type),
             onAmbienceChanged: _onAmbienceChanged,
-            onHarmonize: _play,
+            onHarmonize: _harmonize,
             onStopGraceful: _stopGraceful,
             onImmediateStart: _startImmediateTimer,
             onImmediateEnd: _cancelImmediateTimer,
@@ -330,7 +330,7 @@ class _DummyHarmonizerPageState extends State<DummyHarmonizerPage> {
       _harmonizerState.status == HarmonizerStatus.stopping ||
       _generating;
 
-  bool get _canPlay {
+  bool get _canHarmonize {
     if (_isActive) return false;
     if (_selectedFormula == null) return false;
 

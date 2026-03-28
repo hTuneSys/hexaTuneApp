@@ -16,7 +16,7 @@ abstract class HarmonicPacketDto with _$HarmonicPacketDto {
     /// Duration in milliseconds.
     required int durationMs,
 
-    /// Whether this packet plays only once (in the first cycle).
+    /// Whether this packet runs only once (in the first cycle).
     required bool isOneShot,
   }) = _HarmonicPacketDto;
 

@@ -20,7 +20,7 @@ mixin _$HarmonizerState {
  String? get ambienceId;/// The formula ID that produced the current sequence (for UI restoration).
  String? get formulaId;/// The frequency step sequence from the API.
  List<HarmonicPacketDto> get sequence;/// Current infinite-loop cycle number (0-based).
- int get currentCycle;/// Index of the step currently playing within the cycle.
+ int get currentCycle;/// Index of the step currently harmonizing within the cycle.
  int get currentStepIndex;/// Total duration of one full cycle (excluding one-shot after first).
  Duration get totalCycleDuration;/// Duration of the very first cycle (includes one-shots).
  Duration get firstCycleDuration;/// Time remaining in the current cycle (countdown).
@@ -253,7 +253,7 @@ class _HarmonizerState implements HarmonizerState {
 
 /// Current infinite-loop cycle number (0-based).
 @override@JsonKey() final  int currentCycle;
-/// Index of the step currently playing within the cycle.
+/// Index of the step currently harmonizing within the cycle.
 @override@JsonKey() final  int currentStepIndex;
 /// Total duration of one full cycle (excluding one-shot after first).
 @override@JsonKey() final  Duration totalCycleDuration;

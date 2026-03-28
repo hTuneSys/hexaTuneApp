@@ -16,7 +16,7 @@ mixin _$HarmonizerConfig {
 
 /// The generation type to use.
  GenerationType get type;/// Optional ambience config ID (monaural / binaural only).
- String? get ambienceId;/// The harmonic packet sequence to play (from API response).
+ String? get ambienceId;/// The harmonic packet sequence to harmonize (from API response).
  List<HarmonicPacketDto> get steps;/// The formula ID that generated this sequence (for UI state restoration).
  String? get formulaId;
 /// Create a copy of HarmonizerConfig
@@ -220,9 +220,9 @@ class _HarmonizerConfig implements HarmonizerConfig {
 @override final  GenerationType type;
 /// Optional ambience config ID (monaural / binaural only).
 @override final  String? ambienceId;
-/// The harmonic packet sequence to play (from API response).
+/// The harmonic packet sequence to harmonize (from API response).
  final  List<HarmonicPacketDto> _steps;
-/// The harmonic packet sequence to play (from API response).
+/// The harmonic packet sequence to harmonize (from API response).
 @override List<HarmonicPacketDto> get steps {
   if (_steps is EqualUnmodifiableListView) return _steps;
   // ignore: implicit_dynamic_type

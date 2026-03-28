@@ -15,7 +15,7 @@ abstract class CycleStep with _$CycleStep {
     /// Duration of this step in seconds.
     required double durationSeconds,
 
-    /// If true, this step plays only in the first cycle iteration.
+    /// If true, this step runs only in the first cycle iteration.
     @Default(false) bool oneshot,
   }) = _CycleStep;
 }

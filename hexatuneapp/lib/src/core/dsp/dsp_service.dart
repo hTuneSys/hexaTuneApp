@@ -519,7 +519,7 @@ class DspService {
           ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
           : 0.0;
       _logService.info(
-        'Stopping DSP (played ${elapsed.toStringAsFixed(1)}s)',
+        'Stopping DSP (harmonized ${elapsed.toStringAsFixed(1)}s)',
         category: LogCategory.dsp,
       );
 
@@ -574,7 +574,7 @@ class DspService {
           ? DateTime.now().difference(_startTime!).inMilliseconds / 1000.0
           : 0.0;
       _logService.info(
-        'Graceful stop complete (played ${elapsed.toStringAsFixed(1)}s)',
+        'Graceful stop complete (harmonized ${elapsed.toStringAsFixed(1)}s)',
         category: LogCategory.dsp,
       );
 

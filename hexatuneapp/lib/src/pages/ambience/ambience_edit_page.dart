@@ -170,7 +170,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
     }
   }
 
-  Future<void> _play() async {
+  Future<void> _harmonize() async {
     if (_isRendering || _isLoadingPreview || !_hasLayers) return;
     setState(() => _isLoadingPreview = true);
 
@@ -226,7 +226,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
 
       if (mounted) setState(() => _isRendering = true);
     } catch (e) {
-      _showError('Playback error: $e');
+      _showError('Harmonizing error: $e');
     } finally {
       if (mounted) setState(() => _isLoadingPreview = false);
     }
@@ -388,13 +388,13 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
             }),
             const SizedBox(height: 16),
 
-            // Play button
+            // Harmonize button
             SizedBox(
               height: 48,
               child: OutlinedButton.icon(
                 onPressed: _isRendering
                     ? _stop
-                    : (_hasLayers && !_isLoadingPreview ? _play : null),
+                    : (_hasLayers && !_isLoadingPreview ? _harmonize : null),
                 icon: _isLoadingPreview
                     ? const SizedBox(
                         width: 18,
@@ -402,7 +402,7 @@ class _AmbienceEditPageState extends State<AmbienceEditPage> {
                         child: CircularProgressIndicator(strokeWidth: 2),
                       )
                     : Icon(_isRendering ? Icons.stop : Icons.join_inner),
-                label: Text(_isRendering ? l10n.dspStop : l10n.dspPlay),
+                label: Text(_isRendering ? l10n.dspStop : l10n.dspHarmonize),
               ),
             ),
             const SizedBox(height: 16),

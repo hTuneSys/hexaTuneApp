@@ -105,7 +105,7 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
     }
   }
 
-  Future<void> _play() async {
+  Future<void> _harmonize() async {
     if (_isRendering || _isLoadingPreview || !_hasLayers) return;
     setState(() => _isLoadingPreview = true);
 
@@ -161,7 +161,7 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
 
       if (mounted) setState(() => _isRendering = true);
     } catch (e) {
-      _showError('Playback error: $e');
+      _showError('Harmonizing error: $e');
     } finally {
       if (mounted) setState(() => _isLoadingPreview = false);
     }
@@ -306,8 +306,8 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
             }),
             const SizedBox(height: 16),
 
-            // Play button
-            _buildPlayButton(l10n),
+            // Harmonize button
+            _buildHarmonizeButton(l10n),
             const SizedBox(height: 16),
 
             // Create button
@@ -331,13 +331,13 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
     );
   }
 
-  Widget _buildPlayButton(AppLocalizations l10n) {
+  Widget _buildHarmonizeButton(AppLocalizations l10n) {
     return SizedBox(
       height: 48,
       child: OutlinedButton.icon(
         onPressed: _isRendering
             ? _stop
-            : (_hasLayers && !_isLoadingPreview ? _play : null),
+            : (_hasLayers && !_isLoadingPreview ? _harmonize : null),
         icon: _isLoadingPreview
             ? const SizedBox(
                 width: 18,
@@ -345,7 +345,7 @@ class _AmbienceCreatePageState extends State<AmbienceCreatePage> {
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
             : Icon(_isRendering ? Icons.stop : Icons.join_inner),
-        label: Text(_isRendering ? l10n.dspStop : l10n.dspPlay),
+        label: Text(_isRendering ? l10n.dspStop : l10n.dspHarmonize),
       ),
     );
   }

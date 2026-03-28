@@ -414,7 +414,7 @@ void main() {
       verifyNever(() => mockDsp.clearBase());
     });
 
-    test('clears all layers when null during play', () async {
+    test('clears all layers when null during harmonize', () async {
       when(
         () => mockDsp.updateBinauralConfig(
           binauralEnabled: any(named: 'binauralEnabled'),
@@ -430,7 +430,7 @@ void main() {
 
       await service.harmonize(config);
 
-      // Reset invocations from play to isolate changeAmbience calls.
+      // Reset invocations from harmonize to isolate changeAmbience calls.
       clearInteractions(mockDsp);
       when(() => mockDsp.clearBase()).thenAnswer((_) async => true);
       when(() => mockDsp.clearTexture(any())).thenAnswer((_) async {});

@@ -48,7 +48,7 @@ class HarmonizerService {
   HarmonizerState _currentState = const HarmonizerState();
 
   Timer? _timeTracker;
-  DateTime? _playStartTime;
+  DateTime? _harmonizeStartTime;
   int? _magneticOperationId;
   bool _magneticLooping = false;
   bool _backendStopped = false;
@@ -133,12 +133,12 @@ class HarmonizerService {
 
     try {
       if (config.type.usesDsp) {
-        await _startDspPlayback(config);
+        await _startDspHarmonizing(config);
       } else if (config.type == GenerationType.magnetic) {
-        await _startMagneticPlayback(config);
+        await _startMagneticHarmonizing(config);
       }
 
-      _playStartTime = DateTime.now();
+      _harmonizeStartTime = DateTime.now();
       _startTimeTracker();
 
       _updateState(
@@ -168,7 +168,7 @@ class HarmonizerService {
   /// For DSP modes (monaural / binaural) the remaining countdown continues to
   /// zero before the harmonizer transitions to idle.
   /// For magnetic mode the timer stops immediately, the button enters loading
-  /// state, and the device is sent a RESET.  The play button stays disabled
+  /// state, and the device is sent a RESET.  The harmonize button stays disabled
   /// until the HexaGen device reconnects.
   Future<void> stopGraceful() async {
     if (_currentState.status != HarmonizerStatus.harmonizing) return;
@@ -276,10 +276,10 @@ class HarmonizerService {
   }
 
   // ---------------------------------------------------------------------------
-  // DSP Playback
+  // DSP Harmonizing
   // ---------------------------------------------------------------------------
 
-  Future<void> _startDspPlayback(HarmonizerConfig config) async {
+  Future<void> _startDspHarmonizing(HarmonizerConfig config) async {
     // Load or clear ambience.
     if (config.ambienceId != null) {
       await _loadAmbience(config.ambienceId!);
@@ -417,10 +417,10 @@ class HarmonizerService {
   }
 
   // ---------------------------------------------------------------------------
-  // Magnetic Playback
+  // Magnetic Harmonizing
   // ---------------------------------------------------------------------------
 
-  Future<void> _startMagneticPlayback(HarmonizerConfig config) async {
+  Future<void> _startMagneticHarmonizing(HarmonizerConfig config) async {
     final opId = _hexagenService.generateId();
     _magneticOperationId = opId;
     _magneticLooping = true;
@@ -490,9 +490,9 @@ class HarmonizerService {
         return;
       }
 
-      // --- Playing ---
-      final elapsed = _playStartTime != null
-          ? DateTime.now().difference(_playStartTime!)
+      // --- Harmonizing ---
+      final elapsed = _harmonizeStartTime != null
+          ? DateTime.now().difference(_harmonizeStartTime!)
           : Duration.zero;
 
       final cycleDur = _currentState.isFirstCycle
@@ -583,7 +583,7 @@ class HarmonizerService {
   /// Auto-stop for magnetic mode after the single pass completes.
   ///
   /// Transitions to [HarmonizerStatus.stopping] (loading spinner), sends
-  /// RESET to the device, then cleans up to idle. The play button remains
+  /// RESET to the device, then cleans up to idle. The harmonize button remains
   /// disabled until the HexaGen device reconnects.
   Future<void> _autoStopMagnetic() async {
     _logService.info(
@@ -647,7 +647,7 @@ class HarmonizerService {
   void _cleanup() {
     _timeTracker?.cancel();
     _timeTracker = null;
-    _playStartTime = null;
+    _harmonizeStartTime = null;
     _magneticLooping = false;
     _backendStopped = false;
     _stopCountdownTarget = null;
