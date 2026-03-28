@@ -12,6 +12,9 @@ _GenerateHarmonicsRequest _$GenerateHarmonicsRequestFromJson(
   generationType: json['generationType'] as String,
   sourceType: json['sourceType'] as String,
   sourceId: json['sourceId'] as String,
+  inventoryIds: (json['inventoryIds'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
 );
 
 Map<String, dynamic> _$GenerateHarmonicsRequestToJson(
@@ -20,4 +23,5 @@ Map<String, dynamic> _$GenerateHarmonicsRequestToJson(
   'generationType': instance.generationType,
   'sourceType': instance.sourceType,
   'sourceId': instance.sourceId,
+  'inventoryIds': instance.inventoryIds,
 };

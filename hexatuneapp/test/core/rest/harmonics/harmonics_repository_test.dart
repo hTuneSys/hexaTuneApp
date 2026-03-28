@@ -61,6 +61,7 @@ void main() {
             'generationType': 'Binaural',
             'sourceType': 'Formula',
             'sourceId': 'frm-001',
+            'inventoryIds': null,
           },
         );
 
@@ -100,6 +101,7 @@ void main() {
             'generationType': 'Monaural',
             'sourceType': 'Formula',
             'sourceId': 'frm-002',
+            'inventoryIds': null,
           },
         );
 
@@ -131,6 +133,7 @@ void main() {
             'generationType': 'Photonic',
             'sourceType': 'Formula',
             'sourceId': 'frm-003',
+            'inventoryIds': null,
           },
         );
 
@@ -158,6 +161,7 @@ void main() {
             'generationType': 'Binaural',
             'sourceType': 'Formula',
             'sourceId': 'frm-001',
+            'inventoryIds': null,
           },
         );
 
@@ -185,6 +189,7 @@ void main() {
             'generationType': 'Binaural',
             'sourceType': 'Formula',
             'sourceId': 'frm-missing',
+            'inventoryIds': null,
           },
         );
 
@@ -208,6 +213,7 @@ void main() {
             'generationType': 'Binaural',
             'sourceType': 'Formula',
             'sourceId': 'frm-001',
+            'inventoryIds': null,
           },
         );
 
@@ -225,6 +231,46 @@ void main() {
             category: any(named: 'category'),
           ),
         ).called(1);
+      });
+
+      test('sends POST with Inventory source type and inventoryIds', () async {
+        final inventoryResponseJson = {
+          'requestId': 'req-inv-001',
+          'generationType': 'Binaural',
+          'sourceType': 'Inventory',
+          'sourceId': 'tracking-uuid-001',
+          'totalItems': 2,
+          'sequence': [
+            packetJson,
+            {'value': 528, 'durationMs': 15000, 'isOneShot': true},
+          ],
+        };
+
+        dioAdapter.onPost(
+          ApiEndpoints.harmonicsGenerate,
+          (server) => server.reply(201, inventoryResponseJson),
+          data: {
+            'generationType': 'Binaural',
+            'sourceType': 'Inventory',
+            'sourceId': 'tracking-uuid-001',
+            'inventoryIds': ['inv-001', 'inv-002'],
+          },
+        );
+
+        final result = await repository.generate(
+          const GenerateHarmonicsRequest(
+            generationType: 'Binaural',
+            sourceType: 'Inventory',
+            sourceId: 'tracking-uuid-001',
+            inventoryIds: ['inv-001', 'inv-002'],
+          ),
+        );
+
+        expect(result.requestId, 'req-inv-001');
+        expect(result.sourceType, 'Inventory');
+        expect(result.sourceId, 'tracking-uuid-001');
+        expect(result.totalItems, 2);
+        expect(result.sequence, hasLength(2));
       });
     });
   });

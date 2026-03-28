@@ -13,11 +13,16 @@ abstract class GenerateHarmonicsRequest with _$GenerateHarmonicsRequest {
     /// The generation type (Monaural, Binaural, Magnetic, Photonic, Quantal).
     required String generationType,
 
-    /// The source type (Flow, Formula).
+    /// The source type (Flow, Formula, Inventory).
     required String sourceType,
 
-    /// The source identifier (e.g. formula ID when sourceType is Formula).
+    /// The source identifier. For Formula/Flow this is the formula/flow ID.
+    /// For Inventory this is a client-generated tracking UUID.
     required String sourceId,
+
+    /// Optional list of inventory IDs. Required when sourceType is Inventory.
+    /// Maximum 10 items; duplicates are deduplicated server-side.
+    List<String>? inventoryIds,
   }) = _GenerateHarmonicsRequest;
 
   factory GenerateHarmonicsRequest.fromJson(Map<String, dynamic> json) =>

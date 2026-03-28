@@ -16,9 +16,12 @@ T _$identity<T>(T value) => value;
 mixin _$GenerateHarmonicsRequest {
 
 /// The generation type (Monaural, Binaural, Magnetic, Photonic, Quantal).
- String get generationType;/// The source type (Flow, Formula).
- String get sourceType;/// The source identifier (e.g. formula ID when sourceType is Formula).
- String get sourceId;
+ String get generationType;/// The source type (Flow, Formula, Inventory).
+ String get sourceType;/// The source identifier. For Formula/Flow this is the formula/flow ID.
+/// For Inventory this is a client-generated tracking UUID.
+ String get sourceId;/// Optional list of inventory IDs. Required when sourceType is Inventory.
+/// Maximum 10 items; duplicates are deduplicated server-side.
+ List<String>? get inventoryIds;
 /// Create a copy of GenerateHarmonicsRequest
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -31,16 +34,16 @@ $GenerateHarmonicsRequestCopyWith<GenerateHarmonicsRequest> get copyWith => _$Ge
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenerateHarmonicsRequest&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GenerateHarmonicsRequest&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&const DeepCollectionEquality().equals(other.inventoryIds, inventoryIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,generationType,sourceType,sourceId);
+int get hashCode => Object.hash(runtimeType,generationType,sourceType,sourceId,const DeepCollectionEquality().hash(inventoryIds));
 
 @override
 String toString() {
-  return 'GenerateHarmonicsRequest(generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId)';
+  return 'GenerateHarmonicsRequest(generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId, inventoryIds: $inventoryIds)';
 }
 
 
@@ -51,7 +54,7 @@ abstract mixin class $GenerateHarmonicsRequestCopyWith<$Res>  {
   factory $GenerateHarmonicsRequestCopyWith(GenerateHarmonicsRequest value, $Res Function(GenerateHarmonicsRequest) _then) = _$GenerateHarmonicsRequestCopyWithImpl;
 @useResult
 $Res call({
- String generationType, String sourceType, String sourceId
+ String generationType, String sourceType, String sourceId, List<String>? inventoryIds
 });
 
 
@@ -68,12 +71,13 @@ class _$GenerateHarmonicsRequestCopyWithImpl<$Res>
 
 /// Create a copy of GenerateHarmonicsRequest
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? generationType = null,Object? sourceType = null,Object? sourceId = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? generationType = null,Object? sourceType = null,Object? sourceId = null,Object? inventoryIds = freezed,}) {
   return _then(_self.copyWith(
 generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
 as String,sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
 as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as String,
+as String,inventoryIds: freezed == inventoryIds ? _self.inventoryIds : inventoryIds // ignore: cast_nullable_to_non_nullable
+as List<String>?,
   ));
 }
 
@@ -158,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String generationType,  String sourceType,  String sourceId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String generationType,  String sourceType,  String sourceId,  List<String>? inventoryIds)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsRequest() when $default != null:
-return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
+return $default(_that.generationType,_that.sourceType,_that.sourceId,_that.inventoryIds);case _:
   return orElse();
 
 }
@@ -179,10 +183,10 @@ return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String generationType,  String sourceType,  String sourceId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String generationType,  String sourceType,  String sourceId,  List<String>? inventoryIds)  $default,) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsRequest():
-return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
+return $default(_that.generationType,_that.sourceType,_that.sourceId,_that.inventoryIds);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +203,10 @@ return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String generationType,  String sourceType,  String sourceId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String generationType,  String sourceType,  String sourceId,  List<String>? inventoryIds)?  $default,) {final _that = this;
 switch (_that) {
 case _GenerateHarmonicsRequest() when $default != null:
-return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
+return $default(_that.generationType,_that.sourceType,_that.sourceId,_that.inventoryIds);case _:
   return null;
 
 }
@@ -214,15 +218,29 @@ return $default(_that.generationType,_that.sourceType,_that.sourceId);case _:
 @JsonSerializable()
 
 class _GenerateHarmonicsRequest implements GenerateHarmonicsRequest {
-  const _GenerateHarmonicsRequest({required this.generationType, required this.sourceType, required this.sourceId});
+  const _GenerateHarmonicsRequest({required this.generationType, required this.sourceType, required this.sourceId, final  List<String>? inventoryIds}): _inventoryIds = inventoryIds;
   factory _GenerateHarmonicsRequest.fromJson(Map<String, dynamic> json) => _$GenerateHarmonicsRequestFromJson(json);
 
 /// The generation type (Monaural, Binaural, Magnetic, Photonic, Quantal).
 @override final  String generationType;
-/// The source type (Flow, Formula).
+/// The source type (Flow, Formula, Inventory).
 @override final  String sourceType;
-/// The source identifier (e.g. formula ID when sourceType is Formula).
+/// The source identifier. For Formula/Flow this is the formula/flow ID.
+/// For Inventory this is a client-generated tracking UUID.
 @override final  String sourceId;
+/// Optional list of inventory IDs. Required when sourceType is Inventory.
+/// Maximum 10 items; duplicates are deduplicated server-side.
+ final  List<String>? _inventoryIds;
+/// Optional list of inventory IDs. Required when sourceType is Inventory.
+/// Maximum 10 items; duplicates are deduplicated server-side.
+@override List<String>? get inventoryIds {
+  final value = _inventoryIds;
+  if (value == null) return null;
+  if (_inventoryIds is EqualUnmodifiableListView) return _inventoryIds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of GenerateHarmonicsRequest
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +255,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GenerateHarmonicsRequest&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GenerateHarmonicsRequest&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.sourceId, sourceId) || other.sourceId == sourceId)&&const DeepCollectionEquality().equals(other._inventoryIds, _inventoryIds));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,generationType,sourceType,sourceId);
+int get hashCode => Object.hash(runtimeType,generationType,sourceType,sourceId,const DeepCollectionEquality().hash(_inventoryIds));
 
 @override
 String toString() {
-  return 'GenerateHarmonicsRequest(generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId)';
+  return 'GenerateHarmonicsRequest(generationType: $generationType, sourceType: $sourceType, sourceId: $sourceId, inventoryIds: $inventoryIds)';
 }
 
 
@@ -257,7 +275,7 @@ abstract mixin class _$GenerateHarmonicsRequestCopyWith<$Res> implements $Genera
   factory _$GenerateHarmonicsRequestCopyWith(_GenerateHarmonicsRequest value, $Res Function(_GenerateHarmonicsRequest) _then) = __$GenerateHarmonicsRequestCopyWithImpl;
 @override @useResult
 $Res call({
- String generationType, String sourceType, String sourceId
+ String generationType, String sourceType, String sourceId, List<String>? inventoryIds
 });
 
 
@@ -274,12 +292,13 @@ class __$GenerateHarmonicsRequestCopyWithImpl<$Res>
 
 /// Create a copy of GenerateHarmonicsRequest
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? generationType = null,Object? sourceType = null,Object? sourceId = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? generationType = null,Object? sourceType = null,Object? sourceId = null,Object? inventoryIds = freezed,}) {
   return _then(_GenerateHarmonicsRequest(
 generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
 as String,sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
 as String,sourceId: null == sourceId ? _self.sourceId : sourceId // ignore: cast_nullable_to_non_nullable
-as String,
+as String,inventoryIds: freezed == inventoryIds ? _self._inventoryIds : inventoryIds // ignore: cast_nullable_to_non_nullable
+as List<String>?,
   ));
 }
 

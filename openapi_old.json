@@ -3195,7 +3195,7 @@
           "Harmonics"
         ],
         "summary": "`POST /api/v1/harmonics/generate` — Generate harmonic packet sequence",
-        "description": "Generates a structured packet sequence based on the generation type,\nsource type, and source identifier. For Photonic/Quantal generation types,\nreturns an empty sequence.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — Generation type, source type, source ID,\nand optionally inventory IDs for Inventory source.\n\n| Field | Type | Required | Description |\n|-------|------|----------|-------------|\n| `generationType` | `String` | Yes | One of: Monaural, Binaural, Magnetic, Photonic, Quantal |\n| `sourceType` | `String` | Yes | One of: Flow, Formula, Inventory |\n| `sourceId` | `Uuid` | Yes | Formula/Flow ID, or client tracking UUID for Inventory |\n| `inventoryIds` | `Vec<Uuid>` | Inventory only | Direct inventory IDs (max 10, duplicates deduplicated) |\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] | — |\n| `400`  | Invalid input or missing inventoryIds | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `403`  | Insufficient permissions | [`ProblemDetails`] | `forbidden` |\n| `404`  | Formula or flow not found | [`ProblemDetails`] | `not-found` |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] | `conflict` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule violations.",
+        "description": "Generates a structured packet sequence based on the generation type,\nsource type, and source identifier. For Photonic/Quantal generation types\nor Flow source type, returns an empty sequence.\n\n# Authentication\n\n**Policy:** Authenticated\n\n# Request Body\n\n[`GenerateHarmonicsRequest`] — Generation type, source type, and source ID.\n\n# Responses\n\n| Status | Description | Body | Error Type URI |\n|--------|-------------|------|----------------|\n| `201`  | Harmonics generated | [`GenerateHarmonicsResponse`] | — |\n| `400`  | Invalid input | [`ProblemDetails`] | `bad-request` |\n| `401`  | Not authenticated | [`ProblemDetails`] | `unauthorized` |\n| `403`  | Insufficient permissions | [`ProblemDetails`] | `forbidden` |\n| `404`  | Formula not found | [`ProblemDetails`] | `not-found` |\n| `409`  | All 100 harmonic numbers exhausted | [`ProblemDetails`] | `conflict` |\n| `500`  | Internal server error | [`ProblemDetails`] | `internal-error` |\n\n# Errors\n\nReturns [`ProblemDetails`] on validation, authorization, or business rule violations.",
         "operationId": "generate_harmonics",
         "requestBody": {
           "content": {
@@ -5986,25 +5986,14 @@
             "type": "string",
             "description": "The generation type (Monaural, Binaural, Magnetic, Photonic, Quantal)."
           },
-          "inventoryIds": {
-            "type": [
-              "array",
-              "null"
-            ],
-            "items": {
-              "type": "string",
-              "format": "uuid"
-            },
-            "description": "Optional list of inventory IDs for direct Inventory source.\nRequired when `sourceType` is `\"Inventory\"`, ignored for other source types.\nMaximum 10 IDs. Duplicates are silently deduplicated."
-          },
           "sourceId": {
             "type": "string",
             "format": "uuid",
-            "description": "The source identifier. For Formula/Flow this is the formula/flow ID.\nFor Inventory this is a client-generated tracking UUID."
+            "description": "The source identifier (formula ID when `sourceType` is Formula)."
           },
           "sourceType": {
             "type": "string",
-            "description": "The source type (Flow, Formula, Inventory)."
+            "description": "The source type (Flow, Formula)."
           }
         }
       },
@@ -6106,7 +6095,7 @@
           },
           "isOneShot": {
             "type": "boolean",
-            "description": "Whether this packet harmonizes only once."
+            "description": "Whether this packet plays only once."
           },
           "value": {
             "type": "integer",
