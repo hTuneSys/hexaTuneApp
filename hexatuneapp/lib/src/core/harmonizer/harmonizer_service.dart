@@ -100,7 +100,8 @@ class HarmonizerService {
 
     _logService.info(
       'Harmonizer harmonize: type=${config.type.name}, '
-      'steps=${config.steps.length}, ambience=${config.ambienceId ?? "none"}',
+      'steps=${config.steps.length}, ambience=${config.ambienceId ?? "none"}, '
+      'repeat=${config.repeatCount ?? "infinite"}',
       category: LogCategory.dsp,
     );
 
@@ -115,6 +116,7 @@ class HarmonizerService {
         currentStepIndex: 0,
         errorMessage: null,
         gracefulStopRequested: false,
+        repeatCount: config.repeatCount,
       ),
     );
 
@@ -122,12 +124,24 @@ class HarmonizerService {
     final firstDur = _computeCycleDuration(config.steps, includeOneShots: true);
     final loopDur = _computeCycleDuration(config.steps, includeOneShots: false);
 
+    // Compute total duration across all repeat cycles (null for infinite).
+    final Duration? totalRepeat;
+    if (config.repeatCount != null) {
+      final repeatMs =
+          firstDur.inMilliseconds +
+          (loopDur.inMilliseconds * (config.repeatCount! - 1));
+      totalRepeat = Duration(milliseconds: repeatMs);
+    } else {
+      totalRepeat = null;
+    }
+
     _updateState(
       _currentState.copyWith(
         totalCycleDuration: loopDur,
         firstCycleDuration: firstDur,
         remainingInCycle: firstDur,
         isFirstCycle: true,
+        totalRepeatDuration: totalRepeat,
       ),
     );
 
@@ -538,12 +552,29 @@ class HarmonizerService {
         return;
       }
 
-      // DSP modes: infinite loop.
+      // DSP modes: loop with optional repeat limit.
       final currentCycle = cycleMs > 0 ? elapsedMs ~/ cycleMs : 0;
       final positionInCycle = cycleMs > 0 ? elapsedMs % cycleMs : 0;
       final remaining = Duration(milliseconds: cycleMs - positionInCycle);
       final stepIndex = _computeStepIndex(positionInCycle);
       final isFirst = currentCycle == 0;
+
+      // Auto-stop after completing all repeat cycles.
+      final repeat = _currentState.repeatCount;
+      if (repeat != null && currentCycle >= repeat) {
+        _updateState(
+          _currentState.copyWith(
+            currentCycle: repeat - 1,
+            currentStepIndex: _currentState.sequence.length - 1,
+            remainingInCycle: Duration.zero,
+            isFirstCycle: false,
+          ),
+        );
+        _timeTracker?.cancel();
+        _timeTracker = null;
+        unawaited(_autoStopDsp());
+        return;
+      }
 
       _updateState(
         _currentState.copyWith(
@@ -578,6 +609,37 @@ class HarmonizerService {
     }
 
     _updateState(_currentState.copyWith(remainingInCycle: remaining));
+  }
+
+  /// Auto-stop for DSP modes after completing all repeat cycles.
+  ///
+  /// Transitions to [HarmonizerStatus.stopping], performs backend cleanup,
+  /// then returns to idle.
+  Future<void> _autoStopDsp() async {
+    _logService.info(
+      'DSP repeat cycles complete, auto-stopping',
+      category: LogCategory.dsp,
+    );
+
+    _updateState(
+      _currentState.copyWith(
+        status: HarmonizerStatus.stopping,
+        gracefulStopRequested: true,
+        remainingInCycle: Duration.zero,
+      ),
+    );
+
+    try {
+      await _dspService.stop();
+    } catch (e, st) {
+      _logService.error(
+        'DSP auto-stop error: $e',
+        category: LogCategory.dsp,
+        exception: e,
+        stackTrace: st,
+      );
+    }
+    _cleanup();
   }
 
   /// Auto-stop for magnetic mode after the single pass completes.

@@ -23,5 +23,8 @@ abstract class HarmonizerConfig with _$HarmonizerConfig {
 
     /// The formula ID that generated this sequence (for UI state restoration).
     String? formulaId,
+
+    /// Number of cycles to repeat (null = infinite).
+    int? repeatCount,
   }) = _HarmonizerConfig;
 }

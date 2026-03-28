@@ -1442,6 +1442,30 @@ abstract class AppLocalizations {
   /// **'Please select a source from formula or inventory pages'**
   String get harmonizerSelectSource;
 
+  /// No description provided for @harmonizerRepeatOnce.
+  ///
+  /// In en, this message translates to:
+  /// **'x1'**
+  String get harmonizerRepeatOnce;
+
+  /// No description provided for @harmonizerRepeatThrice.
+  ///
+  /// In en, this message translates to:
+  /// **'x3'**
+  String get harmonizerRepeatThrice;
+
+  /// No description provided for @harmonizerRepeatTen.
+  ///
+  /// In en, this message translates to:
+  /// **'x10'**
+  String get harmonizerRepeatTen;
+
+  /// No description provided for @harmonizerAlreadyActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonization is already in progress'**
+  String get harmonizerAlreadyActive;
+
   /// No description provided for @categoryManagement.
   ///
   /// In en, this message translates to:

@@ -34,7 +34,20 @@ import 'package:hexatuneapp/src/pages/shared/harmonizer_widget.dart';
 /// If [source] is provided, it is set as the current harmonize source
 /// (e.g. from formula or inventory pages). If omitted (center hexagon button),
 /// the sheet opens with the last set source.
+///
+/// If harmonization is already active, shows a snackbar error instead.
 void showHarmonizerSheet(BuildContext context, {HarmonizeSource? source}) {
+  final harmonizer = getIt<HarmonizerService>();
+  if (harmonizer.isHarmonizing ||
+      harmonizer.currentState.status == HarmonizerStatus.preparing ||
+      harmonizer.currentState.status == HarmonizerStatus.stopping) {
+    if (source != null) {
+      final l10n = AppLocalizations.of(context)!;
+      AppSnackBar.info(context, message: l10n.harmonizerAlreadyActive);
+      return;
+    }
+  }
+
   if (source != null) {
     getIt<HarmonizeSourceHolder>().source = source;
   }
@@ -74,6 +87,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   // Formula dropdown state removed — source must be set from formula/inventory pages
 
   bool _generating = false;
+  int? _selectedRepeat = 1;
 
   HarmonizerState _harmonizerState = const HarmonizerState();
   bool _headsetConnected = false;
@@ -188,6 +202,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
         ambienceId: _selectedAmbience?.id,
         steps: response.sequence,
         formulaId: formulaId,
+        repeatCount: _selectedRepeat,
       );
 
       final error = await _harmonizer.harmonize(config);
@@ -282,12 +297,14 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
               isActive: _isActive,
               generating: _generating,
               canHarmonize: _canHarmonize,
+              selectedRepeat: _selectedRepeat,
               onTypeChanged: (type) => setState(() => _selectedType = type),
               onAmbienceChanged: _onAmbienceChanged,
               onHarmonize: _harmonize,
               onStopGraceful: _stopGraceful,
               onImmediateStart: _startImmediateTimer,
               onImmediateEnd: _cancelImmediateTimer,
+              onRepeatChanged: (r) => setState(() => _selectedRepeat = r),
             ),
           ],
         ),

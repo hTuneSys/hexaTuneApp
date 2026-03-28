@@ -121,6 +121,7 @@ void main() {
 
     when(() => mockHarmonizer.state).thenAnswer((_) => harmonizerCtrl.stream);
     when(() => mockHarmonizer.currentState).thenReturn(const HarmonizerState());
+    when(() => mockHarmonizer.isHarmonizing).thenReturn(false);
     when(
       () => mockHarmonizer.validatePrerequisites(any()),
     ).thenReturn(HarmonizerValidation.valid);

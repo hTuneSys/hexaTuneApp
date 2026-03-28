@@ -21,12 +21,14 @@ class HarmonizerWidget extends StatelessWidget {
     required this.isActive,
     required this.generating,
     required this.canHarmonize,
+    required this.selectedRepeat,
     required this.onTypeChanged,
     required this.onAmbienceChanged,
     required this.onHarmonize,
     required this.onStopGraceful,
     required this.onImmediateStart,
     required this.onImmediateEnd,
+    required this.onRepeatChanged,
     super.key,
   });
 
@@ -39,12 +41,16 @@ class HarmonizerWidget extends StatelessWidget {
   final bool isActive;
   final bool generating;
   final bool canHarmonize;
+
+  /// Selected repeat count: null = infinite, 1/3/10 = finite.
+  final int? selectedRepeat;
   final ValueChanged<GenerationType> onTypeChanged;
   final ValueChanged<AmbienceConfig?> onAmbienceChanged;
   final VoidCallback onHarmonize;
   final VoidCallback onStopGraceful;
   final VoidCallback onImmediateStart;
   final VoidCallback onImmediateEnd;
+  final ValueChanged<int?> onRepeatChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +81,11 @@ class HarmonizerWidget extends StatelessWidget {
 
           // --- Bottom half: timer + harmonize/stop ---
           _buildControls(theme, l10n, colorScheme),
+
+          Divider(height: 1, color: colorScheme.outlineVariant),
+
+          // --- Repeat selector ---
+          _buildRepeatSelector(theme, l10n, colorScheme),
         ],
       ),
     );
@@ -218,7 +229,7 @@ class HarmonizerWidget extends StatelessWidget {
               (c) => DropdownMenuItem(value: c, child: Text(c.name)),
             ),
           ],
-          onChanged: onAmbienceChanged,
+          onChanged: isActive ? null : onAmbienceChanged,
         ),
       ),
     );
@@ -263,11 +274,7 @@ class HarmonizerWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       isHarmonizing
-                          ? _formatDuration(
-                              harmonizerState.isFirstCycle
-                                  ? harmonizerState.firstCycleDuration
-                                  : harmonizerState.totalCycleDuration,
-                            )
+                          ? _formatTotalDuration(harmonizerState)
                           : '--:--',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontFeatures: const [FontFeature.tabularFigures()],
@@ -404,6 +411,38 @@ class HarmonizerWidget extends StatelessWidget {
   }
 
   // ---------------------------------------------------------------------------
+  // Repeat selector
+  // ---------------------------------------------------------------------------
+
+  Widget _buildRepeatSelector(
+    ThemeData theme,
+    AppLocalizations l10n,
+    ColorScheme colorScheme,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: SizedBox(
+        width: double.infinity,
+        child: SegmentedButton<int?>(
+          segments: [
+            ButtonSegment(value: 1, label: Text(l10n.harmonizerRepeatOnce)),
+            ButtonSegment(value: 3, label: Text(l10n.harmonizerRepeatThrice)),
+            ButtonSegment(value: 10, label: Text(l10n.harmonizerRepeatTen)),
+            ButtonSegment(
+              value: null,
+              label: Icon(Icons.all_inclusive, size: 20),
+            ),
+          ],
+          selected: {selectedRepeat},
+          onSelectionChanged: isActive
+              ? null
+              : (selected) => onRepeatChanged(selected.first),
+        ),
+      ),
+    );
+  }
+
+  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
 
@@ -422,6 +461,11 @@ class HarmonizerWidget extends StatelessWidget {
     final seconds = d.inSeconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:'
         '${seconds.toString().padLeft(2, '0')}';
+  }
+
+  String _formatTotalDuration(HarmonizerState state) {
+    if (state.totalRepeatDuration == null) return '--:--';
+    return _formatDuration(state.totalRepeatDuration!);
   }
 }
 

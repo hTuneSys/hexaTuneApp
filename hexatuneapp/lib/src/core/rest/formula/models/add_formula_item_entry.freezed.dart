@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AddFormulaItemEntry {
 
- String get inventoryId;/// Quantity (defaults to 1 if not provided, min 1, max 60).
+ String get inventoryId;/// Quantity (defaults to 1 if not provided, min 1, max 30).
  int? get quantity;/// Sort order (defaults to 0 if not provided, must be non-negative).
  int? get sortOrder;
 /// Create a copy of AddFormulaItemEntry
@@ -217,7 +217,7 @@ class _AddFormulaItemEntry implements AddFormulaItemEntry {
   factory _AddFormulaItemEntry.fromJson(Map<String, dynamic> json) => _$AddFormulaItemEntryFromJson(json);
 
 @override final  String inventoryId;
-/// Quantity (defaults to 1 if not provided, min 1, max 60).
+/// Quantity (defaults to 1 if not provided, min 1, max 30).
 @override final  int? quantity;
 /// Sort order (defaults to 0 if not provided, must be non-negative).
 @override final  int? sortOrder;

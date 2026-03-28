@@ -53,5 +53,11 @@ abstract class HarmonizerState with _$HarmonizerState {
 
     /// True after a graceful stop has been requested.
     @Default(false) bool gracefulStopRequested,
+
+    /// Number of cycles to repeat (null = infinite).
+    int? repeatCount,
+
+    /// Total duration across all repeat cycles (null for infinite).
+    Duration? totalRepeatDuration,
   }) = _HarmonizerState;
 }

@@ -33,12 +33,14 @@ HarmonizerWidget _buildWidget({
   bool isActive = false,
   bool generating = false,
   bool canHarmonize = false,
+  int? selectedRepeat = 1,
   ValueChanged<GenerationType>? onTypeChanged,
   ValueChanged<AmbienceConfig?>? onAmbienceChanged,
   VoidCallback? onHarmonize,
   VoidCallback? onStopGraceful,
   VoidCallback? onImmediateStart,
   VoidCallback? onImmediateEnd,
+  ValueChanged<int?>? onRepeatChanged,
 }) {
   return HarmonizerWidget(
     selectedType: selectedType,
@@ -50,12 +52,14 @@ HarmonizerWidget _buildWidget({
     isActive: isActive,
     generating: generating,
     canHarmonize: canHarmonize,
+    selectedRepeat: selectedRepeat,
     onTypeChanged: onTypeChanged ?? (_) {},
     onAmbienceChanged: onAmbienceChanged ?? (_) {},
     onHarmonize: onHarmonize ?? () {},
     onStopGraceful: onStopGraceful ?? () {},
     onImmediateStart: onImmediateStart ?? () {},
     onImmediateEnd: onImmediateEnd ?? () {},
+    onRepeatChanged: onRepeatChanged ?? (_) {},
   );
 }
 
@@ -164,6 +168,7 @@ void main() {
                     isFirstCycle: false,
                     totalCycleDuration: Duration(minutes: 5, seconds: 30),
                     remainingInCycle: Duration(minutes: 3, seconds: 15),
+                    totalRepeatDuration: Duration(minutes: 5, seconds: 30),
                   ),
                   isActive: true,
                 ),
@@ -419,6 +424,106 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('This feature is coming soon'), findsOneWidget);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Repeat selector
+  // ---------------------------------------------------------------------------
+
+  group('HarmonizerWidget repeat selector', () {
+    testWidgets('renders repeat buttons with x1 selected by default', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(body: ListView(children: [_buildWidget()])),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('x1'), findsOneWidget);
+      expect(find.text('x3'), findsOneWidget);
+      expect(find.text('x10'), findsOneWidget);
+      expect(find.byIcon(Icons.all_inclusive), findsOneWidget);
+    });
+
+    testWidgets('repeat buttons are disabled when active', (tester) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(
+            body: ListView(
+              children: [
+                _buildWidget(
+                  isActive: true,
+                  harmonizerState: const HarmonizerState(
+                    status: HarmonizerStatus.harmonizing,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // SegmentedButton should be present but disabled
+      final segmented = tester.widget<SegmentedButton<int?>>(
+        find.byType(SegmentedButton<int?>),
+      );
+      expect(segmented.onSelectionChanged, isNull);
+    });
+
+    testWidgets('total duration shows --:-- for infinite repeat', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(
+            body: ListView(
+              children: [
+                _buildWidget(
+                  selectedRepeat: null,
+                  harmonizerState: const HarmonizerState(
+                    status: HarmonizerStatus.harmonizing,
+                    totalRepeatDuration: null,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      // Total column shows --:-- for infinite repeat
+      expect(find.text('--:--'), findsOneWidget);
+    });
+
+    testWidgets('total duration shows formatted time for finite repeat', (
+      tester,
+    ) async {
+      await tester.pumpWidget(
+        _buildApp(
+          child: Scaffold(
+            body: ListView(
+              children: [
+                _buildWidget(
+                  selectedRepeat: 3,
+                  harmonizerState: const HarmonizerState(
+                    status: HarmonizerStatus.harmonizing,
+                    totalRepeatDuration: Duration(seconds: 225),
+                    remainingInCycle: Duration(seconds: 30),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.text('03:45'), findsOneWidget);
     });
   });
 }

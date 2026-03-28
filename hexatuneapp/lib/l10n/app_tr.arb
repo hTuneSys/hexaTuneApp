@@ -321,6 +321,10 @@
   "harmonizerGenerating": "Sekans üretiliyor...",
   "harmonizerNoSequence": "Formül seçilmedi",
   "harmonizerSelectSource": "Lütfen formül veya envanter sayfalarından bir kaynak seçiniz",
+  "harmonizerRepeatOnce": "x1",
+  "harmonizerRepeatThrice": "x3",
+  "harmonizerRepeatTen": "x10",
+  "harmonizerAlreadyActive": "Harmonizasyon devam ediyor",
 
   "categoryManagement": "Kategori Yönetimi",
   "categoryCreate": "Kategori Oluştur",

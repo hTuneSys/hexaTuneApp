@@ -725,6 +725,18 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please select a source from formula or inventory pages';
 
   @override
+  String get harmonizerRepeatOnce => 'x1';
+
+  @override
+  String get harmonizerRepeatThrice => 'x3';
+
+  @override
+  String get harmonizerRepeatTen => 'x10';
+
+  @override
+  String get harmonizerAlreadyActive => 'Harmonization is already in progress';
+
+  @override
   String get categoryManagement => 'Category Management';
 
   @override

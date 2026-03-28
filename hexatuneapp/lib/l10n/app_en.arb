@@ -324,6 +324,10 @@
   "harmonizerGenerating": "Generating sequence...",
   "harmonizerNoSequence": "No formula selected",
   "harmonizerSelectSource": "Please select a source from formula or inventory pages",
+  "harmonizerRepeatOnce": "x1",
+  "harmonizerRepeatThrice": "x3",
+  "harmonizerRepeatTen": "x10",
+  "harmonizerAlreadyActive": "Harmonization is already in progress",
 
   "categoryManagement": "Category Management",
   "categoryCreate": "Create Category",

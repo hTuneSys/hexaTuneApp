@@ -728,6 +728,18 @@ class AppLocalizationsTr extends AppLocalizations {
       'Lütfen formül veya envanter sayfalarından bir kaynak seçiniz';
 
   @override
+  String get harmonizerRepeatOnce => 'x1';
+
+  @override
+  String get harmonizerRepeatThrice => 'x3';
+
+  @override
+  String get harmonizerRepeatTen => 'x10';
+
+  @override
+  String get harmonizerAlreadyActive => 'Harmonizasyon devam ediyor';
+
+  @override
   String get categoryManagement => 'Kategori Yönetimi';
 
   @override
