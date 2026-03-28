@@ -1,3 +1,19 @@
+# [1.9.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.8.1...v1.9.0) (2026-03-28)
+
+
+### Bug Fixes
+
+* **harmonizer:** use UUID v7 for inventory sourceId instead of placeholder string ([887ab16](https://github.com/hTuneSys/hexaTuneApp/commit/887ab1601a3138f6b49bb15bc71170418adabee4))
+
+
+### Features
+
+* **api-limits:** update formula and inventory limits per new API spec ([277d6c6](https://github.com/hTuneSys/hexaTuneApp/commit/277d6c65670420277eae3ce9dd2e7bae0ff03743))
+* **formula:** add harmonize buttons to list and view pages ([70cf4f3](https://github.com/hTuneSys/hexaTuneApp/commit/70cf4f3e5fcdd203e6714ea6e2ee6a8b5ea47127))
+* **harmonics:** add Inventory source type to GenerateHarmonicsRequest ([95f2db8](https://github.com/hTuneSys/hexaTuneApp/commit/95f2db84b292dc8983f6c46239184d97ca283ca1))
+* **harmonizer:** multi-source bottom sheet with formula and inventory support ([ff2fe7f](https://github.com/hTuneSys/hexaTuneApp/commit/ff2fe7f5f8b5b2ea434cc4f00d80243b1290d2b1))
+* **inventory:** add harmonize button and selected inventory chip bar ([2fde7af](https://github.com/hTuneSys/hexaTuneApp/commit/2fde7afe88aaaa3bd47d5ff3850cdc391e1dc4be))
+
 ## [1.8.1](https://github.com/hTuneSys/hexaTuneApp/compare/v1.8.0...v1.8.1) (2026-03-27)
 
 
