@@ -406,11 +406,14 @@ class _FormulaListTile extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              l10n.formulaInventoryCount(0),
-              style: theme.textTheme.bodySmall,
+            IconButton(
+              icon: Icon(Icons.join_inner, color: theme.colorScheme.primary),
+              onPressed: () {
+                // TODO: trigger harmonize for this formula
+              },
+              tooltip: l10n.harmonizerHarmonize,
+              visualDensity: VisualDensity.compact,
             ),
-            const SizedBox(width: 4),
             CircleAvatar(
               radius: 18,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,

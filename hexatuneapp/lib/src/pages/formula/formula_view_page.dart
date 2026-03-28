@@ -217,6 +217,14 @@ class _FormulaViewPageState extends State<FormulaViewPage> {
                         ),
                       );
                     }),
+                  const SizedBox(height: 24),
+                  FilledButton.icon(
+                    onPressed: () {
+                      // TODO: trigger harmonize for this formula
+                    },
+                    icon: const Icon(Icons.join_inner),
+                    label: Text(l10n.harmonizerHarmonize),
+                  ),
                 ],
               ),
             ),

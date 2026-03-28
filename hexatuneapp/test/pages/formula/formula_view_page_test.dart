@@ -224,5 +224,13 @@ void main() {
 
       expect(find.byIcon(Icons.inventory_2_outlined), findsOneWidget);
     });
+
+    testWidgets('shows harmonize button at bottom', (tester) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.join_inner), findsOneWidget);
+      expect(find.text('Harmonize'), findsOneWidget);
+    });
   });
 }
