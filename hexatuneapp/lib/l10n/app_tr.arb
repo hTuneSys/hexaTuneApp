@@ -588,5 +588,12 @@
   "workspaceRecentlyUsed": "Son Kullanılanlar",
   "workspaceSearchToPin": "Sabitlemek için ara",
   "workspaceNoPinnedFormulas": "Sabitlenmiş formül yok",
-  "workspaceNoRecentlyUsed": "Son kullanılan formül yok"
+  "workspaceNoRecentlyUsed": "Son harmonizasyon yok",
+  "workspaceRepeatInfinite": "∞",
+  "workspaceRepeatCount": "x{count}",
+  "@workspaceRepeatCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

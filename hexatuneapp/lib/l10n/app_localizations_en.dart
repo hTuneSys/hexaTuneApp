@@ -1311,5 +1311,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get workspaceNoPinnedFormulas => 'No pinned formulas';
 
   @override
-  String get workspaceNoRecentlyUsed => 'No recently used formulas';
+  String get workspaceNoRecentlyUsed => 'No recent harmonizations';
+
+  @override
+  String get workspaceRepeatInfinite => '∞';
+
+  @override
+  String workspaceRepeatCount(int count) {
+    return 'x$count';
+  }
 }

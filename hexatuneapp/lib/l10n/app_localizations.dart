@@ -2549,8 +2549,20 @@ abstract class AppLocalizations {
   /// No description provided for @workspaceNoRecentlyUsed.
   ///
   /// In en, this message translates to:
-  /// **'No recently used formulas'**
+  /// **'No recent harmonizations'**
   String get workspaceNoRecentlyUsed;
+
+  /// No description provided for @workspaceRepeatInfinite.
+  ///
+  /// In en, this message translates to:
+  /// **'∞'**
+  String get workspaceRepeatInfinite;
+
+  /// No description provided for @workspaceRepeatCount.
+  ///
+  /// In en, this message translates to:
+  /// **'x{count}'**
+  String workspaceRepeatCount(int count);
 }
 
 class _AppLocalizationsDelegate

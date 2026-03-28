@@ -1321,5 +1321,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get workspaceNoPinnedFormulas => 'Sabitlenmiş formül yok';
 
   @override
-  String get workspaceNoRecentlyUsed => 'Son kullanılan formül yok';
+  String get workspaceNoRecentlyUsed => 'Son harmonizasyon yok';
+
+  @override
+  String get workspaceRepeatInfinite => '∞';
+
+  @override
+  String workspaceRepeatCount(int count) {
+    return 'x$count';
+  }
 }

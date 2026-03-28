@@ -73,6 +73,8 @@ import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart' as _i810;
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart' as _i148;
 import 'package:hexatuneapp/src/core/storage/secure_storage_service.dart'
     as _i325;
+import 'package:hexatuneapp/src/core/workspace/harmonize_history_service.dart'
+    as _i863;
 import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart'
     as _i1021;
 import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart'
@@ -100,6 +102,12 @@ extension GetItInjectableX on _i174.GetIt {
     );
     gh.singleton<_i925.AmbienceService>(
       () => _i925.AmbienceService(
+        gh<_i148.PreferencesService>(),
+        gh<_i571.LogService>(),
+      ),
+    );
+    gh.singleton<_i863.HarmonizeHistoryService>(
+      () => _i863.HarmonizeHistoryService(
         gh<_i148.PreferencesService>(),
         gh<_i571.LogService>(),
       ),

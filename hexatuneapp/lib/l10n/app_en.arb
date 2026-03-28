@@ -591,5 +591,12 @@
   "workspaceRecentlyUsed": "Recently Used",
   "workspaceSearchToPin": "Search to pin",
   "workspaceNoPinnedFormulas": "No pinned formulas",
-  "workspaceNoRecentlyUsed": "No recently used formulas"
+  "workspaceNoRecentlyUsed": "No recent harmonizations",
+  "workspaceRepeatInfinite": "∞",
+  "workspaceRepeatCount": "x{count}",
+  "@workspaceRepeatCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  }
 }

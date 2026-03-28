@@ -10,6 +10,8 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
 import 'package:hexatuneapp/src/core/dsp/ambience/models/ambience_config.dart';
+import 'package:hexatuneapp/src/core/workspace/harmonize_history_service.dart';
+import 'package:hexatuneapp/src/core/workspace/models/harmonize_history_entry.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_service.dart';
 import 'package:hexatuneapp/src/core/hardware/headset/headset_state.dart';
 import 'package:hexatuneapp/src/core/hardware/hexagen/hexagen_service.dart';
@@ -43,7 +45,7 @@ void showHarmonizerSheet(BuildContext context, {HarmonizeSource? source}) {
       harmonizer.currentState.status == HarmonizerStatus.stopping) {
     if (source != null) {
       final l10n = AppLocalizations.of(context)!;
-      AppSnackBar.info(context, message: l10n.harmonizerAlreadyActive);
+      AppSnackBar.error(context, message: l10n.harmonizerAlreadyActive);
       return;
     }
   }
@@ -209,6 +211,8 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
       final error = await _harmonizer.harmonize(config);
       if (error != null && mounted) {
         AppSnackBar.success(context, message: error);
+      } else if (source != null) {
+        _recordHistory(source);
       }
     } catch (e) {
       if (mounted) {
@@ -238,6 +242,38 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   void _cancelImmediateTimer() {
     _immediateTimer?.cancel();
     _immediateTimer = null;
+  }
+
+  void _recordHistory(HarmonizeSource source) {
+    final String sourceType;
+    String? formulaId;
+    String? formulaName;
+    List<HistoryInventoryItem> inventories = const [];
+
+    if (source is FormulaSource) {
+      sourceType = 'Formula';
+      formulaId = source.formula.id;
+      formulaName = source.formula.name;
+    } else if (source is InventorySource) {
+      sourceType = 'Inventory';
+      inventories = source.inventories
+          .map((i) => HistoryInventoryItem(id: i.id, name: i.name))
+          .toList();
+    } else {
+      return;
+    }
+
+    final entry = HarmonizeHistoryEntry(
+      sourceType: sourceType,
+      formulaId: formulaId,
+      formulaName: formulaName,
+      inventories: inventories,
+      generationType: _selectedType.apiValue,
+      ambienceId: _selectedAmbience?.id,
+      repeatCount: _selectedRepeat,
+      harmonizedAt: DateTime.now().toUtc().toIso8601String(),
+    );
+    getIt<HarmonizeHistoryService>().add(entry);
   }
 
   void _onAmbienceChanged(AmbienceConfig? config) {

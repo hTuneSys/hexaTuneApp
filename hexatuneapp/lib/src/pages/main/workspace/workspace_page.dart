@@ -8,16 +8,22 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
+import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
+import 'package:hexatuneapp/src/core/workspace/harmonize_history_service.dart';
+import 'package:hexatuneapp/src/core/workspace/models/harmonize_history_entry.dart';
 import 'package:hexatuneapp/src/core/workspace/models/pinned_formula.dart';
 import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_pin_sheet.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
 /// Main workspace page accessible from the bottom navigation bar.
 ///
 /// Displays pinned formulas, quick-add shortcuts, stats overview,
-/// a 2×2 navigation grid, and a recently-used formula list.
+/// a 2×2 navigation grid, and a recently-used harmonization list.
 class WorkspacePage extends StatefulWidget {
   const WorkspacePage({super.key});
 
@@ -27,18 +33,18 @@ class WorkspacePage extends StatefulWidget {
 
 class _WorkspacePageState extends State<WorkspacePage> {
   late final WorkspacePinService _pinService;
-
-  static const _recentCount = 20;
+  late final HarmonizeHistoryService _historyService;
 
   @override
   void initState() {
     super.initState();
     _pinService = getIt<WorkspacePinService>();
-    _loadPins();
+    _historyService = getIt<HarmonizeHistoryService>();
+    _loadData();
   }
 
-  Future<void> _loadPins() async {
-    await _pinService.load();
+  Future<void> _loadData() async {
+    await Future.wait([_pinService.load(), _historyService.load()]);
     if (mounted) setState(() {});
   }
 
@@ -431,6 +437,8 @@ class _WorkspacePageState extends State<WorkspacePage> {
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
+    final history = _historyService.entries;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -447,33 +455,148 @@ class _WorkspacePageState extends State<WorkspacePage> {
           ],
         ),
         const SizedBox(height: 8),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: _recentCount,
-          separatorBuilder: (_, _) => const SizedBox(height: 4),
-          itemBuilder: (ctx, i) {
-            final name = 'Formula ${i + 1}';
-            return Card(
-              child: ListTile(
-                title: Text(name, style: theme.textTheme.bodyMedium),
-                trailing: IconButton(
-                  icon: Icon(
-                    Icons.join_inner_rounded,
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                  onPressed: () {
-                    getIt<LogService>().devLog(
-                      'Harmonize recently used formula tapped: $name',
-                      category: LogCategory.ui,
-                    );
-                  },
+        if (history.isEmpty)
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              child: Text(
+                l10n.workspaceNoRecentlyUsed,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          )
+        else
+          ListView.separated(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: history.length,
+            separatorBuilder: (_, _) => const SizedBox(height: 4),
+            itemBuilder: (ctx, i) =>
+                _buildHistoryCard(history[i], l10n, theme, colorScheme),
+          ),
       ],
     );
+  }
+
+  Widget _buildHistoryCard(
+    HarmonizeHistoryEntry entry,
+    AppLocalizations l10n,
+    ThemeData theme,
+    ColorScheme colorScheme,
+  ) {
+    final isFormula = entry.sourceType == 'Formula';
+    final icon = isFormula
+        ? Icons.science_outlined
+        : Icons.inventory_2_outlined;
+
+    final repeatLabel = entry.repeatCount == null
+        ? l10n.workspaceRepeatInfinite
+        : l10n.workspaceRepeatCount(entry.repeatCount!);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Row(
+          children: [
+            Icon(icon, color: colorScheme.primary, size: 28),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (isFormula && entry.formulaName != null)
+                    Text(
+                      entry.formulaName!,
+                      style: theme.textTheme.bodyMedium,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    )
+                  else if (!isFormula && entry.inventories.isNotEmpty)
+                    Wrap(
+                      spacing: 4,
+                      runSpacing: 4,
+                      children: entry.inventories
+                          .map(
+                            (inv) => Chip(
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              visualDensity: VisualDensity.compact,
+                              label: Text(
+                                inv.name,
+                                style: theme.textTheme.labelSmall,
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  const SizedBox(height: 4),
+                  Row(
+                    children: [
+                      Text(
+                        entry.generationType,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        repeatLabel,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(
+                Icons.join_inner_rounded,
+                color: colorScheme.onSurfaceVariant,
+              ),
+              onPressed: () => _harmonizeFromHistory(entry),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _harmonizeFromHistory(HarmonizeHistoryEntry entry) {
+    final HarmonizeSource source;
+    if (entry.sourceType == 'Formula' && entry.formulaId != null) {
+      source = FormulaSource(
+        formula: FormulaResponse(
+          id: entry.formulaId!,
+          name: entry.formulaName ?? '',
+          labels: const [],
+          createdAt: '',
+          updatedAt: '',
+        ),
+      );
+    } else if (entry.sourceType == 'Inventory' &&
+        entry.inventories.isNotEmpty) {
+      source = InventorySource(
+        inventories: entry.inventories
+            .map(
+              (inv) => InventoryResponse(
+                id: inv.id,
+                name: inv.name,
+                categoryId: '',
+                labels: const [],
+                imageUploaded: false,
+                createdAt: '',
+                updatedAt: '',
+              ),
+            )
+            .toList(),
+      );
+    } else {
+      return;
+    }
+    showHarmonizerSheet(context, source: source);
   }
 }

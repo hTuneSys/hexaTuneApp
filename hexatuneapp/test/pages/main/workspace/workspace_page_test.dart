@@ -1,6 +1,8 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -9,8 +11,11 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/storage/preferences_service.dart';
+import 'package:hexatuneapp/src/core/workspace/harmonize_history_service.dart';
+import 'package:hexatuneapp/src/core/workspace/models/harmonize_history_entry.dart';
 import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_page.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 
 class MockPreferencesService extends Mock implements PreferencesService {}
 
@@ -47,6 +52,12 @@ void main() {
     getIt.registerSingleton<LogService>(mockLog);
     getIt.registerSingleton<WorkspacePinService>(
       WorkspacePinService(mockPrefs, mockLog),
+    );
+    getIt.registerSingleton<HarmonizeHistoryService>(
+      HarmonizeHistoryService(mockPrefs, mockLog),
+    );
+    getIt.registerLazySingleton<HarmonizeSourceHolder>(
+      () => HarmonizeSourceHolder(),
     );
   });
 
@@ -144,15 +155,98 @@ void main() {
       expect(find.byIcon(Icons.spa_outlined), findsOneWidget);
     });
 
-    testWidgets('displays recently used section', (tester) async {
+    testWidgets('displays recently used section with empty message', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       expect(find.text('Recently Used'), findsOneWidget);
-      expect(find.text('Formula 1'), findsOneWidget);
+      expect(find.text('No recent harmonizations'), findsOneWidget);
     });
 
-    testWidgets('recently used items have harmonize icons', (tester) async {
+    testWidgets('shows formula history card when history exists', (
+      tester,
+    ) async {
+      final entries = [
+        const HarmonizeHistoryEntry(
+          sourceType: 'Formula',
+          formulaId: 'f1',
+          formulaName: 'My Formula',
+          generationType: 'Monaural',
+          repeatCount: 3,
+          harmonizedAt: '2026-01-01T00:00:00Z',
+        ),
+      ];
+      when(
+        () => mockPrefs.getString('workspace_harmonize_history'),
+      ).thenReturn(jsonEncode(entries.map((e) => e.toJson()).toList()));
+
+      getIt.allowReassignment = true;
+      getIt.registerSingleton<HarmonizeHistoryService>(
+        HarmonizeHistoryService(mockPrefs, mockLog),
+      );
+
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.text('My Formula'), findsOneWidget);
+      expect(find.text('Monaural'), findsOneWidget);
+      expect(find.text('x3'), findsOneWidget);
+      expect(find.text('No recent harmonizations'), findsNothing);
+    });
+
+    testWidgets('shows inventory history card with chips', (tester) async {
+      final entries = [
+        const HarmonizeHistoryEntry(
+          sourceType: 'Inventory',
+          inventories: [
+            HistoryInventoryItem(id: 'i1', name: 'Inv A'),
+            HistoryInventoryItem(id: 'i2', name: 'Inv B'),
+          ],
+          generationType: 'Binaural',
+          repeatCount: null,
+          harmonizedAt: '2026-01-01T00:00:00Z',
+        ),
+      ];
+      when(
+        () => mockPrefs.getString('workspace_harmonize_history'),
+      ).thenReturn(jsonEncode(entries.map((e) => e.toJson()).toList()));
+
+      getIt.allowReassignment = true;
+      getIt.registerSingleton<HarmonizeHistoryService>(
+        HarmonizeHistoryService(mockPrefs, mockLog),
+      );
+
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.text('Inv A'), findsOneWidget);
+      expect(find.text('Inv B'), findsOneWidget);
+      expect(find.text('Binaural'), findsOneWidget);
+      expect(find.text('∞'), findsOneWidget);
+    });
+
+    testWidgets('history cards have harmonize button icon', (tester) async {
+      final entries = [
+        const HarmonizeHistoryEntry(
+          sourceType: 'Formula',
+          formulaId: 'f1',
+          formulaName: 'Test',
+          generationType: 'Monaural',
+          repeatCount: 1,
+          harmonizedAt: '2026-01-01T00:00:00Z',
+        ),
+      ];
+      when(
+        () => mockPrefs.getString('workspace_harmonize_history'),
+      ).thenReturn(jsonEncode(entries.map((e) => e.toJson()).toList()));
+
+      getIt.allowReassignment = true;
+      getIt.registerSingleton<HarmonizeHistoryService>(
+        HarmonizeHistoryService(mockPrefs, mockLog),
+      );
+
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
