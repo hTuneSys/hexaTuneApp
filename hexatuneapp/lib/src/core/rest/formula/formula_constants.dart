@@ -6,7 +6,13 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_item_response.d
 /// Business rule constants for formula operations.
 abstract final class FormulaConstants {
   /// Maximum total quantity allowed across all items in a formula.
-  static const int maxTotalQuantity = 60;
+  static const int maxTotalQuantity = 30;
+
+  /// Maximum number of unique inventory items allowed in a formula.
+  static const int maxUniqueItems = 10;
+
+  /// Maximum number of inventory IDs allowed in a harmonics generate request.
+  static const int maxInventorySelection = 10;
 }
 
 /// Validation helpers for formula business rules.
@@ -46,5 +52,10 @@ abstract final class FormulaValidation {
     String inventoryId,
   ) {
     return items.any((i) => i.inventoryId == inventoryId);
+  }
+
+  /// Checks whether adding another unique item would exceed the limit.
+  static bool canAddUniqueItem(List<FormulaItemResponse> items) {
+    return items.length < FormulaConstants.maxUniqueItems;
   }
 }

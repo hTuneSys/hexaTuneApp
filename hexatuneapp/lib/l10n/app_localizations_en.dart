@@ -1060,6 +1060,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get formulaInventoryDuplicate => 'This inventory is already added';
 
   @override
+  String formulaUniqueItemLimit(int max) {
+    return 'Maximum number of unique items reached ($max)';
+  }
+
+  @override
+  String inventorySelectionLimit(int max) {
+    return 'Maximum number of inventories reached ($max)';
+  }
+
+  @override
   String get errorUnauthorized => 'Session expired. Please sign in again.';
 
   @override

@@ -126,6 +126,14 @@ class _FormulaCreatePageState extends State<FormulaCreatePage> {
 
   void _addInventoryItem(InventoryResponse inv) {
     if (_pendingItems.any((i) => i.inventory.id == inv.id)) return;
+    if (_pendingItems.length >= FormulaConstants.maxUniqueItems) {
+      final l10n = AppLocalizations.of(context)!;
+      AppSnackBar.info(
+        context,
+        message: l10n.formulaUniqueItemLimit(FormulaConstants.maxUniqueItems),
+      );
+      return;
+    }
     setState(() {
       _pendingItems.add(_PendingItem(inventory: inv));
       _inventorySearchCtrl.clear();

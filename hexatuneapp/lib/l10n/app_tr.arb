@@ -479,6 +479,22 @@
     }
   },
   "formulaInventoryDuplicate": "Bu envanter zaten eklenmiş",
+  "formulaUniqueItemLimit": "Maksimum benzersiz öğe sayısına ulaşıldı ({max})",
+  "@formulaUniqueItemLimit": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "inventorySelectionLimit": "Maksimum envanter sayısına ulaşıldı ({max})",
+  "@inventorySelectionLimit": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
 
   "errorUnauthorized": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
   "errorForbidden": "Bu işlem için yetkiniz bulunmuyor.",

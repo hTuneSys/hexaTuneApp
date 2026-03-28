@@ -12,7 +12,7 @@ abstract class AddFormulaItemEntry with _$AddFormulaItemEntry {
   const factory AddFormulaItemEntry({
     required String inventoryId,
 
-    /// Quantity (defaults to 1 if not provided, min 1, max 60).
+    /// Quantity (defaults to 1 if not provided, min 1, max 30).
     int? quantity,
 
     /// Sort order (defaults to 0 if not provided, must be non-negative).

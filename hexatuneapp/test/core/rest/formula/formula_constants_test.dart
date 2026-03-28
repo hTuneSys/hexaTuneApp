@@ -8,8 +8,16 @@ import 'package:hexatuneapp/src/core/rest/formula/models/formula_item_response.d
 
 void main() {
   group('FormulaConstants', () {
-    test('maxTotalQuantity is 60', () {
-      expect(FormulaConstants.maxTotalQuantity, 60);
+    test('maxTotalQuantity is 30', () {
+      expect(FormulaConstants.maxTotalQuantity, 30);
+    });
+
+    test('maxUniqueItems is 10', () {
+      expect(FormulaConstants.maxUniqueItems, 10);
+    });
+
+    test('maxInventorySelection is 10', () {
+      expect(FormulaConstants.maxInventorySelection, 10);
     });
   });
 
@@ -54,17 +62,17 @@ void main() {
       });
 
       test('returns correct remaining capacity', () {
-        final items = [makeItem('i1', 'inv1', 20), makeItem('i2', 'inv2', 15)];
-        expect(FormulaValidation.remainingCapacity(items), 25);
+        final items = [makeItem('i1', 'inv1', 10), makeItem('i2', 'inv2', 8)];
+        expect(FormulaValidation.remainingCapacity(items), 12);
       });
 
       test('returns 0 when at capacity', () {
-        final items = [makeItem('i1', 'inv1', 60)];
+        final items = [makeItem('i1', 'inv1', 30)];
         expect(FormulaValidation.remainingCapacity(items), 0);
       });
 
       test('returns negative when over capacity', () {
-        final items = [makeItem('i1', 'inv1', 65)];
+        final items = [makeItem('i1', 'inv1', 35)];
         expect(FormulaValidation.remainingCapacity(items), -5);
       });
     });
@@ -76,45 +84,72 @@ void main() {
       });
 
       test('returns true when exactly at limit', () {
-        final items = [makeItem('i1', 'inv1', 50)];
+        final items = [makeItem('i1', 'inv1', 20)];
         expect(FormulaValidation.canAddQuantity(items, 10), true);
       });
 
       test('returns false when exceeding limit', () {
-        final items = [makeItem('i1', 'inv1', 55)];
+        final items = [makeItem('i1', 'inv1', 25)];
         expect(FormulaValidation.canAddQuantity(items, 6), false);
       });
 
       test('returns true for empty list with quantity under limit', () {
-        expect(FormulaValidation.canAddQuantity([], 60), true);
+        expect(FormulaValidation.canAddQuantity([], 30), true);
       });
 
       test('returns false for empty list with quantity over limit', () {
-        expect(FormulaValidation.canAddQuantity([], 61), false);
+        expect(FormulaValidation.canAddQuantity([], 31), false);
       });
     });
 
     group('canUpdateQuantity', () {
       test('returns true when new quantity fits', () {
-        final items = [makeItem('i1', 'inv1', 30), makeItem('i2', 'inv2', 20)];
-        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 40), true);
+        final items = [makeItem('i1', 'inv1', 15), makeItem('i2', 'inv2', 10)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 20), true);
       });
 
       test('returns true when new quantity exactly fills limit', () {
-        final items = [makeItem('i1', 'inv1', 10), makeItem('i2', 'inv2', 20)];
-        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 40), true);
+        final items = [makeItem('i1', 'inv1', 5), makeItem('i2', 'inv2', 10)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 20), true);
       });
 
       test('returns false when new quantity exceeds limit', () {
-        final items = [makeItem('i1', 'inv1', 10), makeItem('i2', 'inv2', 20)];
-        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 41), false);
+        final items = [makeItem('i1', 'inv1', 5), makeItem('i2', 'inv2', 10)];
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 21), false);
       });
 
       test('ignores target item current quantity in calculation', () {
-        final items = [makeItem('i1', 'inv1', 50), makeItem('i2', 'inv2', 5)];
-        // Other items total = 5, so max for i1 = 55
-        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 55), true);
-        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 56), false);
+        final items = [makeItem('i1', 'inv1', 20), makeItem('i2', 'inv2', 5)];
+        // Other items total = 5, so max for i1 = 25
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 25), true);
+        expect(FormulaValidation.canUpdateQuantity(items, 'i1', 26), false);
+      });
+    });
+
+    group('canAddUniqueItem', () {
+      test('returns true when under limit', () {
+        final items = [makeItem('i1', 'inv1', 1)];
+        expect(FormulaValidation.canAddUniqueItem(items), true);
+      });
+
+      test('returns true for empty list', () {
+        expect(FormulaValidation.canAddUniqueItem([]), true);
+      });
+
+      test('returns false when at limit', () {
+        final items = List.generate(
+          FormulaConstants.maxUniqueItems,
+          (i) => makeItem('i$i', 'inv$i', 1),
+        );
+        expect(FormulaValidation.canAddUniqueItem(items), false);
+      });
+
+      test('returns true when one below limit', () {
+        final items = List.generate(
+          FormulaConstants.maxUniqueItems - 1,
+          (i) => makeItem('i$i', 'inv$i', 1),
+        );
+        expect(FormulaValidation.canAddUniqueItem(items), true);
       });
     });
 

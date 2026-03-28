@@ -1063,6 +1063,16 @@ class AppLocalizationsTr extends AppLocalizations {
   String get formulaInventoryDuplicate => 'Bu envanter zaten eklenmiş';
 
   @override
+  String formulaUniqueItemLimit(int max) {
+    return 'Maksimum benzersiz öğe sayısına ulaşıldı ($max)';
+  }
+
+  @override
+  String inventorySelectionLimit(int max) {
+    return 'Maksimum envanter sayısına ulaşıldı ($max)';
+  }
+
+  @override
   String get errorUnauthorized =>
       'Oturumunuz sona erdi. Lütfen tekrar giriş yapın.';
 

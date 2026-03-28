@@ -482,6 +482,22 @@
     }
   },
   "formulaInventoryDuplicate": "This inventory is already added",
+  "formulaUniqueItemLimit": "Maximum number of unique items reached ({max})",
+  "@formulaUniqueItemLimit": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "inventorySelectionLimit": "Maximum number of inventories reached ({max})",
+  "@inventorySelectionLimit": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
 
   "errorUnauthorized": "Session expired. Please sign in again.",
   "errorForbidden": "You don't have permission for this action.",

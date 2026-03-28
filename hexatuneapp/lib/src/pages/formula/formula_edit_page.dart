@@ -183,6 +183,14 @@ class _FormulaEditPageState extends State<FormulaEditPage> {
 
   void _addInventoryItem(InventoryResponse inv) {
     if (_items.any((i) => i.inventoryId == inv.id)) return;
+    if (_items.length >= FormulaConstants.maxUniqueItems) {
+      final l10n = AppLocalizations.of(context)!;
+      AppSnackBar.info(
+        context,
+        message: l10n.formulaUniqueItemLimit(FormulaConstants.maxUniqueItems),
+      );
+      return;
+    }
     setState(() {
       _items.add(
         _EditItem(

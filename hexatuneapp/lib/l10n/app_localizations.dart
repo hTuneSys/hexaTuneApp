@@ -2084,6 +2084,18 @@ abstract class AppLocalizations {
   /// **'This inventory is already added'**
   String get formulaInventoryDuplicate;
 
+  /// No description provided for @formulaUniqueItemLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum number of unique items reached ({max})'**
+  String formulaUniqueItemLimit(int max);
+
+  /// No description provided for @inventorySelectionLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum number of inventories reached ({max})'**
+  String inventorySelectionLimit(int max);
+
   /// No description provided for @errorUnauthorized.
   ///
   /// In en, this message translates to:

@@ -11,11 +11,13 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/pagination_params.dart';
 import 'package:hexatuneapp/src/core/rest/category/category_repository.dart';
+import 'package:hexatuneapp/src/core/rest/formula/formula_constants.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/inventory_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
@@ -452,6 +454,17 @@ class _InventoryListPageState extends State<InventoryListPage> {
                   context.push(RouteNames.inventoryViewFor(item.id)),
               onSelect: (item) {
                 if (!_selectedInventories.any((i) => i.id == item.id)) {
+                  if (_selectedInventories.length >=
+                      FormulaConstants.maxInventorySelection) {
+                    final l10n = AppLocalizations.of(context)!;
+                    AppSnackBar.info(
+                      context,
+                      message: l10n.inventorySelectionLimit(
+                        FormulaConstants.maxInventorySelection,
+                      ),
+                    );
+                    return;
+                  }
                   setState(() => _selectedInventories.add(item));
                 }
               },
