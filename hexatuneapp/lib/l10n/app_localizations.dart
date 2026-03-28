@@ -1436,6 +1436,12 @@ abstract class AppLocalizations {
   /// **'No formula selected'**
   String get harmonizerNoSequence;
 
+  /// No description provided for @harmonizerSelectSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select a source from formula or inventory pages'**
+  String get harmonizerSelectSource;
+
   /// No description provided for @categoryManagement.
   ///
   /// In en, this message translates to:

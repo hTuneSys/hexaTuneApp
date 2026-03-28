@@ -320,6 +320,7 @@
   "harmonizerImmediateStopHint": "Anında durdurmak için 3 saniye basılı tutun",
   "harmonizerGenerating": "Sekans üretiliyor...",
   "harmonizerNoSequence": "Formül seçilmedi",
+  "harmonizerSelectSource": "Lütfen formül veya envanter sayfalarından bir kaynak seçiniz",
 
   "categoryManagement": "Kategori Yönetimi",
   "categoryCreate": "Kategori Oluştur",

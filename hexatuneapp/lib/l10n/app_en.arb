@@ -323,6 +323,7 @@
   "harmonizerImmediateStopHint": "Hold 3s to stop immediately",
   "harmonizerGenerating": "Generating sequence...",
   "harmonizerNoSequence": "No formula selected",
+  "harmonizerSelectSource": "Please select a source from formula or inventory pages",
 
   "categoryManagement": "Category Management",
   "categoryCreate": "Create Category",

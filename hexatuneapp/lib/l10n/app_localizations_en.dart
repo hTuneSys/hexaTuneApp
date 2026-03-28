@@ -721,6 +721,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerNoSequence => 'No formula selected';
 
   @override
+  String get harmonizerSelectSource =>
+      'Please select a source from formula or inventory pages';
+
+  @override
   String get categoryManagement => 'Category Management';
 
   @override

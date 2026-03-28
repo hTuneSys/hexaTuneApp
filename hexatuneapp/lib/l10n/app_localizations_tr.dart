@@ -724,6 +724,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerNoSequence => 'Formül seçilmedi';
 
   @override
+  String get harmonizerSelectSource =>
+      'Lütfen formül veya envanter sayfalarından bir kaynak seçiniz';
+
+  @override
   String get categoryManagement => 'Kategori Yönetimi';
 
   @override

@@ -18,9 +18,6 @@ import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/generation_type.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_state.dart';
 import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_validation.dart';
-import 'package:hexatuneapp/src/core/network/models/paginated_response.dart';
-import 'package:hexatuneapp/src/core/network/models/pagination_meta.dart';
-import 'package:hexatuneapp/src/core/rest/formula/formula_repository.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
 import 'package:hexatuneapp/src/core/rest/harmonics/harmonics_repository.dart';
 import 'package:hexatuneapp/src/core/rest/inventory/models/inventory_response.dart';
@@ -40,8 +37,6 @@ class MockAmbienceService extends Mock implements AmbienceService {}
 class MockHeadsetService extends Mock implements HeadsetService {}
 
 class MockHexagenService extends Mock implements HexagenService {}
-
-class MockFormulaRepository extends Mock implements FormulaRepository {}
 
 class MockHarmonicsRepository extends Mock implements HarmonicsRepository {}
 
@@ -80,12 +75,6 @@ const _testInventories = [
   ),
 ];
 
-const _emptyPagination = PaginationMeta(
-  hasMore: false,
-  limit: 20,
-  nextCursor: null,
-);
-
 Widget _buildApp({HarmonizeSource? source}) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -109,7 +98,6 @@ void main() {
   late MockAmbienceService mockAmbience;
   late MockHeadsetService mockHeadset;
   late MockHexagenService mockHexagen;
-  late MockFormulaRepository mockFormulaRepo;
   late MockHarmonicsRepository mockHarmonicsRepo;
 
   late StreamController<HarmonizerState> harmonizerCtrl;
@@ -125,7 +113,6 @@ void main() {
     mockAmbience = MockAmbienceService();
     mockHeadset = MockHeadsetService();
     mockHexagen = MockHexagenService();
-    mockFormulaRepo = MockFormulaRepository();
     mockHarmonicsRepo = MockHarmonicsRepository();
 
     harmonizerCtrl = StreamController<HarmonizerState>.broadcast();
@@ -147,17 +134,11 @@ void main() {
     when(() => mockAmbience.configs).thenReturn([]);
     when(() => mockAmbience.load()).thenAnswer((_) async {});
 
-    when(() => mockFormulaRepo.list()).thenAnswer(
-      (_) async =>
-          PaginatedResponse(data: _testFormulas, pagination: _emptyPagination),
-    );
-
     getIt.allowReassignment = true;
     getIt.registerSingleton<HarmonizerService>(mockHarmonizer);
     getIt.registerSingleton<AmbienceService>(mockAmbience);
     getIt.registerSingleton<HeadsetService>(mockHeadset);
     getIt.registerSingleton<HexagenService>(mockHexagen);
-    getIt.registerSingleton<FormulaRepository>(mockFormulaRepo);
     getIt.registerSingleton<HarmonicsRepository>(mockHarmonicsRepo);
     getIt.registerLazySingleton<HarmonizeSourceHolder>(
       () => HarmonizeSourceHolder(),
@@ -182,35 +163,20 @@ void main() {
       expect(find.byType(HarmonizerWidget), findsOneWidget);
     });
 
-    testWidgets('shows formula selector in bottom sheet', (tester) async {
+    testWidgets('shows select source prompt when no source is set', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Formula'), findsOneWidget);
-    });
-
-    testWidgets('shows loading spinner while formulas load', (tester) async {
-      final completer = Completer<PaginatedResponse<FormulaResponse>>();
-      when(() => mockFormulaRepo.list()).thenAnswer((_) => completer.future);
-
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Open'));
-      await tester.pump();
-
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
-
-      completer.complete(
-        PaginatedResponse(data: _testFormulas, pagination: _emptyPagination),
+      expect(
+        find.text('Please select a source from formula or inventory pages'),
+        findsOneWidget,
       );
-      await tester.pumpAndSettle();
-
-      expect(find.byType(CircularProgressIndicator), findsNothing);
-      expect(find.text('Select a formula'), findsOneWidget);
+      expect(find.byIcon(Icons.info_outline), findsOneWidget);
     });
 
     testWidgets('shows harmonizer type tabs', (tester) async {
@@ -223,21 +189,6 @@ void main() {
       expect(find.text('Monaural'), findsNWidgets(2));
       expect(find.text('Binaural'), findsOneWidget);
       expect(find.text('Magnetic'), findsOneWidget);
-    });
-
-    testWidgets('shows no-formulas card when list is empty', (tester) async {
-      when(() => mockFormulaRepo.list()).thenAnswer(
-        (_) async =>
-            PaginatedResponse(data: const [], pagination: _emptyPagination),
-      );
-
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('No formulas available'), findsOneWidget);
     });
 
     testWidgets('reflects harmonizer state changes', (tester) async {
@@ -269,25 +220,9 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      // Should show formula name read-only, no dropdown
       expect(find.text('Alpha Wave'), findsOneWidget);
-      expect(find.byType(DropdownButton<FormulaResponse?>), findsNothing);
       expect(find.byIcon(Icons.science_outlined), findsOneWidget);
     });
-
-    testWidgets(
-      'does not load formulas from repo when FormulaSource is provided',
-      (tester) async {
-        final source = FormulaSource(formula: _testFormulas[0]);
-        await tester.pumpWidget(_buildApp(source: source));
-        await tester.pumpAndSettle();
-
-        await tester.tap(find.text('Open'));
-        await tester.pumpAndSettle();
-
-        verifyNever(() => mockFormulaRepo.list());
-      },
-    );
 
     testWidgets('shows inventory chips for InventorySource', (tester) async {
       const source = InventorySource(inventories: _testInventories);
@@ -300,18 +235,6 @@ void main() {
       expect(find.text('Bass Drum'), findsOneWidget);
       expect(find.text('Snare'), findsOneWidget);
       expect(find.byType(Chip), findsNWidgets(2));
-      expect(find.byType(DropdownButton<FormulaResponse?>), findsNothing);
-    });
-
-    testWidgets('shows dropdown when no source is set', (tester) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
-
-      // Dropdown should be visible
-      expect(find.text('Select a formula'), findsOneWidget);
     });
 
     testWidgets('persists source in holder across sheet open/close', (
@@ -321,7 +244,6 @@ void main() {
       await tester.pumpWidget(_buildApp(source: source));
       await tester.pumpAndSettle();
 
-      // Open sheet
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
