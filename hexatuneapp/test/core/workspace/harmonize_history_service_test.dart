@@ -95,6 +95,16 @@ void main() {
         await service.load();
         expect(service.entries, isEmpty);
       });
+
+      test('only reads from prefs once, preserving add() entries', () async {
+        await service.load();
+        await service.add(_makeEntry(formulaId: 'new'));
+
+        // Second load should be a no-op — in-memory state is authoritative
+        await service.load();
+        expect(service.entries, hasLength(1));
+        expect(service.entries[0].formulaId, 'new');
+      });
     });
 
     group('add', () {

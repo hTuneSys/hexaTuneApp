@@ -25,12 +25,18 @@ class HarmonizeHistoryService {
   static const int maxEntries = 20;
 
   List<HarmonizeHistoryEntry> _entries = [];
+  bool _loaded = false;
 
   /// All recorded history entries, most recent first.
   List<HarmonizeHistoryEntry> get entries => List.unmodifiable(_entries);
 
   /// Load history from local storage.
+  ///
+  /// Only reads from preferences on the first call. After that, in-memory
+  /// state (kept up-to-date by [add]) is the source of truth.
   Future<void> load() async {
+    if (_loaded) return;
+    _loaded = true;
     try {
       final raw = _prefs.getString(_storageKey);
       if (raw == null || raw.isEmpty) {
