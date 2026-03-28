@@ -66,6 +66,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(
             16,
