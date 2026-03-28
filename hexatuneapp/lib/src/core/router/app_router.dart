@@ -26,7 +26,6 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/widgets/mini_harmonizer_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 import 'package:hexatuneapp/src/pages/category/category_list_page.dart';
@@ -98,17 +97,12 @@ class AppRouter {
           return ResetPasswordPage(email: email);
         },
       ),
-      // --- Dummy / dev pages share a shell with a persistent mini-harmonizer ---
+      // --- Main app shell with bottom bar ---
       ShellRoute(
         builder: (context, state, child) {
           return Scaffold(
             extendBody: true,
-            body: Column(
-              children: [
-                Expanded(child: child),
-                const MiniHarmonizerBar(),
-              ],
-            ),
+            body: child,
             bottomNavigationBar: StreamBuilder<HarmonizerState>(
               stream: getIt<HarmonizerService>().state,
               initialData: getIt<HarmonizerService>().currentState,
