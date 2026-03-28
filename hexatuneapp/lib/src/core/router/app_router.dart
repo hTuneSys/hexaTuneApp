@@ -15,9 +15,6 @@ import 'package:hexatuneapp/src/pages/dummy/dummy_account_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_audit_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_devices_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_dsp_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_harmonics_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_harmonizer_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_wallet_page.dart';
@@ -101,13 +98,12 @@ class AppRouter {
       // --- Dummy / dev pages share a shell with a persistent mini-harmonizer ---
       ShellRoute(
         builder: (context, state, child) {
-          final isHarmonizerPage = state.uri.path == RouteNames.harmonizer;
           return Scaffold(
             extendBody: true,
             body: Column(
               children: [
                 Expanded(child: child),
-                if (!isHarmonizerPage) const MiniHarmonizerBar(),
+                const MiniHarmonizerBar(),
               ],
             ),
             bottomNavigationBar: AppBottomBar(
@@ -264,21 +260,8 @@ class AppRouter {
             builder: (context, state) => const DummyAuditPage(),
           ),
           GoRoute(
-            path: RouteNames.harmonics,
-            builder: (context, state) => const DummyHarmonicsPage(),
-          ),
-          GoRoute(
-            path: RouteNames.dsp,
-            builder: (context, state) => const DummyDspPage(),
-          ),
-
-          GoRoute(
             path: RouteNames.hexagen,
             builder: (context, state) => const DummyHexagenPage(),
-          ),
-          GoRoute(
-            path: RouteNames.harmonizer,
-            builder: (context, state) => const DummyHarmonizerPage(),
           ),
           GoRoute(
             path: RouteNames.wallet,

@@ -108,12 +108,12 @@ void main() {
 
       // Scroll down to reveal more items
       await tester.scrollUntilVisible(
-        find.text('Harmonics'),
+        find.text('Wallet'),
         200,
         scrollable: find.byType(Scrollable),
       );
 
-      expect(find.text('Harmonics'), findsOneWidget);
+      expect(find.text('Wallet'), findsOneWidget);
     });
 
     testWidgets('nav items are wrapped in cards', (tester) async {

@@ -65,34 +65,10 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.audit,
     ),
     _NavItem(
-      icon: Icons.music_note,
-      title: 'Harmonics',
-      subtitle: 'Generate harmonic numbers',
-      route: RouteNames.harmonics,
-    ),
-    _NavItem(
-      icon: Icons.equalizer,
-      title: 'DSP Audio Engine',
-      subtitle: 'Multi-layer audio with binaural beats',
-      route: RouteNames.dsp,
-    ),
-    _NavItem(
       icon: Icons.cable,
       title: 'hexaGen Device',
       subtitle: 'Hardware connection, RGB, freq sweep, operations',
       route: RouteNames.hexagen,
-    ),
-    _NavItem(
-      icon: Icons.join_inner,
-      title: 'Harmonizer',
-      subtitle: 'Multi-mode harmonic generator',
-      route: RouteNames.harmonizer,
-    ),
-    _NavItem(
-      icon: Icons.verified_user,
-      title: 'OTP / Email Verify',
-      subtitle: 'Verify email OTP, resend verification',
-      route: RouteNames.otp,
     ),
     _NavItem(
       icon: Icons.account_balance_wallet,
