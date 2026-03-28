@@ -424,6 +424,11 @@ class HarmonizerWidget extends StatelessWidget {
       child: SizedBox(
         width: double.infinity,
         child: SegmentedButton<int?>(
+          style: ButtonStyle(
+            shape: WidgetStatePropertyAll(
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+          ),
           segments: [
             ButtonSegment(value: 1, label: Text(l10n.harmonizerRepeatOnce)),
             ButtonSegment(value: 3, label: Text(l10n.harmonizerRepeatThrice)),

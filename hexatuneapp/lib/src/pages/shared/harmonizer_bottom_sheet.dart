@@ -111,6 +111,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
     _harmonizerState = _harmonizer.currentState;
     if (_harmonizerState.status != HarmonizerStatus.idle) {
       _selectedType = _harmonizerState.activeType ?? GenerationType.monaural;
+      _selectedRepeat = _harmonizerState.repeatCount ?? _selectedRepeat;
     }
 
     _harmonizerSub = _harmonizer.state.listen((s) {
