@@ -59,5 +59,8 @@ abstract class HarmonizerState with _$HarmonizerState {
 
     /// Total duration across all repeat cycles (null for infinite).
     Duration? totalRepeatDuration,
+
+    /// Countdown of total remaining time across all cycles (null for infinite).
+    Duration? totalRemaining,
   }) = _HarmonizerState;
 }

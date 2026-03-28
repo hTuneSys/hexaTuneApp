@@ -151,7 +151,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Total'), findsOneWidget);
-      expect(find.text('Remaining'), findsOneWidget);
+      expect(find.text('Cycle Remaining'), findsOneWidget);
     });
 
     testWidgets('shows duration and remaining when harmonizing', (
@@ -169,6 +169,7 @@ void main() {
                     totalCycleDuration: Duration(minutes: 5, seconds: 30),
                     remainingInCycle: Duration(minutes: 3, seconds: 15),
                     totalRepeatDuration: Duration(minutes: 5, seconds: 30),
+                    totalRemaining: Duration(minutes: 5, seconds: 30),
                   ),
                   isActive: true,
                 ),
@@ -513,6 +514,7 @@ void main() {
                   harmonizerState: const HarmonizerState(
                     status: HarmonizerStatus.harmonizing,
                     totalRepeatDuration: Duration(seconds: 225),
+                    totalRemaining: Duration(seconds: 225),
                     remainingInCycle: Duration(seconds: 30),
                   ),
                 ),

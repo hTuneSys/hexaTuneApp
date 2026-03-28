@@ -701,6 +701,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerRemaining => 'Remaining';
 
   @override
+  String get harmonizerCycleRemaining => 'Cycle Remaining';
+
+  @override
   String harmonizerStep(int index, int value, String duration) {
     return 'Step $index: $value Hz — ${duration}s';
   }

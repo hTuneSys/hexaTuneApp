@@ -1400,6 +1400,12 @@ abstract class AppLocalizations {
   /// **'Remaining'**
   String get harmonizerRemaining;
 
+  /// No description provided for @harmonizerCycleRemaining.
+  ///
+  /// In en, this message translates to:
+  /// **'Cycle Remaining'**
+  String get harmonizerCycleRemaining;
+
   /// No description provided for @harmonizerStep.
   ///
   /// In en, this message translates to:

@@ -274,7 +274,7 @@ class HarmonizerWidget extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       isHarmonizing
-                          ? _formatTotalDuration(harmonizerState)
+                          ? _formatTotalRemaining(harmonizerState)
                           : '--:--',
                       style: theme.textTheme.headlineMedium?.copyWith(
                         fontFeatures: const [FontFeature.tabularFigures()],
@@ -287,13 +287,13 @@ class HarmonizerWidget extends StatelessWidget {
               // Center: Harmonize / Stop button
               _buildCenterButton(theme, l10n, colorScheme, isHarmonizing),
 
-              // Right: Remaining
+              // Right: Cycle Remaining
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      l10n.harmonizerRemaining,
+                      l10n.harmonizerCycleRemaining,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
@@ -468,9 +468,9 @@ class HarmonizerWidget extends StatelessWidget {
         '${seconds.toString().padLeft(2, '0')}';
   }
 
-  String _formatTotalDuration(HarmonizerState state) {
-    if (state.totalRepeatDuration == null) return '--:--';
-    return _formatDuration(state.totalRepeatDuration!);
+  String _formatTotalRemaining(HarmonizerState state) {
+    if (state.totalRemaining == null) return '--:--';
+    return _formatDuration(state.totalRemaining!);
   }
 }
 

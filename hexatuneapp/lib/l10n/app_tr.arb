@@ -307,6 +307,7 @@
   },
   "harmonizerTotalDuration": "Toplam",
   "harmonizerRemaining": "Kalan",
+  "harmonizerCycleRemaining": "Döngü Kalan",
   "harmonizerStep": "Adım {index}: {value} Hz — {duration}s",
   "@harmonizerStep": {
     "placeholders": {

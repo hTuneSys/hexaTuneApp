@@ -702,6 +702,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerRemaining => 'Kalan';
 
   @override
+  String get harmonizerCycleRemaining => 'Döngü Kalan';
+
+  @override
   String harmonizerStep(int index, int value, String duration) {
     return 'Adım $index: $value Hz — ${duration}s';
   }

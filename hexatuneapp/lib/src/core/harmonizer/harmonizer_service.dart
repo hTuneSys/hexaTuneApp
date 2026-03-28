@@ -142,6 +142,7 @@ class HarmonizerService {
         remainingInCycle: firstDur,
         isFirstCycle: true,
         totalRepeatDuration: totalRepeat,
+        totalRemaining: totalRepeat,
       ),
     );
 
@@ -531,6 +532,7 @@ class HarmonizerService {
           _updateState(
             _currentState.copyWith(
               remainingInCycle: Duration.zero,
+              totalRemaining: Duration.zero,
               currentStepIndex: _currentState.sequence.length - 1,
             ),
           );
@@ -546,6 +548,7 @@ class HarmonizerService {
             currentCycle: 0,
             currentStepIndex: stepIndex,
             remainingInCycle: remaining,
+            totalRemaining: remaining,
             isFirstCycle: true,
           ),
         );
@@ -567,6 +570,7 @@ class HarmonizerService {
             currentCycle: repeat - 1,
             currentStepIndex: _currentState.sequence.length - 1,
             remainingInCycle: Duration.zero,
+            totalRemaining: Duration.zero,
             isFirstCycle: false,
           ),
         );
@@ -576,11 +580,25 @@ class HarmonizerService {
         return;
       }
 
+      // Compute total remaining across all cycles.
+      final totalRepeat = _currentState.totalRepeatDuration;
+      final Duration? totalRem;
+      if (totalRepeat != null) {
+        final totalRemMs = (totalRepeat.inMilliseconds - elapsedMs).clamp(
+          0,
+          totalRepeat.inMilliseconds,
+        );
+        totalRem = Duration(milliseconds: totalRemMs);
+      } else {
+        totalRem = null;
+      }
+
       _updateState(
         _currentState.copyWith(
           currentCycle: currentCycle,
           currentStepIndex: stepIndex,
           remainingInCycle: remaining,
+          totalRemaining: totalRem,
           isFirstCycle: isFirst,
         ),
       );

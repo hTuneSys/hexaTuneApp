@@ -310,6 +310,7 @@
   },
   "harmonizerTotalDuration": "Total",
   "harmonizerRemaining": "Remaining",
+  "harmonizerCycleRemaining": "Cycle Remaining",
   "harmonizerStep": "Step {index}: {value} Hz — {duration}s",
   "@harmonizerStep": {
     "placeholders": {
