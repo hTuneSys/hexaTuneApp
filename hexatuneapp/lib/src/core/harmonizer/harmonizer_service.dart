@@ -517,7 +517,7 @@ class HarmonizerService with WidgetsBindingObserver {
       }
 
       final completed = await _hexagenService.waitForOperationComplete(
-        timeout: Duration(seconds: immediate ? 5 : 10),
+        timeout: Duration(seconds: immediate ? 5 : 60),
       );
 
       if (!completed) {
@@ -735,7 +735,7 @@ class HarmonizerService with WidgetsBindingObserver {
   /// Auto-stop for magnetic mode after all repeat cycles complete.
   ///
   /// Transitions to [HarmonizerStatus.stopping], waits for the device to
-  /// report COMPLETED (polling every second for up to 10 s), then cleans up.
+  /// report COMPLETED (polling every second for up to 60 s), then cleans up.
   /// If the device does not respond in time a fallback RESET is sent.
   Future<void> _autoStopMagnetic() async {
     _logService.info(
@@ -754,7 +754,7 @@ class HarmonizerService with WidgetsBindingObserver {
 
     try {
       final completed = await _hexagenService.waitForOperationComplete(
-        timeout: const Duration(seconds: 10),
+        timeout: const Duration(seconds: 60),
       );
 
       if (!completed) {
