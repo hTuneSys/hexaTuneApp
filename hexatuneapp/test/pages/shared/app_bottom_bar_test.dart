@@ -9,6 +9,7 @@ import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 Widget _buildApp({
   ValueChanged<int>? onItemTapped,
   VoidCallback? onCenterTapped,
+  double? harmonizeProgress,
 }) {
   return MaterialApp(
     home: Scaffold(
@@ -17,6 +18,7 @@ Widget _buildApp({
       bottomNavigationBar: AppBottomBar(
         onItemTapped: onItemTapped,
         onCenterTapped: onCenterTapped,
+        harmonizeProgress: harmonizeProgress,
       ),
     ),
   );
@@ -142,6 +144,24 @@ void main() {
       for (final button in buttons) {
         expect(button.color, testColor);
       }
+    });
+
+    testWidgets('renders with progress fill when harmonizeProgress is set', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp(harmonizeProgress: 0.5));
+
+      expect(find.byType(AppBottomBar), findsOneWidget);
+      expect(find.byType(CustomPaint), findsWidgets);
+    });
+
+    testWidgets('renders without progress when harmonizeProgress is null', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_buildApp());
+
+      expect(find.byType(AppBottomBar), findsOneWidget);
+      expect(find.byType(CustomPaint), findsWidgets);
     });
   });
 }

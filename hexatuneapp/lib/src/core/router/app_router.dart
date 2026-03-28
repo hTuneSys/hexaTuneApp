@@ -8,6 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/rest/auth/auth_service.dart';
+import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/harmonizer/harmonizer_service.dart';
+import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_state.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
@@ -106,20 +109,63 @@ class AppRouter {
                 const MiniHarmonizerBar(),
               ],
             ),
-            bottomNavigationBar: AppBottomBar(
-              onItemTapped: (index) {
-                switch (index) {
-                  case 0:
-                    context.go(RouteNames.home);
-                  case 2:
-                    context.go(RouteNames.workspace);
-                  case 3:
-                    context.go(RouteNames.settings);
-                  default:
-                    break;
+            bottomNavigationBar: StreamBuilder<HarmonizerState>(
+              stream: getIt<HarmonizerService>().state,
+              initialData: getIt<HarmonizerService>().currentState,
+              builder: (context, snapshot) {
+                final hState = snapshot.data;
+                final double? progress;
+                if (hState != null &&
+                    hState.status == HarmonizerStatus.harmonizing) {
+                  final total = hState.totalRepeatDuration;
+                  final remaining = hState.totalRemaining;
+                  if (total != null &&
+                      remaining != null &&
+                      total.inMilliseconds > 0) {
+                    progress =
+                        1.0 -
+                        (remaining.inMilliseconds / total.inMilliseconds).clamp(
+                          0.0,
+                          1.0,
+                        );
+                  } else if (total == null) {
+                    // Infinite: use cycle progress.
+                    final cycleDur = hState.isFirstCycle
+                        ? hState.firstCycleDuration
+                        : hState.totalCycleDuration;
+                    if (cycleDur.inMilliseconds > 0) {
+                      progress =
+                          1.0 -
+                          (hState.remainingInCycle.inMilliseconds /
+                                  cycleDur.inMilliseconds)
+                              .clamp(0.0, 1.0);
+                    } else {
+                      progress = null;
+                    }
+                  } else {
+                    progress = null;
+                  }
+                } else {
+                  progress = null;
                 }
+
+                return AppBottomBar(
+                  harmonizeProgress: progress,
+                  onItemTapped: (index) {
+                    switch (index) {
+                      case 0:
+                        context.go(RouteNames.home);
+                      case 2:
+                        context.go(RouteNames.workspace);
+                      case 3:
+                        context.go(RouteNames.settings);
+                      default:
+                        break;
+                    }
+                  },
+                  onCenterTapped: () => showHarmonizerSheet(context),
+                );
               },
-              onCenterTapped: () => showHarmonizerSheet(context),
             ),
           );
         },
