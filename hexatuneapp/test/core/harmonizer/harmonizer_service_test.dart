@@ -699,4 +699,147 @@ void main() {
       ).called(1);
     });
   });
+
+  group('magnetic harmonize v0.1.3', () {
+    /// Helper to set up hexagen mocks for magnetic harmonize.
+    void stubMagneticDefaults() {
+      when(() => mockHexagen.isConnected).thenReturn(true);
+      when(() => mockHexagen.generateId()).thenReturn(1);
+      when(
+        () => mockHexagen.sendOperationPrepare(
+          any(),
+          repeatCount: any(named: 'repeatCount'),
+        ),
+      ).thenAnswer((_) async => CommandStatus.success);
+      when(
+        () => mockHexagen.sendFreqCommandAndWait(
+          any(),
+          any(),
+          isOneShot: any(named: 'isOneShot'),
+        ),
+      ).thenAnswer((_) async => CommandStatus.success);
+      when(
+        () => mockHexagen.sendOperationGenerate(any()),
+      ).thenAnswer((_) async => CommandStatus.success);
+    }
+
+    test('passes isOneShot to sendFreqCommandAndWait', () async {
+      stubMagneticDefaults();
+
+      const config = HarmonizerConfig(
+        type: GenerationType.magnetic,
+        steps:
+            testPackets, // packet 0: isOneShot=false, packet 1: isOneShot=true
+      );
+
+      await service.harmonize(config);
+
+      // First packet: isOneShot=false
+      verify(
+        () => mockHexagen.sendFreqCommandAndWait(5, 30000, isOneShot: false),
+      ).called(1);
+
+      // Second packet: isOneShot=true
+      verify(
+        () => mockHexagen.sendFreqCommandAndWait(10, 15000, isOneShot: true),
+      ).called(1);
+    });
+
+    test('passes repeatCount to sendOperationPrepare', () async {
+      stubMagneticDefaults();
+
+      const config = HarmonizerConfig(
+        type: GenerationType.magnetic,
+        steps: testPackets,
+        repeatCount: 3,
+      );
+
+      await service.harmonize(config);
+
+      verify(
+        () => mockHexagen.sendOperationPrepare(1, repeatCount: 3),
+      ).called(1);
+    });
+
+    test('passes repeatCount 0 for infinite repeats', () async {
+      stubMagneticDefaults();
+
+      const config = HarmonizerConfig(
+        type: GenerationType.magnetic,
+        steps: testPackets,
+        repeatCount: null,
+      );
+
+      await service.harmonize(config);
+
+      verify(
+        () => mockHexagen.sendOperationPrepare(1, repeatCount: 0),
+      ).called(1);
+    });
+
+    test('emits preparing then harmonizing on success', () async {
+      stubMagneticDefaults();
+
+      final states = <HarmonizerState>[];
+      final sub = service.state.listen(states.add);
+      addTearDown(sub.cancel);
+
+      const config = HarmonizerConfig(
+        type: GenerationType.magnetic,
+        steps: testPackets,
+        formulaId: 'mag-formula',
+      );
+
+      final error = await service.harmonize(config);
+      expect(error, isNull);
+
+      await Future<void>.delayed(Duration.zero);
+
+      expect(states.any((s) => s.status == HarmonizerStatus.preparing), isTrue);
+      expect(states.last.status, HarmonizerStatus.harmonizing);
+      expect(states.last.activeType, GenerationType.magnetic);
+      expect(states.last.formulaId, 'mag-formula');
+    });
+  });
+
+  group('completion tracking', () {
+    test('lastCompletionSuccess is null initially', () {
+      expect(service.lastCompletionSuccess, isNull);
+    });
+
+    test('clearCompletionResult resets to null', () async {
+      // Start and stop DSP to trigger completion.
+      when(
+        () => mockDsp.updateBinauralConfig(
+          binauralEnabled: any(named: 'binauralEnabled'),
+          cycleSteps: any(named: 'cycleSteps'),
+        ),
+      ).thenReturn(true);
+      when(() => mockDsp.start()).thenAnswer((_) async => null);
+      when(() => mockDsp.stop()).thenAnswer((_) async {});
+
+      const config = HarmonizerConfig(
+        type: GenerationType.monaural,
+        steps: testPackets,
+      );
+
+      await service.harmonize(config);
+      await service.stopImmediate();
+
+      // After immediate stop, completionSuccess may or may not be set.
+      service.clearCompletionResult();
+      expect(service.lastCompletionSuccess, isNull);
+    });
+  });
+
+  group('lifecycle observer', () {
+    test('initLifecycleObserver does not throw', () {
+      expect(() => service.initLifecycleObserver(), returnsNormally);
+    });
+
+    test('dispose removes observer without error', () {
+      service.initLifecycleObserver();
+      expect(() => service.dispose(), returnsNormally);
+    });
+  });
 }

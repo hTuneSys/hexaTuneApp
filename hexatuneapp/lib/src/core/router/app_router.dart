@@ -53,6 +53,8 @@ import 'package:hexatuneapp/src/pages/ambience/ambience_view_page.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_page.dart';
 import 'package:hexatuneapp/src/pages/main/settings/settings_page.dart';
 import 'package:hexatuneapp/src/pages/provider/provider_page.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+import 'package:hexatuneapp/l10n/app_localizations.dart';
 
 /// Application router with auth-aware redirect logic.
 @singleton
@@ -100,66 +102,66 @@ class AppRouter {
       // --- Main app shell with bottom bar ---
       ShellRoute(
         builder: (context, state, child) {
-          return Scaffold(
-            extendBody: true,
-            body: child,
-            bottomNavigationBar: StreamBuilder<HarmonizerState>(
-              stream: getIt<HarmonizerService>().state,
-              initialData: getIt<HarmonizerService>().currentState,
-              builder: (context, snapshot) {
-                final hState = snapshot.data;
-                final double? progress;
-                if (hState != null &&
-                    hState.status == HarmonizerStatus.harmonizing) {
-                  final total = hState.totalRepeatDuration;
-                  final remaining = hState.totalRemaining;
-                  if (total != null &&
-                      remaining != null &&
-                      total.inMilliseconds > 0) {
-                    progress =
-                        1.0 -
-                        (remaining.inMilliseconds / total.inMilliseconds).clamp(
-                          0.0,
-                          1.0,
-                        );
-                  } else if (total == null) {
-                    // Infinite: use cycle progress.
-                    final cycleDur = hState.isFirstCycle
-                        ? hState.firstCycleDuration
-                        : hState.totalCycleDuration;
-                    if (cycleDur.inMilliseconds > 0) {
+          return _HarmonizeCompletionListener(
+            child: Scaffold(
+              extendBody: true,
+              body: child,
+              bottomNavigationBar: StreamBuilder<HarmonizerState>(
+                stream: getIt<HarmonizerService>().state,
+                initialData: getIt<HarmonizerService>().currentState,
+                builder: (context, snapshot) {
+                  final hState = snapshot.data;
+                  final double? progress;
+                  if (hState != null &&
+                      hState.status == HarmonizerStatus.harmonizing) {
+                    final total = hState.totalRepeatDuration;
+                    final remaining = hState.totalRemaining;
+                    if (total != null &&
+                        remaining != null &&
+                        total.inMilliseconds > 0) {
                       progress =
                           1.0 -
-                          (hState.remainingInCycle.inMilliseconds /
-                                  cycleDur.inMilliseconds)
+                          (remaining.inMilliseconds / total.inMilliseconds)
                               .clamp(0.0, 1.0);
+                    } else if (total == null) {
+                      // Infinite: use cycle progress.
+                      final cycleDur = hState.isFirstCycle
+                          ? hState.firstCycleDuration
+                          : hState.totalCycleDuration;
+                      if (cycleDur.inMilliseconds > 0) {
+                        progress =
+                            1.0 -
+                            (hState.remainingInCycle.inMilliseconds /
+                                    cycleDur.inMilliseconds)
+                                .clamp(0.0, 1.0);
+                      } else {
+                        progress = null;
+                      }
                     } else {
                       progress = null;
                     }
                   } else {
                     progress = null;
                   }
-                } else {
-                  progress = null;
-                }
 
-                return AppBottomBar(
-                  harmonizeProgress: progress,
-                  onItemTapped: (index) {
-                    switch (index) {
-                      case 0:
-                        context.go(RouteNames.home);
-                      case 2:
-                        context.go(RouteNames.workspace);
-                      case 3:
-                        context.go(RouteNames.settings);
-                      default:
-                        break;
-                    }
-                  },
-                  onCenterTapped: () => showHarmonizerSheet(context),
-                );
-              },
+                  return AppBottomBar(
+                    harmonizeProgress: progress,
+                    onItemTapped: (index) {
+                      switch (index) {
+                        case 0:
+                          context.go(RouteNames.home);
+                        case 2:
+                          context.go(RouteNames.workspace);
+                        case 3:
+                          context.go(RouteNames.settings);
+                        default:
+                          break;
+                      }
+                    },
+                    onCenterTapped: () => showHarmonizerSheet(context),
+                  );
+                },
+              ),
             ),
           );
         },
@@ -403,4 +405,62 @@ class _PlaceholderPage extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Listens to [HarmonizerService] state transitions and shows a global
+/// completion snackbar when harmonization ends (success or timeout).
+class _HarmonizeCompletionListener extends StatefulWidget {
+  const _HarmonizeCompletionListener({required this.child});
+
+  final Widget child;
+
+  @override
+  State<_HarmonizeCompletionListener> createState() =>
+      _HarmonizeCompletionListenerState();
+}
+
+class _HarmonizeCompletionListenerState
+    extends State<_HarmonizeCompletionListener> {
+  late final HarmonizerService _harmonizer;
+  StreamSubscription<HarmonizerState>? _sub;
+  HarmonizerStatus _previousStatus = HarmonizerStatus.idle;
+
+  @override
+  void initState() {
+    super.initState();
+    _harmonizer = getIt<HarmonizerService>();
+    _previousStatus = _harmonizer.currentState.status;
+    _sub = _harmonizer.state.listen(_onStateChanged);
+  }
+
+  void _onStateChanged(HarmonizerState state) {
+    final newStatus = state.status;
+    final wasActive =
+        _previousStatus == HarmonizerStatus.harmonizing ||
+        _previousStatus == HarmonizerStatus.stopping;
+    _previousStatus = newStatus;
+
+    if (!wasActive || newStatus != HarmonizerStatus.idle) return;
+
+    final success = _harmonizer.lastCompletionSuccess;
+    if (success == null) return;
+    _harmonizer.clearCompletionResult();
+
+    if (!mounted) return;
+    final l10n = AppLocalizations.of(context)!;
+    if (success) {
+      AppSnackBar.info(context, message: l10n.harmonizeCompleted);
+    } else {
+      AppSnackBar.error(context, message: l10n.harmonizeDeviceTimeout);
+    }
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

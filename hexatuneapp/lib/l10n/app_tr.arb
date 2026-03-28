@@ -326,6 +326,8 @@
   "harmonizerRepeatThrice": "x3",
   "harmonizerRepeatTen": "x10",
   "harmonizerAlreadyActive": "Harmonizasyon devam ediyor",
+  "harmonizeCompleted": "Harmonizasyon başarıyla tamamlandı",
+  "harmonizeDeviceTimeout": "Cihaz zamanında yanıt vermedi. Oturum zorla sıfırlandı.",
 
   "categoryManagement": "Kategori Yönetimi",
   "categoryCreate": "Kategori Oluştur",

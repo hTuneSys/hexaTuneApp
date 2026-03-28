@@ -743,6 +743,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get harmonizerAlreadyActive => 'Harmonizasyon devam ediyor';
 
   @override
+  String get harmonizeCompleted => 'Harmonizasyon başarıyla tamamlandı';
+
+  @override
+  String get harmonizeDeviceTimeout =>
+      'Cihaz zamanında yanıt vermedi. Oturum zorla sıfırlandı.';
+
+  @override
   String get categoryManagement => 'Kategori Yönetimi';
 
   @override

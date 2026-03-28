@@ -71,6 +71,7 @@ class _AppRootState extends State<AppRoot> {
       _updateStep(0, BootstrapStepStatus.running);
       try {
         await configureDependencies();
+        getIt<HarmonizerService>().initLifecycleObserver();
         _diCompleted = true;
         _updateStep(0, BootstrapStepStatus.done);
       } catch (e) {

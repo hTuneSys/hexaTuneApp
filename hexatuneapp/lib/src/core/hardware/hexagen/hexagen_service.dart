@@ -307,10 +307,14 @@ class HexagenService {
   /// When [stepId] is provided it is used as the command ID (useful for
   /// operation-scoped freq steps so firmware reports the same step index
   /// during GENERATE progress). Otherwise an auto-incremented ID is used.
+  ///
+  /// When [isOneShot] is true the device marks this step as one-shot —
+  /// it will only be executed during the first repeat cycle.
   Future<CommandStatus> sendFreqCommandAndWait(
     int freq,
     int timeMs, {
     int? stepId,
+    bool isOneShot = false,
   }) async {
     final deviceId = _deviceManager.connectedId;
     if (deviceId == null) {
@@ -318,7 +322,7 @@ class HexagenService {
     }
     final completer = Completer<CommandStatus>();
     final id = stepId ?? generateId();
-    final command = ATCommand.freq(id, freq, timeMs);
+    final command = ATCommand.freq(id, freq, timeMs, isOneShot: isOneShot);
     final compiled = command.compile();
 
     _commandCompleters[id] = completer;
@@ -334,14 +338,23 @@ class HexagenService {
     return completer.future;
   }
 
-  /// Send AT+OPERATION=id#PREPARE and wait for response.
-  Future<CommandStatus> sendOperationPrepare(int operationId) async {
+  /// Send AT+OPERATION=id#[repeatCount#]PREPARE and wait for response.
+  ///
+  /// When [repeatCount] is provided, the device will repeat the operation
+  /// that many times (0 = infinite).
+  Future<CommandStatus> sendOperationPrepare(
+    int operationId, {
+    int? repeatCount,
+  }) async {
     final deviceId = _deviceManager.connectedId;
     if (deviceId == null) {
       return CommandStatus.error;
     }
     final completer = Completer<CommandStatus>();
-    final command = ATCommand.operationPrepare(operationId);
+    final command = ATCommand.operationPrepare(
+      operationId,
+      repeatCount: repeatCount,
+    );
 
     _commandCompleters[operationId] = completer;
     _currentOperationId = operationId;
@@ -394,29 +407,68 @@ class HexagenService {
 
   /// Graceful stop for an operation.
   ///
-  /// Temporary implementation: sends `ATCommand.reset` and clears state.
-  /// Will be replaced with proper `AT+OPERATION=id#STOP` when firmware
-  /// supports graceful stop.
+  /// Sends `AT+OPERATION=id#STOP#GRACEFUL`. Does **not** reset operation
+  /// state — the caller should await [waitForOperationComplete] and then
+  /// clean up.
   Future<void> stopOperationGraceful(int operationId) async {
     _logService.info(
-      'Graceful stop (temp reset) for operation $operationId',
+      'Graceful stop for operation $operationId',
       category: LogCategory.hardware,
     );
-    await sendATCommand(ATCommand.reset(operationId));
-    resetOperationState();
+    await sendATCommand(ATCommand.operationStopGraceful(operationId));
   }
 
   /// Immediate stop for an operation.
   ///
-  /// Sends `ATCommand.reset` and clears state. Currently identical to
-  /// [stopOperationGraceful] until firmware supports differentiated stop.
+  /// Sends `AT+OPERATION=id#STOP#IMMEDIATELY`. Does **not** reset operation
+  /// state — the caller should await [waitForOperationComplete] and then
+  /// clean up.
   Future<void> stopOperationImmediate(int operationId) async {
     _logService.info(
-      'Immediate stop (temp reset) for operation $operationId',
+      'Immediate stop for operation $operationId',
       category: LogCategory.hardware,
     );
-    await sendATCommand(ATCommand.reset(operationId));
-    resetOperationState();
+    await sendATCommand(ATCommand.operationStopImmediate(operationId));
+  }
+
+  /// Waits for the device to report COMPLETED for the current operation.
+  ///
+  /// Polls [queryOperationStatus] every second. Returns `true` if COMPLETED
+  /// was received within [timeout], `false` on timeout.
+  Future<bool> waitForOperationComplete({
+    Duration timeout = const Duration(seconds: 10),
+  }) async {
+    if (_currentOperationStatus == 'COMPLETED') {
+      resetOperationState();
+      return true;
+    }
+
+    final completer = Completer<bool>();
+    final deadline = DateTime.now().add(timeout);
+
+    final pollTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (_currentOperationStatus == 'COMPLETED') {
+        if (!completer.isCompleted) {
+          resetOperationState();
+          completer.complete(true);
+        }
+        return;
+      }
+      if (DateTime.now().isAfter(deadline)) {
+        if (!completer.isCompleted) {
+          resetOperationState();
+          completer.complete(false);
+        }
+        return;
+      }
+      queryOperationStatus();
+    });
+
+    try {
+      return await completer.future;
+    } finally {
+      pollTimer.cancel();
+    }
   }
 
   // -----------------------------------------------------------------------

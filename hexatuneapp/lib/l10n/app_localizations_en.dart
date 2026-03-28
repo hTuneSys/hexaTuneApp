@@ -740,6 +740,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get harmonizerAlreadyActive => 'Harmonization is already in progress';
 
   @override
+  String get harmonizeCompleted => 'Harmonization completed successfully';
+
+  @override
+  String get harmonizeDeviceTimeout =>
+      'Device did not respond in time. The session was forcefully reset.';
+
+  @override
   String get categoryManagement => 'Category Management';
 
   @override

@@ -71,9 +71,15 @@ class ATCommand {
     return ATCommand(0, ATCommandType.operation, [], isQuery: true);
   }
 
-  /// Prepare operation (AT+OPERATION=id#PREPARE).
-  factory ATCommand.operationPrepare(int id) {
-    return ATCommand(id, ATCommandType.operation, ['PREPARE']);
+  /// Prepare operation.
+  ///
+  /// Without [repeatCount]: `AT+OPERATION=id#PREPARE`.
+  /// With [repeatCount]: `AT+OPERATION=id#repeatCount#PREPARE` (0 = infinite).
+  factory ATCommand.operationPrepare(int id, {int? repeatCount}) {
+    return ATCommand(id, ATCommandType.operation, [
+      if (repeatCount != null) repeatCount.toString(),
+      'PREPARE',
+    ]);
   }
 
   /// Start generation (AT+OPERATION=id#GENERATE).
@@ -81,11 +87,17 @@ class ATCommand {
     return ATCommand(id, ATCommandType.operation, ['GENERATE']);
   }
 
-  /// Set frequency output (AT+FREQ=id#freq#timeMs).
-  factory ATCommand.freq(int id, int freq, int timeMs) {
+  /// Set frequency output (AT+FREQ=id#freq#timeMs#isOneShot).
+  factory ATCommand.freq(
+    int id,
+    int freq,
+    int timeMs, {
+    bool isOneShot = false,
+  }) {
     return ATCommand(id, ATCommandType.freq, [
       freq.toString(),
       timeMs.toString(),
+      isOneShot ? '1' : '0',
     ]);
   }
 
@@ -96,6 +108,16 @@ class ATCommand {
       g.toString(),
       b.toString(),
     ]);
+  }
+
+  /// Graceful stop (AT+OPERATION=id#STOP#GRACEFUL).
+  factory ATCommand.operationStopGraceful(int id) {
+    return ATCommand(id, ATCommandType.operation, ['STOP', 'GRACEFUL']);
+  }
+
+  /// Immediate stop (AT+OPERATION=id#STOP#IMMEDIATELY).
+  factory ATCommand.operationStopImmediate(int id) {
+    return ATCommand(id, ATCommandType.operation, ['STOP', 'IMMEDIATELY']);
   }
 
   /// Reset device (AT+RESET=id).

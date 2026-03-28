@@ -3,6 +3,7 @@
 
 import 'dart:async';
 
+import 'package:flutter/widgets.dart';
 import 'package:injectable/injectable.dart';
 
 import 'package:hexatuneapp/src/core/dsp/ambience/ambience_service.dart';
@@ -27,7 +28,7 @@ import 'package:hexatuneapp/src/core/rest/harmonics/models/harmonic_packet_dto.d
 ///
 /// Exposes a [state] stream that the UI binds to for real-time updates.
 @singleton
-class HarmonizerService {
+class HarmonizerService with WidgetsBindingObserver {
   HarmonizerService(
     this._dspService,
     this._hexagenService,
@@ -54,9 +55,36 @@ class HarmonizerService {
   bool _backendStopped = false;
   DateTime? _stopCountdownTarget;
 
+  /// Whether the last harmonize session completed successfully (`null` = none).
+  bool? _lastCompletionSuccess;
+
   // ---------------------------------------------------------------------------
   // Public API
   // ---------------------------------------------------------------------------
+
+  /// Whether the last harmonize session completed successfully (`null` = none).
+  ///
+  /// Read by the global snackbar listener after the idle transition, then
+  /// cleared via [clearCompletionResult].
+  bool? get lastCompletionSuccess => _lastCompletionSuccess;
+
+  /// Clears the completion flag so the snackbar is only shown once.
+  void clearCompletionResult() => _lastCompletionSuccess = null;
+
+  /// Registers as an app lifecycle observer.
+  ///
+  /// Call once from DI setup (e.g. `app_root.dart`) after
+  /// `WidgetsFlutterBinding.ensureInitialized()`.
+  void initLifecycleObserver() {
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _onForegroundResume();
+    }
+  }
 
   /// Broadcast stream of harmonizer state changes.
   Stream<HarmonizerState> get state => _stateController.stream;
@@ -183,8 +211,7 @@ class HarmonizerService {
   /// For DSP modes (monaural / binaural) the remaining countdown continues to
   /// zero before the harmonizer transitions to idle.
   /// For magnetic mode the timer stops immediately, the button enters loading
-  /// state, and the device is sent a RESET.  The harmonize button stays disabled
-  /// until the HexaGen device reconnects.
+  /// state, and a STOP GRACEFUL command is sent to the device.
   Future<void> stopGraceful() async {
     if (_currentState.status != HarmonizerStatus.harmonizing) return;
 
@@ -196,7 +223,6 @@ class HarmonizerService {
     final isMagnetic = _currentState.activeType == GenerationType.magnetic;
 
     if (isMagnetic) {
-      // Magnetic: stop timer immediately, show loading, fire RESET.
       _timeTracker?.cancel();
       _timeTracker = null;
       _backendStopped = false;
@@ -206,6 +232,7 @@ class HarmonizerService {
           status: HarmonizerStatus.stopping,
           gracefulStopRequested: true,
           remainingInCycle: Duration.zero,
+          totalRemaining: Duration.zero,
         ),
       );
 
@@ -272,7 +299,7 @@ class HarmonizerService {
       if (type != null && type.usesDsp) {
         await _dspService.stop();
       } else if (type == GenerationType.magnetic) {
-        await _stopMagnetic();
+        await _stopMagnetic(immediate: true);
       }
     } finally {
       _cleanup();
@@ -282,6 +309,7 @@ class HarmonizerService {
   /// Cleans up resources.
   @disposeMethod
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _timeTracker?.cancel();
     _magneticLooping = false;
     _backendStopped = false;
@@ -440,18 +468,25 @@ class HarmonizerService {
     _magneticOperationId = opId;
     _magneticLooping = true;
 
-    // PREPARE
-    final prepareStatus = await _hexagenService.sendOperationPrepare(opId);
+    // Device repeat count: null (infinite in app) → 0 (infinite on device).
+    final deviceRepeatCount = config.repeatCount ?? 0;
+
+    // PREPARE with repeat count.
+    final prepareStatus = await _hexagenService.sendOperationPrepare(
+      opId,
+      repeatCount: deviceRepeatCount,
+    );
     if (prepareStatus != CommandStatus.success) {
       throw StateError('HexaGen PREPARE failed: ${prepareStatus.name}');
     }
 
-    // Send FREQ commands.
+    // Send FREQ commands with isOneShot flag.
     for (final packet in config.steps) {
       if (!_magneticLooping) return;
       final status = await _hexagenService.sendFreqCommandAndWait(
         packet.value,
         packet.durationMs,
+        isOneShot: packet.isOneShot,
       );
       if (status != CommandStatus.success) {
         _logService.warning(
@@ -465,18 +500,37 @@ class HarmonizerService {
     await _hexagenService.sendOperationGenerate(opId);
 
     _logService.info(
-      'Magnetic operation $opId started with ${config.steps.length} steps',
+      'Magnetic operation $opId started with ${config.steps.length} steps, '
+      'repeat=$deviceRepeatCount',
       category: LogCategory.hardware,
     );
   }
 
-  Future<void> _stopMagnetic() async {
+  Future<void> _stopMagnetic({bool immediate = false}) async {
     _magneticLooping = false;
     final opId = _magneticOperationId;
     if (opId != null) {
-      // Temporary: both graceful and immediate send RESET.
-      await _hexagenService.sendATCommand(ATCommand.reset(opId));
-      _hexagenService.resetOperationState();
+      if (immediate) {
+        await _hexagenService.stopOperationImmediate(opId);
+      } else {
+        await _hexagenService.stopOperationGraceful(opId);
+      }
+
+      final completed = await _hexagenService.waitForOperationComplete(
+        timeout: Duration(seconds: immediate ? 5 : 10),
+      );
+
+      if (!completed) {
+        _logService.warning(
+          'Device did not report COMPLETED after stop, sending RESET',
+          category: LogCategory.hardware,
+        );
+        await _hexagenService.sendATCommand(ATCommand.reset(opId));
+        _hexagenService.resetOperationState();
+        _lastCompletionSuccess = false;
+      } else {
+        _lastCompletionSuccess = true;
+      }
       _magneticOperationId = null;
     }
   }
@@ -521,35 +575,52 @@ class HarmonizerService {
 
       final isMagnetic = _currentState.activeType == GenerationType.magnetic;
 
-      // Magnetic mode: single pass — auto-stop after first cycle.
+      // Magnetic mode: multi-cycle with optional repeat limit (like DSP).
       if (isMagnetic) {
-        final remaining = Duration(
-          milliseconds: (cycleMs - elapsedMs).clamp(0, cycleMs),
-        );
-        final stepIndex = _computeStepIndex(elapsedMs.clamp(0, cycleMs));
+        final currentCycle = cycleMs > 0 ? elapsedMs ~/ cycleMs : 0;
+        final positionInCycle = cycleMs > 0 ? elapsedMs % cycleMs : 0;
+        final remaining = Duration(milliseconds: cycleMs - positionInCycle);
+        final stepIndex = _computeStepIndex(positionInCycle);
+        final isFirst = currentCycle == 0;
 
-        if (remaining <= Duration.zero) {
+        // Auto-stop after completing all repeat cycles.
+        final repeat = _currentState.repeatCount;
+        if (repeat != null && currentCycle >= repeat) {
           _updateState(
             _currentState.copyWith(
+              currentCycle: repeat - 1,
+              currentStepIndex: _currentState.sequence.length - 1,
               remainingInCycle: Duration.zero,
               totalRemaining: Duration.zero,
-              currentStepIndex: _currentState.sequence.length - 1,
+              isFirstCycle: false,
             ),
           );
-          // Auto-stop magnetic after single pass.
           _timeTracker?.cancel();
           _timeTracker = null;
           unawaited(_autoStopMagnetic());
           return;
         }
 
+        // Compute total remaining across all cycles.
+        final totalRepeat = _currentState.totalRepeatDuration;
+        final Duration? totalRem;
+        if (totalRepeat != null) {
+          final totalRemMs = (totalRepeat.inMilliseconds - elapsedMs).clamp(
+            0,
+            totalRepeat.inMilliseconds,
+          );
+          totalRem = Duration(milliseconds: totalRemMs);
+        } else {
+          totalRem = null;
+        }
+
         _updateState(
           _currentState.copyWith(
-            currentCycle: 0,
+            currentCycle: currentCycle,
             currentStepIndex: stepIndex,
             remainingInCycle: remaining,
-            totalRemaining: remaining,
-            isFirstCycle: true,
+            totalRemaining: totalRem,
+            isFirstCycle: isFirst,
           ),
         );
         return;
@@ -657,17 +728,18 @@ class HarmonizerService {
         stackTrace: st,
       );
     }
+    _lastCompletionSuccess = true;
     _cleanup();
   }
 
-  /// Auto-stop for magnetic mode after the single pass completes.
+  /// Auto-stop for magnetic mode after all repeat cycles complete.
   ///
-  /// Transitions to [HarmonizerStatus.stopping] (loading spinner), sends
-  /// RESET to the device, then cleans up to idle. The harmonize button remains
-  /// disabled until the HexaGen device reconnects.
+  /// Transitions to [HarmonizerStatus.stopping], waits for the device to
+  /// report COMPLETED (polling every second for up to 10 s), then cleans up.
+  /// If the device does not respond in time a fallback RESET is sent.
   Future<void> _autoStopMagnetic() async {
     _logService.info(
-      'Magnetic single-pass complete, auto-stopping',
+      'Magnetic cycles complete, waiting for device COMPLETED',
       category: LogCategory.hardware,
     );
 
@@ -676,11 +748,29 @@ class HarmonizerService {
         status: HarmonizerStatus.stopping,
         gracefulStopRequested: true,
         remainingInCycle: Duration.zero,
+        totalRemaining: Duration.zero,
       ),
     );
 
     try {
-      await _stopMagnetic();
+      final completed = await _hexagenService.waitForOperationComplete(
+        timeout: const Duration(seconds: 10),
+      );
+
+      if (!completed) {
+        _logService.warning(
+          'Device did not report COMPLETED within timeout, sending RESET',
+          category: LogCategory.hardware,
+        );
+        final opId = _magneticOperationId;
+        if (opId != null) {
+          await _hexagenService.sendATCommand(ATCommand.reset(opId));
+          _hexagenService.resetOperationState();
+        }
+        _lastCompletionSuccess = false;
+      } else {
+        _lastCompletionSuccess = true;
+      }
     } catch (e, st) {
       _logService.error(
         'Magnetic auto-stop error: $e',
@@ -688,7 +778,10 @@ class HarmonizerService {
         exception: e,
         stackTrace: st,
       );
+      _lastCompletionSuccess = false;
     }
+
+    _magneticOperationId = null;
     _cleanup();
   }
 
@@ -706,6 +799,31 @@ class HarmonizerService {
       if (i == steps.length - 1) stepIndex = i;
     }
     return stepIndex;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Lifecycle
+  // ---------------------------------------------------------------------------
+
+  void _onForegroundResume() {
+    if (_currentState.activeType != GenerationType.magnetic) return;
+    if (_currentState.status != HarmonizerStatus.harmonizing &&
+        _currentState.status != HarmonizerStatus.stopping) {
+      return;
+    }
+
+    // If the timer has expired while the app was in the background, trigger
+    // the device completion check now.
+    final totalRem = _currentState.totalRemaining;
+    if (totalRem != null && totalRem <= Duration.zero) {
+      _logService.info(
+        'Foreground resume: magnetic timer expired, querying device',
+        category: LogCategory.hardware,
+      );
+      _timeTracker?.cancel();
+      _timeTracker = null;
+      unawaited(_autoStopMagnetic());
+    }
   }
 
   // ---------------------------------------------------------------------------

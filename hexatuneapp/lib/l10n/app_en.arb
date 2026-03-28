@@ -329,6 +329,8 @@
   "harmonizerRepeatThrice": "x3",
   "harmonizerRepeatTen": "x10",
   "harmonizerAlreadyActive": "Harmonization is already in progress",
+  "harmonizeCompleted": "Harmonization completed successfully",
+  "harmonizeDeviceTimeout": "Device did not respond in time. The session was forcefully reset.",
 
   "categoryManagement": "Category Management",
   "categoryCreate": "Create Category",

@@ -210,14 +210,14 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
 
       final error = await _harmonizer.harmonize(config);
       if (error != null && mounted) {
-        AppSnackBar.success(context, message: error);
+        AppSnackBar.error(context, message: error);
       } else if (source != null) {
         _recordHistory(source);
       }
     } catch (e) {
       if (mounted) {
         setState(() => _generating = false);
-        AppSnackBar.success(context, message: e.toString());
+        AppSnackBar.error(context, message: e.toString());
       }
     }
   }

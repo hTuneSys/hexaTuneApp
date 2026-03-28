@@ -1472,6 +1472,18 @@ abstract class AppLocalizations {
   /// **'Harmonization is already in progress'**
   String get harmonizerAlreadyActive;
 
+  /// No description provided for @harmonizeCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Harmonization completed successfully'**
+  String get harmonizeCompleted;
+
+  /// No description provided for @harmonizeDeviceTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Device did not respond in time. The session was forcefully reset.'**
+  String get harmonizeDeviceTimeout;
+
   /// No description provided for @categoryManagement.
   ///
   /// In en, this message translates to:
