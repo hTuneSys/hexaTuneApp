@@ -25,7 +25,7 @@ path = [
   "AGENTS.md",
   "openapi.json",
   "openapi_old.json",
-  "openapinew.json",
+  "openapi_new.json",
   "plans.md",
 ]
 precedence = "aggregate"

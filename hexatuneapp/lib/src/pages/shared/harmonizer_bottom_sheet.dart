@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -198,7 +199,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
       inventoryIds = null;
     } else if (source is InventorySource) {
       sourceType = 'Inventory';
-      sourceId = 'inventory-session';
+      sourceId = const Uuid().v7();
       inventoryIds = source.inventories.map((i) => i.id).toList();
     } else if (source == null && _dropdownFormula != null) {
       // Fallback: formula selected from dropdown (no pre-set source)
