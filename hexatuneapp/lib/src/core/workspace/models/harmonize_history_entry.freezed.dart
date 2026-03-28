@@ -288,7 +288,8 @@ mixin _$HarmonizeHistoryEntry {
  List<HistoryInventoryItem> get inventories;/// Flow ID (when sourceType is 'Flow', future use).
  String? get flowId;/// Generation type used (e.g. 'Monaural', 'Binaural').
  String get generationType;/// Ambience config ID if one was selected.
- String? get ambienceId;/// Repeat count (null = infinite).
+ String? get ambienceId;/// Ambience display name (denormalized for display without service lookup).
+ String? get ambienceName;/// Repeat count (null = infinite).
  int? get repeatCount;/// ISO 8601 timestamp of when the harmonize session started.
  String get harmonizedAt;
 /// Create a copy of HarmonizeHistoryEntry
@@ -303,16 +304,16 @@ $HarmonizeHistoryEntryCopyWith<HarmonizeHistoryEntry> get copyWith => _$Harmoniz
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizeHistoryEntry&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&(identical(other.formulaName, formulaName) || other.formulaName == formulaName)&&const DeepCollectionEquality().equals(other.inventories, inventories)&&(identical(other.flowId, flowId) || other.flowId == flowId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.repeatCount, repeatCount) || other.repeatCount == repeatCount)&&(identical(other.harmonizedAt, harmonizedAt) || other.harmonizedAt == harmonizedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HarmonizeHistoryEntry&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&(identical(other.formulaName, formulaName) || other.formulaName == formulaName)&&const DeepCollectionEquality().equals(other.inventories, inventories)&&(identical(other.flowId, flowId) || other.flowId == flowId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.ambienceName, ambienceName) || other.ambienceName == ambienceName)&&(identical(other.repeatCount, repeatCount) || other.repeatCount == repeatCount)&&(identical(other.harmonizedAt, harmonizedAt) || other.harmonizedAt == harmonizedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sourceType,formulaId,formulaName,const DeepCollectionEquality().hash(inventories),flowId,generationType,ambienceId,repeatCount,harmonizedAt);
+int get hashCode => Object.hash(runtimeType,sourceType,formulaId,formulaName,const DeepCollectionEquality().hash(inventories),flowId,generationType,ambienceId,ambienceName,repeatCount,harmonizedAt);
 
 @override
 String toString() {
-  return 'HarmonizeHistoryEntry(sourceType: $sourceType, formulaId: $formulaId, formulaName: $formulaName, inventories: $inventories, flowId: $flowId, generationType: $generationType, ambienceId: $ambienceId, repeatCount: $repeatCount, harmonizedAt: $harmonizedAt)';
+  return 'HarmonizeHistoryEntry(sourceType: $sourceType, formulaId: $formulaId, formulaName: $formulaName, inventories: $inventories, flowId: $flowId, generationType: $generationType, ambienceId: $ambienceId, ambienceName: $ambienceName, repeatCount: $repeatCount, harmonizedAt: $harmonizedAt)';
 }
 
 
@@ -323,7 +324,7 @@ abstract mixin class $HarmonizeHistoryEntryCopyWith<$Res>  {
   factory $HarmonizeHistoryEntryCopyWith(HarmonizeHistoryEntry value, $Res Function(HarmonizeHistoryEntry) _then) = _$HarmonizeHistoryEntryCopyWithImpl;
 @useResult
 $Res call({
- String sourceType, String? formulaId, String? formulaName, List<HistoryInventoryItem> inventories, String? flowId, String generationType, String? ambienceId, int? repeatCount, String harmonizedAt
+ String sourceType, String? formulaId, String? formulaName, List<HistoryInventoryItem> inventories, String? flowId, String generationType, String? ambienceId, String? ambienceName, int? repeatCount, String harmonizedAt
 });
 
 
@@ -340,7 +341,7 @@ class _$HarmonizeHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizeHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sourceType = null,Object? formulaId = freezed,Object? formulaName = freezed,Object? inventories = null,Object? flowId = freezed,Object? generationType = null,Object? ambienceId = freezed,Object? repeatCount = freezed,Object? harmonizedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sourceType = null,Object? formulaId = freezed,Object? formulaName = freezed,Object? inventories = null,Object? flowId = freezed,Object? generationType = null,Object? ambienceId = freezed,Object? ambienceName = freezed,Object? repeatCount = freezed,Object? harmonizedAt = null,}) {
   return _then(_self.copyWith(
 sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
 as String,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
@@ -349,6 +350,7 @@ as String?,inventories: null == inventories ? _self.inventories : inventories //
 as List<HistoryInventoryItem>,flowId: freezed == flowId ? _self.flowId : flowId // ignore: cast_nullable_to_non_nullable
 as String?,generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
 as String,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
+as String?,ambienceName: freezed == ambienceName ? _self.ambienceName : ambienceName // ignore: cast_nullable_to_non_nullable
 as String?,repeatCount: freezed == repeatCount ? _self.repeatCount : repeatCount // ignore: cast_nullable_to_non_nullable
 as int?,harmonizedAt: null == harmonizedAt ? _self.harmonizedAt : harmonizedAt // ignore: cast_nullable_to_non_nullable
 as String,
@@ -436,10 +438,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  int? repeatCount,  String harmonizedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  String? ambienceName,  int? repeatCount,  String harmonizedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HarmonizeHistoryEntry() when $default != null:
-return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.repeatCount,_that.harmonizedAt);case _:
+return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.ambienceName,_that.repeatCount,_that.harmonizedAt);case _:
   return orElse();
 
 }
@@ -457,10 +459,10 @@ return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.invento
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  int? repeatCount,  String harmonizedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  String? ambienceName,  int? repeatCount,  String harmonizedAt)  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizeHistoryEntry():
-return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.repeatCount,_that.harmonizedAt);case _:
+return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.ambienceName,_that.repeatCount,_that.harmonizedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -477,10 +479,10 @@ return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.invento
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  int? repeatCount,  String harmonizedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sourceType,  String? formulaId,  String? formulaName,  List<HistoryInventoryItem> inventories,  String? flowId,  String generationType,  String? ambienceId,  String? ambienceName,  int? repeatCount,  String harmonizedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _HarmonizeHistoryEntry() when $default != null:
-return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.repeatCount,_that.harmonizedAt);case _:
+return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.inventories,_that.flowId,_that.generationType,_that.ambienceId,_that.ambienceName,_that.repeatCount,_that.harmonizedAt);case _:
   return null;
 
 }
@@ -492,7 +494,7 @@ return $default(_that.sourceType,_that.formulaId,_that.formulaName,_that.invento
 @JsonSerializable()
 
 class _HarmonizeHistoryEntry implements HarmonizeHistoryEntry {
-  const _HarmonizeHistoryEntry({required this.sourceType, this.formulaId, this.formulaName, final  List<HistoryInventoryItem> inventories = const [], this.flowId, required this.generationType, this.ambienceId, this.repeatCount, required this.harmonizedAt}): _inventories = inventories;
+  const _HarmonizeHistoryEntry({required this.sourceType, this.formulaId, this.formulaName, final  List<HistoryInventoryItem> inventories = const [], this.flowId, required this.generationType, this.ambienceId, this.ambienceName, this.repeatCount, required this.harmonizedAt}): _inventories = inventories;
   factory _HarmonizeHistoryEntry.fromJson(Map<String, dynamic> json) => _$HarmonizeHistoryEntryFromJson(json);
 
 /// Source type: 'Formula', 'Inventory', or 'Flow'.
@@ -516,6 +518,8 @@ class _HarmonizeHistoryEntry implements HarmonizeHistoryEntry {
 @override final  String generationType;
 /// Ambience config ID if one was selected.
 @override final  String? ambienceId;
+/// Ambience display name (denormalized for display without service lookup).
+@override final  String? ambienceName;
 /// Repeat count (null = infinite).
 @override final  int? repeatCount;
 /// ISO 8601 timestamp of when the harmonize session started.
@@ -534,16 +538,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizeHistoryEntry&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&(identical(other.formulaName, formulaName) || other.formulaName == formulaName)&&const DeepCollectionEquality().equals(other._inventories, _inventories)&&(identical(other.flowId, flowId) || other.flowId == flowId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.repeatCount, repeatCount) || other.repeatCount == repeatCount)&&(identical(other.harmonizedAt, harmonizedAt) || other.harmonizedAt == harmonizedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HarmonizeHistoryEntry&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.formulaId, formulaId) || other.formulaId == formulaId)&&(identical(other.formulaName, formulaName) || other.formulaName == formulaName)&&const DeepCollectionEquality().equals(other._inventories, _inventories)&&(identical(other.flowId, flowId) || other.flowId == flowId)&&(identical(other.generationType, generationType) || other.generationType == generationType)&&(identical(other.ambienceId, ambienceId) || other.ambienceId == ambienceId)&&(identical(other.ambienceName, ambienceName) || other.ambienceName == ambienceName)&&(identical(other.repeatCount, repeatCount) || other.repeatCount == repeatCount)&&(identical(other.harmonizedAt, harmonizedAt) || other.harmonizedAt == harmonizedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,sourceType,formulaId,formulaName,const DeepCollectionEquality().hash(_inventories),flowId,generationType,ambienceId,repeatCount,harmonizedAt);
+int get hashCode => Object.hash(runtimeType,sourceType,formulaId,formulaName,const DeepCollectionEquality().hash(_inventories),flowId,generationType,ambienceId,ambienceName,repeatCount,harmonizedAt);
 
 @override
 String toString() {
-  return 'HarmonizeHistoryEntry(sourceType: $sourceType, formulaId: $formulaId, formulaName: $formulaName, inventories: $inventories, flowId: $flowId, generationType: $generationType, ambienceId: $ambienceId, repeatCount: $repeatCount, harmonizedAt: $harmonizedAt)';
+  return 'HarmonizeHistoryEntry(sourceType: $sourceType, formulaId: $formulaId, formulaName: $formulaName, inventories: $inventories, flowId: $flowId, generationType: $generationType, ambienceId: $ambienceId, ambienceName: $ambienceName, repeatCount: $repeatCount, harmonizedAt: $harmonizedAt)';
 }
 
 
@@ -554,7 +558,7 @@ abstract mixin class _$HarmonizeHistoryEntryCopyWith<$Res> implements $Harmonize
   factory _$HarmonizeHistoryEntryCopyWith(_HarmonizeHistoryEntry value, $Res Function(_HarmonizeHistoryEntry) _then) = __$HarmonizeHistoryEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String sourceType, String? formulaId, String? formulaName, List<HistoryInventoryItem> inventories, String? flowId, String generationType, String? ambienceId, int? repeatCount, String harmonizedAt
+ String sourceType, String? formulaId, String? formulaName, List<HistoryInventoryItem> inventories, String? flowId, String generationType, String? ambienceId, String? ambienceName, int? repeatCount, String harmonizedAt
 });
 
 
@@ -571,7 +575,7 @@ class __$HarmonizeHistoryEntryCopyWithImpl<$Res>
 
 /// Create a copy of HarmonizeHistoryEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sourceType = null,Object? formulaId = freezed,Object? formulaName = freezed,Object? inventories = null,Object? flowId = freezed,Object? generationType = null,Object? ambienceId = freezed,Object? repeatCount = freezed,Object? harmonizedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sourceType = null,Object? formulaId = freezed,Object? formulaName = freezed,Object? inventories = null,Object? flowId = freezed,Object? generationType = null,Object? ambienceId = freezed,Object? ambienceName = freezed,Object? repeatCount = freezed,Object? harmonizedAt = null,}) {
   return _then(_HarmonizeHistoryEntry(
 sourceType: null == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
 as String,formulaId: freezed == formulaId ? _self.formulaId : formulaId // ignore: cast_nullable_to_non_nullable
@@ -580,6 +584,7 @@ as String?,inventories: null == inventories ? _self._inventories : inventories /
 as List<HistoryInventoryItem>,flowId: freezed == flowId ? _self.flowId : flowId // ignore: cast_nullable_to_non_nullable
 as String?,generationType: null == generationType ? _self.generationType : generationType // ignore: cast_nullable_to_non_nullable
 as String,ambienceId: freezed == ambienceId ? _self.ambienceId : ambienceId // ignore: cast_nullable_to_non_nullable
+as String?,ambienceName: freezed == ambienceName ? _self.ambienceName : ambienceName // ignore: cast_nullable_to_non_nullable
 as String?,repeatCount: freezed == repeatCount ? _self.repeatCount : repeatCount // ignore: cast_nullable_to_non_nullable
 as int?,harmonizedAt: null == harmonizedAt ? _self.harmonizedAt : harmonizedAt // ignore: cast_nullable_to_non_nullable
 as String,

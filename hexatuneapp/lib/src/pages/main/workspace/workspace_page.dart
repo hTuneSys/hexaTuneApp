@@ -541,6 +541,25 @@ class _WorkspacePageState extends State<WorkspacePage> {
                           color: colorScheme.onSurfaceVariant,
                         ),
                       ),
+                      if (entry.ambienceName != null) ...[
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.spa_outlined,
+                          size: 12,
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 2),
+                        Flexible(
+                          child: Text(
+                            entry.ambienceName!,
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                       const SizedBox(width: 8),
                       Text(
                         repeatLabel,

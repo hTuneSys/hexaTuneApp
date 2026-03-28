@@ -46,6 +46,9 @@ abstract class HarmonizeHistoryEntry with _$HarmonizeHistoryEntry {
     /// Ambience config ID if one was selected.
     String? ambienceId,
 
+    /// Ambience display name (denormalized for display without service lookup).
+    String? ambienceName,
+
     /// Repeat count (null = infinite).
     int? repeatCount,
 

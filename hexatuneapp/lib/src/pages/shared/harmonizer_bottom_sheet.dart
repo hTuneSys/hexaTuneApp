@@ -270,6 +270,7 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
       inventories: inventories,
       generationType: _selectedType.apiValue,
       ambienceId: _selectedAmbience?.id,
+      ambienceName: _selectedAmbience?.name,
       repeatCount: _selectedRepeat,
       harmonizedAt: DateTime.now().toUtc().toIso8601String(),
     );

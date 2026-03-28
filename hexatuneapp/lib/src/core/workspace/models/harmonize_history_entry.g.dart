@@ -31,6 +31,7 @@ _HarmonizeHistoryEntry _$HarmonizeHistoryEntryFromJson(
   flowId: json['flowId'] as String?,
   generationType: json['generationType'] as String,
   ambienceId: json['ambienceId'] as String?,
+  ambienceName: json['ambienceName'] as String?,
   repeatCount: (json['repeatCount'] as num?)?.toInt(),
   harmonizedAt: json['harmonizedAt'] as String,
 );
@@ -45,6 +46,7 @@ Map<String, dynamic> _$HarmonizeHistoryEntryToJson(
   'flowId': instance.flowId,
   'generationType': instance.generationType,
   'ambienceId': instance.ambienceId,
+  'ambienceName': instance.ambienceName,
   'repeatCount': instance.repeatCount,
   'harmonizedAt': instance.harmonizedAt,
 };
