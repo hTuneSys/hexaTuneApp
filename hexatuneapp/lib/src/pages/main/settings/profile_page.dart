@@ -10,14 +10,13 @@ import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
-import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
-/// Profile page displaying account information and profile editing.
+/// Profile page for editing user profile.
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
@@ -30,7 +29,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final _avatarUrlCtrl = TextEditingController();
   final _bioCtrl = TextEditingController();
 
-  AccountResponse? _account;
   ProfileResponse? _profile;
   bool _isLoading = false;
   String? _error;
@@ -57,21 +55,16 @@ class _ProfilePageState extends State<ProfilePage> {
     final log = getIt<LogService>();
     try {
       final repo = getIt<AccountRepository>();
-      final account = await repo.getAccount();
       final profile = await repo.getProfile();
       if (mounted) {
         setState(() {
-          _account = account;
           _profile = profile;
           _displayNameCtrl.text = profile.displayName ?? '';
           _avatarUrlCtrl.text = profile.avatarUrl ?? '';
           _bioCtrl.text = profile.bio ?? '';
         });
       }
-      log.devLog(
-        'Profile data loaded: ${account.id}',
-        category: LogCategory.ui,
-      );
+      log.devLog('Profile data loaded', category: LogCategory.ui);
     } catch (e) {
       log.devLog('Load profile data failed: $e', category: LogCategory.ui);
       if (mounted) setState(() => _error = e.toString());
@@ -137,11 +130,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildBody(ThemeData theme, AppLocalizations l10n) {
-    if (_isLoading && _account == null) {
+    if (_isLoading && _profile == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (_error != null && _account == null) {
+    if (_error != null && _profile == null) {
       return Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -170,82 +163,14 @@ class _ProfilePageState extends State<ProfilePage> {
         16,
         16 + AppBottomBar.scrollPadding,
       ),
-      children: [
-        _buildAccountSection(theme, l10n),
-        const Divider(height: 32),
-        _buildProfileSection(theme, l10n),
-        const Divider(height: 32),
-        _buildUpdateSection(theme, l10n),
-      ],
+      children: [_buildFormSection(theme, l10n)],
     );
   }
 
-  Widget _buildAccountSection(ThemeData theme, AppLocalizations l10n) {
+  Widget _buildFormSection(ThemeData theme, AppLocalizations l10n) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.profileAccountSection, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
-        if (_account != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _infoRow(l10n.profileAccountId, _account!.id),
-                  _infoRow(l10n.profileAccountStatus, _account!.status),
-                  _infoRow(l10n.profileAccountCreated, _account!.createdAt),
-                  _infoRow(l10n.profileAccountUpdated, _account!.updatedAt),
-                  if (_account!.lockedAt != null)
-                    _infoRow(l10n.profileAccountLockedAt, _account!.lockedAt!),
-                  if (_account!.suspendedAt != null)
-                    _infoRow(
-                      l10n.profileAccountSuspendedAt,
-                      _account!.suspendedAt!,
-                    ),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildProfileSection(ThemeData theme, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(l10n.profileSection, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
-        if (_profile != null)
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _infoRow(
-                    l10n.profileDisplayName,
-                    _profile!.displayName ?? '—',
-                  ),
-                  _infoRow(l10n.profileAvatarUrl, _profile!.avatarUrl ?? '—'),
-                  _infoRow(l10n.profileBio, _profile!.bio ?? '—'),
-                  _infoRow(l10n.profileAccountUpdated, _profile!.updatedAt),
-                ],
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildUpdateSection(ThemeData theme, AppLocalizations l10n) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(l10n.profileUpdateSection, style: theme.textTheme.titleMedium),
-        const SizedBox(height: 8),
         Text(
           l10n.profileDisplayName,
           style: theme.textTheme.bodyLarge?.copyWith(
@@ -318,30 +243,6 @@ class _ProfilePageState extends State<ProfilePage> {
               : Text(l10n.profileSave),
         ),
       ],
-    );
-  }
-
-  Widget _infoRow(String label, String value) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-          Expanded(
-            child: SelectableText(value, style: theme.textTheme.bodyMedium),
-          ),
-        ],
-      ),
     );
   }
 }

@@ -65,4 +65,5 @@ class RouteNames {
   static const String settingsWallet = '/settings/wallet';
   static const String settingsSessions = '/settings/sessions';
   static const String settingsDevices = '/settings/devices';
+  static const String settingsLogMonitor = '/settings/log-monitor';
 }

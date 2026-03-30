@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
+import 'package:hexatuneapp/src/core/config/env.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 
@@ -62,6 +63,13 @@ class SettingsPage extends StatelessWidget {
             subtitle: l10n.settingsLinkedAccountsSubtitle,
             onTap: () => context.go(RouteNames.providerManagement),
           ),
+          if (!Env.isProd)
+            _SettingsTile(
+              icon: Icons.bug_report,
+              title: l10n.settingsLogMonitor,
+              subtitle: l10n.settingsLogMonitorSubtitle,
+              onTap: () => context.go(RouteNames.settingsLogMonitor),
+            ),
           Divider(color: theme.colorScheme.outlineVariant),
           _SettingsTile(
             icon: Icons.info_outline,

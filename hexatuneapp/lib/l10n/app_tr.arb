@@ -546,6 +546,8 @@
   "settingsSessionsSubtitle": "Aktif oturumları yönetin",
   "settingsDevices": "Cihazlar",
   "settingsDevicesSubtitle": "Kayıtlı cihazları yönetin",
+  "settingsLogMonitor": "Günlük İzleyici",
+  "settingsLogMonitorSubtitle": "Gerçek zamanlı hata ayıklama günlükleri ve tanılama",
   "settingsAbout": "Hakkında",
   "settingsPrivacyPolicy": "Gizlilik Politikası",
   "settingsTermsOfService": "Kullanım Koşulları",

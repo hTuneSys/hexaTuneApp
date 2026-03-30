@@ -52,6 +52,11 @@ void main() {
           'subtitle': 'Manage your authentication providers',
           'icon': Icons.link,
         },
+        {
+          'title': 'Log Monitor',
+          'subtitle': 'Real-time debug logs and diagnostics',
+          'icon': Icons.bug_report,
+        },
       ];
 
       for (final item in internalItems) {
@@ -72,7 +77,7 @@ void main() {
         await tester.pumpWidget(_buildApp());
         await tester.pumpAndSettle();
 
-        expect(find.byIcon(Icons.chevron_right), findsNWidgets(5));
+        expect(find.byIcon(Icons.chevron_right), findsNWidgets(6));
       });
     });
 
@@ -114,7 +119,7 @@ void main() {
       expect(find.byType(Divider), findsOneWidget);
     });
 
-    testWidgets('shows all 8 leading icons', (tester) async {
+    testWidgets('shows all 9 leading icons', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
@@ -126,6 +131,7 @@ void main() {
       expect(find.byIcon(Icons.schedule_outlined), findsOneWidget);
       expect(find.byIcon(Icons.devices_outlined), findsOneWidget);
       expect(find.byIcon(Icons.link), findsOneWidget);
+      expect(find.byIcon(Icons.bug_report), findsOneWidget);
 
       await tester.scrollUntilVisible(find.text('Terms of Service'), 200);
       expect(find.byIcon(Icons.info_outline), findsOneWidget);
@@ -138,9 +144,9 @@ void main() {
       await tester.pumpAndSettle();
 
       final listTiles = find.byType(ListTile, skipOffstage: false);
-      expect(listTiles, findsNWidgets(8));
+      expect(listTiles, findsNWidgets(9));
 
-      for (var i = 0; i < 8; i++) {
+      for (var i = 0; i < 9; i++) {
         expect(
           tester.widget<ListTile>(listTiles.at(i)).onTap,
           isNotNull,
@@ -149,11 +155,11 @@ void main() {
       }
     });
 
-    testWidgets('renders 8 Card widgets for menu items', (tester) async {
+    testWidgets('renders 9 Card widgets for menu items', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byType(Card, skipOffstage: false), findsNWidgets(8));
+      expect(find.byType(Card, skipOffstage: false), findsNWidgets(9));
     });
   });
 }

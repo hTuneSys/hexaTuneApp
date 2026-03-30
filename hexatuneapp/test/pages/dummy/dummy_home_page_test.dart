@@ -106,14 +106,13 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Scroll down to reveal more items
       await tester.scrollUntilVisible(
-        find.text('Log Monitor'),
+        find.text('hexaGen Device'),
         200,
         scrollable: find.byType(Scrollable),
       );
 
-      expect(find.text('Log Monitor'), findsOneWidget);
+      expect(find.text('hexaGen Device'), findsOneWidget);
     });
 
     testWidgets('nav items are wrapped in cards', (tester) async {

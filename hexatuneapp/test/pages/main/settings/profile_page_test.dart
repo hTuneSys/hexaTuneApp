@@ -11,7 +11,6 @@ import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
-import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
 import 'package:hexatuneapp/src/pages/main/settings/profile_page.dart';
@@ -19,13 +18,6 @@ import 'package:hexatuneapp/src/pages/main/settings/profile_page.dart';
 class MockAccountRepository extends Mock implements AccountRepository {}
 
 class MockLogService extends Mock implements LogService {}
-
-const _testAccount = AccountResponse(
-  id: 'acc-1',
-  status: 'active',
-  createdAt: '2025-01-01',
-  updatedAt: '2025-01-02',
-);
 
 const _testProfile = ProfileResponse(
   accountId: 'acc-1',
@@ -75,64 +67,34 @@ void main() {
 
   group('ProfilePage', () {
     testWidgets('shows loading indicator initially', (tester) async {
-      final accountCompleter = Completer<AccountResponse>();
+      final profileCompleter = Completer<ProfileResponse>();
       when(
-        () => mockRepo.getAccount(),
-      ).thenAnswer((_) => accountCompleter.future);
-      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
+        () => mockRepo.getProfile(),
+      ).thenAnswer((_) => profileCompleter.future);
 
       await tester.pumpWidget(_buildApp());
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
 
-      // Complete to avoid pending timer errors
-      accountCompleter.complete(_testAccount);
+      profileCompleter.complete(_testProfile);
       await tester.pumpAndSettle();
     });
 
-    testWidgets('shows account info after load', (tester) async {
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
-      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
-
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      expect(find.text('acc-1'), findsOneWidget);
-      expect(find.text('active'), findsOneWidget);
-      expect(find.text('2025-01-01'), findsAtLeast(1));
-      expect(find.text('2025-01-02'), findsAtLeast(1));
-    });
-
-    testWidgets('shows profile info after load', (tester) async {
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
-      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
-
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      expect(find.text('Test User'), findsAtLeast(1));
-      expect(find.text('http://example.com/avatar.png'), findsAtLeast(1));
-      expect(find.text('A bio'), findsAtLeast(1));
-    });
-
-    testWidgets('shows update form with pre-filled text fields', (
+    testWidgets('shows form with pre-filled text fields after load', (
       tester,
     ) async {
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
       when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
 
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Verify three TextFields exist with label text
-      expect(find.widgetWithText(TextField, 'Display Name'), findsAtLeast(1));
+      expect(find.widgetWithText(TextField, 'Display Name'), findsOneWidget);
       expect(find.widgetWithText(TextField, 'Avatar URL'), findsOneWidget);
       expect(find.widgetWithText(TextField, 'Bio'), findsOneWidget);
 
-      // Verify pre-filled values via controller text
       final displayNameField = tester.widget<TextField>(
-        find.widgetWithText(TextField, 'Display Name').first,
+        find.widgetWithText(TextField, 'Display Name'),
       );
       expect(displayNameField.controller?.text, 'Test User');
 
@@ -150,7 +112,6 @@ void main() {
     testWidgets('save button triggers updateProfile and shows snackbar', (
       tester,
     ) async {
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
       when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
       when(
         () => mockRepo.updateProfile(any()),
@@ -159,7 +120,6 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Scroll to the save button (it may be off-screen)
       final saveButton = find.widgetWithText(FilledButton, 'Save Profile');
       await tester.ensureVisible(saveButton);
       await tester.pumpAndSettle();
@@ -172,49 +132,40 @@ void main() {
     });
 
     testWidgets('shows error and retry button on load failure', (tester) async {
-      when(() => mockRepo.getAccount()).thenThrow(Exception('network error'));
-      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
+      when(() => mockRepo.getProfile()).thenThrow(Exception('network error'));
 
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Error state shows l10n.profileNoData and retry
       expect(find.text('—'), findsOneWidget);
       expect(find.widgetWithText(FilledButton, 'Retry'), findsOneWidget);
     });
 
     testWidgets('retry button triggers reload', (tester) async {
-      // First call fails
-      when(() => mockRepo.getAccount()).thenThrow(Exception('network error'));
-      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
+      when(() => mockRepo.getProfile()).thenThrow(Exception('network error'));
 
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Set up for successful retry
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
+      when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
 
       await tester.tap(find.widgetWithText(FilledButton, 'Retry'));
       await tester.pumpAndSettle();
 
-      expect(find.text('acc-1'), findsOneWidget);
+      expect(find.text('Test User'), findsOneWidget);
     });
 
     testWidgets('refresh button triggers reload', (tester) async {
-      when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
       when(() => mockRepo.getProfile()).thenAnswer((_) async => _testProfile);
 
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      // Clear call counts
       clearInteractions(mockRepo);
 
-      // Tap refresh icon in AppBar
       await tester.tap(find.byIcon(Icons.refresh));
       await tester.pumpAndSettle();
 
-      verify(() => mockRepo.getAccount()).called(1);
       verify(() => mockRepo.getProfile()).called(1);
     });
   });

@@ -106,7 +106,7 @@ void main() {
       final routes = appRouter.router.configuration.routes;
 
       final shellRoute = routes.whereType<ShellRoute>().first;
-      expect(shellRoute.routes.length, 33);
+      expect(shellRoute.routes.length, 34);
     });
   });
 }

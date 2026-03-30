@@ -2348,6 +2348,18 @@ abstract class AppLocalizations {
   /// **'Manage registered devices'**
   String get settingsDevicesSubtitle;
 
+  /// No description provided for @settingsLogMonitor.
+  ///
+  /// In en, this message translates to:
+  /// **'Log Monitor'**
+  String get settingsLogMonitor;
+
+  /// No description provided for @settingsLogMonitorSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Real-time debug logs and diagnostics'**
+  String get settingsLogMonitorSubtitle;
+
   /// No description provided for @settingsAbout.
   ///
   /// In en, this message translates to:

@@ -325,6 +325,10 @@ class AppRouter {
             path: RouteNames.settingsDevices,
             builder: (context, state) => const DevicesPage(),
           ),
+          GoRoute(
+            path: RouteNames.settingsLogMonitor,
+            builder: (context, state) => const DummyLogMonitorPage(),
+          ),
         ],
       ),
     ],

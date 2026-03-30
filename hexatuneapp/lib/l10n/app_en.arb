@@ -549,6 +549,8 @@
   "settingsSessionsSubtitle": "Manage active sessions",
   "settingsDevices": "Devices",
   "settingsDevicesSubtitle": "Manage registered devices",
+  "settingsLogMonitor": "Log Monitor",
+  "settingsLogMonitorSubtitle": "Real-time debug logs and diagnostics",
   "settingsAbout": "About",
   "settingsPrivacyPolicy": "Privacy Policy",
   "settingsTermsOfService": "Terms of Service",

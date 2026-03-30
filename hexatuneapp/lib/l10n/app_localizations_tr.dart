@@ -1217,6 +1217,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settingsDevicesSubtitle => 'Kayıtlı cihazları yönetin';
 
   @override
+  String get settingsLogMonitor => 'Günlük İzleyici';
+
+  @override
+  String get settingsLogMonitorSubtitle =>
+      'Gerçek zamanlı hata ayıklama günlükleri ve tanılama';
+
+  @override
   String get settingsAbout => 'Hakkında';
 
   @override

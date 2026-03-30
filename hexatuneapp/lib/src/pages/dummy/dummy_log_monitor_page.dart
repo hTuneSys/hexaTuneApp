@@ -5,8 +5,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/src/core/log/debug_log_buffer.dart';
+import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
@@ -123,6 +125,10 @@ class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(RouteNames.settings),
+        ),
         title: Text('Log Monitor ($totalCount)'),
         actions: [
           IconButton(

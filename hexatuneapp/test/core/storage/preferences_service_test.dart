@@ -1,6 +1,7 @@
 // SPDX-FileCopyrightText: 2025 hexaTune LLC
 // SPDX-License-Identifier: MIT
 
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +12,7 @@ void main() {
     late PreferencesService service;
 
     setUp(() async {
+      WidgetsFlutterBinding.ensureInitialized();
       SharedPreferences.setMockInitialValues({});
       service = PreferencesService();
       await service.init();

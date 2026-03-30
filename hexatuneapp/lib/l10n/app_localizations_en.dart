@@ -1207,6 +1207,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsDevicesSubtitle => 'Manage registered devices';
 
   @override
+  String get settingsLogMonitor => 'Log Monitor';
+
+  @override
+  String get settingsLogMonitorSubtitle =>
+      'Real-time debug logs and diagnostics';
+
+  @override
   String get settingsAbout => 'About';
 
   @override
