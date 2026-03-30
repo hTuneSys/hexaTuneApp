@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/harmonizer/models/generation_type.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/rest/formula/models/formula_response.dart';
@@ -18,6 +19,7 @@ import 'package:hexatuneapp/src/core/workspace/workspace_pin_service.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_pin_sheet.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonize_source.dart';
+import 'package:hexatuneapp/src/pages/shared/harmonize_source_holder.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 
 /// Main workspace page accessible from the bottom navigation bar.
@@ -82,7 +84,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
               _buildMainCard(l10n, theme, colorScheme),
               const SizedBox(height: 24),
               _buildNavGrid(l10n, theme, colorScheme),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               _buildRecentlyUsed(l10n, theme, colorScheme),
             ],
           ),
@@ -438,7 +440,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final history = _historyService.entries;
+    final history = _historyService.entries.take(20).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -617,6 +619,25 @@ class _WorkspacePageState extends State<WorkspacePage> {
     } else {
       return;
     }
-    showHarmonizerSheet(context, source: source);
+
+    GenerationType? genType;
+    for (final type in GenerationType.values) {
+      if (type.apiValue == entry.generationType) {
+        genType = type;
+        break;
+      }
+    }
+
+    showHarmonizerSheet(
+      context,
+      source: source,
+      preset: genType != null
+          ? HarmonizePreset(
+              type: genType,
+              repeatCount: entry.repeatCount,
+              ambienceId: entry.ambienceId,
+            )
+          : null,
+    );
   }
 }

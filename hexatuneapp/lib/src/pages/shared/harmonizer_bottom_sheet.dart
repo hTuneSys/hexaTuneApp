@@ -38,7 +38,11 @@ import 'package:hexatuneapp/src/pages/shared/harmonizer_widget.dart';
 /// the sheet opens with the last set source.
 ///
 /// If harmonization is already active, shows a snackbar error instead.
-void showHarmonizerSheet(BuildContext context, {HarmonizeSource? source}) {
+void showHarmonizerSheet(
+  BuildContext context, {
+  HarmonizeSource? source,
+  HarmonizePreset? preset,
+}) {
   final harmonizer = getIt<HarmonizerService>();
   if (harmonizer.isHarmonizing ||
       harmonizer.currentState.status == HarmonizerStatus.preparing ||
@@ -50,9 +54,11 @@ void showHarmonizerSheet(BuildContext context, {HarmonizeSource? source}) {
     }
   }
 
+  final holder = getIt<HarmonizeSourceHolder>();
   if (source != null) {
-    getIt<HarmonizeSourceHolder>().source = source;
+    holder.source = source;
   }
+  holder.preset = preset;
   showModalBottomSheet<void>(
     context: context,
     useRootNavigator: true,
@@ -95,6 +101,9 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
   bool _headsetConnected = false;
   bool _hexagenConnected = false;
 
+  /// Ambience ID from preset, applied after ambiences load.
+  String? _pendingPresetAmbienceId;
+
   HarmonizeSource? get _source => _sourceHolder.source;
 
   @override
@@ -114,7 +123,15 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
     if (_harmonizerState.status != HarmonizerStatus.idle) {
       _selectedType = _harmonizerState.activeType ?? GenerationType.monaural;
       _selectedRepeat = _harmonizerState.repeatCount ?? _selectedRepeat;
+    } else {
+      final preset = _sourceHolder.preset;
+      if (preset != null) {
+        _selectedType = preset.type;
+        _selectedRepeat = preset.repeatCount;
+        _pendingPresetAmbienceId = preset.ambienceId;
+      }
     }
+    _sourceHolder.preset = null;
 
     _harmonizerSub = _harmonizer.state.listen((s) {
       if (mounted) setState(() => _harmonizerState = s);
@@ -145,6 +162,13 @@ class _HarmonizerSheetContentState extends State<_HarmonizerSheetContent> {
     if (mounted) {
       setState(() {
         _restoreAmbienceFromState();
+        if (_pendingPresetAmbienceId != null &&
+            _harmonizerState.status == HarmonizerStatus.idle) {
+          _selectedAmbience = _ambienceService.findById(
+            _pendingPresetAmbienceId!,
+          );
+          _pendingPresetAmbienceId = null;
+        }
       });
     }
   }
