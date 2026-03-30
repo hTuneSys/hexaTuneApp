@@ -12,19 +12,17 @@ import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
-/// Temporary debug page that displays all in-memory log entries captured
-/// by [DebugLogBuffer] since app launch. Supports real-time streaming,
+/// Debug page that displays all in-memory log entries captured by
+/// [DebugLogBuffer] since app launch. Supports real-time streaming,
 /// one-tap copy, and level-based filtering.
-///
-/// Will be removed after debugging is complete.
-class DummyLogMonitorPage extends StatefulWidget {
-  const DummyLogMonitorPage({super.key});
+class LogMonitorPage extends StatefulWidget {
+  const LogMonitorPage({super.key});
 
   @override
-  State<DummyLogMonitorPage> createState() => _DummyLogMonitorPageState();
+  State<LogMonitorPage> createState() => _LogMonitorPageState();
 }
 
-class _DummyLogMonitorPageState extends State<DummyLogMonitorPage> {
+class _LogMonitorPageState extends State<LogMonitorPage> {
   late final StreamSubscription<DebugLogEntry> _subscription;
   final _scrollController = ScrollController();
   String? _levelFilter;

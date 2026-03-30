@@ -14,14 +14,8 @@ import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_state.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_audit_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_log_monitor_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
+import 'package:hexatuneapp/src/pages/debug/log_monitor_page.dart';
+import 'package:hexatuneapp/src/pages/main/home/home_page.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/harmonizer_bottom_sheet.dart';
 import 'package:hexatuneapp/src/pages/category/category_list_page.dart';
@@ -168,7 +162,7 @@ class AppRouter {
         routes: [
           GoRoute(
             path: RouteNames.home,
-            builder: (context, state) => const DummyHomePage(),
+            builder: (context, state) => const HomePage(),
           ),
           GoRoute(
             path: RouteNames.reAuth,
@@ -179,19 +173,6 @@ class AppRouter {
             path: RouteNames.deviceApproval,
             builder: (context, state) =>
                 const _PlaceholderPage(title: 'Device Approval'),
-          ),
-          // Dummy test pages for all API endpoints.
-          GoRoute(
-            path: RouteNames.authExtras,
-            builder: (context, state) => const DummyAuthExtrasPage(),
-          ),
-          GoRoute(
-            path: RouteNames.providers,
-            builder: (context, state) => const DummyProvidersPage(),
-          ),
-          GoRoute(
-            path: RouteNames.tenants,
-            builder: (context, state) => const DummyTenantsPage(),
           ),
           GoRoute(
             path: RouteNames.categoryList,
@@ -282,22 +263,6 @@ class AppRouter {
             },
           ),
           GoRoute(
-            path: RouteNames.tasks,
-            builder: (context, state) => const DummyTasksPage(),
-          ),
-          GoRoute(
-            path: RouteNames.audit,
-            builder: (context, state) => const DummyAuditPage(),
-          ),
-          GoRoute(
-            path: RouteNames.hexagen,
-            builder: (context, state) => const DummyHexagenPage(),
-          ),
-          GoRoute(
-            path: RouteNames.logMonitor,
-            builder: (context, state) => const DummyLogMonitorPage(),
-          ),
-          GoRoute(
             path: RouteNames.workspace,
             builder: (context, state) => const WorkspacePage(),
           ),
@@ -327,7 +292,7 @@ class AppRouter {
           ),
           GoRoute(
             path: RouteNames.settingsLogMonitor,
-            builder: (context, state) => const DummyLogMonitorPage(),
+            builder: (context, state) => const LogMonitorPage(),
           ),
         ],
       ),

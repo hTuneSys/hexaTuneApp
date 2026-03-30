@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:hexatuneapp/src/core/log/debug_log_buffer.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_log_monitor_page.dart';
+import 'package:hexatuneapp/src/pages/debug/log_monitor_page.dart';
 
 Widget _buildApp() {
-  return const MaterialApp(home: DummyLogMonitorPage());
+  return const MaterialApp(home: LogMonitorPage());
 }
 
 void main() {
@@ -20,7 +20,7 @@ void main() {
     DebugLogBuffer.instance.clear();
   });
 
-  group('DummyLogMonitorPage', () {
+  group('LogMonitorPage', () {
     testWidgets('shows appbar title with count', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();

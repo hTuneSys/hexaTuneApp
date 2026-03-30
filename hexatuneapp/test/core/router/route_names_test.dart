@@ -22,14 +22,6 @@ void main() {
       expect(RouteNames.deviceApproval, '/device-approval');
     });
 
-    test('dev test pages have /dev/ prefix', () {
-      expect(RouteNames.authExtras, startsWith('/dev/'));
-      expect(RouteNames.providers, startsWith('/dev/'));
-      expect(RouteNames.tenants, startsWith('/dev/'));
-      expect(RouteNames.tasks, startsWith('/dev/'));
-      expect(RouteNames.audit, startsWith('/dev/'));
-    });
-
     test('settings sub-routes have /settings/ prefix', () {
       expect(RouteNames.settingsProfile, '/settings/profile');
       expect(RouteNames.settingsWallet, '/settings/wallet');
