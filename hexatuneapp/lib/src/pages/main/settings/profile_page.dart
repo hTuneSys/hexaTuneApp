@@ -146,9 +146,15 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.profileNoData, style: theme.textTheme.bodyLarge),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: theme.colorScheme.outline,
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            Text(l10n.profileNoData, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 16),
+            FilledButton.tonal(
               onPressed: _loadData,
               child: Text(l10n.profileRetry),
             ),
@@ -182,9 +188,6 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 8),
         if (_account != null)
           Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -217,9 +220,6 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 8),
         if (_profile != null)
           Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -246,13 +246,28 @@ class _ProfilePageState extends State<ProfilePage> {
       children: [
         Text(l10n.profileUpdateSection, style: theme.textTheme.titleMedium),
         const SizedBox(height: 8),
+        Text(
+          l10n.profileDisplayName,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
         Material(
           elevation: 1,
           borderRadius: BorderRadius.circular(12),
           color: theme.colorScheme.surfaceContainerLow,
           child: TextField(
             controller: _displayNameCtrl,
-            decoration: InputDecoration(labelText: l10n.profileDisplayName),
+            decoration: InputDecoration(hintText: l10n.profileDisplayName),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          l10n.profileAvatarUrl,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
@@ -262,7 +277,15 @@ class _ProfilePageState extends State<ProfilePage> {
           color: theme.colorScheme.surfaceContainerLow,
           child: TextField(
             controller: _avatarUrlCtrl,
-            decoration: InputDecoration(labelText: l10n.profileAvatarUrl),
+            decoration: InputDecoration(hintText: l10n.profileAvatarUrl),
+            textInputAction: TextInputAction.next,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          l10n.profileBio,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 8),
@@ -272,18 +295,25 @@ class _ProfilePageState extends State<ProfilePage> {
           color: theme.colorScheme.surfaceContainerLow,
           child: TextField(
             controller: _bioCtrl,
-            decoration: InputDecoration(labelText: l10n.profileBio),
+            decoration: InputDecoration(hintText: l10n.profileBio),
             maxLines: 3,
           ),
         ),
-        const SizedBox(height: 16),
-        ElevatedButton(
+        const SizedBox(height: 24),
+        FilledButton(
           onPressed: _isLoading ? null : _updateProfile,
+          style: FilledButton.styleFrom(
+            elevation: 1,
+            minimumSize: const Size.fromHeight(48),
+          ),
           child: _isLoading
-              ? const SizedBox(
+              ? SizedBox(
                   height: 20,
                   width: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: theme.colorScheme.onPrimary,
+                  ),
                 )
               : Text(l10n.profileSave),
         ),
@@ -292,6 +322,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _infoRow(String label, String value) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
@@ -299,9 +330,16 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           SizedBox(
             width: 100,
-            child: Text(label, style: Theme.of(context).textTheme.bodySmall),
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
-          Expanded(child: SelectableText(value)),
+          Expanded(
+            child: SelectableText(value, style: theme.textTheme.bodyMedium),
+          ),
         ],
       ),
     );

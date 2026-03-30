@@ -65,9 +65,6 @@ class _DevicesPageState extends State<DevicesPage> {
       builder: (ctx) {
         final dialogTheme = Theme.of(ctx);
         return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
           title: Text(l10n.devicesDeleteConfirm),
           actions: [
             TextButton(
@@ -77,6 +74,7 @@ class _DevicesPageState extends State<DevicesPage> {
             FilledButton(
               onPressed: () => Navigator.of(ctx).pop(true),
               style: FilledButton.styleFrom(
+                elevation: 1,
                 backgroundColor: dialogTheme.colorScheme.error,
                 foregroundColor: dialogTheme.colorScheme.onError,
               ),
@@ -140,9 +138,15 @@ class _DevicesPageState extends State<DevicesPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(l10n.devicesNoDevices, style: theme.textTheme.bodyLarge),
+            Icon(
+              Icons.error_outline,
+              size: 64,
+              color: theme.colorScheme.outline,
+            ),
             const SizedBox(height: 16),
-            ElevatedButton(
+            Text(l10n.devicesNoDevices, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 16),
+            FilledButton.tonal(
               onPressed: _loadDevices,
               child: Text(l10n.devicesRetry),
             ),
@@ -154,7 +158,18 @@ class _DevicesPageState extends State<DevicesPage> {
     final devices = _devices;
     if (devices == null || devices.isEmpty) {
       return Center(
-        child: Text(l10n.devicesNoDevices, style: theme.textTheme.bodyLarge),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.devices_outlined,
+              size: 64,
+              color: theme.colorScheme.outline,
+            ),
+            const SizedBox(height: 16),
+            Text(l10n.devicesNoDevices, style: theme.textTheme.titleMedium),
+          ],
+        ),
       );
     }
 
@@ -181,7 +196,6 @@ class _DevicesPageState extends State<DevicesPage> {
     DeviceResponse device,
   ) {
     return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -247,7 +261,12 @@ class _DevicesPageState extends State<DevicesPage> {
         children: [
           SizedBox(
             width: 100,
-            child: Text(label, style: theme.textTheme.bodySmall),
+            child: Text(
+              label,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ),
           Expanded(
             child: SelectableText(value, style: theme.textTheme.bodyMedium),

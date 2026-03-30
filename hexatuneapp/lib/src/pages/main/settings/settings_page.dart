@@ -111,7 +111,10 @@ class _SettingsTile extends StatelessWidget {
     final theme = Theme.of(context);
     return Card(
       child: ListTile(
-        leading: Icon(icon, color: theme.colorScheme.primary),
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Icon(icon, color: theme.colorScheme.onPrimaryContainer),
+        ),
         title: Text(title),
         subtitle: subtitle != null ? Text(subtitle!) : null,
         trailing: Icon(

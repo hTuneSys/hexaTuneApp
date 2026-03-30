@@ -160,7 +160,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Scroll to the save button (it may be off-screen)
-      final saveButton = find.widgetWithText(ElevatedButton, 'Save Profile');
+      final saveButton = find.widgetWithText(FilledButton, 'Save Profile');
       await tester.ensureVisible(saveButton);
       await tester.pumpAndSettle();
 
@@ -180,7 +180,7 @@ void main() {
 
       // Error state shows l10n.profileNoData and retry
       expect(find.text('—'), findsOneWidget);
-      expect(find.widgetWithText(ElevatedButton, 'Retry'), findsOneWidget);
+      expect(find.widgetWithText(FilledButton, 'Retry'), findsOneWidget);
     });
 
     testWidgets('retry button triggers reload', (tester) async {
@@ -194,7 +194,7 @@ void main() {
       // Set up for successful retry
       when(() => mockRepo.getAccount()).thenAnswer((_) async => _testAccount);
 
-      await tester.tap(find.widgetWithText(ElevatedButton, 'Retry'));
+      await tester.tap(find.widgetWithText(FilledButton, 'Retry'));
       await tester.pumpAndSettle();
 
       expect(find.text('acc-1'), findsOneWidget);

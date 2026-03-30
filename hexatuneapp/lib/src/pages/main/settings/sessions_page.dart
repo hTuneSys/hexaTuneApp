@@ -25,7 +25,6 @@ class SessionsPage extends StatefulWidget {
 }
 
 class _SessionsPageState extends State<SessionsPage> {
-  static const _borderRadius = 12.0;
   static const _pageLimit = 20;
 
   final _searchController = TextEditingController();
@@ -85,6 +84,52 @@ class _SessionsPageState extends State<SessionsPage> {
 
   // ── Revoke actions ───────────────────────────────────────────────────────
 
+  void _showSortSheet() {
+    final l10n = AppLocalizations.of(context)!;
+    final options = <(String, String)>[
+      ('', l10n.sessionsSortDefault),
+      ('-last_activity_at', l10n.sessionsSortRecentActivity),
+      ('last_activity_at', l10n.sessionsSortOldestActivity),
+      ('-created_at', l10n.sessionsSortNewest),
+      ('created_at', l10n.sessionsSortOldest),
+    ];
+    showModalBottomSheet<void>(
+      context: context,
+      useRootNavigator: true,
+      builder: (ctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                l10n.sessionsSort,
+                style: Theme.of(ctx).textTheme.titleMedium,
+              ),
+            ),
+            ...options.map((opt) {
+              final selected = opt.$1 == _sortValue;
+              return ListTile(
+                title: Text(opt.$2),
+                leading: Icon(
+                  selected
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_unchecked,
+                  color: selected ? Theme.of(ctx).colorScheme.primary : null,
+                ),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  setState(() => _sortValue = opt.$1);
+                  _load();
+                },
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
   Future<void> _revokeOthers() async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
@@ -92,9 +137,6 @@ class _SessionsPageState extends State<SessionsPage> {
       builder: (ctx) => AlertDialog(
         title: Text(l10n.sessionsRevokeOthersTitle),
         content: Text(l10n.sessionsRevokeOthersMessage),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_borderRadius),
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -102,6 +144,10 @@ class _SessionsPageState extends State<SessionsPage> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              elevation: 1,
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+            ),
             child: Text(l10n.sessionsRevoke),
           ),
         ],
@@ -133,9 +179,6 @@ class _SessionsPageState extends State<SessionsPage> {
       builder: (ctx) => AlertDialog(
         title: Text(l10n.sessionsRevokeAllTitle),
         content: Text(l10n.sessionsRevokeAllMessage),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_borderRadius),
-        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -143,6 +186,10 @@ class _SessionsPageState extends State<SessionsPage> {
           ),
           FilledButton(
             onPressed: () => Navigator.pop(ctx, true),
+            style: FilledButton.styleFrom(
+              elevation: 1,
+              backgroundColor: Theme.of(ctx).colorScheme.error,
+            ),
             child: Text(l10n.sessionsRevoke),
           ),
         ],
@@ -194,13 +241,13 @@ class _SessionsPageState extends State<SessionsPage> {
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
                 Expanded(
                   child: Material(
                     elevation: 1,
-                    borderRadius: BorderRadius.circular(_borderRadius),
+                    borderRadius: BorderRadius.circular(12),
                     color: colorScheme.surfaceContainerLow,
                     child: TextField(
                       controller: _searchController,
@@ -215,35 +262,14 @@ class _SessionsPageState extends State<SessionsPage> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                DropdownButton<String>(
-                  value: _sortValue,
-                  hint: Text(l10n.sessionsSort),
-                  items: [
-                    DropdownMenuItem(
-                      value: '',
-                      child: Text(l10n.sessionsSortDefault),
+                OutlinedButton(
+                  onPressed: _showSortSheet,
+                  style: OutlinedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    DropdownMenuItem(
-                      value: '-last_activity_at',
-                      child: Text(l10n.sessionsSortRecentActivity),
-                    ),
-                    DropdownMenuItem(
-                      value: 'last_activity_at',
-                      child: Text(l10n.sessionsSortOldestActivity),
-                    ),
-                    DropdownMenuItem(
-                      value: '-created_at',
-                      child: Text(l10n.sessionsSortNewest),
-                    ),
-                    DropdownMenuItem(
-                      value: 'created_at',
-                      child: Text(l10n.sessionsSortOldest),
-                    ),
-                  ],
-                  onChanged: (v) {
-                    setState(() => _sortValue = v ?? '');
-                    _load();
-                  },
+                  ),
+                  child: Text(l10n.sessionsSort),
                 ),
               ],
             ),
@@ -268,9 +294,9 @@ class _SessionsPageState extends State<SessionsPage> {
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(
           8,
+          4,
           8,
-          8,
-          8 + AppBottomBar.scrollPadding,
+          4 + AppBottomBar.scrollPadding,
         ),
         itemCount: _sessions.length + (_hasMore ? 1 : 0),
         itemBuilder: (ctx, i) {
@@ -305,11 +331,11 @@ class _SessionsPageState extends State<SessionsPage> {
         : session.deviceId;
 
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_borderRadius),
-      ),
       child: ListTile(
-        leading: Icon(Icons.devices, color: colorScheme.primary),
+        leading: CircleAvatar(
+          backgroundColor: colorScheme.primaryContainer,
+          child: Icon(Icons.devices, color: colorScheme.onPrimaryContainer),
+        ),
         title: Text(truncatedId, style: theme.textTheme.titleSmall),
         subtitle: Text(
           '${l10n.sessionsDevice}: $truncatedDevice\n'

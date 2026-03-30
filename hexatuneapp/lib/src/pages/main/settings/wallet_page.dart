@@ -30,8 +30,6 @@ class WalletPage extends StatefulWidget {
 }
 
 class _WalletPageState extends State<WalletPage> {
-  static const _borderRadius = 12.0;
-
   WalletBalanceResponse? _balance;
   bool _balanceLoading = false;
 
@@ -212,9 +210,6 @@ class _WalletPageState extends State<WalletPage> {
           const Center(child: CircularProgressIndicator())
         else if (_balance != null)
           Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(_borderRadius),
-            ),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -320,12 +315,17 @@ class _WalletPageState extends State<WalletPage> {
               children: [
                 Icon(
                   Icons.receipt_long,
-                  size: 48,
+                  size: 64,
                   color: theme.colorScheme.outline,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.walletNoTransactions,
+                  style: theme.textTheme.titleMedium,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  l10n.walletNoTransactions,
+                  l10n.walletTransactionCount(0),
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: theme.colorScheme.outline,
                   ),
@@ -357,9 +357,6 @@ class _WalletPageState extends State<WalletPage> {
     ThemeData theme,
   ) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_borderRadius),
-      ),
       child: Padding(
         padding: const EdgeInsets.all(12),
         child: Column(
@@ -413,7 +410,7 @@ class _WalletPageState extends State<WalletPage> {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: theme.colorScheme.secondaryContainer,
-        borderRadius: BorderRadius.circular(_borderRadius),
+        borderRadius: BorderRadius.circular(12),
       ),
       child: Text(
         label,
@@ -443,11 +440,21 @@ class _WalletPageState extends State<WalletPage> {
           const Center(child: CircularProgressIndicator())
         else if (_products.isEmpty)
           Center(
-            child: Text(
-              l10n.walletNoProducts,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.outline,
-              ),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.store_outlined,
+                  size: 64,
+                  color: theme.colorScheme.outline,
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  l10n.walletNoProducts,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.outline,
+                  ),
+                ),
+              ],
             ),
           )
         else
@@ -464,10 +471,14 @@ class _WalletPageState extends State<WalletPage> {
     ThemeData theme,
   ) {
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(_borderRadius),
-      ),
       child: ListTile(
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primaryContainer,
+          child: Icon(
+            Icons.shopping_bag_outlined,
+            color: theme.colorScheme.onPrimaryContainer,
+          ),
+        ),
         title: Text(product.name),
         subtitle: Text(
           l10n.walletBalanceCoins(product.coins),

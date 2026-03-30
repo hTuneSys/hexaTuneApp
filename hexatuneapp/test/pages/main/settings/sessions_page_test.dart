@@ -114,11 +114,11 @@ void main() {
       expect(find.byType(TextField), findsOneWidget);
     });
 
-    testWidgets('shows sort dropdown', (tester) async {
+    testWidgets('shows sort button', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.text('Default'), findsOneWidget);
+      expect(find.text('Sort'), findsOneWidget);
     });
 
     testWidgets(
