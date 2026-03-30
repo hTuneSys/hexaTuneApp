@@ -1,3 +1,19 @@
+# [1.11.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.10.0...v1.11.0) (2026-03-30)
+
+
+### Bug Fixes
+
+* **workspace:** fix overscroll by replacing SingleChildScrollView with ListView ([36409db](https://github.com/hTuneSys/hexaTuneApp/commit/36409db791cc68765018222fbcbae91cc0b89dd4))
+* **workspace:** reduce nav gap, limit history to 20, prefill harmonizer from history ([192d172](https://github.com/hTuneSys/hexaTuneApp/commit/192d1726c1f652149de72273232f2b07b8e77ed9))
+* **workspace:** remove excess gap between nav grid and recently used ([5327f27](https://github.com/hTuneSys/hexaTuneApp/commit/5327f278d7c01a5337ef765b243b5c0d9a51aea5))
+
+
+### Features
+
+* **settings:** add back navigation to linked accounts page ([1470443](https://github.com/hTuneSys/hexaTuneApp/commit/1470443bf134e450cf3274e4e807d7a9b15b7437))
+* **settings:** add back navigation to settings sub-pages ([3ddae9f](https://github.com/hTuneSys/hexaTuneApp/commit/3ddae9f9e772f6b9872bfe98ed112ca2ec7f65a8))
+* **settings:** migrate dummy pages to production settings sub-pages ([c35af30](https://github.com/hTuneSys/hexaTuneApp/commit/c35af30a10ad9dcc32de151bd8b4c8058b11966a))
+
 # [1.10.0](https://github.com/hTuneSys/hexaTuneApp/compare/v1.9.0...v1.10.0) (2026-03-28)
 
 
