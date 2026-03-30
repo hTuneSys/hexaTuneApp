@@ -161,6 +161,11 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('No recent harmonizations'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('Recently Used'), findsOneWidget);
       expect(find.text('No recent harmonizations'), findsOneWidget);
     });
@@ -190,6 +195,11 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('My Formula'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('My Formula'), findsOneWidget);
       expect(find.text('Monaural'), findsOneWidget);
       expect(find.text('x3'), findsOneWidget);
@@ -221,6 +231,11 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('Inv A'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('Inv A'), findsOneWidget);
       expect(find.text('Inv B'), findsOneWidget);
       expect(find.text('Binaural'), findsOneWidget);
@@ -250,6 +265,11 @@ void main() {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
+      await tester.scrollUntilVisible(
+        find.text('Test'),
+        200,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.byIcon(Icons.join_inner_rounded), findsWidgets);
     });
 

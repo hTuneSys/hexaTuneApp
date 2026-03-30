@@ -65,29 +65,44 @@ class _WorkspacePageState extends State<WorkspacePage> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final history = _historyService.entries.take(20).toList();
 
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: SingleChildScrollView(
+        child: ListView(
           padding: const EdgeInsets.fromLTRB(
             16,
             16,
             16,
             16 + AppBottomBar.scrollPadding,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildHeader(l10n, theme, colorScheme),
-              const SizedBox(height: 16),
-              _buildMainCard(l10n, theme, colorScheme),
-              const SizedBox(height: 16),
-              _buildNavGrid(l10n, theme, colorScheme),
-              const SizedBox(height: 16),
-              _buildRecentlyUsed(l10n, theme, colorScheme),
-            ],
-          ),
+          children: [
+            _buildHeader(l10n, theme, colorScheme),
+            const SizedBox(height: 16),
+            _buildMainCard(l10n, theme, colorScheme),
+            const SizedBox(height: 16),
+            _buildNavGrid(l10n, theme, colorScheme),
+            const SizedBox(height: 16),
+            _buildRecentlyUsedHeader(l10n, theme, colorScheme),
+            const SizedBox(height: 8),
+            if (history.isEmpty)
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  child: Text(
+                    l10n.workspaceNoRecentlyUsed,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ),
+              )
+            else
+              ...history.map(
+                (entry) => _buildHistoryCard(entry, l10n, theme, colorScheme),
+              ),
+          ],
         ),
       ),
     );
@@ -437,50 +452,21 @@ class _WorkspacePageState extends State<WorkspacePage> {
     );
   }
 
-  Widget _buildRecentlyUsed(
+  Widget _buildRecentlyUsedHeader(
     AppLocalizations l10n,
     ThemeData theme,
     ColorScheme colorScheme,
   ) {
-    final history = _historyService.entries.take(20).toList();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Row(
       children: [
-        Row(
-          children: [
-            Icon(Icons.history, size: 18, color: colorScheme.onSurfaceVariant),
-            const SizedBox(width: 6),
-            Text(
-              l10n.workspaceRecentlyUsed,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        if (history.isEmpty)
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              child: Text(
-                l10n.workspaceNoRecentlyUsed,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          )
-        else
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: history.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 4),
-            itemBuilder: (ctx, i) =>
-                _buildHistoryCard(history[i], l10n, theme, colorScheme),
+        Icon(Icons.history, size: 18, color: colorScheme.onSurfaceVariant),
+        const SizedBox(width: 6),
+        Text(
+          l10n.workspaceRecentlyUsed,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
           ),
+        ),
       ],
     );
   }
