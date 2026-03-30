@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -12,6 +13,7 @@ import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
 import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
+import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
@@ -118,6 +120,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(RouteNames.settings),
+        ),
         title: Text(l10n.profileTitle),
         actions: [
           IconButton(

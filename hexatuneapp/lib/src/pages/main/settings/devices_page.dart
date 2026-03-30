@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -10,6 +11,7 @@ import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
 import 'package:hexatuneapp/src/core/rest/device/device_repository.dart';
 import 'package:hexatuneapp/src/core/rest/device/models/device_response.dart';
+import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
@@ -112,6 +114,10 @@ class _DevicesPageState extends State<DevicesPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(RouteNames.settings),
+        ),
         title: Text(l10n.devicesTitle),
         actions: [
           IconButton(

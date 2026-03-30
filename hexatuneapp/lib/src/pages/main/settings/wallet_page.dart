@@ -4,6 +4,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/di/injection.dart';
@@ -16,6 +17,7 @@ import 'package:hexatuneapp/src/core/payment/models/iap_status.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/transaction_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/models/wallet_balance_response.dart';
 import 'package:hexatuneapp/src/core/rest/wallet/wallet_repository.dart';
+import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 
@@ -169,7 +171,13 @@ class _WalletPageState extends State<WalletPage> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.walletTitle)),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(RouteNames.settings),
+        ),
+        title: Text(l10n.walletTitle),
+      ),
       body: RefreshIndicator(
         onRefresh: _refresh,
         child: ListView(
