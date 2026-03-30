@@ -5,6 +5,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:hexatuneapp/l10n/app_localizations.dart';
 import 'package:hexatuneapp/src/core/rest/auth/auth_repository.dart';
@@ -20,6 +21,7 @@ import 'package:hexatuneapp/src/core/di/injection.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/core/router/route_names.dart';
 import 'package:hexatuneapp/src/core/storage/otp_timer_service.dart';
 import 'package:hexatuneapp/src/pages/auth/widgets/otp_input_field.dart';
 import 'package:hexatuneapp/src/pages/provider/provider_reset_password_sheet.dart';
@@ -410,6 +412,10 @@ class _ProviderPageState extends State<ProviderPage> {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go(RouteNames.settings),
+        ),
         title: Text(l10n.providerTitle),
         actions: [
           IconButton(
