@@ -82,7 +82,7 @@ class _WorkspacePageState extends State<WorkspacePage> {
               _buildHeader(l10n, theme, colorScheme),
               const SizedBox(height: 16),
               _buildMainCard(l10n, theme, colorScheme),
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
               _buildNavGrid(l10n, theme, colorScheme),
               const SizedBox(height: 16),
               _buildRecentlyUsed(l10n, theme, colorScheme),
@@ -404,21 +404,15 @@ class _WorkspacePageState extends State<WorkspacePage> {
       (Icons.spa_outlined, l10n.workspaceAmbience, RouteNames.ambienceList),
     ];
 
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: 12,
-      crossAxisSpacing: 12,
-      childAspectRatio: 2.2,
-      children: items.map((item) {
-        return Card(
+    Widget buildNavItem((IconData, String, String) item) {
+      return Expanded(
+        child: Card(
           color: colorScheme.surfaceContainerLow,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
             onTap: () => context.push(item.$3),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               child: Row(
                 children: [
                   Icon(item.$1, color: colorScheme.primary),
@@ -430,8 +424,16 @@ class _WorkspacePageState extends State<WorkspacePage> {
               ),
             ),
           ),
-        );
-      }).toList(),
+        ),
+      );
+    }
+
+    return Column(
+      children: [
+        Row(children: [buildNavItem(items[0]), buildNavItem(items[1])]),
+        const SizedBox(height: 12),
+        Row(children: [buildNavItem(items[2]), buildNavItem(items[3])]),
+      ],
     );
   }
 
