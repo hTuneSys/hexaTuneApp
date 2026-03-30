@@ -210,26 +210,31 @@ class HarmonizerWidget extends StatelessWidget {
     AppLocalizations l10n,
     ColorScheme colorScheme,
   ) {
-    return InputDecorator(
-      decoration: InputDecoration(
-        labelText: l10n.harmonizerSelectAmbience,
-        isDense: true,
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<AmbienceConfig?>(
-          value: selectedAmbience,
-          isExpanded: true,
+    return Material(
+      elevation: 1,
+      borderRadius: BorderRadius.circular(12),
+      color: colorScheme.surfaceContainerLow,
+      child: InputDecorator(
+        decoration: InputDecoration(
+          labelText: l10n.harmonizerSelectAmbience,
           isDense: true,
-          items: [
-            DropdownMenuItem<AmbienceConfig?>(
-              value: null,
-              child: Text(l10n.harmonizerNoAmbience),
-            ),
-            ...ambienceConfigs.map(
-              (c) => DropdownMenuItem(value: c, child: Text(c.name)),
-            ),
-          ],
-          onChanged: isActive ? null : onAmbienceChanged,
+        ),
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<AmbienceConfig?>(
+            value: selectedAmbience,
+            isExpanded: true,
+            isDense: true,
+            items: [
+              DropdownMenuItem<AmbienceConfig?>(
+                value: null,
+                child: Text(l10n.harmonizerNoAmbience),
+              ),
+              ...ambienceConfigs.map(
+                (c) => DropdownMenuItem(value: c, child: Text(c.name)),
+              ),
+            ],
+            onChanged: isActive ? null : onAmbienceChanged,
+          ),
         ),
       ),
     );
