@@ -25,35 +25,135 @@ void main() {
       expect(find.text('Settings'), findsOneWidget);
     });
 
-    testWidgets('shows linked accounts item', (tester) async {
-      await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
+    group('internal menu items', () {
+      final internalItems = <Map<String, dynamic>>[
+        {
+          'title': 'Profile',
+          'subtitle': 'Account info and profile settings',
+          'icon': Icons.person_outline,
+        },
+        {
+          'title': 'Wallet',
+          'subtitle': 'Balance and transactions',
+          'icon': Icons.account_balance_wallet_outlined,
+        },
+        {
+          'title': 'Sessions',
+          'subtitle': 'Manage active sessions',
+          'icon': Icons.schedule_outlined,
+        },
+        {
+          'title': 'Devices',
+          'subtitle': 'Manage registered devices',
+          'icon': Icons.devices_outlined,
+        },
+        {
+          'title': 'Linked Accounts',
+          'subtitle': 'Manage your authentication providers',
+          'icon': Icons.link,
+        },
+      ];
 
-      expect(find.text('Linked Accounts'), findsOneWidget);
-      expect(find.text('Manage your authentication providers'), findsOneWidget);
+      for (final item in internalItems) {
+        testWidgets('shows ${item['title']} item', (tester) async {
+          await tester.pumpWidget(_buildApp());
+          await tester.pumpAndSettle();
+
+          await tester.scrollUntilVisible(
+            find.text(item['title'] as String),
+            200,
+          );
+          expect(find.text(item['title'] as String), findsOneWidget);
+          expect(find.text(item['subtitle'] as String), findsOneWidget);
+        });
+      }
+
+      testWidgets('shows chevron_right trailing icons', (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        expect(find.byIcon(Icons.chevron_right), findsNWidgets(5));
+      });
     });
 
-    testWidgets('shows link icon', (tester) async {
+    group('external menu items', () {
+      final externalItems = <Map<String, dynamic>>[
+        {'title': 'About', 'icon': Icons.info_outline},
+        {'title': 'Privacy Policy', 'icon': Icons.privacy_tip_outlined},
+        {'title': 'Terms of Service', 'icon': Icons.description_outlined},
+      ];
+
+      for (final item in externalItems) {
+        testWidgets('shows ${item['title']} item', (tester) async {
+          await tester.pumpWidget(_buildApp());
+          await tester.pumpAndSettle();
+
+          await tester.scrollUntilVisible(
+            find.text(item['title'] as String),
+            200,
+          );
+          expect(find.text(item['title'] as String), findsOneWidget);
+        });
+      }
+
+      testWidgets('shows open_in_new trailing icons', (tester) async {
+        await tester.pumpWidget(_buildApp());
+        await tester.pumpAndSettle();
+
+        await tester.scrollUntilVisible(find.text('Terms of Service'), 200);
+        expect(find.byIcon(Icons.open_in_new), findsNWidgets(3));
+      });
+    });
+
+    testWidgets('shows divider between internal and external items', (
+      tester,
+    ) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
+      expect(find.byType(Divider), findsOneWidget);
+    });
+
+    testWidgets('shows all 8 leading icons', (tester) async {
+      await tester.pumpWidget(_buildApp());
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(Icons.person_outline), findsOneWidget);
+      expect(
+        find.byIcon(Icons.account_balance_wallet_outlined),
+        findsOneWidget,
+      );
+      expect(find.byIcon(Icons.schedule_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.devices_outlined), findsOneWidget);
       expect(find.byIcon(Icons.link), findsOneWidget);
+
+      await tester.scrollUntilVisible(find.text('Terms of Service'), 200);
+      expect(find.byIcon(Icons.info_outline), findsOneWidget);
+      expect(find.byIcon(Icons.privacy_tip_outlined), findsOneWidget);
+      expect(find.byIcon(Icons.description_outlined), findsOneWidget);
     });
 
-    testWidgets('shows chevron trailing icon', (tester) async {
+    testWidgets('all items are tappable', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      expect(find.byIcon(Icons.chevron_right), findsOneWidget);
+      final listTiles = find.byType(ListTile, skipOffstage: false);
+      expect(listTiles, findsNWidgets(8));
+
+      for (var i = 0; i < 8; i++) {
+        expect(
+          tester.widget<ListTile>(listTiles.at(i)).onTap,
+          isNotNull,
+          reason: 'ListTile at index $i should be tappable',
+        );
+      }
     });
 
-    testWidgets('linked accounts item is tappable', (tester) async {
+    testWidgets('renders 8 Card widgets for menu items', (tester) async {
       await tester.pumpWidget(_buildApp());
       await tester.pumpAndSettle();
 
-      final listTile = find.byType(ListTile);
-      expect(listTile, findsOneWidget);
-      expect(tester.widget<ListTile>(listTile).onTap, isNotNull);
+      expect(find.byType(Card, skipOffstage: false), findsNWidgets(8));
     });
   });
 }

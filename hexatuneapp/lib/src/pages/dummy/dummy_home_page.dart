@@ -26,19 +26,19 @@ class DummyHomePage extends StatelessWidget {
       icon: Icons.person,
       title: 'Account & Profile',
       subtitle: 'Account info, profile view/edit',
-      route: RouteNames.account,
+      route: RouteNames.settingsProfile,
     ),
     _NavItem(
       icon: Icons.devices,
       title: 'Sessions',
       subtitle: 'Active sessions, revoke',
-      route: RouteNames.sessions,
+      route: RouteNames.settingsSessions,
     ),
     _NavItem(
       icon: Icons.phone_android,
       title: 'Devices & Approvals',
       subtitle: 'Push token, device approval flow',
-      route: RouteNames.devices,
+      route: RouteNames.settingsDevices,
     ),
     _NavItem(
       icon: Icons.link,
@@ -74,7 +74,7 @@ class DummyHomePage extends StatelessWidget {
       icon: Icons.account_balance_wallet,
       title: 'Wallet',
       subtitle: 'Balance, packages, purchases, transactions',
-      route: RouteNames.wallet,
+      route: RouteNames.settingsWallet,
     ),
     _NavItem(
       icon: Icons.bug_report,

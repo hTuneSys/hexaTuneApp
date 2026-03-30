@@ -17,9 +17,6 @@ class RouteNames {
 
   // Dummy test pages — will be removed after production UI is built.
   static const String authExtras = '/dev/auth-extras';
-  static const String account = '/dev/account';
-  static const String sessions = '/dev/sessions';
-  static const String devices = '/dev/devices';
   static const String providers = '/dev/providers';
   static const String tenants = '/dev/tenants';
   static const String categoryList = '/categories';
@@ -60,9 +57,12 @@ class RouteNames {
   static const String flows = '/dev/flows';
   static const String steps = '/dev/steps';
   static const String otp = '/dev/otp';
-  static const String wallet = '/dev/wallet';
   static const String logMonitor = '/dev/log-monitor';
   static const String workspace = '/workspace';
   static const String settings = '/settings';
   static const String providerManagement = '/settings/providers';
+  static const String settingsProfile = '/settings/profile';
+  static const String settingsWallet = '/settings/wallet';
+  static const String settingsSessions = '/settings/sessions';
+  static const String settingsDevices = '/settings/devices';
 }

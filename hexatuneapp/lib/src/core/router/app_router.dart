@@ -14,16 +14,12 @@ import 'package:hexatuneapp/src/core/harmonizer/models/harmonizer_state.dart';
 import 'package:hexatuneapp/src/core/log/log_category.dart';
 import 'package:hexatuneapp/src/core/log/log_service.dart';
 import 'package:hexatuneapp/src/core/router/route_names.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_account_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_audit_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_auth_extras_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_devices_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_hexagen_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_home_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_wallet_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_log_monitor_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_providers_page.dart';
-import 'package:hexatuneapp/src/pages/dummy/dummy_sessions_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tasks_page.dart';
 import 'package:hexatuneapp/src/pages/dummy/dummy_tenants_page.dart';
 import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
@@ -52,6 +48,10 @@ import 'package:hexatuneapp/src/pages/ambience/ambience_edit_page.dart';
 import 'package:hexatuneapp/src/pages/ambience/ambience_view_page.dart';
 import 'package:hexatuneapp/src/pages/main/workspace/workspace_page.dart';
 import 'package:hexatuneapp/src/pages/main/settings/settings_page.dart';
+import 'package:hexatuneapp/src/pages/main/settings/profile_page.dart';
+import 'package:hexatuneapp/src/pages/main/settings/wallet_page.dart';
+import 'package:hexatuneapp/src/pages/main/settings/sessions_page.dart';
+import 'package:hexatuneapp/src/pages/main/settings/devices_page.dart';
 import 'package:hexatuneapp/src/pages/provider/provider_page.dart';
 import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
 import 'package:hexatuneapp/l10n/app_localizations.dart';
@@ -186,18 +186,6 @@ class AppRouter {
             builder: (context, state) => const DummyAuthExtrasPage(),
           ),
           GoRoute(
-            path: RouteNames.account,
-            builder: (context, state) => const DummyAccountPage(),
-          ),
-          GoRoute(
-            path: RouteNames.sessions,
-            builder: (context, state) => const DummySessionsPage(),
-          ),
-          GoRoute(
-            path: RouteNames.devices,
-            builder: (context, state) => const DummyDevicesPage(),
-          ),
-          GoRoute(
             path: RouteNames.providers,
             builder: (context, state) => const DummyProvidersPage(),
           ),
@@ -306,10 +294,6 @@ class AppRouter {
             builder: (context, state) => const DummyHexagenPage(),
           ),
           GoRoute(
-            path: RouteNames.wallet,
-            builder: (context, state) => const DummyWalletPage(),
-          ),
-          GoRoute(
             path: RouteNames.logMonitor,
             builder: (context, state) => const DummyLogMonitorPage(),
           ),
@@ -324,6 +308,22 @@ class AppRouter {
           GoRoute(
             path: RouteNames.providerManagement,
             builder: (context, state) => const ProviderPage(),
+          ),
+          GoRoute(
+            path: RouteNames.settingsProfile,
+            builder: (context, state) => const ProfilePage(),
+          ),
+          GoRoute(
+            path: RouteNames.settingsWallet,
+            builder: (context, state) => const WalletPage(),
+          ),
+          GoRoute(
+            path: RouteNames.settingsSessions,
+            builder: (context, state) => const SessionsPage(),
+          ),
+          GoRoute(
+            path: RouteNames.settingsDevices,
+            builder: (context, state) => const DevicesPage(),
           ),
         ],
       ),

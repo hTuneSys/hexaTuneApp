@@ -1183,6 +1183,262 @@ class AppLocalizationsEn extends AppLocalizations {
       'Manage your authentication providers';
 
   @override
+  String get settingsProfile => 'Profile';
+
+  @override
+  String get settingsProfileSubtitle => 'Account info and profile settings';
+
+  @override
+  String get settingsWallet => 'Wallet';
+
+  @override
+  String get settingsWalletSubtitle => 'Balance and transactions';
+
+  @override
+  String get settingsSessions => 'Sessions';
+
+  @override
+  String get settingsSessionsSubtitle => 'Manage active sessions';
+
+  @override
+  String get settingsDevices => 'Devices';
+
+  @override
+  String get settingsDevicesSubtitle => 'Manage registered devices';
+
+  @override
+  String get settingsAbout => 'About';
+
+  @override
+  String get settingsPrivacyPolicy => 'Privacy Policy';
+
+  @override
+  String get settingsTermsOfService => 'Terms of Service';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get profileAccountSection => 'Account';
+
+  @override
+  String get profileSection => 'Profile';
+
+  @override
+  String get profileUpdateSection => 'Update Profile';
+
+  @override
+  String get profileAccountId => 'ID';
+
+  @override
+  String get profileAccountStatus => 'Status';
+
+  @override
+  String get profileAccountCreated => 'Created';
+
+  @override
+  String get profileAccountUpdated => 'Updated';
+
+  @override
+  String get profileAccountLockedAt => 'Locked At';
+
+  @override
+  String get profileAccountSuspendedAt => 'Suspended At';
+
+  @override
+  String get profileDisplayName => 'Display Name';
+
+  @override
+  String get profileAvatarUrl => 'Avatar URL';
+
+  @override
+  String get profileBio => 'Bio';
+
+  @override
+  String get profileSave => 'Save Profile';
+
+  @override
+  String get profileUpdated => 'Profile updated';
+
+  @override
+  String get profileNoData => '—';
+
+  @override
+  String get profileRetry => 'Retry';
+
+  @override
+  String get walletTitle => 'Wallet';
+
+  @override
+  String get walletBalanceSection => 'Balance';
+
+  @override
+  String get walletGetBalance => 'Get Balance';
+
+  @override
+  String get walletTransactionsSection => 'Transactions';
+
+  @override
+  String get walletNoTransactions => 'No transactions';
+
+  @override
+  String walletTransactionCount(int count) {
+    return '$count transactions';
+  }
+
+  @override
+  String walletHasMore(String value) {
+    return 'Has more: $value';
+  }
+
+  @override
+  String walletBalanceCoins(int count) {
+    return '$count coins';
+  }
+
+  @override
+  String get walletPurchased => 'Purchased';
+
+  @override
+  String get walletSpent => 'Spent';
+
+  @override
+  String get walletBalance => 'Balance';
+
+  @override
+  String walletBalanceAfter(int count) {
+    return 'Balance after: $count';
+  }
+
+  @override
+  String get walletStoreSection => 'Store';
+
+  @override
+  String get walletLoadProducts => 'Load Products';
+
+  @override
+  String get walletNoProducts => 'No products available';
+
+  @override
+  String get walletPurchase => 'Purchase';
+
+  @override
+  String get walletPurchaseInitiated => 'Purchase initiated';
+
+  @override
+  String get walletLoadMore => 'Load More';
+
+  @override
+  String get sessionsTitle => 'Sessions';
+
+  @override
+  String get sessionsSearch => 'Search';
+
+  @override
+  String get sessionsSort => 'Sort';
+
+  @override
+  String get sessionsSortDefault => 'Default';
+
+  @override
+  String get sessionsSortRecentActivity => 'Recent activity';
+
+  @override
+  String get sessionsSortOldestActivity => 'Oldest activity';
+
+  @override
+  String get sessionsSortNewest => 'Newest';
+
+  @override
+  String get sessionsSortOldest => 'Oldest';
+
+  @override
+  String get sessionsRevokeOthers => 'Revoke Others';
+
+  @override
+  String get sessionsRevokeAll => 'Revoke All';
+
+  @override
+  String get sessionsRevokeOthersTitle => 'Revoke Other Sessions';
+
+  @override
+  String get sessionsRevokeOthersMessage =>
+      'This will terminate all sessions except the current one.';
+
+  @override
+  String get sessionsRevokeAllTitle => 'Revoke All Sessions';
+
+  @override
+  String get sessionsRevokeAllMessage =>
+      'This will terminate ALL sessions including the current one. You will be logged out.';
+
+  @override
+  String sessionsRevokedCount(int count) {
+    return 'Revoked $count sessions';
+  }
+
+  @override
+  String get sessionsCancel => 'Cancel';
+
+  @override
+  String get sessionsRevoke => 'Revoke';
+
+  @override
+  String get sessionsLoadMore => 'Load More';
+
+  @override
+  String get sessionsDevice => 'Device';
+
+  @override
+  String get sessionsCreated => 'Created';
+
+  @override
+  String get sessionsExpires => 'Expires';
+
+  @override
+  String get devicesTitle => 'Devices';
+
+  @override
+  String get devicesTrusted => 'Trusted';
+
+  @override
+  String get devicesNotTrusted => 'Not trusted';
+
+  @override
+  String get devicesUserAgent => 'Agent';
+
+  @override
+  String get devicesIpAddress => 'IP';
+
+  @override
+  String get devicesFirstSeen => 'First seen';
+
+  @override
+  String get devicesLastSeen => 'Last seen';
+
+  @override
+  String get devicesDelete => 'Delete';
+
+  @override
+  String get devicesDeleteConfirm =>
+      'Are you sure you want to delete this device?';
+
+  @override
+  String get devicesDeleteCancel => 'Cancel';
+
+  @override
+  String get devicesDeleteConfirmAction => 'Delete';
+
+  @override
+  String get devicesDeleted => 'Device deleted';
+
+  @override
+  String get devicesNoDevices => 'No registered devices';
+
+  @override
+  String get devicesRetry => 'Retry';
+
+  @override
   String get providerTitle => 'Linked Accounts';
 
   @override

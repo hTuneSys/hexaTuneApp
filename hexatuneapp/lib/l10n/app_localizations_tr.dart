@@ -1193,6 +1193,262 @@ class AppLocalizationsTr extends AppLocalizations {
       'Kimlik doğrulama sağlayıcılarınızı yönetin';
 
   @override
+  String get settingsProfile => 'Profil';
+
+  @override
+  String get settingsProfileSubtitle => 'Hesap bilgileri ve profil ayarları';
+
+  @override
+  String get settingsWallet => 'Cüzdan';
+
+  @override
+  String get settingsWalletSubtitle => 'Bakiye ve işlemler';
+
+  @override
+  String get settingsSessions => 'Oturumlar';
+
+  @override
+  String get settingsSessionsSubtitle => 'Aktif oturumları yönetin';
+
+  @override
+  String get settingsDevices => 'Cihazlar';
+
+  @override
+  String get settingsDevicesSubtitle => 'Kayıtlı cihazları yönetin';
+
+  @override
+  String get settingsAbout => 'Hakkında';
+
+  @override
+  String get settingsPrivacyPolicy => 'Gizlilik Politikası';
+
+  @override
+  String get settingsTermsOfService => 'Kullanım Koşulları';
+
+  @override
+  String get profileTitle => 'Profil';
+
+  @override
+  String get profileAccountSection => 'Hesap';
+
+  @override
+  String get profileSection => 'Profil';
+
+  @override
+  String get profileUpdateSection => 'Profili Güncelle';
+
+  @override
+  String get profileAccountId => 'ID';
+
+  @override
+  String get profileAccountStatus => 'Durum';
+
+  @override
+  String get profileAccountCreated => 'Oluşturulma';
+
+  @override
+  String get profileAccountUpdated => 'Güncelleme';
+
+  @override
+  String get profileAccountLockedAt => 'Kilitlenme';
+
+  @override
+  String get profileAccountSuspendedAt => 'Askıya Alma';
+
+  @override
+  String get profileDisplayName => 'Görünen Ad';
+
+  @override
+  String get profileAvatarUrl => 'Avatar URL';
+
+  @override
+  String get profileBio => 'Biyografi';
+
+  @override
+  String get profileSave => 'Profili Kaydet';
+
+  @override
+  String get profileUpdated => 'Profil güncellendi';
+
+  @override
+  String get profileNoData => '—';
+
+  @override
+  String get profileRetry => 'Yeniden Dene';
+
+  @override
+  String get walletTitle => 'Cüzdan';
+
+  @override
+  String get walletBalanceSection => 'Bakiye';
+
+  @override
+  String get walletGetBalance => 'Bakiyeyi Göster';
+
+  @override
+  String get walletTransactionsSection => 'İşlemler';
+
+  @override
+  String get walletNoTransactions => 'İşlem bulunamadı';
+
+  @override
+  String walletTransactionCount(int count) {
+    return '$count işlem';
+  }
+
+  @override
+  String walletHasMore(String value) {
+    return 'Daha fazla: $value';
+  }
+
+  @override
+  String walletBalanceCoins(int count) {
+    return '$count jeton';
+  }
+
+  @override
+  String get walletPurchased => 'Satın Alınan';
+
+  @override
+  String get walletSpent => 'Harcanan';
+
+  @override
+  String get walletBalance => 'Bakiye';
+
+  @override
+  String walletBalanceAfter(int count) {
+    return 'Sonraki bakiye: $count';
+  }
+
+  @override
+  String get walletStoreSection => 'Mağaza';
+
+  @override
+  String get walletLoadProducts => 'Ürünleri Yükle';
+
+  @override
+  String get walletNoProducts => 'Ürün bulunamadı';
+
+  @override
+  String get walletPurchase => 'Satın Al';
+
+  @override
+  String get walletPurchaseInitiated => 'Satın alma başlatıldı';
+
+  @override
+  String get walletLoadMore => 'Daha Fazla';
+
+  @override
+  String get sessionsTitle => 'Oturumlar';
+
+  @override
+  String get sessionsSearch => 'Ara';
+
+  @override
+  String get sessionsSort => 'Sırala';
+
+  @override
+  String get sessionsSortDefault => 'Varsayılan';
+
+  @override
+  String get sessionsSortRecentActivity => 'Son etkinlik';
+
+  @override
+  String get sessionsSortOldestActivity => 'En eski etkinlik';
+
+  @override
+  String get sessionsSortNewest => 'En yeni';
+
+  @override
+  String get sessionsSortOldest => 'En eski';
+
+  @override
+  String get sessionsRevokeOthers => 'Diğerlerini İptal Et';
+
+  @override
+  String get sessionsRevokeAll => 'Tümünü İptal Et';
+
+  @override
+  String get sessionsRevokeOthersTitle => 'Diğer Oturumları İptal Et';
+
+  @override
+  String get sessionsRevokeOthersMessage =>
+      'Bu işlem, mevcut oturum dışındaki tüm oturumları sonlandıracak.';
+
+  @override
+  String get sessionsRevokeAllTitle => 'Tüm Oturumları İptal Et';
+
+  @override
+  String get sessionsRevokeAllMessage =>
+      'Bu işlem, mevcut oturum dahil TÜM oturumları sonlandıracak. Çıkış yapmış olacaksınız.';
+
+  @override
+  String sessionsRevokedCount(int count) {
+    return '$count oturum iptal edildi';
+  }
+
+  @override
+  String get sessionsCancel => 'İptal';
+
+  @override
+  String get sessionsRevoke => 'İptal Et';
+
+  @override
+  String get sessionsLoadMore => 'Daha Fazla';
+
+  @override
+  String get sessionsDevice => 'Cihaz';
+
+  @override
+  String get sessionsCreated => 'Oluşturulma';
+
+  @override
+  String get sessionsExpires => 'Bitiş';
+
+  @override
+  String get devicesTitle => 'Cihazlar';
+
+  @override
+  String get devicesTrusted => 'Güvenilir';
+
+  @override
+  String get devicesNotTrusted => 'Güvenilir değil';
+
+  @override
+  String get devicesUserAgent => 'Tarayıcı';
+
+  @override
+  String get devicesIpAddress => 'IP';
+
+  @override
+  String get devicesFirstSeen => 'İlk görülme';
+
+  @override
+  String get devicesLastSeen => 'Son görülme';
+
+  @override
+  String get devicesDelete => 'Sil';
+
+  @override
+  String get devicesDeleteConfirm =>
+      'Bu cihazı silmek istediğinizden emin misiniz?';
+
+  @override
+  String get devicesDeleteCancel => 'İptal';
+
+  @override
+  String get devicesDeleteConfirmAction => 'Sil';
+
+  @override
+  String get devicesDeleted => 'Cihaz silindi';
+
+  @override
+  String get devicesNoDevices => 'Kayıtlı cihaz yok';
+
+  @override
+  String get devicesRetry => 'Yeniden Dene';
+
+  @override
   String get providerTitle => 'Bağlı Hesaplar';
 
   @override

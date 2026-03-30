@@ -538,6 +538,116 @@
   "settingsTitle": "Ayarlar",
   "settingsLinkedAccounts": "Bağlı Hesaplar",
   "settingsLinkedAccountsSubtitle": "Kimlik doğrulama sağlayıcılarınızı yönetin",
+  "settingsProfile": "Profil",
+  "settingsProfileSubtitle": "Hesap bilgileri ve profil ayarları",
+  "settingsWallet": "Cüzdan",
+  "settingsWalletSubtitle": "Bakiye ve işlemler",
+  "settingsSessions": "Oturumlar",
+  "settingsSessionsSubtitle": "Aktif oturumları yönetin",
+  "settingsDevices": "Cihazlar",
+  "settingsDevicesSubtitle": "Kayıtlı cihazları yönetin",
+  "settingsAbout": "Hakkında",
+  "settingsPrivacyPolicy": "Gizlilik Politikası",
+  "settingsTermsOfService": "Kullanım Koşulları",
+
+  "profileTitle": "Profil",
+  "profileAccountSection": "Hesap",
+  "profileSection": "Profil",
+  "profileUpdateSection": "Profili Güncelle",
+  "profileAccountId": "ID",
+  "profileAccountStatus": "Durum",
+  "profileAccountCreated": "Oluşturulma",
+  "profileAccountUpdated": "Güncelleme",
+  "profileAccountLockedAt": "Kilitlenme",
+  "profileAccountSuspendedAt": "Askıya Alma",
+  "profileDisplayName": "Görünen Ad",
+  "profileAvatarUrl": "Avatar URL",
+  "profileBio": "Biyografi",
+  "profileSave": "Profili Kaydet",
+  "profileUpdated": "Profil güncellendi",
+  "profileNoData": "—",
+  "profileRetry": "Yeniden Dene",
+
+  "walletTitle": "Cüzdan",
+  "walletBalanceSection": "Bakiye",
+  "walletGetBalance": "Bakiyeyi Göster",
+  "walletTransactionsSection": "İşlemler",
+  "walletNoTransactions": "İşlem bulunamadı",
+  "walletTransactionCount": "{count} işlem",
+  "@walletTransactionCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletHasMore": "Daha fazla: {value}",
+  "@walletHasMore": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "walletBalanceCoins": "{count} jeton",
+  "@walletBalanceCoins": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletPurchased": "Satın Alınan",
+  "walletSpent": "Harcanan",
+  "walletBalance": "Bakiye",
+  "walletBalanceAfter": "Sonraki bakiye: {count}",
+  "@walletBalanceAfter": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletStoreSection": "Mağaza",
+  "walletLoadProducts": "Ürünleri Yükle",
+  "walletNoProducts": "Ürün bulunamadı",
+  "walletPurchase": "Satın Al",
+  "walletPurchaseInitiated": "Satın alma başlatıldı",
+  "walletLoadMore": "Daha Fazla",
+
+  "sessionsTitle": "Oturumlar",
+  "sessionsSearch": "Ara",
+  "sessionsSort": "Sırala",
+  "sessionsSortDefault": "Varsayılan",
+  "sessionsSortRecentActivity": "Son etkinlik",
+  "sessionsSortOldestActivity": "En eski etkinlik",
+  "sessionsSortNewest": "En yeni",
+  "sessionsSortOldest": "En eski",
+  "sessionsRevokeOthers": "Diğerlerini İptal Et",
+  "sessionsRevokeAll": "Tümünü İptal Et",
+  "sessionsRevokeOthersTitle": "Diğer Oturumları İptal Et",
+  "sessionsRevokeOthersMessage": "Bu işlem, mevcut oturum dışındaki tüm oturumları sonlandıracak.",
+  "sessionsRevokeAllTitle": "Tüm Oturumları İptal Et",
+  "sessionsRevokeAllMessage": "Bu işlem, mevcut oturum dahil TÜM oturumları sonlandıracak. Çıkış yapmış olacaksınız.",
+  "sessionsRevokedCount": "{count} oturum iptal edildi",
+  "@sessionsRevokedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sessionsCancel": "İptal",
+  "sessionsRevoke": "İptal Et",
+  "sessionsLoadMore": "Daha Fazla",
+  "sessionsDevice": "Cihaz",
+  "sessionsCreated": "Oluşturulma",
+  "sessionsExpires": "Bitiş",
+
+  "devicesTitle": "Cihazlar",
+  "devicesTrusted": "Güvenilir",
+  "devicesNotTrusted": "Güvenilir değil",
+  "devicesUserAgent": "Tarayıcı",
+  "devicesIpAddress": "IP",
+  "devicesFirstSeen": "İlk görülme",
+  "devicesLastSeen": "Son görülme",
+  "devicesDelete": "Sil",
+  "devicesDeleteConfirm": "Bu cihazı silmek istediğinizden emin misiniz?",
+  "devicesDeleteCancel": "İptal",
+  "devicesDeleteConfirmAction": "Sil",
+  "devicesDeleted": "Cihaz silindi",
+  "devicesNoDevices": "Kayıtlı cihaz yok",
+  "devicesRetry": "Yeniden Dene",
 
   "providerTitle": "Bağlı Hesaplar",
   "providerEmailSection": "E-posta",

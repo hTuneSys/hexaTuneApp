@@ -1,0 +1,303 @@
+// SPDX-FileCopyrightText: 2025 hexaTune LLC
+// SPDX-License-Identifier: MIT
+
+import 'package:flutter/material.dart';
+
+import 'package:hexatuneapp/l10n/app_localizations.dart';
+import 'package:hexatuneapp/src/core/di/injection.dart';
+import 'package:hexatuneapp/src/core/log/log_category.dart';
+import 'package:hexatuneapp/src/core/log/log_service.dart';
+import 'package:hexatuneapp/src/core/network/api_error_handler.dart';
+import 'package:hexatuneapp/src/core/rest/account/account_repository.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/account_response.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/profile_response.dart';
+import 'package:hexatuneapp/src/core/rest/account/models/update_profile_request.dart';
+import 'package:hexatuneapp/src/pages/shared/app_bottom_bar.dart';
+import 'package:hexatuneapp/src/pages/shared/app_snack_bar.dart';
+
+/// Profile page displaying account information and profile editing.
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final _displayNameCtrl = TextEditingController();
+  final _avatarUrlCtrl = TextEditingController();
+  final _bioCtrl = TextEditingController();
+
+  AccountResponse? _account;
+  ProfileResponse? _profile;
+  bool _isLoading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  @override
+  void dispose() {
+    _displayNameCtrl.dispose();
+    _avatarUrlCtrl.dispose();
+    _bioCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    final log = getIt<LogService>();
+    try {
+      final repo = getIt<AccountRepository>();
+      final account = await repo.getAccount();
+      final profile = await repo.getProfile();
+      if (mounted) {
+        setState(() {
+          _account = account;
+          _profile = profile;
+          _displayNameCtrl.text = profile.displayName ?? '';
+          _avatarUrlCtrl.text = profile.avatarUrl ?? '';
+          _bioCtrl.text = profile.bio ?? '';
+        });
+      }
+      log.devLog(
+        'Profile data loaded: ${account.id}',
+        category: LogCategory.ui,
+      );
+    } catch (e) {
+      log.devLog('Load profile data failed: $e', category: LogCategory.ui);
+      if (mounted) setState(() => _error = e.toString());
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    final log = getIt<LogService>();
+    try {
+      final repo = getIt<AccountRepository>();
+      final updated = await repo.updateProfile(
+        UpdateProfileRequest(
+          displayName: _displayNameCtrl.text.trim().isEmpty
+              ? null
+              : _displayNameCtrl.text.trim(),
+          avatarUrl: _avatarUrlCtrl.text.trim().isEmpty
+              ? null
+              : _avatarUrlCtrl.text.trim(),
+          bio: _bioCtrl.text.trim().isEmpty ? null : _bioCtrl.text.trim(),
+        ),
+      );
+      if (mounted) {
+        setState(() => _profile = updated);
+        final l10n = AppLocalizations.of(context)!;
+        AppSnackBar.success(context, message: l10n.profileUpdated);
+      }
+      log.devLog('Profile updated', category: LogCategory.ui);
+    } catch (e) {
+      log.devLog('Update profile failed: $e', category: LogCategory.ui);
+      if (mounted) ApiErrorHandler.handle(context, e);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(l10n.profileTitle),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _isLoading ? null : _loadData,
+          ),
+        ],
+      ),
+      body: _buildBody(theme, l10n),
+    );
+  }
+
+  Widget _buildBody(ThemeData theme, AppLocalizations l10n) {
+    if (_isLoading && _account == null) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_error != null && _account == null) {
+      return Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(l10n.profileNoData, style: theme.textTheme.bodyLarge),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: _loadData,
+              child: Text(l10n.profileRetry),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        16 + AppBottomBar.scrollPadding,
+      ),
+      children: [
+        _buildAccountSection(theme, l10n),
+        const Divider(height: 32),
+        _buildProfileSection(theme, l10n),
+        const Divider(height: 32),
+        _buildUpdateSection(theme, l10n),
+      ],
+    );
+  }
+
+  Widget _buildAccountSection(ThemeData theme, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.profileAccountSection, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        if (_account != null)
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _infoRow(l10n.profileAccountId, _account!.id),
+                  _infoRow(l10n.profileAccountStatus, _account!.status),
+                  _infoRow(l10n.profileAccountCreated, _account!.createdAt),
+                  _infoRow(l10n.profileAccountUpdated, _account!.updatedAt),
+                  if (_account!.lockedAt != null)
+                    _infoRow(l10n.profileAccountLockedAt, _account!.lockedAt!),
+                  if (_account!.suspendedAt != null)
+                    _infoRow(
+                      l10n.profileAccountSuspendedAt,
+                      _account!.suspendedAt!,
+                    ),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildProfileSection(ThemeData theme, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.profileSection, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        if (_profile != null)
+          Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _infoRow(
+                    l10n.profileDisplayName,
+                    _profile!.displayName ?? '—',
+                  ),
+                  _infoRow(l10n.profileAvatarUrl, _profile!.avatarUrl ?? '—'),
+                  _infoRow(l10n.profileBio, _profile!.bio ?? '—'),
+                  _infoRow(l10n.profileAccountUpdated, _profile!.updatedAt),
+                ],
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Widget _buildUpdateSection(ThemeData theme, AppLocalizations l10n) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.profileUpdateSection, style: theme.textTheme.titleMedium),
+        const SizedBox(height: 8),
+        Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(12),
+          color: theme.colorScheme.surfaceContainerLow,
+          child: TextField(
+            controller: _displayNameCtrl,
+            decoration: InputDecoration(labelText: l10n.profileDisplayName),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(12),
+          color: theme.colorScheme.surfaceContainerLow,
+          child: TextField(
+            controller: _avatarUrlCtrl,
+            decoration: InputDecoration(labelText: l10n.profileAvatarUrl),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Material(
+          elevation: 1,
+          borderRadius: BorderRadius.circular(12),
+          color: theme.colorScheme.surfaceContainerLow,
+          child: TextField(
+            controller: _bioCtrl,
+            decoration: InputDecoration(labelText: l10n.profileBio),
+            maxLines: 3,
+          ),
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(
+          onPressed: _isLoading ? null : _updateProfile,
+          child: _isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Text(l10n.profileSave),
+        ),
+      ],
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(label, style: Theme.of(context).textTheme.bodySmall),
+          ),
+          Expanded(child: SelectableText(value)),
+        ],
+      ),
+    );
+  }
+}

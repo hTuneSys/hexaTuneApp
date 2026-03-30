@@ -24,13 +24,18 @@ void main() {
 
     test('dev test pages have /dev/ prefix', () {
       expect(RouteNames.authExtras, startsWith('/dev/'));
-      expect(RouteNames.account, startsWith('/dev/'));
-      expect(RouteNames.sessions, startsWith('/dev/'));
-      expect(RouteNames.devices, startsWith('/dev/'));
       expect(RouteNames.providers, startsWith('/dev/'));
       expect(RouteNames.tenants, startsWith('/dev/'));
       expect(RouteNames.tasks, startsWith('/dev/'));
       expect(RouteNames.audit, startsWith('/dev/'));
+    });
+
+    test('settings sub-routes have /settings/ prefix', () {
+      expect(RouteNames.settingsProfile, '/settings/profile');
+      expect(RouteNames.settingsWallet, '/settings/wallet');
+      expect(RouteNames.settingsSessions, '/settings/sessions');
+      expect(RouteNames.settingsDevices, '/settings/devices');
+      expect(RouteNames.providerManagement, '/settings/providers');
     });
 
     test('inventory production routes have correct paths', () {

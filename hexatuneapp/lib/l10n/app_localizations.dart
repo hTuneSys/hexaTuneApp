@@ -2300,6 +2300,492 @@ abstract class AppLocalizations {
   /// **'Manage your authentication providers'**
   String get settingsLinkedAccountsSubtitle;
 
+  /// No description provided for @settingsProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get settingsProfile;
+
+  /// No description provided for @settingsProfileSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Account info and profile settings'**
+  String get settingsProfileSubtitle;
+
+  /// No description provided for @settingsWallet.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get settingsWallet;
+
+  /// No description provided for @settingsWalletSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance and transactions'**
+  String get settingsWalletSubtitle;
+
+  /// No description provided for @settingsSessions.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get settingsSessions;
+
+  /// No description provided for @settingsSessionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage active sessions'**
+  String get settingsSessionsSubtitle;
+
+  /// No description provided for @settingsDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get settingsDevices;
+
+  /// No description provided for @settingsDevicesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage registered devices'**
+  String get settingsDevicesSubtitle;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get settingsTermsOfService;
+
+  /// No description provided for @profileTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileTitle;
+
+  /// No description provided for @profileAccountSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get profileAccountSection;
+
+  /// No description provided for @profileSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profileSection;
+
+  /// No description provided for @profileUpdateSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Profile'**
+  String get profileUpdateSection;
+
+  /// No description provided for @profileAccountId.
+  ///
+  /// In en, this message translates to:
+  /// **'ID'**
+  String get profileAccountId;
+
+  /// No description provided for @profileAccountStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get profileAccountStatus;
+
+  /// No description provided for @profileAccountCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get profileAccountCreated;
+
+  /// No description provided for @profileAccountUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Updated'**
+  String get profileAccountUpdated;
+
+  /// No description provided for @profileAccountLockedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Locked At'**
+  String get profileAccountLockedAt;
+
+  /// No description provided for @profileAccountSuspendedAt.
+  ///
+  /// In en, this message translates to:
+  /// **'Suspended At'**
+  String get profileAccountSuspendedAt;
+
+  /// No description provided for @profileDisplayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Display Name'**
+  String get profileDisplayName;
+
+  /// No description provided for @profileAvatarUrl.
+  ///
+  /// In en, this message translates to:
+  /// **'Avatar URL'**
+  String get profileAvatarUrl;
+
+  /// No description provided for @profileBio.
+  ///
+  /// In en, this message translates to:
+  /// **'Bio'**
+  String get profileBio;
+
+  /// No description provided for @profileSave.
+  ///
+  /// In en, this message translates to:
+  /// **'Save Profile'**
+  String get profileSave;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated'**
+  String get profileUpdated;
+
+  /// No description provided for @profileNoData.
+  ///
+  /// In en, this message translates to:
+  /// **'—'**
+  String get profileNoData;
+
+  /// No description provided for @profileRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get profileRetry;
+
+  /// No description provided for @walletTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Wallet'**
+  String get walletTitle;
+
+  /// No description provided for @walletBalanceSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get walletBalanceSection;
+
+  /// No description provided for @walletGetBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Get Balance'**
+  String get walletGetBalance;
+
+  /// No description provided for @walletTransactionsSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Transactions'**
+  String get walletTransactionsSection;
+
+  /// No description provided for @walletNoTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'No transactions'**
+  String get walletNoTransactions;
+
+  /// No description provided for @walletTransactionCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} transactions'**
+  String walletTransactionCount(int count);
+
+  /// No description provided for @walletHasMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Has more: {value}'**
+  String walletHasMore(String value);
+
+  /// No description provided for @walletBalanceCoins.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} coins'**
+  String walletBalanceCoins(int count);
+
+  /// No description provided for @walletPurchased.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchased'**
+  String get walletPurchased;
+
+  /// No description provided for @walletSpent.
+  ///
+  /// In en, this message translates to:
+  /// **'Spent'**
+  String get walletSpent;
+
+  /// No description provided for @walletBalance.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance'**
+  String get walletBalance;
+
+  /// No description provided for @walletBalanceAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Balance after: {count}'**
+  String walletBalanceAfter(int count);
+
+  /// No description provided for @walletStoreSection.
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get walletStoreSection;
+
+  /// No description provided for @walletLoadProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'Load Products'**
+  String get walletLoadProducts;
+
+  /// No description provided for @walletNoProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'No products available'**
+  String get walletNoProducts;
+
+  /// No description provided for @walletPurchase.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase'**
+  String get walletPurchase;
+
+  /// No description provided for @walletPurchaseInitiated.
+  ///
+  /// In en, this message translates to:
+  /// **'Purchase initiated'**
+  String get walletPurchaseInitiated;
+
+  /// No description provided for @walletLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get walletLoadMore;
+
+  /// No description provided for @sessionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Sessions'**
+  String get sessionsTitle;
+
+  /// No description provided for @sessionsSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get sessionsSearch;
+
+  /// No description provided for @sessionsSort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sessionsSort;
+
+  /// No description provided for @sessionsSortDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get sessionsSortDefault;
+
+  /// No description provided for @sessionsSortRecentActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent activity'**
+  String get sessionsSortRecentActivity;
+
+  /// No description provided for @sessionsSortOldestActivity.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest activity'**
+  String get sessionsSortOldestActivity;
+
+  /// No description provided for @sessionsSortNewest.
+  ///
+  /// In en, this message translates to:
+  /// **'Newest'**
+  String get sessionsSortNewest;
+
+  /// No description provided for @sessionsSortOldest.
+  ///
+  /// In en, this message translates to:
+  /// **'Oldest'**
+  String get sessionsSortOldest;
+
+  /// No description provided for @sessionsRevokeOthers.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke Others'**
+  String get sessionsRevokeOthers;
+
+  /// No description provided for @sessionsRevokeAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke All'**
+  String get sessionsRevokeAll;
+
+  /// No description provided for @sessionsRevokeOthersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke Other Sessions'**
+  String get sessionsRevokeOthersTitle;
+
+  /// No description provided for @sessionsRevokeOthersMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will terminate all sessions except the current one.'**
+  String get sessionsRevokeOthersMessage;
+
+  /// No description provided for @sessionsRevokeAllTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke All Sessions'**
+  String get sessionsRevokeAllTitle;
+
+  /// No description provided for @sessionsRevokeAllMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'This will terminate ALL sessions including the current one. You will be logged out.'**
+  String get sessionsRevokeAllMessage;
+
+  /// No description provided for @sessionsRevokedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoked {count} sessions'**
+  String sessionsRevokedCount(int count);
+
+  /// No description provided for @sessionsCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get sessionsCancel;
+
+  /// No description provided for @sessionsRevoke.
+  ///
+  /// In en, this message translates to:
+  /// **'Revoke'**
+  String get sessionsRevoke;
+
+  /// No description provided for @sessionsLoadMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Load More'**
+  String get sessionsLoadMore;
+
+  /// No description provided for @sessionsDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get sessionsDevice;
+
+  /// No description provided for @sessionsCreated.
+  ///
+  /// In en, this message translates to:
+  /// **'Created'**
+  String get sessionsCreated;
+
+  /// No description provided for @sessionsExpires.
+  ///
+  /// In en, this message translates to:
+  /// **'Expires'**
+  String get sessionsExpires;
+
+  /// No description provided for @devicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Devices'**
+  String get devicesTitle;
+
+  /// No description provided for @devicesTrusted.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted'**
+  String get devicesTrusted;
+
+  /// No description provided for @devicesNotTrusted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not trusted'**
+  String get devicesNotTrusted;
+
+  /// No description provided for @devicesUserAgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Agent'**
+  String get devicesUserAgent;
+
+  /// No description provided for @devicesIpAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'IP'**
+  String get devicesIpAddress;
+
+  /// No description provided for @devicesFirstSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'First seen'**
+  String get devicesFirstSeen;
+
+  /// No description provided for @devicesLastSeen.
+  ///
+  /// In en, this message translates to:
+  /// **'Last seen'**
+  String get devicesLastSeen;
+
+  /// No description provided for @devicesDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get devicesDelete;
+
+  /// No description provided for @devicesDeleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this device?'**
+  String get devicesDeleteConfirm;
+
+  /// No description provided for @devicesDeleteCancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get devicesDeleteCancel;
+
+  /// No description provided for @devicesDeleteConfirmAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get devicesDeleteConfirmAction;
+
+  /// No description provided for @devicesDeleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Device deleted'**
+  String get devicesDeleted;
+
+  /// No description provided for @devicesNoDevices.
+  ///
+  /// In en, this message translates to:
+  /// **'No registered devices'**
+  String get devicesNoDevices;
+
+  /// No description provided for @devicesRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get devicesRetry;
+
   /// No description provided for @providerTitle.
   ///
   /// In en, this message translates to:

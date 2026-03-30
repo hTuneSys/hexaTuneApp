@@ -541,6 +541,116 @@
   "settingsTitle": "Settings",
   "settingsLinkedAccounts": "Linked Accounts",
   "settingsLinkedAccountsSubtitle": "Manage your authentication providers",
+  "settingsProfile": "Profile",
+  "settingsProfileSubtitle": "Account info and profile settings",
+  "settingsWallet": "Wallet",
+  "settingsWalletSubtitle": "Balance and transactions",
+  "settingsSessions": "Sessions",
+  "settingsSessionsSubtitle": "Manage active sessions",
+  "settingsDevices": "Devices",
+  "settingsDevicesSubtitle": "Manage registered devices",
+  "settingsAbout": "About",
+  "settingsPrivacyPolicy": "Privacy Policy",
+  "settingsTermsOfService": "Terms of Service",
+
+  "profileTitle": "Profile",
+  "profileAccountSection": "Account",
+  "profileSection": "Profile",
+  "profileUpdateSection": "Update Profile",
+  "profileAccountId": "ID",
+  "profileAccountStatus": "Status",
+  "profileAccountCreated": "Created",
+  "profileAccountUpdated": "Updated",
+  "profileAccountLockedAt": "Locked At",
+  "profileAccountSuspendedAt": "Suspended At",
+  "profileDisplayName": "Display Name",
+  "profileAvatarUrl": "Avatar URL",
+  "profileBio": "Bio",
+  "profileSave": "Save Profile",
+  "profileUpdated": "Profile updated",
+  "profileNoData": "—",
+  "profileRetry": "Retry",
+
+  "walletTitle": "Wallet",
+  "walletBalanceSection": "Balance",
+  "walletGetBalance": "Get Balance",
+  "walletTransactionsSection": "Transactions",
+  "walletNoTransactions": "No transactions",
+  "walletTransactionCount": "{count} transactions",
+  "@walletTransactionCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletHasMore": "Has more: {value}",
+  "@walletHasMore": {
+    "placeholders": {
+      "value": { "type": "String" }
+    }
+  },
+  "walletBalanceCoins": "{count} coins",
+  "@walletBalanceCoins": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletPurchased": "Purchased",
+  "walletSpent": "Spent",
+  "walletBalance": "Balance",
+  "walletBalanceAfter": "Balance after: {count}",
+  "@walletBalanceAfter": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "walletStoreSection": "Store",
+  "walletLoadProducts": "Load Products",
+  "walletNoProducts": "No products available",
+  "walletPurchase": "Purchase",
+  "walletPurchaseInitiated": "Purchase initiated",
+  "walletLoadMore": "Load More",
+
+  "sessionsTitle": "Sessions",
+  "sessionsSearch": "Search",
+  "sessionsSort": "Sort",
+  "sessionsSortDefault": "Default",
+  "sessionsSortRecentActivity": "Recent activity",
+  "sessionsSortOldestActivity": "Oldest activity",
+  "sessionsSortNewest": "Newest",
+  "sessionsSortOldest": "Oldest",
+  "sessionsRevokeOthers": "Revoke Others",
+  "sessionsRevokeAll": "Revoke All",
+  "sessionsRevokeOthersTitle": "Revoke Other Sessions",
+  "sessionsRevokeOthersMessage": "This will terminate all sessions except the current one.",
+  "sessionsRevokeAllTitle": "Revoke All Sessions",
+  "sessionsRevokeAllMessage": "This will terminate ALL sessions including the current one. You will be logged out.",
+  "sessionsRevokedCount": "Revoked {count} sessions",
+  "@sessionsRevokedCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "sessionsCancel": "Cancel",
+  "sessionsRevoke": "Revoke",
+  "sessionsLoadMore": "Load More",
+  "sessionsDevice": "Device",
+  "sessionsCreated": "Created",
+  "sessionsExpires": "Expires",
+
+  "devicesTitle": "Devices",
+  "devicesTrusted": "Trusted",
+  "devicesNotTrusted": "Not trusted",
+  "devicesUserAgent": "Agent",
+  "devicesIpAddress": "IP",
+  "devicesFirstSeen": "First seen",
+  "devicesLastSeen": "Last seen",
+  "devicesDelete": "Delete",
+  "devicesDeleteConfirm": "Are you sure you want to delete this device?",
+  "devicesDeleteCancel": "Cancel",
+  "devicesDeleteConfirmAction": "Delete",
+  "devicesDeleted": "Device deleted",
+  "devicesNoDevices": "No registered devices",
+  "devicesRetry": "Retry",
 
   "providerTitle": "Linked Accounts",
   "providerEmailSection": "Email",
