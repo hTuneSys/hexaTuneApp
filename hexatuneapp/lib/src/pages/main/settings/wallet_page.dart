@@ -204,7 +204,12 @@ class _WalletPageState extends State<WalletPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.walletBalanceSection, style: theme.textTheme.titleMedium),
+        Text(
+          l10n.walletBalanceSection,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 8),
         if (_balanceLoading && _balance == null)
           const Center(child: CircularProgressIndicator())
@@ -288,7 +293,9 @@ class _WalletPageState extends State<WalletPage> {
       children: [
         Text(
           l10n.walletTransactionsSection,
-          style: theme.textTheme.titleMedium,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         const SizedBox(height: 8),
         if (_transactionsLoading && _transactions.isEmpty)
@@ -411,7 +418,12 @@ class _WalletPageState extends State<WalletPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.walletStoreSection, style: theme.textTheme.titleMedium),
+        Text(
+          l10n.walletStoreSection,
+          style: theme.textTheme.bodyLarge?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 8),
         if (_productsLoading && _products.isEmpty)
           const Center(child: CircularProgressIndicator())
