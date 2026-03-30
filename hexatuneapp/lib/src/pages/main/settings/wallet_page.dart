@@ -58,6 +58,7 @@ class _WalletPageState extends State<WalletPage> {
       if (mounted) setState(() => _products = products);
     });
     _loadBalance();
+    _loadProducts();
     _loadTransactions();
   }
 
@@ -69,7 +70,7 @@ class _WalletPageState extends State<WalletPage> {
   }
 
   Future<void> _refresh() async {
-    await Future.wait([_loadBalance(), _loadTransactions()]);
+    await Future.wait([_loadBalance(), _loadProducts(), _loadTransactions()]);
   }
 
   Future<void> _loadBalance() async {
@@ -190,9 +191,9 @@ class _WalletPageState extends State<WalletPage> {
           children: [
             _buildBalanceSection(l10n, theme),
             const SizedBox(height: 24),
-            _buildTransactionsSection(l10n, theme),
-            const SizedBox(height: 24),
             _buildStoreSection(l10n, theme),
+            const SizedBox(height: 24),
+            _buildTransactionsSection(l10n, theme),
           ],
         ),
       ),
@@ -436,12 +437,6 @@ class _WalletPageState extends State<WalletPage> {
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.outline,
           ),
-        ),
-        const SizedBox(height: 8),
-        FilledButton.tonalIcon(
-          onPressed: _productsLoading ? null : _loadProducts,
-          icon: const Icon(Icons.refresh),
-          label: Text(l10n.walletLoadProducts),
         ),
         const SizedBox(height: 8),
         if (_productsLoading && _products.isEmpty)

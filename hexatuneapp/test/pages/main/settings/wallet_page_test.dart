@@ -154,13 +154,8 @@ void main() {
       expect(find.text('50'), findsOneWidget);
     });
 
-    testWidgets('refresh button triggers reload', (tester) async {
+    testWidgets('auto-loads products on init', (tester) async {
       await tester.pumpWidget(_buildApp());
-      await tester.pumpAndSettle();
-
-      // Scroll to the store section's Load Products button (Icons.refresh)
-      await tester.scrollUntilVisible(find.byIcon(Icons.refresh), 200);
-      await tester.tap(find.byIcon(Icons.refresh));
       await tester.pumpAndSettle();
 
       verify(() => mockIap.loadProducts()).called(1);
