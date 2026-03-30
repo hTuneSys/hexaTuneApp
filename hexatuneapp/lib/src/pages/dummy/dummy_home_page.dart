@@ -23,24 +23,6 @@ class DummyHomePage extends StatelessWidget {
       route: RouteNames.authExtras,
     ),
     _NavItem(
-      icon: Icons.person,
-      title: 'Account & Profile',
-      subtitle: 'Account info, profile view/edit',
-      route: RouteNames.settingsProfile,
-    ),
-    _NavItem(
-      icon: Icons.devices,
-      title: 'Sessions',
-      subtitle: 'Active sessions, revoke',
-      route: RouteNames.settingsSessions,
-    ),
-    _NavItem(
-      icon: Icons.phone_android,
-      title: 'Devices & Approvals',
-      subtitle: 'Push token, device approval flow',
-      route: RouteNames.settingsDevices,
-    ),
-    _NavItem(
       icon: Icons.link,
       title: 'Providers',
       subtitle: 'Link/unlink auth providers',
@@ -69,12 +51,6 @@ class DummyHomePage extends StatelessWidget {
       title: 'hexaGen Device',
       subtitle: 'Hardware connection, RGB, freq sweep, operations',
       route: RouteNames.hexagen,
-    ),
-    _NavItem(
-      icon: Icons.account_balance_wallet,
-      title: 'Wallet',
-      subtitle: 'Balance, packages, purchases, transactions',
-      route: RouteNames.settingsWallet,
     ),
     _NavItem(
       icon: Icons.bug_report,

@@ -67,8 +67,8 @@ void main() {
 
       // Verify items near the top of the list that are visible
       expect(find.text('Auth Extras'), findsOneWidget);
-      expect(find.text('Account & Profile'), findsOneWidget);
-      expect(find.text('Sessions'), findsOneWidget);
+      expect(find.text('Providers'), findsOneWidget);
+      expect(find.text('Tenants'), findsOneWidget);
     });
 
     testWidgets('renders subtitles for nav items', (tester) async {
@@ -79,7 +79,7 @@ void main() {
         find.text('Forgot/reset password, re-auth, refresh'),
         findsOneWidget,
       );
-      expect(find.text('Account info, profile view/edit'), findsOneWidget);
+      expect(find.text('Link/unlink auth providers'), findsOneWidget);
     });
 
     testWidgets('renders chevron trailing icons', (tester) async {
@@ -108,12 +108,12 @@ void main() {
 
       // Scroll down to reveal more items
       await tester.scrollUntilVisible(
-        find.text('Wallet'),
+        find.text('Log Monitor'),
         200,
         scrollable: find.byType(Scrollable),
       );
 
-      expect(find.text('Wallet'), findsOneWidget);
+      expect(find.text('Log Monitor'), findsOneWidget);
     });
 
     testWidgets('nav items are wrapped in cards', (tester) async {
